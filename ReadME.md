@@ -105,7 +105,7 @@ Building 5 actions with 7 processes...
 ### 基本设置
 
 1. 在您的关卡中放置一个`MuJoCoSimulation`参与者
-2. 在参与者属性中设置 XML 文件路径
+2. 在参与者属性中设置 XML 文件路径，比如`D:\\hutb\\Unreal\\CarlaUE4\\Plugins\\mujoco_plugin\\Content\\model\\humanoid\\humanoid.xml`
 3. 开始播放模式以查看模拟
 
 ### 控制
