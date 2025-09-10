@@ -7,9 +7,10 @@ public class MujocoTestTarget : TargetRules
 {
 	public MujocoTestTarget(TargetInfo Target) : base(Target)
 	{
-		Type = TargetType.Game;
-		DefaultBuildSettings = BuildSettingsVersion.V5;
-		IncludeOrderVersion = EngineIncludeOrderVersion.Unreal5_4;
+        CppStandard = CppStandardVersion.Cpp17;
+        Type = TargetType.Game;
+        DefaultBuildSettings = BuildSettingsVersion.Latest;
+		// IncludeOrderVersion = EngineIncludeOrderVersion.Latest;
 		ExtraModuleNames.Add("MujocoTest");
 	}
 }

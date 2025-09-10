@@ -12,13 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+using namespace std;
+
 #ifndef MUJOCO_INCLUDE_MJSPEC_H_
 #define MUJOCO_INCLUDE_MJSPEC_H_
 
 #include <stddef.h>
+#include <cstddef>
 #include <mujoco/mjmodel.h>
 #include <mujoco/mjtnum.h>
-
 
 // this is a C-API
 #ifdef __cplusplus
@@ -40,7 +42,8 @@ extern "C" {
   using mjFloatVec    = std::vector<float>;
   using mjFloatVecVec = std::vector<std::vector<float>>;
   using mjDoubleVec   = std::vector<double>;
-  using mjByteVec     = std::vector<std::byte>;
+  using mjByteVec     = std::vector<std::vector<int>>;  // <cstddef> 头文件中提供的 std::byte 类型
+  // Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2039: byte' is not a member of 'std'
 #else
   // C: opaque types
   typedef void mjString;

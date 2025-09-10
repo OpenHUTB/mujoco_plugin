@@ -27,9 +27,13 @@ public class MuJoCoUE : ModuleRules
 			new string[]
 			{
 				"Core", "ProceduralMeshComponent",
+                "MeshDescription",
+                "StaticMeshDescription",
+                "MeshConversion",
+				// solve link error: FMeshDescription::~FMeshDescription(void)
 				// ... add other public dependencies that you statically link with here ...
 			}
-			);
+            );
 
 
 		PrivateDependencyModuleNames.AddRange(

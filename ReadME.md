@@ -24,6 +24,82 @@
 2. 重新构建您的项目
 3. 在项目设置中启用 Mujoco 插件
 
+### 移植到 UE 4.26
+
+根据`MujocoTest.uproject`生成vs工程报错：
+```shell
+
+Running D:/work/workspace/engine/Engine/Binaries/DotNET/UnrealBuildTool.exe  -projectfiles -project="D:/hutb/Unreal/CarlaUE4/Plugins/mujoco_plugin/MujocoTest.uproject" -game -engine -progress -log="D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin/Saved/Logs/UnrealVersionSelector-2025.09.10-09.45.53.log"
+Discovering modules, targets and source code for project...
+While compiling D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Intermediate\Build\BuildRules\MujocoTestModuleRules.dll:
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTest.Target.cs(11,47) : error CS0117: “UnrealBuildTool.BuildSettingsVersion”并不包含“V5”的定义
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTest.Target.cs(12,3) : error CS0103: 当前上下文中不存在名称“IncludeOrderVersion”
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTest.Target.cs(12,25) : error CS0103: 当前上下文中不存在名称“EngineIncludeOrderVersion”
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTestEditor.Target.cs(11,47) : error CS0117: “UnrealBuildTool.BuildSettingsVersion”并不包含“V5”的定义
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTestEditor.Target.cs(12,3) : error CS0103: 当前上下文中不存在名称“IncludeOrderVersion”
+d:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Source\MujocoTestEditor.Target.cs(12,25) : error CS0103: 当前上下文中不存在名称“EngineIncludeOrderVersion”
+ERROR: Unable to compile source files.
+
+```
+
+
+
+编译报错：
+```shell
+  Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2039: byte' is not a member of 'std'
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2039: "byte": 不是 "std" 的成员
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\INCLUDE\vector(29): note: 参见“std”的声明
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2065: “byte”: 未声明的标识符
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2923: "std::vector": "byte" 不是参数 "_Ty" 的有效 模板 类型参数
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): note: 参见“byte”的声明
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2976: “std::vector'”: 模板 参数太少
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\INCLUDE\vector(442): note: 参见“std::vector”的声明
+  [6/13] Module.MuJoCoUE.cpp
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2039: "byte": 不是 "std" 的成员
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\INCLUDE\vector(29): note: 参见“std”的声明
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2065: “byte”: 未声明的标识符
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2923: "std::vector": "byte" 不是参数 "_Ty" 的有效 模板 类型参数
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): note: 参见“byte”的声明
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Source\mujoco\include\mujoco/mjspec.h(43): error C2976: “std::vector'”: 模板 参数太少
+  C:\Program Files\Microsoft Visual Studio\2022\Community\VC\Tools\MSVC\14.44.35207\INCLUDE\vector(442): note: 参见“std::vector”的声明
+  [7/13] UE4Editor-WmfMedia.dll
+    正在创建库 D:\work\workspace\engine\Engine\Plugins\Media\WmfMedia\Intermediate\Build\Win64\UE4Editor\Development\WmfMedia\UE4Editor-WmfMedia.suppressed.lib 和对象 D:\work\workspace\engine\Engine\Plugins\Media\WmfMedia\Intermediate\Build\Win64\UE4Editor\Development\WmfMedia\UE4Editor-WmfMedia.suppressed.exp
+  [8/13] Module.PixelStreaming.cpp
+make: *** [CarlaUE4Editor] 错误 6
+```
+
+C++17引入了类型std::byte，代码中使用了using namespace std 与原C++定义的unsigned char byte冲突；或者其它重名冲突。C++17还引进了std::array ，std::size，也会导致同样的问题。
+
+解决方法：
+如果代码中加了using namespace std ，可以将它移除；
+
+
+虚幻引擎 `virtual FArchive& operator<<(FSoftObjectPath& Value) override;` 报错：
+```text
+E1455: member function declared with ‘override’ does not override a base class member.
+```
+
+编辑器偏好设置（Editor Preferences） > 通用（General） > 实时编码（Live Coding）  启用 live coding
+
+Live Coding 是 Unreal Engine 4.22+ 引入的更强大的实时编译功能，允许在编辑器运行时直接修改和重新编译 C++ 代码，甚至支持新增类、函数、变量等。
+
+
+```
+Building 5 actions with 7 processes...
+  [1/5] Module.MuJoCoUE.gen.cpp
+  [2/5] Module.MuJoCoUE.cpp
+  [3/5] UE4Editor-MuJoCoUE.lib
+    正在创建库 D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Intermediate\Build\Win64\UE4Editor\Development\MuJoCoUE\UE4Editor-MuJoCoUE.lib 和对象 D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Intermediate\Build\Win64\UE4Editor\Development\MuJoCoUE\UE4Editor-MuJoCoUE.exp
+  [4/5] UE4Editor-MuJoCoUE.dll
+    正在创建库 D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Intermediate\Build\Win64\UE4Editor\Development\MuJoCoUE\UE4Editor-MuJoCoUE.suppressed.lib 和对象 D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Intermediate\Build\Win64\UE4Editor\Development\MuJoCoUE\UE4Editor-MuJoCoUE.suppressed.exp
+  Module.MuJoCoUE.cpp.obj : error LNK2019: 无法解析的外部符号 "__declspec(dllimport) public: __cdecl FMeshDescription::~FMeshDescription(void)" (__imp_??1FMeshDescription@@QEAA@XZ)，函数 "protected: void __cdecl AMuJoCoSimulation::GenerateMeshes(struct ModelInfo &)" (?GenerateMeshes@AMuJoCoSimulation@@IEAAXAEAUModelInfo@@@Z) 中引用了该符号
+  Module.MuJoCoUE.cpp.obj : error LNK2001: 无法解析的外部符号 "public: __cdecl FMeshDescription::~FMeshDescription(void)" (??1FMeshDescription@@QEAA@XZ)
+  D:\hutb\Unreal\CarlaUE4\Plugins\mujoco_plugin\Plugins\MuJoCoUE\Binaries\Win64\UE4Editor-MuJoCoUE.dll : fatal error LNK1120: 2 个无法解析的外部命令
+```
+
+
+
+
 ## 用法
 
 ### 基本设置
