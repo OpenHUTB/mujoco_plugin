@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Possession & Twist Control - Mujoco 插件</title>
+    <title>持有和扭转控制 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Possession \u0026 Twist Control";
+        var mkdocs_page_name = "\u6301\u6709\u548c\u626d\u8f6c\u63a7\u5236";
         var mkdocs_page_input_path = "guides/possession_twist.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Possession & Twist Control</li>
+      <li class="breadcrumb-item active">持有和扭转控制</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/possession_twist.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,86 +68,102 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="possession-twist-control">Possession &amp; Twist Control</h1>
-<p>URLab articulations are Unreal Pawns — they can be possessed by a PlayerController to enable direct input control. The twist controller captures WASD/gamepad input and broadcasts velocity commands over ZMQ.</p>
-<h2 id="possessing-an-articulation">Possessing an Articulation</h2>
-<p><strong>From the MjSimulate widget:</strong> Click the <strong>Possess</strong> button next to the articulation selector. The button toggles to <strong>Release</strong> while possessed.</p>
-<p><strong>From Blueprint/C++:</strong>
+                <h1 id="_1">持有和扭转控制</h1>
+<p>URLab 关节是虚幻引擎的棋子——它们可以被玩家控制器控制，从而实现直接输入控制。扭转控制器可以捕获WASD/游戏手柄输入，并通过 ZMQ 广播速度指令。</p>
+<h2 id="_2">持有关节</h2>
+<p><strong>在 MjSimulate 小部件中：</strong> 点击关节选择器旁边的<strong>持有(Possess)</strong>按钮。该按钮会在被控制时切换为<strong>释放(Release)</strong>状态。</p>
+<p><strong>来自 蓝图/C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">APlayerController</span><span class="o">*</span><span class="w"> </span><span class="n">PC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFirstPlayerController</span><span class="p">();</span>
 <span class="n">PC</span><span class="o">-&gt;</span><span class="n">Possess</span><span class="p">(</span><span class="n">MyArticulation</span><span class="p">);</span>
-<span class="c1">// Later:</span>
+<span class="c1">// 之后</span>
 <span class="n">PC</span><span class="o">-&gt;</span><span class="n">UnPossess</span><span class="p">();</span>
 </code></pre></div></p>
-<p>When possessed:
-- Enhanced Input mapping context (<code>IMC_TwistControl</code>) is added
-- A spring arm + camera attaches to the root MjBody for follow-cam
-- WASD/QE input feeds the twist controller</p>
-<p>When released:
-- Mapping context removed, twist state zeroed
-- Camera components cleaned up
-- Original pawn re-possessed</p>
+<p>当持有时：</p>
+<ul>
+<li>
+<p>添加增强型输入映射上下文(Input mapping context, IMC) (<code>IMC_TwistControl</code>)</p>
+</li>
+<li>
+<p>弹簧臂 + 摄像头连接到根 MjBody 以实现跟随摄像头功能</p>
+</li>
+<li>
+<p>WASD/QE 输入信号传输至扭转控制器</p>
+</li>
+</ul>
+<p>当释放时：</p>
+<ul>
+<li>
+<p>映射上下文已移除，扭曲状态已清零</p>
+</li>
+<li>
+<p>相机组件已清理</p>
+</li>
+<li>
+<p>原始棋子已重新获得控制权</p>
+</li>
+</ul>
 <h2 id="umjtwistcontroller">UMjTwistController</h2>
-<p>Auto-created on every AMjArticulation at BeginPlay. Captures input and stores thread-safe twist state.</p>
-<p><strong>Properties (editable in Details panel or via locomotion sliders):</strong></p>
+<p>每次 AMjArticulation 操作在 BeginPlay 时自动创建。捕获输入并存储线程安全的扭转状态。</p>
+<p><strong>属性（可在“详细信息”面板或通过移动滑块编辑）：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Default</th>
-<th>Description</th>
+<th>属性</th>
+<th>默认值</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>MaxVx</code></td>
-<td>0.8 m/s</td>
-<td>Max forward speed</td>
+<td>0.8 米/秒</td>
+<td>最大前进速度</td>
 </tr>
 <tr>
 <td><code>MaxVy</code></td>
-<td>0.5 m/s</td>
-<td>Max strafe speed</td>
+<td>0.5 米/秒</td>
+<td>最大横向移动速度</td>
 </tr>
 <tr>
 <td><code>MaxYawRate</code></td>
-<td>1.57 rad/s</td>
-<td>Max turn rate</td>
+<td>1.57 弧度/秒</td>
+<td>最大转弯率</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Input mapping:</strong></p>
+<p><strong>输入映射：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Key</th>
-<th>Action</th>
+<th>键</th>
+<th>操作</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>W/S</td>
-<td>Forward/backward</td>
+<td>前进/后退</td>
 </tr>
 <tr>
 <td>A/D</td>
-<td>Strafe left/right</td>
+<td>左右扫射</td>
 </tr>
 <tr>
 <td>Q/E</td>
-<td>Turn left/right</td>
+<td>左转/右转</td>
 </tr>
 <tr>
 <td>1-0</td>
-<td>Action keys (10-slot bitmask)</td>
+<td>操作键（10槽位位掩码）</td>
 </tr>
 </tbody>
 </table>
-<p><strong>ZMQ broadcast:</strong> The sensor broadcaster publishes twist state every physics step:</p>
+<p><strong>ZMQ 广播：</strong> 传感器广播器在每个物理步骤中发布扭矩状态：</p>
 <table>
 <thead>
 <tr>
-<th>Topic</th>
-<th>Payload</th>
+<th>主题</th>
+<th>有效载荷</th>
 </tr>
 </thead>
 <tbody>
@@ -157,47 +173,63 @@
 </tr>
 <tr>
 <td><code>&lt;prefix&gt;/actions</code></td>
-<td><code>int32</code> bitmask of pressed action keys</td>
+<td><code>int32</code> 按下的操作键的 int32 位掩码</td>
 </tr>
 </tbody>
 </table>
-<h2 id="follow-camera">Follow Camera</h2>
-<p>On possession, a spring arm + camera component attaches to the root MjBody:</p>
+<h2 id="_3">跟随相机</h2>
+<p>获得控制权后，一个弹簧臂+摄像机组件会附加到根 MjBody 上：</p>
 <ul>
-<li><strong>Camera lag</strong>: speed 8, rotation lag enabled for smooth tracking</li>
-<li><strong>Arm length</strong>: 300 units behind, 100 units above</li>
-<li>Tagged <code>PossessCamera</code> for cleanup on release</li>
+<li><strong>摄像机延迟</strong>: 速度 8，启用旋转延迟以实现平滑跟踪</li>
+<li><strong>臂长</strong>: 后方 300 个单位，上方 100 个单位</li>
+<li>已标记 <code>PossessCamera</code> 以便在发布时进行清理</li>
 </ul>
-<p>The camera follows the actual physics body position, not the static actor root.</p>
-<h2 id="connecting-to-policies">Connecting to Policies</h2>
-<p>The Python policy bridge reads twist commands via the <code>UnrealTwistCtrl</code> controller class:</p>
-<div class="highlight"><pre><span></span><code><span class="c1"># In policy_gui.py — twist controller masquerades as JoystickCtrl</span>
-<span class="c1"># so the Unitree policy&#39;s _get_commands() finds the axes data</span>
+<p>摄像机跟随实际物理物体的位置，而不是静态的动作者根位置。</p>
+<h2 id="_4">连接到策略</h2>
+<p>Python 策略桥接器通过 <code>UnrealTwistCtrl</code> 控制器类读取 Twist 命令：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 在 policy_gui.py 中，Twist 控制器伪装成 JoystickCtrl。</span>
+<span class="c1"># 因此，Unitree 策略的 _get_commands() 函数可以找到坐标轴数据。</span>
 <span class="n">ctrl_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">UnrealTwistCtrlCfg</span><span class="p">()]</span>
 </code></pre></div>
-<p>Twist values map to policy commands:
-- <code>vx</code> → forward velocity command
-- <code>vy</code> → lateral velocity command
-- <code>yaw_rate</code> → turn command</p>
-<p>The policy interprets these as walking direction/speed.</p>
-<h2 id="locomotion-sliders">Locomotion Sliders</h2>
-<p>When an articulation with a TwistController is selected in the MjSimulate widget, a <strong>LOCOMOTION</strong> section appears with three sliders:</p>
+<p>扭转值对应策略指令：</p>
 <ul>
-<li><strong>Max Forward Speed</strong> (0.0 – 2.0 m/s)</li>
-<li><strong>Max Strafe Speed</strong> (0.0 – 1.0 m/s)</li>
-<li><strong>Max Turn Rate</strong> (0.0 – 3.14 rad/s)</li>
+<li>
+<p><code>vx</code> → 前进速度指令</p>
+</li>
+<li>
+<p><code>vy</code> → 侧向速度指令</p>
+</li>
+<li>
+<p><code>yaw_rate</code> →  转弯指令</p>
+</li>
 </ul>
-<p>These control how much velocity a full keypress produces.</p>
-<h2 id="global-simulation-hotkeys">Global Simulation Hotkeys</h2>
-<p>See <a href="../blueprint_reference/#hotkeys">Hotkeys</a> for all keyboard shortcuts.</p>
+<p>该策略将这些解读为步行方向/速度。</p>
+<h2 id="_5">移动滑块</h2>
+<p>当在 MjSimulate 小部件中选择带有 TwistController 的关节时，会出现一个<strong>移动</strong>部分，其中包含三个滑块：</p>
+<ul>
+<li><strong>最大前进速度</strong> (0.0 – 2.0 米/秒)</li>
+<li><strong>最大平移速度</strong> (0.0 – 1.0 米/秒)</li>
+<li><strong>最大转弯速率</strong> (0.0 – 3.14 弧度/秒)</li>
+</ul>
+<p>这些参数控制着完整按键按下时产生的力度。</p>
+<h2 id="_6">全局模拟热键</h2>
+<p>请参阅 <a href="../blueprint_reference/#hotkeys">快捷键</a> 了解所有键盘快捷键。</p>
 <h2 id="mjkeyframecameraactor">MjKeyframeCameraActor</h2>
-<p>For scripted camera work (e.g., filming demos), use <code>MjKeyframeCameraActor</code> instead of the possession follow-cam. It plays back predefined camera keyframes with interpolation, independent of any possessed pawn.</p>
-<h2 id="input-assets">Input Assets</h2>
-<p>Located in <code>Content/Input/</code>:
-- <code>IA_TwistMove</code> — Axis2D input action (WASD)
-- <code>IA_TwistTurn</code> — Axis1D input action (Q/E)
-- <code>IMC_TwistControl</code> — Input mapping context binding both actions</p>
-<p>Auto-loaded from plugin content when the TwistController is created.</p>
+<p>对于脚本化的相机操作（例如拍摄演示），请使用 <code>MjKeyframeCameraActor</code> 而不是附身跟随镜头。它会播放预定义的镜头关键帧并进行插值，且不受任何被持有棋子的影响。</p>
+<h2 id="_7">输入资产</h2>
+<p>位于 <code>Content/Input/</code> 目录下：</p>
+<ul>
+<li>
+<p><code>IA_TwistMove</code> — Axis2D 输入动作 (WASD)</p>
+</li>
+<li>
+<p><code>IA_TwistTurn</code> — Axis1D 输入动作 (Q/E)</p>
+</li>
+<li>
+<p><code>IMC_TwistControl</code> — 输入映射上下文绑定两个动作</p>
+</li>
+</ul>
+<p>创建 TwistController 时，从插件内容自动加载。</p>
               
             </div>
           </div><footer>
