@@ -106,8 +106,8 @@
 <p><strong>蓝图：</strong></p>
 <ul>
 <li><strong>获取传感器标量(Get Sensor Scalar)</strong> (名称) → Float — 适用于 1D 传感器 (触摸, 关节位置, 时钟)</li>
-<li><strong>Get Sensor Reading</strong> (name) → Array of Float — for vector sensors (force, accelerometer)</li>
-<li><strong>Get Joint Angle</strong> (name) → Float — shortcut for joint position</li>
+<li><strong>获取传感器读数</strong> (名称) → Float 数组 — 适用于向量传感器（力、加速度）</li>
+<li><strong>获取关节角度</strong> (名称) → Float — 关节位置的快捷方式</li>
 </ul>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="n">Touch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetSensorScalar</span><span class="p">(</span><span class="s">&quot;fingertip_touch&quot;</span><span class="p">);</span>
@@ -115,43 +115,43 @@
 <span class="kt">float</span><span class="w"> </span><span class="n">Angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetJointAngle</span><span class="p">(</span><span class="s">&quot;elbow&quot;</span><span class="p">);</span>
 </code></pre></div></p>
 <hr />
-<h2 id="reacting-to-collisions">Reacting to Collisions</h2>
-<p><code>AMjArticulation</code> has an <strong>On Collision</strong> event dispatcher. Fires with: <code>SelfGeom</code> (UMjGeom<em>), <code>OtherGeom</code> (UMjGeom</em>), <code>ContactPos</code> (FVector).</p>
-<p><strong>Blueprint:</strong> Select the articulation reference → <strong>Assign On Collision</strong> → wire into your logic.</p>
+<h2 id="_5">碰撞响应</h2>
+<p><code>AMjArticulation</code> 具有 <strong>碰撞时(On Collision)</strong>事件分发器。触发条件包括：自身几何体<code>SelfGeom</code> (UMjGeom<em>)、其他几何体<code>OtherGeom</code> (UMjGeom</em>) 和接触位置<code>ContactPos</code> (FVector)。</p>
+<p><strong>蓝图：</strong> 选择关节参考 → <strong>分配碰撞时事件(Assign On Collision)</strong> → 连接到您的逻辑。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">OnCollision</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">AMyActor</span><span class="o">::</span><span class="n">HandleCollision</span><span class="p">);</span>
 
 <span class="kt">void</span><span class="w"> </span><span class="nf">AMyActor::HandleCollision</span><span class="p">(</span><span class="n">UMjGeom</span><span class="o">*</span><span class="w"> </span><span class="n">SelfGeom</span><span class="p">,</span><span class="w"> </span><span class="n">UMjGeom</span><span class="o">*</span><span class="w"> </span><span class="n">OtherGeom</span><span class="p">,</span><span class="w"> </span><span class="n">FVector</span><span class="w"> </span><span class="n">ContactPos</span><span class="p">)</span>
 <span class="p">{</span>
-<span class="w">    </span><span class="c1">// Stop gripper, play effect, etc.</span>
+<span class="w">    </span><span class="c1">// 停止 gripper、播放效果等。</span>
 <span class="p">}</span>
 </code></pre></div></p>
 <hr />
-<h2 id="simulation-lifecycle">Simulation Lifecycle</h2>
-<p>All on the manager:</p>
+<h2 id="_6">仿真生命周期</h2>
+<p>一切都归因于管理器</p>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>What it does</th>
+<th>节点</th>
+<th>作用</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Set Paused</strong> (bool)</td>
-<td>Pause/resume the physics thread</td>
+<td>暂停/恢复物理线程</td>
 </tr>
 <tr>
 <td><strong>Reset Simulation</strong></td>
-<td>Zero positions, velocities, time</td>
+<td>零位置、速度、时间</td>
 </tr>
 <tr>
 <td><strong>Step Sync</strong> (N)</td>
-<td>Advance N steps synchronously (RL-style loops)</td>
+<td>同步推进 N 步（强化学习式的循环）</td>
 </tr>
 <tr>
 <td><strong>Get Sim Time</strong></td>
-<td>Current simulation clock</td>
+<td>当前模拟时钟</td>
 </tr>
 </tbody>
 </table>
@@ -162,53 +162,53 @@
 <span class="kt">float</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetSimTime</span><span class="p">();</span>
 </code></pre></div></p>
 <hr />
-<h2 id="snapshots">Snapshots</h2>
-<p>Save and restore the full simulation state:</p>
-<p><strong>Blueprint:</strong> <strong>Capture Snapshot</strong> → store in a variable → <strong>Restore Snapshot</strong> later.</p>
+<h2 id="_7">快照</h2>
+<p>保存并恢复完整的模拟状态：</p>
+<p><strong>蓝图：</strong> <strong>捕获快照</strong> → 存储在变量中 → 稍后<strong>恢复快照</strong>。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">UMjSimulationState</span><span class="o">*</span><span class="w"> </span><span class="n">Snap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">CaptureSnapshot</span><span class="p">();</span>
 <span class="c1">// ... try something ...</span>
 <span class="n">Manager</span><span class="o">-&gt;</span><span class="n">RestoreSnapshot</span><span class="p">(</span><span class="n">Snap</span><span class="p">);</span>
 </code></pre></div></p>
-<p>Hold multiple snapshots for A/B testing, checkpointing, or undo.</p>
+<p>保存多个快照，用于 A/B 测试、检查点或撤销。</p>
 <hr />
-<h2 id="keyframe-api">Keyframe API</h2>
-<p>On <code>AMjArticulation</code>:</p>
+<h2 id="api">关键帧 API</h2>
+<p>在 <code>AMjArticulation</code>:</p>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>What it does</th>
+<th>节点</th>
+<th>作用</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>ResetToKeyframe(Name)</code></td>
-<td>Teleports to a named keyframe (sets qpos/qvel/ctrl)</td>
+<td>传送至指定的关键帧（设置 qpos/qvel/ctrl）</td>
 </tr>
 <tr>
 <td><code>HoldKeyframe(Name)</code></td>
-<td>Continuously maintains a keyframe pose</td>
+<td>持续保持关键帧姿态</td>
 </tr>
 <tr>
 <td><code>StopHoldKeyframe()</code></td>
-<td>Releases the held keyframe</td>
+<td>释放已保持的关键帧</td>
 </tr>
 <tr>
 <td><code>GetKeyframeNames()</code></td>
-<td>Returns names of all keyframes on this articulation</td>
+<td>返回此关节上所有关键帧的名称</td>
 </tr>
 <tr>
 <td><code>IsHoldingKeyframe()</code></td>
-<td>Returns true if currently holding a pose</td>
+<td>如果当前保持某个姿势，则返回 true</td>
 </tr>
 </tbody>
 </table>
-<p>The MjSimulate widget provides a keyframe dropdown and Reset/Hold/Stop buttons for interactive use.</p>
+<p>MjSimulate 小部件提供关键帧下拉菜单和重置/保持/停止按钮，以便进行交互式使用。</p>
 <hr />
-<h2 id="recording-and-replay">Recording and Replay</h2>
-<p>With an <code>AMjReplayManager</code> in the level:</p>
-<p><strong>Blueprint:</strong> <strong>Start Recording</strong> / <strong>Stop Recording</strong> / <strong>Start Replay</strong> / <strong>Stop Replay</strong> / <strong>Save Recording to File</strong> / <strong>Load Recording from File</strong></p>
+<h2 id="_8">记录和回放</h2>
+<p>在关卡中使用回放管理器<code>AMjReplayManager</code></p>
+<p><strong>蓝图：</strong> <strong>开始记录(Start Recording)</strong> / <strong>停止记录(Stop Recording)</strong> / <strong>开始回放(Start Replay)</strong> / <strong>停止回放(Stop Replay)</strong> / <strong>将记录内容保存到文件(Save Recording to File)</strong> / <strong>从文件加载记录内容(Load Recording from File)</strong></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartRecording</span><span class="p">();</span>
 <span class="c1">// ... simulation runs ...</span>
@@ -217,163 +217,163 @@
 <span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartReplay</span><span class="p">();</span>
 </code></pre></div></p>
 <hr />
-<h2 id="switching-control-source">Switching Control Source</h2>
-<p>Toggle between dashboard and external ZMQ control:</p>
-<p><strong>Blueprint:</strong> <strong>Get Manager</strong> → <strong>Set Control Source</strong> → <code>UI</code> or <code>ZMQ</code></p>
+<h2 id="_9">切换控制源</h2>
+<p>在仪表盘和外部 ZMQ 控制之间切换：</p>
+<p><strong>蓝图：</strong> <strong>获取管理器(Get Manager)</strong> → <strong>设置控制源(Set Control Source)</strong> → <code>UI</code> 或者 <code>ZMQ</code></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">SetControlSource</span><span class="p">(</span><span class="n">EControlSource</span><span class="o">::</span><span class="n">ZMQ</span><span class="p">);</span>
 </code></pre></div></p>
-<p>Per-articulation override available on <code>AMjArticulation::ControlSource</code>.</p>
+<p><code>AMjArticulation::ControlSource</code> 上提供了每个关节的覆盖设置。</p>
 <hr />
 <h2 id="mjkeyframecontroller">MjKeyframeController</h2>
-<p>Cycles through named poses on an articulation with ease-in-out blending.</p>
+<p>在关节上循环切换已命名的姿势，并实现流畅的过渡效果。</p>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>Description</th>
+<th>节点</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>LoadPreset</strong> (name)</td>
-<td>Load a built-in pose sequence</td>
+<td><strong>LoadPreset</strong> (名称)</td>
+<td>加载内置姿态序列</td>
 </tr>
 <tr>
 <td><strong>Play</strong> / <strong>Stop</strong></td>
-<td>Start or pause playback</td>
+<td>开始或暂停播放</td>
 </tr>
 <tr>
-<td><strong>GoToKeyframe</strong> (index)</td>
-<td>Jump to a specific keyframe</td>
+<td><strong>GoToKeyframe</strong> (索引)</td>
+<td>跳转到特定关键帧</td>
 </tr>
 <tr>
 <td><strong>GetPresetNames</strong></td>
-<td>Returns all available preset names</td>
+<td>返回所有可用的预设名称</td>
 </tr>
 </tbody>
 </table>
-<p>For full details on the keyframe controller, presets, and FMjKeyframePose struct, see <a href="../controller_framework/">Controller Framework</a>.</p>
+<p>有关关键帧控制器、预设和 FMjKeyframePose 结构体的完整详细信息，请参阅 <a href="../controller_framework/">控制器框架</a> 。</p>
 <hr />
 <h2 id="mjkeyframecameraactor">MjKeyframeCameraActor</h2>
-<p><code>AMjKeyframeCameraActor</code> is a cinematic camera that smoothly interpolates through a list of waypoints (<code>FMjCameraWaypoint</code>: Position, Rotation, Time). It uses a <code>UCineCameraComponent</code> and displays a spline preview of the path in the editor.</p>
-<p><strong>Key functions:</strong></p>
+<p><code>AMjKeyframeCameraActor</code> 是一款影视级相机，它能够平滑地通过一系列路径点（<code>FMjCameraWaypoint</code>：位置、旋转、时间）进行插值。它使用 <code>UCineCameraComponent</code>，并在编辑器中显示路径的样条曲线预览。</p>
+<p><strong>主要功能：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>Description</th>
+<th>节点</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>Play</strong></td>
-<td>Start waypoint playback</td>
+<td>开始航点回放</td>
 </tr>
 <tr>
 <td><strong>Pause</strong></td>
-<td>Freeze at current position</td>
+<td>冻结在当前位置</td>
 </tr>
 <tr>
 <td><strong>TogglePlayPause</strong></td>
-<td>Toggle (also bound to <strong>O</strong> key)</td>
+<td>切换（也绑定到<strong>O</strong>键）</td>
 </tr>
 <tr>
 <td><strong>Reset</strong></td>
-<td>Return to first waypoint</td>
+<td>返回第一个航点</td>
 </tr>
 <tr>
 <td><strong>CaptureCurrentView</strong></td>
-<td>(Editor only) Snapshot the viewport camera as a new waypoint</td>
+<td>（仅限编辑）将视口相机快照为新的航点</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Properties:</strong> <code>bAutoPlay</code>, <code>bAutoActivate</code> (sets as player view target), <code>bLoop</code>, <code>StartDelay</code>, <code>bSmoothInterp</code> (cubic vs linear).</p>
+<p><strong>属性：</strong> <code>bAutoPlay</code>, <code>bAutoActivate</code> (设置为玩家视图目标), <code>bLoop</code>, <code>StartDelay</code>, <code>bSmoothInterp</code> (立方体 vs 线性).</p>
 <hr />
 <h2 id="mjimpulselauncher">MjImpulseLauncher</h2>
-<p><code>AMjImpulseLauncher</code> applies a velocity-based impulse to an <code>MjBody</code>. Two modes:</p>
+<p><code>AMjImpulseLauncher</code> 会对 <code>MjBody</code> 施加基于速度的脉冲。有两种模式：</p>
 <ul>
-<li><strong>Direct</strong> — launches along the actor's forward vector (or <code>DirectionOverride</code>).</li>
-<li><strong>Targeted</strong> — set <code>LaunchTarget</code> to an actor and it computes a ballistic arc toward it. <code>ArcHeight</code> controls the lob.</li>
+<li><strong>直接</strong>模式 — 沿 Actor 的前向向量（或 <code>DirectionOverride</code>）发射。 </li>
+<li><strong>目标</strong>模式 — 将 <code>LaunchTarget</code> 设置为某个动作者，它会计算指向该动作者的弹道弧线。<code>ArcHeight</code> 控制抛射高度。</li>
 </ul>
 <table>
 <thead>
 <tr>
-<th>Node</th>
-<th>Description</th>
+<th>节点</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>FireImpulse</strong></td>
-<td>Apply the impulse once</td>
+<td>施加一次脉冲</td>
 </tr>
 <tr>
 <td><strong>ResetAndFire</strong></td>
-<td>Teleport projectile back to launcher position and fire (also bound to <strong>F</strong> key)</td>
+<td>将弹丸传送回发射器位置并发射（也绑定到 <strong>F</strong> 键）</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Properties:</strong> <code>TargetActor</code>, <code>TargetBodyName</code> (optional, defaults to first MjBody), <code>LaunchSpeed</code> (m/s), <code>LaunchTarget</code>, <code>ArcHeight</code>, <code>bAutoFire</code>, <code>AutoFireDelay</code>.</p>
+<p><strong>属性：</strong> <code>TargetActor</code>, <code>TargetBodyName</code> （可选，默认为第一个 MjBody）, <code>LaunchSpeed</code> (米/秒), <code>LaunchTarget</code>, <code>ArcHeight</code>, <code>bAutoFire</code>, <code>AutoFireDelay</code>。</p>
 <hr />
-<h2 id="hotkeys">Hotkeys</h2>
-<p>Handled by <code>AAMjManager::Tick</code>. Active during PIE:</p>
+<h2 id="_10">快捷键</h2>
+<p>由 <code>AAMjManager::Tick</code> 处理。在 PIE 期间处于活动状态：</p>
 <table>
 <thead>
 <tr>
-<th>Key</th>
-<th>Action</th>
+<th>键</th>
+<th>动作</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>1</strong></td>
-<td>Toggle debug contacts</td>
+<td>切换调试联系人</td>
 </tr>
 <tr>
 <td><strong>2</strong></td>
-<td>Toggle visual meshes</td>
+<td>切换视觉网格</td>
 </tr>
 <tr>
 <td><strong>3</strong></td>
-<td>Toggle articulation collision wireframes</td>
+<td>切换关节碰撞线框</td>
 </tr>
 <tr>
 <td><strong>4</strong></td>
-<td>Toggle debug joints</td>
+<td>切换调试关节</td>
 </tr>
 <tr>
 <td><strong>5</strong></td>
-<td>Toggle quick-convert collision wireframes</td>
+<td>切换快速转换碰撞线框</td>
 </tr>
 <tr>
 <td><strong>P</strong></td>
-<td>Pause / resume simulation</td>
+<td>暂停/恢复模拟</td>
 </tr>
 <tr>
 <td><strong>R</strong></td>
-<td>Reset simulation</td>
+<td>重置模拟</td>
 </tr>
 <tr>
 <td><strong>O</strong></td>
-<td>Toggle orbit camera orbit + keyframe camera play/pause</td>
+<td>切换轨道相机轨道 + 关键帧相机播放/暂停</td>
 </tr>
 <tr>
 <td><strong>F</strong></td>
-<td>Reset and fire all impulse launchers</td>
+<td>重置并发射所有脉冲启动器</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="per-articulation-control-source">Per-Articulation Control Source</h2>
-<p>Each <code>AMjArticulation</code> has a <code>ControlSource</code> field (<code>0</code> = ZMQ, <code>1</code> = UI) that overrides the manager-level <code>EControlSource</code> setting. This lets you run some robots from the dashboard sliders while others receive external ZMQ commands in the same scene.</p>
-<p><strong>Blueprint:</strong> Set <code>ControlSource</code> on the articulation reference in Details or via Set node.</p>
+<h2 id="_11">每个关节的控制源</h2>
+<p>每个 <code>AMjArticulation</code> 都有一个 <code>ControlSource</code> 字段（<code>0</code> = ZMQ，<code>1</code> = UI），该字段会覆盖管理器级别的 <code>EControlSource</code> 设置。这样，您就可以在同一场景中通过控制面板滑块控制部分机器人，同时接收其他机器人的外部 ZMQ 命令。</p>
+<p><strong>蓝图：</strong> 在“详细信息(Details)”中或通过“设置(Set)”节点设置关节参考的<code>ControlSource</code>。 </p>
 <p><strong>C++:</strong>
-<div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">ControlSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// UI control for this robot</span>
+<div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">ControlSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// 该机器人的用户界面控制</span>
 </code></pre></div></p>
 <hr />
-<h2 id="advanced-direct-mujoco-access">Advanced: Direct MuJoCo Access</h2>
-<p>For users who need low-level access, every <code>UMjComponent</code> exposes <strong>Get Mj ID</strong> (compiled integer ID), <strong>Get Mj Name</strong> (prefixed name), and <strong>Is Bound</strong> (compilation status). Use these to index directly into <code>mjData</code> from C++. For most workflows, the API above is all you need.</p>
+<h2 id="mujoco">高级：直接访问 MuJoCo</h2>
+<p>对于需要底层访问权限的用户，每个 <code>UMjComponent</code> 都公开了 <strong>Get Mj ID</strong>（编译后的整数 ID）、<strong>Get Mj Name</strong>（带前缀的名称）和 <strong>Is Bound</strong>（编译状态）三个方法。您可以使用这些方法直接从 C++ 访问 <code>mjData</code>。对于大多数工作流程，上述 API 已足够。</p>
               
             </div>
           </div><footer>

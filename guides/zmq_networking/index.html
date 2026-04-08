@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>ZMQ Networking & ROS 2 - Mujoco 插件</title>
+    <title>ZMQ 网络与 ROS 2 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "ZMQ Networking \u0026 ROS 2";
+        var mkdocs_page_name = "ZMQ \u7f51\u7edc\u4e0e ROS 2";
         var mkdocs_page_input_path = "guides/zmq_networking.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">ZMQ Networking & ROS 2</li>
+      <li class="breadcrumb-item active">ZMQ 网络与 ROS 2</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/zmq_networking.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,25 +68,25 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="zmq-networking-ros-2">ZMQ Networking &amp; ROS 2</h1>
-<p>Unreal Robotics Lab uses <a href="https://zeromq.org">ZeroMQ</a> for all external communication. The design philosophy: keep the Unreal side fast, binary, and dependency-free — then let a separate bridge handle translation to whatever framework the user prefers.</p>
+                <h1 id="zmq-ros-2">ZMQ 网络与 ROS 2</h1>
+<p>Unreal Robotics Lab 使用 <a href="https://zeromq.org">ZeroMQ</a> 进行所有外部通信。其设计理念是：保持虚幻引擎端快速、二进制且无依赖——然后由一个独立的桥接器负责将其转换为用户偏好的任何框架。</p>
 <hr />
-<h2 id="why-zmq">Why ZMQ?</h2>
+<h2 id="zmq">为什么选择 ZMQ？</h2>
 <ul>
-<li><strong>Speed.</strong> Binary PUB/SUB with no serialization overhead. The control loop runs at physics-thread frequency (typically 500–1000 Hz) without bottlenecking on message encoding.</li>
-<li><strong>Minimal dependencies.</strong> libzmq is the only networking dependency inside the plugin. No ROS, no middleware, no build system entanglement.</li>
-<li><strong>User's choice.</strong> The plugin does not mandate a robotics framework. ZMQ is the native transport; if you want ROS 2, the separate <code>urlab_bridge</code> handles the translation. If you want raw Python, just use <code>pyzmq</code>. If you want something else entirely, the binary format is straightforward to parse.</li>
+<li><strong>速度快。</strong> 采用二进制发布/订阅模式，无序列化开销。控制循环以物理线程频率（通常为 500–1000 Hz）运行，不会因消息编码而出现瓶颈。</li>
+<li><strong>依赖项极少。</strong> libzmq是插件内部唯一的网络依赖项。无需 ROS、中间件或构建系统集成。</li>
+<li><strong>用户选择。</strong> 该插件不强制要求使用机器人框架。ZMQ 是原生传输协议；如果您需要 ROS 2，则可以使用单独的 urlab_bridge 进行转换。如果您需要纯 Python 代码，只需使用 <code>pyzmq</code> 即可。如果您需要其他格式，二进制格式也很容易解析。</li>
 </ul>
 <hr />
-<h2 id="plugin-side-components">Plugin-Side Components</h2>
-<p>Three components handle the networking, all auto-created on the <code>AAMjManager</code> at BeginPlay if none exist:</p>
+<h2 id="_1">插件端组件</h2>
+<p>三个组件负责网络连接，如果 <code>AAMjManager</code> 在 BeginPlay 时不存在，则所有组件都会自动创建：</p>
 <table>
 <thead>
 <tr>
-<th>Component</th>
-<th>Socket</th>
-<th>Default Endpoint</th>
-<th>Purpose</th>
+<th>组件</th>
+<th>套接字</th>
+<th>默认端点</th>
+<th>目的</th>
 </tr>
 </thead>
 <tbody>
@@ -94,23 +94,23 @@
 <td><code>UZmqSensorBroadcaster</code></td>
 <td>PUB</td>
 <td><code>tcp://*:5555</code></td>
-<td>Publishes sensor data, joint state, twist, actions</td>
+<td>发布传感器数据、关节状态、扭转、动作</td>
 </tr>
 <tr>
 <td><code>UZmqControlSubscriber</code></td>
 <td>SUB + PUB</td>
 <td><code>tcp://*:5556</code> (SUB), <code>tcp://*:5557</code> (info PUB)</td>
-<td>Receives control vectors and gain updates; publishes actuator info JSON</td>
+<td>接收控制向量和增益更新；发布执行器信息 JSON</td>
 </tr>
 <tr>
 <td><code>UMjCamera</code> (ZMQ mode)</td>
 <td>PUB</td>
 <td>per-camera endpoint</td>
-<td>Streams rendered camera frames on a dedicated thread (uses <code>SCS_FinalToneCurveHDR</code> capture source, so Post Process Volumes are respected)</td>
+<td>在专用线程上流式传输渲染的相机帧（使用 <code>SCS_FinalToneCurveHDR</code> 捕获源，因此会考虑后处理体积）</td>
 </tr>
 </tbody>
 </table>
-<p>All Unreal-side sockets use <code>zmq_bind()</code>. External clients use <code>zmq_connect()</code>.</p>
+<p>所有虚幻引擎端的套接字都使用 <code>zmq_bind()</code> 函数。外部客户端使用 <code>zmq_connect()</code> 函数。</p>
 <h3 id="timing">Timing</h3>
 <p>ZMQ callbacks run directly on the physics thread:</p>
 <ol>
