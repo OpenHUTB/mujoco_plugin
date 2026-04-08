@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Scripting with Blueprints & C++ - Mujoco 插件</title>
+    <title>使用蓝图和 C++ 进行脚本编写 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Scripting with Blueprints \u0026 C++";
+        var mkdocs_page_name = "\u4f7f\u7528\u84dd\u56fe\u548c C++ \u8fdb\u884c\u811a\u672c\u7f16\u5199";
         var mkdocs_page_input_path = "guides/blueprint_reference.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Scripting with Blueprints & C++</li>
+      <li class="breadcrumb-item active">使用蓝图和 C++ 进行脚本编写</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/blueprint_reference.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,44 +68,44 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="scripting-with-blueprints-c">Scripting with Blueprints &amp; C++</h1>
-<p>Every MuJoCo component in Unreal Robotics Lab is a regular Unreal component. Articulations are actors. You interact with them the same way you would with any other actor or component — get references, call functions, bind events. No need to touch MuJoCo directly unless you want to.</p>
-<p>For the full class-by-class API listing, see the <a href="../api/index.md">auto-generated API Reference</a>.</p>
+                <h1 id="c">使用蓝图和 C++ 进行脚本编写</h1>
+<p>Unreal Robotics Lab 中的每个 MuJoCo 组件都是普通的虚幻引擎组件。关节是 Actor。您可以像操作其他 Actor 或组件一样与它们交互：获取引用、调用函数、绑定事件。除非您需要，否则无需直接操作 MuJoCo。</p>
+<p>有关完整的类 API 列表，请参阅 <a href="../api/index.md">自动生成的 API 参考</a> 。</p>
 <hr />
-<h2 id="getting-references">Getting References</h2>
-<p>An <code>AMjArticulation</code> is just an actor. Get a reference any way you normally would:</p>
-<p><strong>Blueprint:</strong> Get All Actors of Class, cast from a hit result, or store a reference variable.</p>
+<h2 id="_1">获取参考</h2>
+<p><code>AMjArticulation</code> 本质上就是一个动作者。获取引用的方式与通常相同：</p>
+<p><strong>蓝图：</strong> 获取所有类的参与者(Actor)、从命中结果进行类型转换，或存储引用变量。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">AAMjManager</span><span class="o">*</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AAMjManager</span><span class="o">::</span><span class="n">GetManager</span><span class="p">();</span>
 <span class="n">AMjArticulation</span><span class="o">*</span><span class="w"> </span><span class="n">Robot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetArticulation</span><span class="p">(</span><span class="s">&quot;MyRobot&quot;</span><span class="p">);</span>
 </code></pre></div></p>
-<p>From the manager you can look up articulations by name or get all of them:</p>
-<p><strong>Blueprint:</strong> <strong>Get Manager</strong> → <strong>Get Articulation</strong> (name) / <strong>Get All Articulations</strong></p>
+<p>从管理器中，您可以按名称查找关节，或获取所有关节：</p>
+<p><strong>蓝图：</strong> <strong>获取管理器</strong> → <strong>获取关节</strong> (名称) / <strong>获取所有关节</strong></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">TArray</span><span class="o">&lt;</span><span class="n">AMjArticulation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">All</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetAllArticulations</span><span class="p">();</span>
 </code></pre></div></p>
 <hr />
-<h2 id="working-with-components">Working with Components</h2>
-<p>Once you have an articulation, its MuJoCo components are just child components. Access them by name or as arrays:</p>
-<p><strong>Blueprint:</strong> <strong>Get Actuator</strong> (name), <strong>Get Joint</strong> (name), <strong>Get Sensor</strong> (name) — or <strong>Get Actuators</strong>, <strong>Get Joints</strong>, <strong>Get Sensors</strong>, <strong>Get Bodies</strong> for arrays. You can also drag directly from the component tree in your Blueprint.</p>
+<h2 id="_2">使用组件</h2>
+<p>一旦你创建了一个关节，它的 MuJoCo 组件就只是子组件。你可以按名称或数组访问它们：</p>
+<p><strong>蓝图：</strong> <strong>获取执行器</strong> (名称), <strong>获取关节</strong> (名称), <strong>获取传感器</strong> (名称) — 或者对于数组 <strong>获取执行器</strong>, <strong>获取关节</strong>, <strong>获取传感器</strong>, <strong>获取刚体</strong>。你也可以直接从蓝图中的组件树拖拽组件。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">UMjActuator</span><span class="o">*</span><span class="w"> </span><span class="n">Act</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetActuator</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">);</span>
 <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UMjJoint</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">Joints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetJoints</span><span class="p">();</span>
-<span class="n">UMjBody</span><span class="o">*</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetBodyByMjId</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w">  </span><span class="c1">// by compiled ID</span>
+<span class="n">UMjBody</span><span class="o">*</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetBodyByMjId</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w">  </span><span class="c1">// 按编译 ID</span>
 </code></pre></div></p>
 <hr />
-<h2 id="controlling-actuators">Controlling Actuators</h2>
-<p><strong>Blueprint:</strong> <strong>Set Actuator Control</strong> (Name, Value) on the articulation. Wire <strong>Get Game Time in Seconds</strong> → <strong>Sin</strong> → <strong>Set Actuator Control</strong> into Event Tick for a simple sine wave.</p>
-<p>Use <strong>Get Actuator Range</strong> to get a <code>Vector2D</code> (min, max) for clamping.</p>
+<h2 id="_3">控制执行器</h2>
+<p><strong>蓝图：</strong> 在关节上<strong>设置执行器控制</strong> (名称, 值)。 使用 Wire <strong>获取游戏时间（以秒为单位）</strong> → <strong>正弦</strong> → 将<strong>执行器控制</strong>设置为事件节拍，即可得到一个简单的正弦波。 </p>
+<p>使用<strong>获取执行器范围(Get Actuator Range)</strong>获取 <code>Vector2D</code>（最小值，最大值）以限制范围。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">SetActuatorControl</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.57f</span><span class="p">);</span>
 <span class="n">FVector2D</span><span class="w"> </span><span class="n">Range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetActuatorRange</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">);</span>
 </code></pre></div></p>
 <hr />
-<h2 id="reading-sensors">Reading Sensors</h2>
-<p><strong>Blueprint:</strong></p>
+<h2 id="_4">读取传感器</h2>
+<p><strong>蓝图：</strong></p>
 <ul>
-<li><strong>Get Sensor Scalar</strong> (name) → Float — for 1D sensors (touch, joint pos, clock)</li>
+<li><strong>获取传感器标量(Get Sensor Scalar)</strong> (名称) → Float — 适用于 1D 传感器 (触摸, 关节位置, 时钟)</li>
 <li><strong>Get Sensor Reading</strong> (name) → Array of Float — for vector sensors (force, accelerometer)</li>
 <li><strong>Get Joint Angle</strong> (name) → Float — shortcut for joint position</li>
 </ul>
