@@ -83,7 +83,7 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/URLab
 </code></pre></div></li>
 <li>构建第三方依赖项（一次）：
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>UnrealRoboticsLab/third_party
-<span class="c1"># Run third_party/build_all.ps1</span>
+<span class="c1"># 运行 third_party/build_all.ps1</span>
 </code></pre></div>
    Windows 的预编译二进制文件包含在 <code>third_party/install/</code>（MuJoCo、libzmq、CoACD）中。</li>
 <li>在虚幻引擎中打开你的 <code>.uproject</code> 文件 -- 插件会自动加载。</li>
@@ -124,32 +124,32 @@ uv<span class="w"> </span>sync
 <ol>
 <li><code>cd</code> 进入 <code>urlab_bridge/</code>.</li>
 <li>安装：<code>uv sync</code> (或者 <code>pip install -e .</code>).</li>
-<li>Run a policy: <code>uv run src/run_policy.py --policy unitree_12dof</code></li>
-<li>Or use the GUI: <code>uv run src/urlab_policy/policy_gui.py</code></li>
-<li>Select your articulation and policy, click Start.</li>
+<li>运行策略：<code>uv run src/run_policy.py --policy unitree_12dof</code></li>
+<li>或者使用图形用户界面：<code>uv run src/urlab_policy/policy_gui.py</code></li>
+<li>选择您的关节和策略，点击开始。</li>
 </ol>
-<h3 id="from-blueprint">From Blueprint</h3>
-<div class="highlight"><pre><span></span><code><span class="c1">// Set actuator control value</span>
+<h3 id="_9">从蓝图</h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// 设置执行器控制值</span>
 <span class="n">MyArticulation</span><span class="o">-&gt;</span><span class="n">SetActuatorControl</span><span class="p">(</span><span class="s">&quot;left_hip&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">0.5f</span><span class="p">);</span>
 
-<span class="c1">// Read joint state</span>
+<span class="c1">// 读取关节状态</span>
 <span class="kt">float</span><span class="w"> </span><span class="n">Angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyArticulation</span><span class="o">-&gt;</span><span class="n">GetJointAngle</span><span class="p">(</span><span class="s">&quot;left_knee&quot;</span><span class="p">);</span>
 
-<span class="c1">// Read sensor data</span>
+<span class="c1">// 读取传感器数据</span>
 <span class="kt">float</span><span class="w"> </span><span class="n">Touch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyArticulation</span><span class="o">-&gt;</span><span class="n">GetSensorScalar</span><span class="p">(</span><span class="s">&quot;foot_contact&quot;</span><span class="p">);</span>
 <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyArticulation</span><span class="o">-&gt;</span><span class="n">GetSensorReading</span><span class="p">(</span><span class="s">&quot;wrist_force&quot;</span><span class="p">);</span>
 </code></pre></div>
-<p>All functions are <code>BlueprintCallable</code>.</p>
-<h2 id="debug-visualization">Debug Visualization</h2>
-<p>See <a href="../guides/blueprint_reference/#hotkeys">Hotkeys</a> for keyboard shortcuts.</p>
-<h2 id="next-steps">Next Steps</h2>
+<p>所有的功能都是可调用的蓝图<code>BlueprintCallable</code>.</p>
+<h2 id="_10">调式可视化</h2>
+<p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 了解键盘快捷键。</p>
+<h2 id="_11">后续步骤</h2>
 <ul>
-<li><a href="../features/">features.md</a> -- complete feature reference</li>
-<li><a href="../guides/mujoco_import/">MJCF Import</a> -- import pipeline details</li>
-<li><a href="../guides/blueprint_reference/">Blueprint Reference</a> -- all Blueprint-callable functions and hotkeys</li>
-<li><a href="../guides/zmq_networking/">ZMQ Networking</a> -- protocol, topics, and Python examples</li>
-<li><a href="../guides/policy_bridge/">Policy Bridge</a> -- RL policy deployment</li>
-<li><a href="guides/developer_tools.md">Developer Tools</a> -- schema tracking, debug XML, build/test skills</li>
+<li><a href="../features/">features.md</a> -- 完整功能参考</li>
+<li><a href="../guides/mujoco_import/">MJCF 导入</a> -- 导入管道详情</li>
+<li><a href="../guides/blueprint_reference/">蓝图参考</a> -- 所有蓝图可调用函数和快捷键</li>
+<li><a href="../guides/zmq_networking/">ZMQ 网络</a> -- 协议、主题和 Python 示例</li>
+<li><a href="../guides/policy_bridge/">策略桥接</a> -- 强化学习策略部署</li>
+<li><a href="guides/developer_tools.md">开发者工具</a> -- 模式跟踪、 XML 调试、构建/测试技能</li>
 </ul>
               
             </div>
