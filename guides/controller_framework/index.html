@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Controller Framework - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Controller Framework";
+        var mkdocs_page_input_path = "guides/controller_framework.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Controller Framework</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/controller_framework.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="controller-framework">Controller Framework</h1>
+<p>The controller framework lets you define how position targets become joint torques. Every articulation can have one controller component that intercepts the control pipeline at physics rate.</p>
+<h2 id="control-flow">Control Flow</h2>
+<div class="highlight"><pre><span></span><code>ZMQ / Blueprint → SetNetworkControl(target) on UMjActuator
+                         │
+         AMjArticulation::ApplyControls()
+                         │
+              ┌──────────┴──────────┐
+              │ Controller found?   │ No controller
+              │                     │
+     Controller.ComputeAndApply()  d-&gt;ctrl[id] = target
+              │                     (direct write)
+     Custom control law runs
+     at every physics step
+</code></pre></div>
+<p>If no controller component exists, <code>ApplyControls</code> writes the raw <code>NetworkValue</code> to <code>d-&gt;ctrl</code> — suitable for position actuators where MuJoCo handles PD internally.</p>
+<h2 id="built-in-controllers">Built-in Controllers</h2>
+<table>
+<thead>
+<tr>
+<th>Controller</th>
+<th>Use Case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>UMjPassthroughController</strong></td>
+<td>Direct write (same as no controller, but explicit)</td>
+</tr>
+<tr>
+<td><strong>UMjPDController</strong></td>
+<td>Position target → PD torque at physics rate. For motor actuators.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="umjpdcontroller">UMjPDController</h2>
+<p>Computes <code>torque = Kp * (target - qpos) - Kv * qvel</code> every physics step. Targets are clamped to joint range. Use with <code>&lt;motor&gt;</code> actuators in the MJCF.</p>
+<p><strong>Properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Kp</code></td>
+<td><code>TArray&lt;float&gt;</code></td>
+<td>Proportional gains, one per actuator</td>
+</tr>
+<tr>
+<td><code>Kv</code></td>
+<td><code>TArray&lt;float&gt;</code></td>
+<td>Derivative gains</td>
+</tr>
+<tr>
+<td><code>TorqueLimits</code></td>
+<td><code>TArray&lt;float&gt;</code></td>
+<td>Symmetric torque clamps</td>
+</tr>
+<tr>
+<td><code>DefaultKp/Kv/TorqueLimit</code></td>
+<td><code>float</code></td>
+<td>Fallback for unset entries</td>
+</tr>
+</tbody>
+</table>
+<p>Gains can be pushed from Python via ZMQ <code>set_gains</code> message (name-keyed JSON).</p>
+<h2 id="umjkeyframecontroller">UMjKeyframeController</h2>
+<p>A preset-based pose sequencer. Unlike <code>UMjPDController</code> and <code>UMjPassthroughController</code>, this is a <code>UActorComponent</code> (not derived from <code>UMjArticulationController</code>) — it writes actuator targets via <code>SetActuatorControl</code> at game-tick rate rather than intercepting the physics-rate control pipeline.</p>
+<p>Add it to an <code>AMjArticulation</code> actor. It auto-resolves the owner articulation on <code>BeginPlay</code>.</p>
+<p><strong>FMjKeyframePose struct:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Name</code></td>
+<td><code>FString</code></td>
+<td>Display name (e.g., "Reach")</td>
+</tr>
+<tr>
+<td><code>Targets</code></td>
+<td><code>TArray&lt;float&gt;</code></td>
+<td>Actuator targets, ordered to match the articulation's actuator list</td>
+</tr>
+<tr>
+<td><code>HoldTime</code></td>
+<td><code>float</code></td>
+<td>Seconds to hold this pose before advancing</td>
+</tr>
+<tr>
+<td><code>BlendTime</code></td>
+<td><code>float</code></td>
+<td>Seconds to interpolate from the previous pose (ease-in-out)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Preset system:</strong> Call <code>GetPresetNames()</code> for available presets, then <code>LoadPreset(Name)</code> to populate the <code>Keyframes</code> array. In the Details panel, select from the <code>Preset</code> dropdown and tick <code>bLoadPreset</code> to apply.</p>
+<p><strong>Built-in presets:</strong> Franka (Reach-Grasp-Lift, Wave), UR5e (Pick-Place, Sweep), Spot (FR Knee Cycle, Wave, Sit), ANYmal (Sit, Weight Shift), Go2 (Stand-Crouch, Stretch).</p>
+<p><strong>Properties:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bAutoPlay</code></td>
+<td><code>true</code></td>
+<td>Start playing on BeginPlay</td>
+</tr>
+<tr>
+<td><code>StartDelay</code></td>
+<td><code>0.5s</code></td>
+<td>Delay before first keyframe</td>
+</tr>
+<tr>
+<td><code>bLoop</code></td>
+<td><code>true</code></td>
+<td>Loop back to first keyframe after last</td>
+</tr>
+<tr>
+<td><code>Preset</code></td>
+<td>empty</td>
+<td>Selected preset name</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Actions:</strong> <code>Play()</code>, <code>Stop()</code>, <code>GoToKeyframe(Index)</code>, <code>LoadPreset(Name)</code>.</p>
+<h2 id="per-articulation-control-source">Per-Articulation Control Source</h2>
+<p>The manager has a global <code>EControlSource</code> (UI or ZMQ). Each <code>AMjArticulation</code> can override this with its own <code>ControlSource</code> field (<code>uint8</code>: 0 = ZMQ, 1 = UI). This allows mixed control — some robots driven by the dashboard, others by an external policy — in the same scene.</p>
+<h2 id="writing-a-custom-controller">Writing a Custom Controller</h2>
+<p>Derive from <code>UMjArticulationController</code> and override <code>ComputeAndApply</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">UCLASS</span><span class="p">(</span><span class="n">ClassGroup</span><span class="o">=</span><span class="p">(</span><span class="n">Custom</span><span class="p">),</span><span class="w"> </span><span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">UMyController</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">UMjArticulationController</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="k">public</span><span class="o">:</span>
+<span class="w">    </span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">EditAnywhere</span><span class="p">)</span>
+<span class="w">    </span><span class="kt">float</span><span class="w"> </span><span class="n">MyGain</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">50.0f</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">ComputeAndApply</span><span class="p">(</span><span class="n">mjModel</span><span class="o">*</span><span class="w"> </span><span class="n">m</span><span class="p">,</span><span class="w"> </span><span class="n">mjData</span><span class="o">*</span><span class="w"> </span><span class="n">d</span><span class="p">,</span><span class="w"> </span><span class="n">uint8</span><span class="w"> </span><span class="n">Source</span><span class="p">)</span><span class="w"> </span><span class="k">override</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">int32</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">Bindings</span><span class="p">.</span><span class="n">Num</span><span class="p">();</span><span class="w"> </span><span class="o">++</span><span class="n">i</span><span class="p">)</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="n">FActuatorBinding</span><span class="o">&amp;</span><span class="w"> </span><span class="n">B</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Bindings</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+<span class="w">            </span><span class="kt">float</span><span class="w"> </span><span class="n">Target</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">B</span><span class="p">.</span><span class="n">Component</span><span class="o">-&gt;</span><span class="n">ResolveDesiredControl</span><span class="p">(</span><span class="n">Source</span><span class="p">);</span>
+<span class="w">            </span><span class="kt">float</span><span class="w"> </span><span class="n">Pos</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">qpos</span><span class="p">[</span><span class="n">B</span><span class="p">.</span><span class="n">QposAddr</span><span class="p">];</span>
+<span class="w">            </span><span class="kt">float</span><span class="w"> </span><span class="n">Vel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">float</span><span class="p">)</span><span class="n">d</span><span class="o">-&gt;</span><span class="n">qvel</span><span class="p">[</span><span class="n">B</span><span class="p">.</span><span class="n">QvelAddr</span><span class="p">];</span>
+
+<span class="w">            </span><span class="kt">float</span><span class="w"> </span><span class="n">Torque</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyGain</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="p">(</span><span class="n">Target</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">Pos</span><span class="p">);</span>
+<span class="w">            </span><span class="n">d</span><span class="o">-&gt;</span><span class="n">ctrl</span><span class="p">[</span><span class="n">B</span><span class="p">.</span><span class="n">ActuatorMjID</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">mjtNum</span><span class="p">)</span><span class="n">Torque</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">};</span>
+</code></pre></div>
+<p>The <code>Bindings</code> array is populated automatically by <code>Bind()</code> — each entry maps an actuator to its joint's qpos/qvel addresses.</p>
+<h2 id="binding">Binding</h2>
+<p><code>Bind()</code> runs once after the MuJoCo model compiles. It resolves each actuator's joint transmission via <code>m-&gt;actuator_trnid</code> and stores the qpos/qvel addresses. Free and ball joints are skipped.</p>
+<p>Bindings are sorted by actuator MjID so the array index matches the order Python discovers actuators.</p>
+<h2 id="thread-safety">Thread Safety</h2>
+<p><code>ComputeAndApply</code> runs on the async physics thread. Read actuator values via <code>ResolveDesiredControl()</code> (atomic). Gain arrays accept benign torn reads during updates — individual float writes are atomic on x86/ARM.</p>
+<h2 id="adding-to-an-articulation">Adding to an Articulation</h2>
+<ol>
+<li>Open your AMjArticulation Blueprint</li>
+<li><strong>Add Component</strong> → search for your controller (e.g., <code>MjPDController</code>)</li>
+<li>Configure properties in the Details panel (or push via ZMQ)</li>
+<li>The controller activates automatically when <code>bEnabled = true</code> and <code>IsBound()</code></li>
+</ol>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

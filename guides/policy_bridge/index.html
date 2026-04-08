@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>URLab Bridge - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "URLab Bridge";
+        var mkdocs_page_input_path = "guides/policy_bridge.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">URLab Bridge</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/policy_bridge.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="urlab-bridge">URLab Bridge</h1>
+<p>The URLab Bridge is a separate companion repository (<code>urlab_bridge</code>) in the same GitHub organization. It provides Python-side middleware between external systems and URLab's MuJoCo simulation, communicating over ZMQ for RL policy deployment, remote teleoperation, data logging, sensor monitoring, and custom control pipelines.</p>
+<h2 id="what-it-does">What It Does</h2>
+<ul>
+<li>Bidirectional ZMQ communication: receives joint state, sensor data, base state, and camera images from Unreal; sends actuator commands and PD gains back</li>
+<li>Remote control: drive robots from Python scripts, Jupyter notebooks, ROS 2 nodes, or any ZMQ-capable system</li>
+<li>Policy deployment: run pretrained RL policies (locomotion, motion imitation, quadruped gaits) against the Unreal simulation</li>
+<li>Sensor monitoring: real-time dashboard (DearPyGui) for visualizing joint states, sensor readouts, and camera feeds</li>
+<li>Handles articulation discovery, joint mapping, and actuator ID resolution automatically</li>
+<li>Provides forward kinematics for body position computation</li>
+<li>Prefix-based filtering for multi-articulation scenes</li>
+<li>Supports both position targets (for position actuators) and torque targets (for motor + PD)</li>
+</ul>
+<h2 id="architecture">Architecture</h2>
+<div class="highlight"><pre><span></span><code>┌─────────────────────────────────┐     ZMQ      ┌──────────────────┐
+│  Python (URLab Bridge)          │◄────────────►│  Unreal (URLab)  │
+│                                 │              │                  │
+│  Your Control System            │  joint state │  MuJoCo physics  │
+│    ├─ RL Policy (RoboJuDo)      │◄─────────────│  ZMQ Broadcaster │
+│    ├─ Custom Controller         │              │                  │
+│    └─ Teleoperation             │  ctrl targets│  ZMQ Subscriber  │
+│                                 │─────────────►│  → d-&gt;ctrl       │
+└─────────────────────────────────┘              └──────────────────┘
+</code></pre></div>
+<h2 id="setup">Setup</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>Plugins/UnrealRoboticsLab/urlab_bridge
+uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11
+uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.11<span class="w"> </span>.venv
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>pyzmq
+</code></pre></div>
+<p>For RL policy support (RoboJuDo):
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>RoboJuDo
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dearpygui<span class="w"> </span>opencv-python
+<span class="nb">cd</span><span class="w"> </span>RoboJuDo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
+</code></pre></div></p>
+<h2 id="zmq-protocol">ZMQ Protocol</h2>
+<p>For ZMQ protocol details, topic formats, and message structures, see <a href="../zmq_networking/">ZMQ Networking</a>.</p>
+<h2 id="using-the-bridge-directly">Using the Bridge Directly</h2>
+<p>For custom controllers without RoboJuDo:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">urlab_policy.unreal_env</span> <span class="kn">import</span> <span class="n">ZmqLink</span>
+<span class="kn">import</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">zmq</span> <span class="o">=</span> <span class="n">ZmqLink</span><span class="p">(</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="p">,</span> <span class="s2">&quot;tcp://127.0.0.1:5556&quot;</span><span class="p">)</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Wait for connection</span>
+
+<span class="c1"># Read state</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">drain</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">topic</span><span class="p">,</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="k">if</span> <span class="s2">&quot;/joint/&quot;</span> <span class="ow">in</span> <span class="n">topic</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
+        <span class="n">jid</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;Ifff&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Joint </span><span class="si">{</span><span class="n">jid</span><span class="si">}</span><span class="s2">: pos=</span><span class="si">{</span><span class="n">pos</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="c1"># Send control (12 actuators, all to zero)</span>
+<span class="n">targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">zmq</span><span class="o">.</span><span class="n">send_control</span><span class="p">(</span><span class="s2">&quot;my_robot_prefix&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
+
+<span class="n">zmq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+</code></pre></div>
+<h2 id="robojudo-integration">RoboJuDo Integration</h2>
+<p>For running pretrained RL policies, the bridge wraps <a href="https://github.com/HansZ8/RoboJuDo">RoboJuDo</a> as the policy runtime.</p>
+<p><strong>GUI:</strong>
+<div class="highlight"><pre><span></span><code><span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
+<span class="nv">$env:PYTHONPATH</span> <span class="p">=</span> <span class="s2">&quot;src&quot;</span>
+<span class="n">python</span> <span class="n">src</span><span class="p">\</span><span class="n">urlab_policy</span><span class="p">\</span><span class="n">policy_gui</span><span class="p">.</span><span class="n">py</span>
+</code></pre></div></p>
+<p><strong>CLI:</strong>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/run_policy.py<span class="w"> </span>--policy<span class="w"> </span>unitree<span class="w"> </span>--prefix<span class="w"> </span>g1
+</code></pre></div></p>
+<p>Available policies are registered in <code>policy_registry.py</code>. Each entry defines the policy config class, environment config, DOF count, and controller type.</p>
+<h3 id="go2-walk-these-ways-policy">Go2 Walk-These-Ways Policy</h3>
+<p>12-DOF quadruped policy with gait conditioning. Supports preset gaits: Trot, Pronk, Bound, and Pace. Requires a checkpoint download (see <code>RoboJuDo/checkpoints/</code> README for links).</p>
+<h2 id="motor-vs-position-actuators">Motor vs Position Actuators</h2>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>MJCF Actuator</th>
+<th>Control Signal</th>
+<th>PD Location</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Position</td>
+<td><code>&lt;position kp="100" kv="5"&gt;</code></td>
+<td>Position target (rad)</td>
+<td>MuJoCo internal</td>
+</tr>
+<tr>
+<td>Motor + PD</td>
+<td><code>&lt;motor forcerange="-88 88"&gt;</code></td>
+<td>Position target (rad)</td>
+<td>C++ UMjPDController</td>
+</tr>
+</tbody>
+</table>
+<p>Position actuators are simpler and more stable. Motor + PD matches training dynamics exactly but requires gain configuration. Use the GUI checkbox to toggle.</p>
+<h2 id="configuration">Configuration</h2>
+<p>Key settings in <code>env_config.py</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Default</th>
+<th>Must Match</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>sim_dt</code></td>
+<td>0.002</td>
+<td>Unreal manager timestep</td>
+</tr>
+<tr>
+<td><code>sim_decimation</code></td>
+<td>10</td>
+<td>Policy frequency = 1/(sim_dt * decimation)</td>
+</tr>
+<tr>
+<td><code>state_endpoint</code></td>
+<td>tcp://127.0.0.1:5555</td>
+<td>ZmqSensorBroadcaster endpoint (PUB)</td>
+</tr>
+<tr>
+<td><code>control_endpoint</code></td>
+<td>tcp://127.0.0.1:5556</td>
+<td>ZmqControlSubscriber endpoint (SUB)</td>
+</tr>
+</tbody>
+</table>
+<p>All Unreal-side sockets bind; the Python bridge connects. See <a href="../zmq_networking/">ZMQ Networking</a> for topic formats and port assignments.</p>
+<h2 id="force-twist-override">Force Twist Override</h2>
+<p>The policy GUI provides a force twist override that lets you send manual velocity commands (vx, vy, yaw_rate) directly, bypassing keyboard possession input. Useful for scripted motion or testing without possessing the articulation in Unreal.</p>
+<h2 id="multi-articulation-scenes">Multi-Articulation Scenes</h2>
+<p>ZMQ topics use prefix-based filtering (<code>&lt;prefix&gt;/joint/...</code>, <code>&lt;prefix&gt;/control</code>, etc.). In scenes with multiple articulations, each one publishes and subscribes under its own prefix. The Python side filters incoming messages by prefix to route state to the correct policy instance.</p>
+<h2 id="mesh-preparation">Mesh Preparation</h2>
+<p>Use <code>Scripts/clean_meshes.py</code> to convert meshes to GLB and resolve filename conflicts before import.</p>
+<h2 id="debugging-tools">Debugging Tools</h2>
+<table>
+<thead>
+<tr>
+<th>Script</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>zmq_visualizer_gui.py</code></td>
+<td>Standalone ZMQ state viewer with sliders</td>
+</tr>
+<tr>
+<td><code>policy_gui.py</code></td>
+<td>Full policy runner with visualization</td>
+</tr>
+<tr>
+<td><code>test_native_mujoco.py</code></td>
+<td>Run policy in native MuJoCo viewer (ground truth)</td>
+</tr>
+<tr>
+<td><code>test_compare_targets.py</code></td>
+<td>Log targets for native vs Unreal comparison</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

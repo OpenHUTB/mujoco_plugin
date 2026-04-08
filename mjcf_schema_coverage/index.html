@@ -1,0 +1,1716 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>MJCF Schema Coverage - Mujoco 插件</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "MJCF Schema Coverage";
+        var mkdocs_page_input_path = "mjcf_schema_coverage.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">MJCF Schema Coverage</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/mjcf_schema_coverage.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mjcf-schema-coverage">MJCF Schema Coverage</h1>
+<p>Checked against: <strong>MuJoCo 3.4</strong> (C API / mjSpec)
+Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
+<h2 id="summary">Summary</h2>
+<table>
+<thead>
+<tr>
+<th>Category</th>
+<th>Supported</th>
+<th>Import-Only</th>
+<th>Missing</th>
+<th>Total</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>body</td>
+<td>7</td>
+<td>0</td>
+<td>3</td>
+<td>10</td>
+</tr>
+<tr>
+<td>joint</td>
+<td>18</td>
+<td>0</td>
+<td>2</td>
+<td>20</td>
+</tr>
+<tr>
+<td>geom</td>
+<td>22</td>
+<td>0</td>
+<td>5</td>
+<td>27</td>
+</tr>
+<tr>
+<td>site</td>
+<td>10</td>
+<td>0</td>
+<td>2</td>
+<td>12</td>
+</tr>
+<tr>
+<td>actuator (common)</td>
+<td>14</td>
+<td>0</td>
+<td>2</td>
+<td>16</td>
+</tr>
+<tr>
+<td>actuator types</td>
+<td>9</td>
+<td>0</td>
+<td>0</td>
+<td>9</td>
+</tr>
+<tr>
+<td>sensor types</td>
+<td>41</td>
+<td>0</td>
+<td>0</td>
+<td>41</td>
+</tr>
+<tr>
+<td>tendon</td>
+<td>16</td>
+<td>0</td>
+<td>1</td>
+<td>17</td>
+</tr>
+<tr>
+<td>equality</td>
+<td>7</td>
+<td>0</td>
+<td>0</td>
+<td>7</td>
+</tr>
+<tr>
+<td>default</td>
+<td>6</td>
+<td>0</td>
+<td>5</td>
+<td>11</td>
+</tr>
+<tr>
+<td>compiler</td>
+<td>5</td>
+<td>0</td>
+<td>2</td>
+<td>7</td>
+</tr>
+<tr>
+<td>option</td>
+<td>17</td>
+<td>0</td>
+<td>3</td>
+<td>20</td>
+</tr>
+<tr>
+<td>keyframe</td>
+<td>6</td>
+<td>0</td>
+<td>0</td>
+<td>6</td>
+</tr>
+<tr>
+<td>contact</td>
+<td>2</td>
+<td>0</td>
+<td>0</td>
+<td>2</td>
+</tr>
+<tr>
+<td>asset</td>
+<td>3</td>
+<td>0</td>
+<td>1</td>
+<td>4</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="body">body</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("name")</code>. Export: <code>mjs_setName</code> via <code>Setup()</code></td>
+</tr>
+<tr>
+<td>childclass</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("childclass")</code>. Export: <code>mjs_setString(BodyToAttachTo-&gt;childclass)</code></td>
+</tr>
+<tr>
+<td>pos</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ParseVector(pos)</code> + coord convert. Export: <code>UEToMjPosition</code> in <code>Setup()</code></td>
+</tr>
+<tr>
+<td>quat</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code>. Export: via <code>Setup()</code> transform</td>
+</tr>
+<tr>
+<td>axisangle</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code> (priority 2)</td>
+</tr>
+<tr>
+<td>xyaxes</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code> (priority 3)</td>
+</tr>
+<tr>
+<td>zaxis</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code> (priority 4)</td>
+</tr>
+<tr>
+<td>euler</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code> (priority 5, respects eulerseq)</td>
+</tr>
+<tr>
+<td>mocap</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool("mocap")</code> -&gt; <code>bDrivenByUnreal</code>. Export: <code>BodyToAttachTo-&gt;mocap = 1</code></td>
+</tr>
+<tr>
+<td>gravcomp</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat("gravcomp")</code>. Export: <code>BodyToAttachTo-&gt;gravcomp = Gravcomp</code></td>
+</tr>
+<tr>
+<td>sleep</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("sleep")</code> -&gt; enum. Export: <code>BodyToAttachTo-&gt;sleep</code></td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed or exported</td>
+</tr>
+</tbody>
+</table>
+<h2 id="joint">joint</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: via MjComponent base. Export: <code>mjs_setName</code> in <code>RegisterToSpec</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("class")</code>. Export: <code>ResolveDefault</code></td>
+</tr>
+<tr>
+<td>type</td>
+<td>SUPPORTED</td>
+<td>Import: parsed string -&gt; enum. Export: <code>Joint-&gt;type</code></td>
+</tr>
+<tr>
+<td>group</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt("group")</code>. Export: <code>Joint-&gt;group</code></td>
+</tr>
+<tr>
+<td>pos</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("pos")</code> + coord convert. Export: <code>UEToMjPosition</code></td>
+</tr>
+<tr>
+<td>axis</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("axis")</code> + Y negate. Export: writes <code>Joint-&gt;axis</code></td>
+</tr>
+<tr>
+<td>springdamper</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray("springdamper")</code> -&gt; Stiffness + Damping</td>
+</tr>
+<tr>
+<td>limited</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool("limited")</code>. Export: <code>Joint-&gt;limited</code></td>
+</tr>
+<tr>
+<td>solreflimit</td>
+<td>SUPPORTED</td>
+<td>Import + Export via <code>Joint-&gt;solref_limit</code></td>
+</tr>
+<tr>
+<td>solimplimit</td>
+<td>SUPPORTED</td>
+<td>Import + Export via <code>Joint-&gt;solimp_limit</code></td>
+</tr>
+<tr>
+<td>solreffriction</td>
+<td>SUPPORTED</td>
+<td>Import + Export via <code>Joint-&gt;solref_friction</code></td>
+</tr>
+<tr>
+<td>solimpfriction</td>
+<td>SUPPORTED</td>
+<td>Import + Export via <code>Joint-&gt;solimp_friction</code></td>
+</tr>
+<tr>
+<td>stiffness</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code> (up to 3 polynomial coefficients). Export: <code>Joint-&gt;stiffness[0..2]</code></td>
+</tr>
+<tr>
+<td>range</td>
+<td>SUPPORTED</td>
+<td>Import + Export. Slide joints auto-convert m&lt;-&gt;cm</td>
+</tr>
+<tr>
+<td>actuatorfrcrange</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Joint-&gt;actfrcrange</code></td>
+</tr>
+<tr>
+<td>margin</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Joint-&gt;margin</code></td>
+</tr>
+<tr>
+<td>ref</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Joint-&gt;ref</code>. Slide: m&lt;-&gt;cm</td>
+</tr>
+<tr>
+<td>springref</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Joint-&gt;springref</code></td>
+</tr>
+<tr>
+<td>armature</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Joint-&gt;armature</code></td>
+</tr>
+<tr>
+<td>damping</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code> (up to 3 polynomial coefficients). Export: <code>Joint-&gt;damping[0..2]</code></td>
+</tr>
+<tr>
+<td>frictionloss</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Joint-&gt;frictionloss</code></td>
+</tr>
+<tr>
+<td>actuatorgravcomp</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed or exported</td>
+</tr>
+</tbody>
+</table>
+<h2 id="geom">geom</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: <code>GetAttribute("name")</code>. Export: <code>SetSpecElementName</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("class")</code>. Export: <code>ResolveDefault</code></td>
+</tr>
+<tr>
+<td>type</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum (plane/hfield/sphere/capsule/ellipsoid/cylinder/box/mesh/sdf). Export: writes <code>Geom-&gt;type</code></td>
+</tr>
+<tr>
+<td>contype</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Geom-&gt;contype</code></td>
+</tr>
+<tr>
+<td>conaffinity</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Geom-&gt;conaffinity</code></td>
+</tr>
+<tr>
+<td>condim</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Geom-&gt;condim</code></td>
+</tr>
+<tr>
+<td>group</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Geom-&gt;group</code></td>
+</tr>
+<tr>
+<td>priority</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Geom-&gt;priority</code></td>
+</tr>
+<tr>
+<td>size</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code> (handles 1/2/3 params). Export: writes per <code>SizeParamsCount</code></td>
+</tr>
+<tr>
+<td>material</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("material")</code>. Export: material instance created at import</td>
+</tr>
+<tr>
+<td>friction</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Geom-&gt;friction</code></td>
+</tr>
+<tr>
+<td>mass</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Geom-&gt;mass</code></td>
+</tr>
+<tr>
+<td>density</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Geom-&gt;density</code></td>
+</tr>
+<tr>
+<td>solref</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Geom-&gt;solref</code></td>
+</tr>
+<tr>
+<td>solimp</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Geom-&gt;solimp</code></td>
+</tr>
+<tr>
+<td>margin</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Geom-&gt;margin</code></td>
+</tr>
+<tr>
+<td>gap</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Geom-&gt;gap</code></td>
+</tr>
+<tr>
+<td>fromto</td>
+<td>SUPPORTED</td>
+<td>Import: resolves to pos/quat/size. Export: raw fromto or decomposed</td>
+</tr>
+<tr>
+<td>pos</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ParseVector</code> + coord convert. Export: <code>UEToMjPosition</code></td>
+</tr>
+<tr>
+<td>quat</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code>. Export: <code>UEToMjRotation</code></td>
+</tr>
+<tr>
+<td>axisangle</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>xyaxes</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>zaxis</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>euler</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>mesh</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("mesh")</code>. Export: <code>mjs_setString(Geom-&gt;meshname)</code></td>
+</tr>
+<tr>
+<td>rgba</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Geom-&gt;rgba</code></td>
+</tr>
+<tr>
+<td>hfield</td>
+<td>MISSING</td>
+<td>Geom type recognized; hfield asset not imported from XML <code>&lt;asset&gt;</code></td>
+</tr>
+<tr>
+<td>fitscale</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>shellinertia</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>solmix</td>
+<td>MISSING</td>
+<td>Bound in runtime view (<code>geom_solmix</code>) but not imported/exported via XML</td>
+</tr>
+<tr>
+<td>fluidshape</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>fluidcoef</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="site">site</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: via MjComponent base. Export: <code>SetSpecElementName</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: via MjComponent base. Export: <code>ResolveDefault</code></td>
+</tr>
+<tr>
+<td>type</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum (sphere/capsule/ellipsoid/cylinder/box). Export: <code>site-&gt;type</code></td>
+</tr>
+<tr>
+<td>group</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>site-&gt;group</code></td>
+</tr>
+<tr>
+<td>pos</td>
+<td>SUPPORTED</td>
+<td>Import: parsed + coord convert. Export: <code>UEToMjPosition</code></td>
+</tr>
+<tr>
+<td>quat</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code>. Export: <code>UEToMjRotation</code></td>
+</tr>
+<tr>
+<td>axisangle</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>xyaxes</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>zaxis</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>euler</td>
+<td>SUPPORTED</td>
+<td>Import: via <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>size</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>site-&gt;size</code></td>
+</tr>
+<tr>
+<td>fromto</td>
+<td>SUPPORTED</td>
+<td>Import: resolves to pos/quat/size. Export: raw fromto</td>
+</tr>
+<tr>
+<td>rgba</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>site-&gt;rgba</code></td>
+</tr>
+<tr>
+<td>material</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="actuator-common-attributes">actuator (common attributes)</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Export: <code>SetSpecElementName</code> in <code>RegisterToSpec</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("class")</code>. Export: <code>ResolveDefault</code></td>
+</tr>
+<tr>
+<td>group</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. Export: <code>Actuator-&gt;group</code></td>
+</tr>
+<tr>
+<td>ctrllimited</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code>. Export: <code>Actuator-&gt;ctrllimited</code></td>
+</tr>
+<tr>
+<td>forcelimited</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code>. Export: <code>Actuator-&gt;forcelimited</code></td>
+</tr>
+<tr>
+<td>ctrlrange</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Actuator-&gt;ctrlrange</code></td>
+</tr>
+<tr>
+<td>forcerange</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Actuator-&gt;forcerange</code></td>
+</tr>
+<tr>
+<td>lengthrange</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Actuator-&gt;lengthrange</code></td>
+</tr>
+<tr>
+<td>gear</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Actuator-&gt;gear</code></td>
+</tr>
+<tr>
+<td>cranklength</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Actuator-&gt;cranklength</code></td>
+</tr>
+<tr>
+<td>joint</td>
+<td>SUPPORTED</td>
+<td>Import: sets <code>TransmissionType::Joint</code>. Export: via <code>trntype</code> + <code>target</code></td>
+</tr>
+<tr>
+<td>tendon</td>
+<td>SUPPORTED</td>
+<td>Import: sets <code>TransmissionType::Tendon</code>. Export: via <code>trntype</code> + <code>target</code></td>
+</tr>
+<tr>
+<td>site</td>
+<td>SUPPORTED</td>
+<td>Import: sets <code>TransmissionType::Site</code>. Export: via <code>trntype</code> + <code>target</code></td>
+</tr>
+<tr>
+<td>body</td>
+<td>SUPPORTED</td>
+<td>Import: sets <code>TransmissionType::Body</code>. Export: via <code>trntype</code> + <code>target</code></td>
+</tr>
+<tr>
+<td>actearly</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code>. Export: <code>Actuator-&gt;actearly</code></td>
+</tr>
+<tr>
+<td>actlimited</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code>. Export: <code>Actuator-&gt;actlimited</code></td>
+</tr>
+<tr>
+<td>actrange</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code>. Export: <code>Actuator-&gt;actrange</code></td>
+</tr>
+<tr>
+<td>damping</td>
+<td>MISSING</td>
+<td>Not parsed in base actuator (but subtype <code>kv</code> covers damper case)</td>
+</tr>
+<tr>
+<td>armature</td>
+<td>MISSING</td>
+<td>Not parsed in base actuator</td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="actuator-types">actuator types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>general</td>
+<td>SUPPORTED</td>
+<td><code>MjGeneralActuator</code>. Exports raw gainprm/biasprm/dynprm directly</td>
+</tr>
+<tr>
+<td>motor</td>
+<td>SUPPORTED</td>
+<td><code>MjMotorActuator</code>. Uses <code>mjs_setToMotor</code></td>
+</tr>
+<tr>
+<td>position</td>
+<td>SUPPORTED</td>
+<td><code>MjPositionActuator</code>. Parses <code>kp</code>. Uses <code>mjs_setToPosition</code></td>
+</tr>
+<tr>
+<td>velocity</td>
+<td>SUPPORTED</td>
+<td><code>MjVelocityActuator</code>. Parses <code>kv</code>. Uses <code>mjs_setToVelocity</code></td>
+</tr>
+<tr>
+<td>intvelocity</td>
+<td>SUPPORTED</td>
+<td><code>MjIntVelocityActuator</code>. Parses <code>kp</code>. Uses <code>mjs_setToIntvelocity</code></td>
+</tr>
+<tr>
+<td>damper</td>
+<td>SUPPORTED</td>
+<td><code>MjDamperActuator</code>. Parses <code>kv</code>. Uses <code>mjs_setToDamper</code></td>
+</tr>
+<tr>
+<td>cylinder</td>
+<td>SUPPORTED</td>
+<td><code>MjCylinderActuator</code>. Parses <code>timeconst/bias/area/diameter</code>. Uses <code>mjs_setToCylinder</code></td>
+</tr>
+<tr>
+<td>muscle</td>
+<td>SUPPORTED</td>
+<td><code>MjMuscleActuator</code>. Uses <code>mjs_setToMuscle</code></td>
+</tr>
+<tr>
+<td>adhesion</td>
+<td>SUPPORTED</td>
+<td><code>MjAdhesionActuator</code>. Parses <code>gain</code>. Uses <code>mjs_setToAdhesion</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="sensor-types">sensor types</h2>
+<p>All 41 sensor types are SUPPORTED (import via tag-name map, export via <code>mjsSensor-&gt;type</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>touch</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>accelerometer</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>velocimeter</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>gyro</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>force</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>torque</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>magnetometer</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>camprojection</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>rangefinder</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointpos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointactfrc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonpos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonactfrc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>actuatorpos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>actuatorvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>actuatorfrc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>ballquat</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>ballangvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointlimitpos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointlimitvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>jointlimitfrc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonlimitpos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonlimitvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tendonlimitfrc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framepos</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framequat</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framexaxis</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>frameyaxis</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framezaxis</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framelinvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>frameangvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>framelinacc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>frameangacc</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>subtreecom</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>subtreelinvel</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>subtreeangmom</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>insidesite</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>geomdist</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>geomnormal</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>geomfromto</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>contact</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>e_potential</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>e_kinetic</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>clock</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>tactile</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>plugin</td>
+<td>SUPPORTED</td>
+</tr>
+<tr>
+<td>user</td>
+<td>SUPPORTED</td>
+</tr>
+</tbody>
+</table>
+<p>Sensor common attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Via <code>SetSpecElementName</code></td>
+</tr>
+<tr>
+<td>noise</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Sensor-&gt;noise</code></td>
+</tr>
+<tr>
+<td>cutoff</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Sensor-&gt;cutoff</code></td>
+</tr>
+<tr>
+<td>objname/site/joint/etc</td>
+<td>SUPPORTED</td>
+<td>Import: tries each target attr. Export: <code>Sensor-&gt;objname</code></td>
+</tr>
+<tr>
+<td>refname</td>
+<td>SUPPORTED</td>
+<td>Import: <code>GetAttribute("refname")</code>. Export: <code>Sensor-&gt;refname</code></td>
+</tr>
+<tr>
+<td>objtype</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum. Export: <code>Sensor-&gt;objtype</code></td>
+</tr>
+<tr>
+<td>reftype</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum. Export: <code>Sensor-&gt;reftype</code></td>
+</tr>
+<tr>
+<td>dim</td>
+<td>SUPPORTED</td>
+<td>Import: parsed from attr. Export: <code>Sensor-&gt;dim</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("class")</code></td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="tendon">tendon</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: via MjComponent. Export: <code>mjs_setName</code></td>
+</tr>
+<tr>
+<td>class</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("class")</code>. Export: <code>ResolveDefault</code></td>
+</tr>
+<tr>
+<td>stiffness</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code> (up to 3 polynomial coefficients). Export: <code>Tendon-&gt;stiffness[0..2]</code></td>
+</tr>
+<tr>
+<td>springlength</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>damping</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloatArray</code> (up to 3 polynomial coefficients). Export: <code>Tendon-&gt;damping[0..2]</code></td>
+</tr>
+<tr>
+<td>frictionloss</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>armature</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>limited</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>range</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>margin</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>actfrclimited</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>actfrcrange</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>solreflimit</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>solimplimit</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>solreffriction</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>solimpfriction</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>width</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>rgba</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>group</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>user</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<p>Tendon wrap types:</p>
+<table>
+<thead>
+<tr>
+<th>Wrap Type</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>joint</td>
+<td>SUPPORTED</td>
+<td><code>mjs_wrapJoint</code> with coef</td>
+</tr>
+<tr>
+<td>site</td>
+<td>SUPPORTED</td>
+<td><code>mjs_wrapSite</code></td>
+</tr>
+<tr>
+<td>geom</td>
+<td>SUPPORTED</td>
+<td><code>mjs_wrapGeom</code> with sidesite</td>
+</tr>
+<tr>
+<td>pulley</td>
+<td>SUPPORTED</td>
+<td><code>mjs_wrapPulley</code> with divisor</td>
+</tr>
+</tbody>
+</table>
+<h2 id="equality">equality</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>connect</td>
+<td>SUPPORTED</td>
+<td>Parses body1/body2, anchor. Exports via <code>Eq-&gt;data[0..2]</code></td>
+</tr>
+<tr>
+<td>weld</td>
+<td>SUPPORTED</td>
+<td>Parses body1/body2, relpos, relquat, torquescale. Exports via <code>Eq-&gt;data[0..7]</code></td>
+</tr>
+<tr>
+<td>joint</td>
+<td>SUPPORTED</td>
+<td>Parses joint1/joint2, polycoef. Exports via <code>Eq-&gt;data</code></td>
+</tr>
+<tr>
+<td>tendon</td>
+<td>SUPPORTED</td>
+<td>Parses tendon1/tendon2, polycoef. Exports via <code>Eq-&gt;data</code></td>
+</tr>
+</tbody>
+</table>
+<p>Equality common attributes:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>active</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code>. Export: <code>Eq-&gt;active</code></td>
+</tr>
+<tr>
+<td>solref</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>solimp</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+</tbody>
+</table>
+<h2 id="default">default</h2>
+<table>
+<thead>
+<tr>
+<th>Child Element</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>class (attr)</td>
+<td>SUPPORTED</td>
+<td>Import: <code>GetAttribute("class")</code>. Nested defaults supported</td>
+</tr>
+<tr>
+<td>geom</td>
+<td>SUPPORTED</td>
+<td><code>GeomComp-&gt;ExportTo(def-&gt;geom)</code></td>
+</tr>
+<tr>
+<td>joint</td>
+<td>SUPPORTED</td>
+<td><code>JointComp-&gt;ExportTo(def-&gt;joint)</code></td>
+</tr>
+<tr>
+<td>site</td>
+<td>SUPPORTED</td>
+<td><code>SiteComp-&gt;ExportTo(def-&gt;site)</code></td>
+</tr>
+<tr>
+<td>camera</td>
+<td>SUPPORTED</td>
+<td><code>CameraComp-&gt;ExportTo(def-&gt;camera)</code></td>
+</tr>
+<tr>
+<td>tendon</td>
+<td>SUPPORTED</td>
+<td><code>TendonComp-&gt;ExportTo(def-&gt;tendon)</code></td>
+</tr>
+<tr>
+<td>general/motor/position/velocity/etc</td>
+<td>SUPPORTED</td>
+<td><code>ActuatorComp-&gt;ExportTo(def-&gt;actuator)</code> (polymorphic)</td>
+</tr>
+<tr>
+<td>mesh</td>
+<td>MISSING</td>
+<td>Not handled in default export</td>
+</tr>
+<tr>
+<td>material</td>
+<td>MISSING</td>
+<td>Not handled in default export</td>
+</tr>
+<tr>
+<td>pair</td>
+<td>MISSING</td>
+<td>Not handled in default export</td>
+</tr>
+<tr>
+<td>equality</td>
+<td>MISSING</td>
+<td>Not handled in default export</td>
+</tr>
+<tr>
+<td>light</td>
+<td>MISSING</td>
+<td>Not handled in default export</td>
+</tr>
+</tbody>
+</table>
+<h2 id="compiler">compiler</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>angle</td>
+<td>SUPPORTED</td>
+<td><code>ParseCompilerSettings</code> -&gt; <code>bAngleInDegrees</code>. Used by <code>OrientationToMjQuat</code></td>
+</tr>
+<tr>
+<td>eulerseq</td>
+<td>SUPPORTED</td>
+<td><code>ParseCompilerSettings</code> -&gt; <code>EulerSeq</code>. Used for euler decomposition</td>
+</tr>
+<tr>
+<td>meshdir</td>
+<td>SUPPORTED</td>
+<td>Parsed from <code>&lt;compiler&gt;</code>, used for mesh path resolution</td>
+</tr>
+<tr>
+<td>texturedir</td>
+<td>SUPPORTED</td>
+<td>Parsed from <code>&lt;compiler&gt;</code>, used for texture path resolution</td>
+</tr>
+<tr>
+<td>assetdir</td>
+<td>SUPPORTED</td>
+<td>Parsed, overrides meshdir for asset lookups</td>
+</tr>
+<tr>
+<td>autolimits</td>
+<td>SUPPORTED</td>
+<td>Parsed into <code>bAutoLimits</code> (deferred to MuJoCo spec compiler)</td>
+</tr>
+<tr>
+<td>coordinate</td>
+<td>MISSING</td>
+<td>Always assumes "local" (MuJoCo 3.x default)</td>
+</tr>
+<tr>
+<td>settotalmass</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="option">option</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>timestep</td>
+<td>SUPPORTED</td>
+<td>Import from XML + <code>ApplyToSpec</code>. Runtime override supported</td>
+</tr>
+<tr>
+<td>gravity</td>
+<td>SUPPORTED</td>
+<td>Import + coord convert (cm/s2, Y negate)</td>
+</tr>
+<tr>
+<td>wind</td>
+<td>SUPPORTED</td>
+<td>Import + coord convert</td>
+</tr>
+<tr>
+<td>magnetic</td>
+<td>SUPPORTED</td>
+<td>Import + coord convert</td>
+</tr>
+<tr>
+<td>density</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>viscosity</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>impratio</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>tolerance</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>iterations</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>ls_iterations</td>
+<td>SUPPORTED</td>
+<td>Import + export</td>
+</tr>
+<tr>
+<td>integrator</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum (Euler/RK4/implicit/implicitfast)</td>
+</tr>
+<tr>
+<td>cone</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum (pyramidal/elliptic)</td>
+</tr>
+<tr>
+<td>solver</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; enum (PGS/CG/Newton)</td>
+</tr>
+<tr>
+<td>noslip_iterations</td>
+<td>SUPPORTED</td>
+<td>Import + export (with override)</td>
+</tr>
+<tr>
+<td>noslip_tolerance</td>
+<td>SUPPORTED</td>
+<td>Import + export (with override)</td>
+</tr>
+<tr>
+<td>ccd_iterations</td>
+<td>SUPPORTED</td>
+<td>Import + export (with override)</td>
+</tr>
+<tr>
+<td>ccd_tolerance</td>
+<td>SUPPORTED</td>
+<td>Import + export (with override)</td>
+</tr>
+<tr>
+<td>flag (enableflags)</td>
+<td>SUPPORTED</td>
+<td>MultiCCD and Sleep flags handled</td>
+</tr>
+<tr>
+<td>o_margin</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>o_solref</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>o_solimp</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>mpr_iterations</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>mpr_tolerance</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>sdf_iterations</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+<tr>
+<td>sdf_initpoints</td>
+<td>MISSING</td>
+<td>Not parsed</td>
+</tr>
+</tbody>
+</table>
+<h2 id="keyframekey">keyframe/key</h2>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: via MjComponent. Export: <code>mjs_setName</code></td>
+</tr>
+<tr>
+<td>time</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code>. Export: <code>Key-&gt;time</code></td>
+</tr>
+<tr>
+<td>qpos</td>
+<td>SUPPORTED</td>
+<td>Import + Export. Auto-pads for free joints</td>
+</tr>
+<tr>
+<td>qvel</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>act</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>ctrl</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>mpos</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+<tr>
+<td>mquat</td>
+<td>SUPPORTED</td>
+<td>Import + Export</td>
+</tr>
+</tbody>
+</table>
+<h2 id="contact">contact</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>pair</td>
+<td>SUPPORTED</td>
+<td>Parses geom1/geom2/condim/friction/solref/solimp/gap/margin. Full import+export</td>
+</tr>
+<tr>
+<td>exclude</td>
+<td>SUPPORTED</td>
+<td>Parses body1/body2/name. Full import+export</td>
+</tr>
+</tbody>
+</table>
+<h2 id="asset">asset</h2>
+<table>
+<thead>
+<tr>
+<th>Element</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>mesh</td>
+<td>SUPPORTED</td>
+<td>Parsed recursively via <code>ParseAssetsRecursive</code>. GLB/STL/OBJ imported as UE StaticMesh</td>
+</tr>
+<tr>
+<td>material</td>
+<td>SUPPORTED</td>
+<td>Parsed into <code>FMuJoCoMaterialData</code>. Creates UE MaterialInstance with texture params</td>
+</tr>
+<tr>
+<td>texture</td>
+<td>SUPPORTED</td>
+<td>Imported from disk (PNG/JPG/BMP/TGA). Applied to material instances</td>
+</tr>
+<tr>
+<td>hfield</td>
+<td>MISSING</td>
+<td>Not parsed from <code>&lt;asset&gt;</code>. Geom type=hfield recognized but asset data not imported</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../js/umlconvert.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>ZMQ Networking & ROS 2 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "ZMQ Networking \u0026 ROS 2";
+        var mkdocs_page_input_path = "guides/zmq_networking.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">ZMQ Networking & ROS 2</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/zmq_networking.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="zmq-networking-ros-2">ZMQ Networking &amp; ROS 2</h1>
+<p>Unreal Robotics Lab uses <a href="https://zeromq.org">ZeroMQ</a> for all external communication. The design philosophy: keep the Unreal side fast, binary, and dependency-free — then let a separate bridge handle translation to whatever framework the user prefers.</p>
+<hr />
+<h2 id="why-zmq">Why ZMQ?</h2>
+<ul>
+<li><strong>Speed.</strong> Binary PUB/SUB with no serialization overhead. The control loop runs at physics-thread frequency (typically 500–1000 Hz) without bottlenecking on message encoding.</li>
+<li><strong>Minimal dependencies.</strong> libzmq is the only networking dependency inside the plugin. No ROS, no middleware, no build system entanglement.</li>
+<li><strong>User's choice.</strong> The plugin does not mandate a robotics framework. ZMQ is the native transport; if you want ROS 2, the separate <code>urlab_bridge</code> handles the translation. If you want raw Python, just use <code>pyzmq</code>. If you want something else entirely, the binary format is straightforward to parse.</li>
+</ul>
+<hr />
+<h2 id="plugin-side-components">Plugin-Side Components</h2>
+<p>Three components handle the networking, all auto-created on the <code>AAMjManager</code> at BeginPlay if none exist:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Socket</th>
+<th>Default Endpoint</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>UZmqSensorBroadcaster</code></td>
+<td>PUB</td>
+<td><code>tcp://*:5555</code></td>
+<td>Publishes sensor data, joint state, twist, actions</td>
+</tr>
+<tr>
+<td><code>UZmqControlSubscriber</code></td>
+<td>SUB + PUB</td>
+<td><code>tcp://*:5556</code> (SUB), <code>tcp://*:5557</code> (info PUB)</td>
+<td>Receives control vectors and gain updates; publishes actuator info JSON</td>
+</tr>
+<tr>
+<td><code>UMjCamera</code> (ZMQ mode)</td>
+<td>PUB</td>
+<td>per-camera endpoint</td>
+<td>Streams rendered camera frames on a dedicated thread (uses <code>SCS_FinalToneCurveHDR</code> capture source, so Post Process Volumes are respected)</td>
+</tr>
+</tbody>
+</table>
+<p>All Unreal-side sockets use <code>zmq_bind()</code>. External clients use <code>zmq_connect()</code>.</p>
+<h3 id="timing">Timing</h3>
+<p>ZMQ callbacks run directly on the physics thread:</p>
+<ol>
+<li><strong>PreStep</strong> — <code>UZmqControlSubscriber</code> reads incoming commands → writes to <code>mjData.ctrl</code></li>
+<li><strong>mj_step()</strong> — physics advances</li>
+<li><strong>PostStep</strong> — <code>UZmqSensorBroadcaster</code> reads <code>mjData</code> → publishes</li>
+</ol>
+<p>One-timestep latency between command and response. Camera frames run on their own background thread so they never stall the physics loop.</p>
+<h3 id="topics-sensor-broadcast">Topics (Sensor Broadcast)</h3>
+<p>All messages are multipart: topic string + binary payload. Topics are prefixed with the articulation actor name:</p>
+<table>
+<thead>
+<tr>
+<th>Topic Pattern</th>
+<th>Payload</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{Name}/joint/{JointName}</code></td>
+<td><code>int32 id, float pos, float vel, float acc</code> (16 bytes)</td>
+<td><code>UMjJoint::BuildBinaryPayload</code></td>
+</tr>
+<tr>
+<td><code>{Name}/sensor/{SensorName}</code></td>
+<td><code>int32 id, float[] values</code> (4 + 4*dim bytes)</td>
+<td><code>UMjSensor::BuildBinaryPayload</code></td>
+</tr>
+<tr>
+<td><code>{Name}/base_state/{JointName}</code></td>
+<td><code>7 x float64</code> (pos xyz + quat wxyz)</td>
+<td><code>UMjFreeJoint::BuildBinaryPayload</code></td>
+</tr>
+<tr>
+<td><code>{Name}/twist</code></td>
+<td><code>3 x float32</code>: vx, vy, yaw_rate</td>
+<td>TwistController</td>
+</tr>
+<tr>
+<td><code>{Name}/actions</code></td>
+<td><code>int32</code> bitmask</td>
+<td>TwistController (only sent when non-zero)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="topics-control-receive">Topics (Control Receive)</h3>
+<p>The control subscriber filters on <code>{Name}/control</code> and <code>{Name}/set_gains</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Topic Pattern</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>{Name}/control</code></td>
+<td><code>int32 count</code>, then <code>count</code> x <code>(int32 actuator_id, float value)</code></td>
+</tr>
+<tr>
+<td><code>{Name}/set_gains</code></td>
+<td>JSON: <code>{"joint_name": {"kp": float, "kv": float, "torque_limit": float}, ...}</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="info-broadcast-port-5557">Info Broadcast (Port 5557)</h3>
+<p>The control subscriber periodically publishes a JSON discovery message on the info endpoint containing actuator names, IDs, ranges, and camera endpoints. This is sent frequently at startup (every 50 steps for the first 5s), then every 500 steps (~1s).</p>
+<blockquote>
+<p><strong>Multi-articulation filtering:</strong> In multi-robot scenes, subscribe with the articulation name prefix (e.g., <code>sub.setsockopt_string(zmq.SUBSCRIBE, "Robot_A/")</code>) to receive only that robot's data.</p>
+</blockquote>
+<h3 id="control-source">Control Source</h3>
+<p><code>EControlSource</code> determines whether actuators respond to ZMQ or dashboard input. Set it globally on the manager or per-articulation:</p>
+<div class="highlight"><pre><span></span><code>Manager-&gt;SetControlSource(EControlSource::ZMQ);
+</code></pre></div>
+<hr />
+<h2 id="urlab_bridge-ros-2">urlab_bridge (ROS 2)</h2>
+<p>The <strong>urlab_bridge</strong> (separate companion repository, same GitHub organization) is the Python-side middleware. It sits between the plugin's ZMQ streams and any external system (ROS 2, RL policies, custom scripts):</p>
+<div class="highlight"><pre><span></span><code>Unreal (ZMQ binary) → urlab_bridge → ROS 2 topics
+</code></pre></div>
+<p>It subscribes to the ZMQ sensor and camera endpoints, unpacks the binary payloads, and publishes to standard ROS 2 topics (<code>/joint_states</code>, <code>/sensor_data</code>, <code>/camera/image_raw</code>). Multi-robot namespacing is handled automatically.</p>
+<p><strong>Why a separate bridge?</strong></p>
+<ul>
+<li>Keeps the Unreal plugin free of ROS build dependencies (ament, colcon, etc.)</li>
+<li>The bridge is pure Python with <code>pyzmq</code> + <code>rclpy</code> — easy to install, easy to modify</li>
+<li>Users who do not need ROS never have to think about it</li>
+<li>Users who do need ROS get standard topic interfaces without any plugin changes</li>
+</ul>
+<h3 id="quick-test-no-ros-needed">Quick test (no ROS needed)</h3>
+<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>src/zmq_visualizer.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--main_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--camera_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5558&quot;</span>
+</code></pre></div>
+<p>Prints live joint states and opens an OpenCV window for camera frames.</p>
+<h3 id="ros-2-rebroadcaster">ROS 2 rebroadcaster</h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># Source your ROS 2 environment first (Humble, Jazzy, etc.)</span>
+uv<span class="w"> </span>run<span class="w"> </span>src/ros2_broadcaster.py<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--main_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--camera_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5558&quot;</span>
+</code></pre></div>
+<hr />
+<h2 id="connecting-from-python">Connecting from Python</h2>
+<p>Minimal <code>pyzmq</code> example:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">zmq</span><span class="o">,</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">ctx</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
+
+<span class="c1"># Receive sensor data (Unreal binds, we connect)</span>
+<span class="n">sub</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUB</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="p">)</span>
+<span class="n">sub</span><span class="o">.</span><span class="n">setsockopt_string</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">SUBSCRIBE</span><span class="p">,</span> <span class="s2">&quot;MyRobot/&quot;</span><span class="p">)</span>
+
+<span class="c1"># Send controls (Unreal binds SUB on 5556, we connect PUB)</span>
+<span class="n">pub</span> <span class="o">=</span> <span class="n">ctx</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">zmq</span><span class="o">.</span><span class="n">PUB</span><span class="p">)</span>
+<span class="n">pub</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;tcp://127.0.0.1:5556&quot;</span><span class="p">)</span>
+
+<span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+    <span class="n">topic</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">sub</span><span class="o">.</span><span class="n">recv_multipart</span><span class="p">()</span>
+    <span class="n">topic_str</span> <span class="o">=</span> <span class="n">topic</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="s2">&quot;/joint/&quot;</span> <span class="ow">in</span> <span class="n">topic_str</span><span class="p">:</span>
+        <span class="n">jid</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;Ifff&quot;</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Joint </span><span class="si">{</span><span class="n">jid</span><span class="si">}</span><span class="s2">: pos=</span><span class="si">{</span><span class="n">pos</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Send control: 3 actuators example</span>
+    <span class="n">num</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">payload</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;I&quot;</span><span class="p">,</span> <span class="n">num</span><span class="p">)</span>  <span class="c1"># count</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num</span><span class="p">):</span>
+        <span class="n">payload</span> <span class="o">+=</span> <span class="n">struct</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="s2">&quot;&lt;If&quot;</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>  <span class="c1"># (id, value) pairs</span>
+    <span class="n">pub</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;MyRobot/control &quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">])</span>
+</code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<p><strong>No data arriving</strong> — check that endpoints match (protocol, IP, port). All Unreal-side sockets <em>bind</em>; external clients <em>connect</em>.</p>
+<p><strong>Controls have no effect</strong> — verify <code>ControlSource</code> is set to <code>ZMQ</code>. Note the control topic requires a trailing space in the subscription filter (e.g., <code>"MyRobot/control "</code>).</p>
+<p><strong>Camera frames blank</strong> — make sure <code>bEnableZmqBroadcast = true</code> on the camera component and the model compiled successfully.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

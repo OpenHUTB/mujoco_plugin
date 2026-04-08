@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Possession & Twist Control - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Possession \u0026 Twist Control";
+        var mkdocs_page_input_path = "guides/possession_twist.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Possession & Twist Control</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/possession_twist.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="possession-twist-control">Possession &amp; Twist Control</h1>
+<p>URLab articulations are Unreal Pawns — they can be possessed by a PlayerController to enable direct input control. The twist controller captures WASD/gamepad input and broadcasts velocity commands over ZMQ.</p>
+<h2 id="possessing-an-articulation">Possessing an Articulation</h2>
+<p><strong>From the MjSimulate widget:</strong> Click the <strong>Possess</strong> button next to the articulation selector. The button toggles to <strong>Release</strong> while possessed.</p>
+<p><strong>From Blueprint/C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">APlayerController</span><span class="o">*</span><span class="w"> </span><span class="n">PC</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">GetWorld</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">GetFirstPlayerController</span><span class="p">();</span>
+<span class="n">PC</span><span class="o">-&gt;</span><span class="n">Possess</span><span class="p">(</span><span class="n">MyArticulation</span><span class="p">);</span>
+<span class="c1">// Later:</span>
+<span class="n">PC</span><span class="o">-&gt;</span><span class="n">UnPossess</span><span class="p">();</span>
+</code></pre></div></p>
+<p>When possessed:
+- Enhanced Input mapping context (<code>IMC_TwistControl</code>) is added
+- A spring arm + camera attaches to the root MjBody for follow-cam
+- WASD/QE input feeds the twist controller</p>
+<p>When released:
+- Mapping context removed, twist state zeroed
+- Camera components cleaned up
+- Original pawn re-possessed</p>
+<h2 id="umjtwistcontroller">UMjTwistController</h2>
+<p>Auto-created on every AMjArticulation at BeginPlay. Captures input and stores thread-safe twist state.</p>
+<p><strong>Properties (editable in Details panel or via locomotion sliders):</strong></p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MaxVx</code></td>
+<td>0.8 m/s</td>
+<td>Max forward speed</td>
+</tr>
+<tr>
+<td><code>MaxVy</code></td>
+<td>0.5 m/s</td>
+<td>Max strafe speed</td>
+</tr>
+<tr>
+<td><code>MaxYawRate</code></td>
+<td>1.57 rad/s</td>
+<td>Max turn rate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Input mapping:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>W/S</td>
+<td>Forward/backward</td>
+</tr>
+<tr>
+<td>A/D</td>
+<td>Strafe left/right</td>
+</tr>
+<tr>
+<td>Q/E</td>
+<td>Turn left/right</td>
+</tr>
+<tr>
+<td>1-0</td>
+<td>Action keys (10-slot bitmask)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>ZMQ broadcast:</strong> The sensor broadcaster publishes twist state every physics step:</p>
+<table>
+<thead>
+<tr>
+<th>Topic</th>
+<th>Payload</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;prefix&gt;/twist</code></td>
+<td><code>3 x float32</code>: vx (m/s), vy (m/s), yaw_rate (rad/s)</td>
+</tr>
+<tr>
+<td><code>&lt;prefix&gt;/actions</code></td>
+<td><code>int32</code> bitmask of pressed action keys</td>
+</tr>
+</tbody>
+</table>
+<h2 id="follow-camera">Follow Camera</h2>
+<p>On possession, a spring arm + camera component attaches to the root MjBody:</p>
+<ul>
+<li><strong>Camera lag</strong>: speed 8, rotation lag enabled for smooth tracking</li>
+<li><strong>Arm length</strong>: 300 units behind, 100 units above</li>
+<li>Tagged <code>PossessCamera</code> for cleanup on release</li>
+</ul>
+<p>The camera follows the actual physics body position, not the static actor root.</p>
+<h2 id="connecting-to-policies">Connecting to Policies</h2>
+<p>The Python policy bridge reads twist commands via the <code>UnrealTwistCtrl</code> controller class:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># In policy_gui.py — twist controller masquerades as JoystickCtrl</span>
+<span class="c1"># so the Unitree policy&#39;s _get_commands() finds the axes data</span>
+<span class="n">ctrl_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">UnrealTwistCtrlCfg</span><span class="p">()]</span>
+</code></pre></div>
+<p>Twist values map to policy commands:
+- <code>vx</code> → forward velocity command
+- <code>vy</code> → lateral velocity command
+- <code>yaw_rate</code> → turn command</p>
+<p>The policy interprets these as walking direction/speed.</p>
+<h2 id="locomotion-sliders">Locomotion Sliders</h2>
+<p>When an articulation with a TwistController is selected in the MjSimulate widget, a <strong>LOCOMOTION</strong> section appears with three sliders:</p>
+<ul>
+<li><strong>Max Forward Speed</strong> (0.0 – 2.0 m/s)</li>
+<li><strong>Max Strafe Speed</strong> (0.0 – 1.0 m/s)</li>
+<li><strong>Max Turn Rate</strong> (0.0 – 3.14 rad/s)</li>
+</ul>
+<p>These control how much velocity a full keypress produces.</p>
+<h2 id="global-simulation-hotkeys">Global Simulation Hotkeys</h2>
+<p>See <a href="../blueprint_reference/#hotkeys">Hotkeys</a> for all keyboard shortcuts.</p>
+<h2 id="mjkeyframecameraactor">MjKeyframeCameraActor</h2>
+<p>For scripted camera work (e.g., filming demos), use <code>MjKeyframeCameraActor</code> instead of the possession follow-cam. It plays back predefined camera keyframes with interpolation, independent of any possessed pawn.</p>
+<h2 id="input-assets">Input Assets</h2>
+<p>Located in <code>Content/Input/</code>:
+- <code>IA_TwistMove</code> — Axis2D input action (WASD)
+- <code>IA_TwistTurn</code> — Axis1D input action (Q/E)
+- <code>IMC_TwistControl</code> — Input mapping context binding both actions</p>
+<p>Auto-loaded from plugin content when the TwistController is created.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

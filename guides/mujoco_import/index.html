@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>MJCF Import - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "MJCF Import";
+        var mkdocs_page_input_path = "guides/mujoco_import.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">MJCF Import</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/mujoco_import.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mjcf-import">MJCF Import</h1>
+<p>Unreal Robotics Lab can import standard MuJoCo XML (MJCF) files and reconstruct the full model hierarchy as Unreal components. Grab an <code>.xml</code> from the MuJoCo Menagerie or your own projects and drag it straight into the Content Browser.</p>
+<hr />
+<h2 id="importing">Importing</h2>
+<ol>
+<li>Drag your <code>.xml</code> file into the Unreal <strong>Content Browser</strong>.</li>
+<li><code>UMujocoImportFactory</code> automatically runs <code>Scripts/clean_meshes.py</code> as a subprocess:</li>
+<li>Parses the XML to find all referenced mesh assets</li>
+<li>Detects GLB stem conflicts (e.g., <code>link1.obj</code> and <code>link1.stl</code> both producing <code>link1.glb</code>) and renames them</li>
+<li>Converts meshes to GLB (preserving UVs, stripping embedded textures)</li>
+<li>Produces a <code>_ue.xml</code> with updated mesh references</li>
+<li>Graceful fallback: if Python or trimesh is missing, the raw XML is used instead</li>
+<li>The factory creates an <code>AMjArticulation</code> Blueprint via four parsing passes:</li>
+<li><strong>Pass 1:</strong> Assets (meshes with scales, textures with file paths, materials with RGBA/texture refs)</li>
+<li><strong>Pass 2:</strong> Defaults (class hierarchy as <code>UMjDefault</code> components)</li>
+<li><strong>Pass 3:</strong> Worldbody (recursive body/geom/joint/site hierarchy)</li>
+<li><strong>Pass 4:</strong> Actuators, sensors, tendons, equalities, keyframes, contact pairs/excludes</li>
+<li>Place the Blueprint in your level. It is ready to simulate.</li>
+</ol>
+<hr />
+<h2 id="what-gets-created">What Gets Created</h2>
+<table>
+<thead>
+<tr>
+<th>MJCF Element</th>
+<th>Unreal Component</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>&lt;body&gt;</code></td>
+<td><code>UMjBody</code> (recursive hierarchy preserved)</td>
+</tr>
+<tr>
+<td><code>&lt;joint&gt;</code></td>
+<td><code>UMjHingeJoint</code>, <code>UMjSlideJoint</code>, <code>UMjBallJoint</code>, <code>UMjFreeJoint</code></td>
+</tr>
+<tr>
+<td><code>&lt;geom&gt;</code></td>
+<td><code>UMjGeom</code> / primitive subclass</td>
+</tr>
+<tr>
+<td><code>&lt;site&gt;</code></td>
+<td><code>UMjSite</code></td>
+</tr>
+<tr>
+<td><code>&lt;actuator&gt;</code></td>
+<td><code>UMjMotorActuator</code>, <code>UMjPositionActuator</code>, etc.</td>
+</tr>
+<tr>
+<td><code>&lt;sensor&gt;</code></td>
+<td><code>UMjTouchSensor</code>, <code>UMjGyro</code>, etc. (30+ types)</td>
+</tr>
+<tr>
+<td><code>&lt;tendon&gt;</code></td>
+<td><code>UMjTendon</code></td>
+</tr>
+<tr>
+<td><code>&lt;equality&gt;</code></td>
+<td><code>UMjEquality</code></td>
+</tr>
+<tr>
+<td><code>&lt;keyframe&gt;</code></td>
+<td><code>UMjKeyframe</code></td>
+</tr>
+<tr>
+<td><code>&lt;default&gt;</code></td>
+<td><code>UMjDefault</code></td>
+</tr>
+<tr>
+<td><code>&lt;camera&gt;</code></td>
+<td><code>UMjCamera</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="compiler-settings">Compiler Settings</h2>
+<p>The importer respects the MJCF <code>&lt;compiler&gt;</code> element:</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>angle="degree"</code> / <code>"radian"</code></td>
+<td>How joint limits and positions are interpreted</td>
+</tr>
+<tr>
+<td><code>autolimits="true"</code></td>
+<td>Enables limits automatically when <code>range</code> is set</td>
+</tr>
+<tr>
+<td><code>eulerseq</code></td>
+<td>Euler rotation sequence for body orientations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="how-defaults-work">How Defaults Work</h2>
+<p><code>&lt;default&gt;</code> blocks in MuJoCo XML define shared properties that child elements inherit by class name. When imported, these become <code>UMjDefault</code> components in the articulation's component tree.</p>
+<p>These are <strong>not</strong> just for reference — they are live components. The plugin uses them when converting the Blueprint <em>back</em> into MuJoCo's internal representation during compilation. Each component checks its assigned <code>ClassName</code> against the default chain, and MuJoCo applies the inheritance at spec compilation time, exactly as it would with raw XML.</p>
+<p>This means:</p>
+<ul>
+<li>Editing a <code>UMjDefault</code> component affects all components that reference that default class.</li>
+<li>The default hierarchy (nested defaults) is preserved and functional.</li>
+<li>If you remove a default, components that relied on it will fall back to their own explicit property values.</li>
+</ul>
+<hr />
+<h2 id="fromto-resolution">FromTo Resolution</h2>
+<p>Geoms defined with the <code>fromto</code> attribute are resolved to explicit <code>pos</code>, <code>quat</code>, and <code>size</code> at import time. The resolution is type-aware:</p>
+<table>
+<thead>
+<tr>
+<th>Geom Type</th>
+<th>Size Mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Capsule / Cylinder</td>
+<td><code>size[1]</code> = half-length along the segment</td>
+</tr>
+<tr>
+<td>Box / Ellipsoid</td>
+<td><code>size[2]</code> = half-length along the segment</td>
+</tr>
+</tbody>
+</table>
+<p>After import the component stores the resolved transform — <code>fromto</code> is not preserved.</p>
+<hr />
+<h2 id="materials-textures">Materials &amp; Textures</h2>
+<p>The importer creates shared Unreal material instances keyed by XML <code>&lt;material&gt;</code> name. All geoms referencing the same material name share one instance (e.g., every geom with <code>material="white"</code> uses <code>MI_white</code>). Textures referenced by <code>&lt;texture&gt;</code> elements are applied to the corresponding material instance.</p>
+<hr />
+<h2 id="mesh-assets">Mesh Assets</h2>
+<p>The importer looks for mesh files relative to the XML file's directory. Found meshes are copied to a <code>/Meshes/</code> subfolder under the import target to avoid texture name collisions, then registered in MuJoCo's VFS during compilation.</p>
+<p><strong>Format priority:</strong> FBX &gt; GLB &gt; OBJ. The importer tries multiple paths via <code>ImportSingleMesh()</code>: GLB (via Interchange), then raw OBJ/STL (via FBX factory), then FBX fallback. If all fail, the geom is created without a visual mesh but still exists as a collision primitive. A warning is logged and compilation still succeeds.</p>
+<p><strong>Auto mesh preparation:</strong> The <code>clean_meshes_trimesh.py</code> script runs automatically during import (see <a href="#importing">Importing</a> above). You can also run it manually:</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>Scripts/clean_meshes.py<span class="w"> </span>path/to/robot.xml
+</code></pre></div>
+<p>This produces a <code>_ue.xml</code> file with updated mesh references that you can drag into Unreal instead of the original XML.</p>
+<hr />
+<h2 id="debugging-import-issues">Debugging Import Issues</h2>
+<p>Enable <code>bSaveDebugXml</code> on the <code>AAMjManager</code> to save <code>scene_compiled.xml</code> and <code>scene_compiled.mjb</code> to <code>Saved/URLab/</code> after compilation. Diff the original MJCF against the compiled XML to identify import/export mismatches (missing elements, wrong property values, broken default inheritance). The compiled XML can also be loaded into native MuJoCo for verification. See <a href="developer_tools.md">Developer Tools</a> for more.</p>
+<h2 id="after-import">After Import</h2>
+<p>The imported articulation is a normal Unreal actor. You can rearrange components, add sensors or cameras, override properties, or save it as a reusable Blueprint. The XML is only read during import — after that, the Unreal components are the source of truth.</p>
+<p>For full details on the import pipeline internals, see <a href="../../architecture/#import-pipeline">Architecture</a>.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Scripting with Blueprints & C++ - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Scripting with Blueprints \u0026 C++";
+        var mkdocs_page_input_path = "guides/blueprint_reference.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Scripting with Blueprints & C++</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/blueprint_reference.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="scripting-with-blueprints-c">Scripting with Blueprints &amp; C++</h1>
+<p>Every MuJoCo component in Unreal Robotics Lab is a regular Unreal component. Articulations are actors. You interact with them the same way you would with any other actor or component — get references, call functions, bind events. No need to touch MuJoCo directly unless you want to.</p>
+<p>For the full class-by-class API listing, see the <a href="../api/index.md">auto-generated API Reference</a>.</p>
+<hr />
+<h2 id="getting-references">Getting References</h2>
+<p>An <code>AMjArticulation</code> is just an actor. Get a reference any way you normally would:</p>
+<p><strong>Blueprint:</strong> Get All Actors of Class, cast from a hit result, or store a reference variable.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">AAMjManager</span><span class="o">*</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AAMjManager</span><span class="o">::</span><span class="n">GetManager</span><span class="p">();</span>
+<span class="n">AMjArticulation</span><span class="o">*</span><span class="w"> </span><span class="n">Robot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetArticulation</span><span class="p">(</span><span class="s">&quot;MyRobot&quot;</span><span class="p">);</span>
+</code></pre></div></p>
+<p>From the manager you can look up articulations by name or get all of them:</p>
+<p><strong>Blueprint:</strong> <strong>Get Manager</strong> → <strong>Get Articulation</strong> (name) / <strong>Get All Articulations</strong></p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">TArray</span><span class="o">&lt;</span><span class="n">AMjArticulation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">All</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetAllArticulations</span><span class="p">();</span>
+</code></pre></div></p>
+<hr />
+<h2 id="working-with-components">Working with Components</h2>
+<p>Once you have an articulation, its MuJoCo components are just child components. Access them by name or as arrays:</p>
+<p><strong>Blueprint:</strong> <strong>Get Actuator</strong> (name), <strong>Get Joint</strong> (name), <strong>Get Sensor</strong> (name) — or <strong>Get Actuators</strong>, <strong>Get Joints</strong>, <strong>Get Sensors</strong>, <strong>Get Bodies</strong> for arrays. You can also drag directly from the component tree in your Blueprint.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">UMjActuator</span><span class="o">*</span><span class="w"> </span><span class="n">Act</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetActuator</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">);</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UMjJoint</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">Joints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetJoints</span><span class="p">();</span>
+<span class="n">UMjBody</span><span class="o">*</span><span class="w"> </span><span class="n">Body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetBodyByMjId</span><span class="p">(</span><span class="mi">3</span><span class="p">);</span><span class="w">  </span><span class="c1">// by compiled ID</span>
+</code></pre></div></p>
+<hr />
+<h2 id="controlling-actuators">Controlling Actuators</h2>
+<p><strong>Blueprint:</strong> <strong>Set Actuator Control</strong> (Name, Value) on the articulation. Wire <strong>Get Game Time in Seconds</strong> → <strong>Sin</strong> → <strong>Set Actuator Control</strong> into Event Tick for a simple sine wave.</p>
+<p>Use <strong>Get Actuator Range</strong> to get a <code>Vector2D</code> (min, max) for clamping.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">SetActuatorControl</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">,</span><span class="w"> </span><span class="mf">1.57f</span><span class="p">);</span>
+<span class="n">FVector2D</span><span class="w"> </span><span class="n">Range</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetActuatorRange</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">);</span>
+</code></pre></div></p>
+<hr />
+<h2 id="reading-sensors">Reading Sensors</h2>
+<p><strong>Blueprint:</strong></p>
+<ul>
+<li><strong>Get Sensor Scalar</strong> (name) → Float — for 1D sensors (touch, joint pos, clock)</li>
+<li><strong>Get Sensor Reading</strong> (name) → Array of Float — for vector sensors (force, accelerometer)</li>
+<li><strong>Get Joint Angle</strong> (name) → Float — shortcut for joint position</li>
+</ul>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="n">Touch</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetSensorScalar</span><span class="p">(</span><span class="s">&quot;fingertip_touch&quot;</span><span class="p">);</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetSensorReading</span><span class="p">(</span><span class="s">&quot;wrist_force&quot;</span><span class="p">);</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">Angle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetJointAngle</span><span class="p">(</span><span class="s">&quot;elbow&quot;</span><span class="p">);</span>
+</code></pre></div></p>
+<hr />
+<h2 id="reacting-to-collisions">Reacting to Collisions</h2>
+<p><code>AMjArticulation</code> has an <strong>On Collision</strong> event dispatcher. Fires with: <code>SelfGeom</code> (UMjGeom<em>), <code>OtherGeom</code> (UMjGeom</em>), <code>ContactPos</code> (FVector).</p>
+<p><strong>Blueprint:</strong> Select the articulation reference → <strong>Assign On Collision</strong> → wire into your logic.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">OnCollision</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">AMyActor</span><span class="o">::</span><span class="n">HandleCollision</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">AMyActor::HandleCollision</span><span class="p">(</span><span class="n">UMjGeom</span><span class="o">*</span><span class="w"> </span><span class="n">SelfGeom</span><span class="p">,</span><span class="w"> </span><span class="n">UMjGeom</span><span class="o">*</span><span class="w"> </span><span class="n">OtherGeom</span><span class="p">,</span><span class="w"> </span><span class="n">FVector</span><span class="w"> </span><span class="n">ContactPos</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Stop gripper, play effect, etc.</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<hr />
+<h2 id="simulation-lifecycle">Simulation Lifecycle</h2>
+<p>All on the manager:</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Set Paused</strong> (bool)</td>
+<td>Pause/resume the physics thread</td>
+</tr>
+<tr>
+<td><strong>Reset Simulation</strong></td>
+<td>Zero positions, velocities, time</td>
+</tr>
+<tr>
+<td><strong>Step Sync</strong> (N)</td>
+<td>Advance N steps synchronously (RL-style loops)</td>
+</tr>
+<tr>
+<td><strong>Get Sim Time</strong></td>
+<td>Current simulation clock</td>
+</tr>
+</tbody>
+</table>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">SetPaused</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+<span class="n">Manager</span><span class="o">-&gt;</span><span class="n">StepSync</span><span class="p">(</span><span class="mi">10</span><span class="p">);</span>
+<span class="n">Manager</span><span class="o">-&gt;</span><span class="n">ResetSimulation</span><span class="p">();</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">Time</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetSimTime</span><span class="p">();</span>
+</code></pre></div></p>
+<hr />
+<h2 id="snapshots">Snapshots</h2>
+<p>Save and restore the full simulation state:</p>
+<p><strong>Blueprint:</strong> <strong>Capture Snapshot</strong> → store in a variable → <strong>Restore Snapshot</strong> later.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">UMjSimulationState</span><span class="o">*</span><span class="w"> </span><span class="n">Snap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">CaptureSnapshot</span><span class="p">();</span>
+<span class="c1">// ... try something ...</span>
+<span class="n">Manager</span><span class="o">-&gt;</span><span class="n">RestoreSnapshot</span><span class="p">(</span><span class="n">Snap</span><span class="p">);</span>
+</code></pre></div></p>
+<p>Hold multiple snapshots for A/B testing, checkpointing, or undo.</p>
+<hr />
+<h2 id="keyframe-api">Keyframe API</h2>
+<p>On <code>AMjArticulation</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ResetToKeyframe(Name)</code></td>
+<td>Teleports to a named keyframe (sets qpos/qvel/ctrl)</td>
+</tr>
+<tr>
+<td><code>HoldKeyframe(Name)</code></td>
+<td>Continuously maintains a keyframe pose</td>
+</tr>
+<tr>
+<td><code>StopHoldKeyframe()</code></td>
+<td>Releases the held keyframe</td>
+</tr>
+<tr>
+<td><code>GetKeyframeNames()</code></td>
+<td>Returns names of all keyframes on this articulation</td>
+</tr>
+<tr>
+<td><code>IsHoldingKeyframe()</code></td>
+<td>Returns true if currently holding a pose</td>
+</tr>
+</tbody>
+</table>
+<p>The MjSimulate widget provides a keyframe dropdown and Reset/Hold/Stop buttons for interactive use.</p>
+<hr />
+<h2 id="recording-and-replay">Recording and Replay</h2>
+<p>With an <code>AMjReplayManager</code> in the level:</p>
+<p><strong>Blueprint:</strong> <strong>Start Recording</strong> / <strong>Stop Recording</strong> / <strong>Start Replay</strong> / <strong>Stop Replay</strong> / <strong>Save Recording to File</strong> / <strong>Load Recording from File</strong></p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartRecording</span><span class="p">();</span>
+<span class="c1">// ... simulation runs ...</span>
+<span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StopRecording</span><span class="p">();</span>
+<span class="n">Replay</span><span class="o">-&gt;</span><span class="n">SaveRecordingToFile</span><span class="p">(</span><span class="s">&quot;C:/data/experiment.dat&quot;</span><span class="p">);</span>
+<span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartReplay</span><span class="p">();</span>
+</code></pre></div></p>
+<hr />
+<h2 id="switching-control-source">Switching Control Source</h2>
+<p>Toggle between dashboard and external ZMQ control:</p>
+<p><strong>Blueprint:</strong> <strong>Get Manager</strong> → <strong>Set Control Source</strong> → <code>UI</code> or <code>ZMQ</code></p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">SetControlSource</span><span class="p">(</span><span class="n">EControlSource</span><span class="o">::</span><span class="n">ZMQ</span><span class="p">);</span>
+</code></pre></div></p>
+<p>Per-articulation override available on <code>AMjArticulation::ControlSource</code>.</p>
+<hr />
+<h2 id="mjkeyframecontroller">MjKeyframeController</h2>
+<p>Cycles through named poses on an articulation with ease-in-out blending.</p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>LoadPreset</strong> (name)</td>
+<td>Load a built-in pose sequence</td>
+</tr>
+<tr>
+<td><strong>Play</strong> / <strong>Stop</strong></td>
+<td>Start or pause playback</td>
+</tr>
+<tr>
+<td><strong>GoToKeyframe</strong> (index)</td>
+<td>Jump to a specific keyframe</td>
+</tr>
+<tr>
+<td><strong>GetPresetNames</strong></td>
+<td>Returns all available preset names</td>
+</tr>
+</tbody>
+</table>
+<p>For full details on the keyframe controller, presets, and FMjKeyframePose struct, see <a href="../controller_framework/">Controller Framework</a>.</p>
+<hr />
+<h2 id="mjkeyframecameraactor">MjKeyframeCameraActor</h2>
+<p><code>AMjKeyframeCameraActor</code> is a cinematic camera that smoothly interpolates through a list of waypoints (<code>FMjCameraWaypoint</code>: Position, Rotation, Time). It uses a <code>UCineCameraComponent</code> and displays a spline preview of the path in the editor.</p>
+<p><strong>Key functions:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Play</strong></td>
+<td>Start waypoint playback</td>
+</tr>
+<tr>
+<td><strong>Pause</strong></td>
+<td>Freeze at current position</td>
+</tr>
+<tr>
+<td><strong>TogglePlayPause</strong></td>
+<td>Toggle (also bound to <strong>O</strong> key)</td>
+</tr>
+<tr>
+<td><strong>Reset</strong></td>
+<td>Return to first waypoint</td>
+</tr>
+<tr>
+<td><strong>CaptureCurrentView</strong></td>
+<td>(Editor only) Snapshot the viewport camera as a new waypoint</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Properties:</strong> <code>bAutoPlay</code>, <code>bAutoActivate</code> (sets as player view target), <code>bLoop</code>, <code>StartDelay</code>, <code>bSmoothInterp</code> (cubic vs linear).</p>
+<hr />
+<h2 id="mjimpulselauncher">MjImpulseLauncher</h2>
+<p><code>AMjImpulseLauncher</code> applies a velocity-based impulse to an <code>MjBody</code>. Two modes:</p>
+<ul>
+<li><strong>Direct</strong> — launches along the actor's forward vector (or <code>DirectionOverride</code>).</li>
+<li><strong>Targeted</strong> — set <code>LaunchTarget</code> to an actor and it computes a ballistic arc toward it. <code>ArcHeight</code> controls the lob.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Node</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>FireImpulse</strong></td>
+<td>Apply the impulse once</td>
+</tr>
+<tr>
+<td><strong>ResetAndFire</strong></td>
+<td>Teleport projectile back to launcher position and fire (also bound to <strong>F</strong> key)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Properties:</strong> <code>TargetActor</code>, <code>TargetBodyName</code> (optional, defaults to first MjBody), <code>LaunchSpeed</code> (m/s), <code>LaunchTarget</code>, <code>ArcHeight</code>, <code>bAutoFire</code>, <code>AutoFireDelay</code>.</p>
+<hr />
+<h2 id="hotkeys">Hotkeys</h2>
+<p>Handled by <code>AAMjManager::Tick</code>. Active during PIE:</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>1</strong></td>
+<td>Toggle debug contacts</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>Toggle visual meshes</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>Toggle articulation collision wireframes</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td>Toggle debug joints</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Toggle quick-convert collision wireframes</td>
+</tr>
+<tr>
+<td><strong>P</strong></td>
+<td>Pause / resume simulation</td>
+</tr>
+<tr>
+<td><strong>R</strong></td>
+<td>Reset simulation</td>
+</tr>
+<tr>
+<td><strong>O</strong></td>
+<td>Toggle orbit camera orbit + keyframe camera play/pause</td>
+</tr>
+<tr>
+<td><strong>F</strong></td>
+<td>Reset and fire all impulse launchers</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="per-articulation-control-source">Per-Articulation Control Source</h2>
+<p>Each <code>AMjArticulation</code> has a <code>ControlSource</code> field (<code>0</code> = ZMQ, <code>1</code> = UI) that overrides the manager-level <code>EControlSource</code> setting. This lets you run some robots from the dashboard sliders while others receive external ZMQ commands in the same scene.</p>
+<p><strong>Blueprint:</strong> Set <code>ControlSource</code> on the articulation reference in Details or via Set node.</p>
+<p><strong>C++:</strong>
+<div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">ControlSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// UI control for this robot</span>
+</code></pre></div></p>
+<hr />
+<h2 id="advanced-direct-mujoco-access">Advanced: Direct MuJoCo Access</h2>
+<p>For users who need low-level access, every <code>UMjComponent</code> exposes <strong>Get Mj ID</strong> (compiled integer ID), <strong>Get Mj Name</strong> (prefixed name), and <strong>Is Bound</strong> (compilation status). Use these to index directly into <code>mjData</code> from C++. For most workflows, the API above is all you need.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

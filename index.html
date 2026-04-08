@@ -34,7 +34,7 @@
           <a href="." class="icon icon-home"> Mujoco 插件
         </a><div role="search">
   <form id ="rtd-search-form" class="wy-form" action="./search.html" method="get">
-      <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" title="Type search term here" />
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
   </form>
 </div>
       </div>
@@ -43,12 +43,6 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">首页</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#_1">简介 </a>
-        <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#_2">引擎插件 </a>
-    </li>
-        </ul>
-    </li>
     </ul>
                 </li>
               </ul>
@@ -68,7 +62,7 @@
     <li><a href="." class="icon icon-home" aria-label="Docs"></a></li>
       <li class="breadcrumb-item active">首页</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/index.md" class="icon icon-github"> Edit on GitHub</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/index.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -79,16 +73,105 @@
                 <h1 id="mujoco"><a href="https://github.com/OpenHUTB/mujoco_plugin">Mujoco 插件</a></h1>
 <p>欢迎使用 Mujoco 插件文档，该页面包含所有内容的索引。</p>
 <ul>
-<li><a href="#primary"><strong>简介</strong></a>  <ul>
-<li><a href="#plugin">引擎插件</a></li>
+<li><a href="#implementation"><strong>mujoco 插件实现</strong></a>  <ul>
+<li><a href="#guide">指南</a></li>
 </ul>
 </li>
+<li><a href="#dev"><strong>引擎插件开发</strong></a>  </li>
 </ul>
 <hr />
-<h2 id="_1">简介 <span id="introduction"></span></h2>
-<h3 id="_2">引擎插件 <span id="opensim"></span></h3>
+<h1 id="mujoco_1">mujoco 插件实现 <span id="implementation"></span></h1>
+<!-- 更新至：https://github.com/URLab-Sim/UnrealRoboticsLab/commit/8f571e7f66eb06c65d390a47bc8211aa9bb64455 -->
+
+<p>虚幻机器人实验室 (Unreal Robotics Lab, URLab) 虚幻引擎插件将 <a href="https://github.com/google-deepmind/mujoco">MuJoCo</a> 物理引擎直接嵌入到编辑器和运行时中。</p>
+<p>该插件提供研究级的接触动力学功能，并兼容虚幻引擎的渲染、蓝图脚本和编辑器工具。您可以从 MJCF XML 文件导入机器人（或在组件层级结构中创建机器人），点击“运行”按钮，MuJoCo 会在专用线程上处理物理效果，而虚幻引擎则负责所有视觉效果。</p>
+<p><img alt="" src="img/hero.png" /></p>
+<hr />
+<h2 id="_1">指南  <span id="guide"></span></h2>
+<table>
+<thead>
+<tr>
+<th>指南</th>
+<th>涵盖的内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="getting_started/">入门</a></td>
+<td>安装、首次模拟、控制方法</td>
+</tr>
+<tr>
+<td><a href="features/">特性</a></td>
+<td>完整特性参考</td>
+</tr>
+<tr>
+<td><a href="guides/mujoco_import/">MJCF 导入</a></td>
+<td>将 MuJoCo XML 模型导入虚幻引擎</td>
+</tr>
+<tr>
+<td><a href="guides/geometry_authoring/">几何体与碰撞</a></td>
+<td>图元、网格几何体、快速转换、高度场</td>
+</tr>
+<tr>
+<td><a href="guides/controller_framework/">控制器框架</a></td>
+<td>PD、关键帧和自定义控制器</td>
+</tr>
+<tr>
+<td><a href="guides/possession_twist/">持有和扭转控制</a></td>
+<td>WASD控制，弹簧臂摄像头</td>
+</tr>
+<tr>
+<td><a href="guides/blueprint_reference/">使用蓝图编写脚本</a></td>
+<td>快捷键、API 使用、脚本工作流程</td>
+</tr>
+<tr>
+<td><a href="guides/zmq_networking/">ZMQ 网络与 ROS 2</a></td>
+<td>ZMQ 传输、主题、摄像头流媒体</td>
+</tr>
+<tr>
+<td><a href="guides/policy_bridge/">URLab 桥接</a></td>
+<td>Python 中间件、强化学习策略、远程控制</td>
+</tr>
+<tr>
+<td><a href="architecture/">架构</a></td>
+<td>子系统设计、线程模型、编译流程</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="api">API 参考</h2>
+<p><a href="api/index.md">API参考文档</a> 会在每次构建时根据 C++ 头文件自动生成。它涵盖了插件中的每个类、结构体和枚举。</p>
+<h1 id="_2">引擎插件开发 <span id="dev"></span></h1>
 <p><a href="introduction/"><strong>引擎插件开发入门</strong></a> — 引擎插件开发的环境配置</p>
-<p>如果对文档中的任何问题可以在 <a href="https://github.com/OpenHUTB/locomotion">本文档的源码仓库</a> 中的 <a href="https://github.com/OpenHUTB/locomotion/issues">问题</a> 页面讨论或者提交 <a href="https://zhuanlan.zhihu.com/p/153381521">拉取请求</a> 直接修改文档。</p>
+<hr />
+<h2 id="_3">第三方软件</h2>
+<table>
+<thead>
+<tr>
+<th>库</th>
+<th>许可证</th>
+<th>角色</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/google-deepmind/mujoco">MuJoCo</a></td>
+<td>Apache 2.0</td>
+<td>物理模拟引擎</td>
+</tr>
+<tr>
+<td><a href="https://github.com/SarahWeiii/CoACD">CoACD</a></td>
+<td>MIT</td>
+<td>凸近似分解(Convex approximate decomposition, CoACD)</td>
+</tr>
+<tr>
+<td><a href="https://zeromq.org">libzmq</a></td>
+<td>MPL 2.0</td>
+<td>高性能消息传递</td>
+</tr>
+</tbody>
+</table>
+<p>如果对文档中的任何问题可以在 <a href="https://github.com/OpenHUTB/mujoco_plugin">本文档的源码仓库</a> 中的 <a href="https://github.com/OpenHUTB/mujoco_plugin/issues">问题</a> 页面讨论或者提交 <a href="https://zhuanlan.zhihu.com/p/153381521">拉取请求</a> 直接修改文档。</p>
               
             </div>
           </div><footer>
@@ -142,6 +225,6 @@
 </html>
 
 <!--
-MkDocs version : 1.5.3
-Build Date UTC : 2025-11-07 03:27:42.323068+00:00
+MkDocs version : 1.5.8
+Build Date UTC : 2026-04-08 01:50:13.439535+00:00
 -->

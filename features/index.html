@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Features - Mujoco 插件</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Features";
+        var mkdocs_page_input_path = "features.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Features</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/features.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="features">Features</h1>
+<h2 id="core-architecture">Core Architecture</h2>
+<ul>
+<li>Full MuJoCo C API accessible (<code>mjModel*</code>, <code>mjData*</code>) -- users can call any MuJoCo function directly</li>
+<li>Async physics thread with configurable timestep</li>
+<li>Component-based design matching MJCF element hierarchy</li>
+<li>Singleton <code>MjManager</code> orchestrates compilation, stepping, and state</li>
+</ul>
+<h2 id="mjcf-import">MJCF Import</h2>
+<p>Drag-and-drop XML import into Content Browser. Auto-generates Unreal Blueprints with full component hierarchy, mesh conversion, material import, and default class inheritance.</p>
+<p>See <a href="../guides/mujoco_import/">MuJoCo Import</a> for details.</p>
+<h2 id="quick-convert">Quick Convert</h2>
+<ul>
+<li>Convert any Unreal Static Mesh to a MuJoCo physics body with one click</li>
+<li>CoACD convex decomposition with adjustable threshold (0.01-1.0)</li>
+<li>Visual/collision mesh separation (group 2 visual, group 3 collision)</li>
+<li>Static, dynamic, or mocap-driven modes</li>
+<li>Friction, solver parameters configurable per component</li>
+</ul>
+<h2 id="heightfield-terrain">Heightfield Terrain</h2>
+<ul>
+<li>Convert Unreal Landscapes to MuJoCo heightfield collision</li>
+<li>Configurable sample resolution (2-512)</li>
+<li>Complex trace mode for accurate mesh sampling</li>
+<li>Actor whitelist filtering</li>
+<li>Binary cache for fast recompilation</li>
+<li>Editor grid preview visualization</li>
+</ul>
+<h2 id="physics-simulation">Physics Simulation</h2>
+<ul>
+<li>Solvers: PGS, CG, Newton</li>
+<li>Integrators: Euler, RK4, Implicit, ImplicitFast</li>
+<li>Sim speed control (5-100%)</li>
+<li>Pause, resume, reset, single-step</li>
+<li>Snapshot capture and restore (full state)</li>
+<li>Keyframe reset and hold</li>
+<li>Sleep support with per-body policies</li>
+<li>Multi-CCD collision detection</li>
+<li>Gravity, wind, density, viscosity</li>
+</ul>
+<h2 id="actuators-8-types">Actuators (8 types)</h2>
+<p>Motor, Position, Velocity, IntVelocity, Damper, Cylinder, Muscle, Adhesion</p>
+<ul>
+<li>All transmission types: joint, tendon, site, body, slider-crank</li>
+<li>Runtime control via <code>SetControl()</code> (BlueprintCallable)</li>
+<li>Gain/bias parameter arrays</li>
+<li>Control/force/activation range limits</li>
+</ul>
+<h2 id="sensors-40-types">Sensors (40+ types)</h2>
+<p>Site-attached: Touch, Accelerometer, Velocimeter, Gyro, Force, Torque, Magnetometer, RangeFinder, CamProjection</p>
+<p>Joint/tendon/actuator: Pos, Vel, Frc for each</p>
+<p>Ball joint: Quat, AngVel</p>
+<p>Frame: Pos, Quat, XYZ axes, LinVel, AngVel, LinAcc, AngAcc</p>
+<p>Subtree: COM, LinVel, AngMom</p>
+<p>Geometric: InsideSite, GeomDist, GeomNormal, GeomFromTo</p>
+<p>Global: Contact, EPotential, EKinetic, Clock</p>
+<ul>
+<li>All readable via <code>GetSensorReading()</code> / <code>GetSensorScalar()</code> on the articulation (BlueprintCallable)</li>
+</ul>
+<h2 id="controllers">Controllers</h2>
+<p>PD, passthrough, keyframe, and twist controllers for articulations. Keyframe controller includes built-in presets for Franka, UR5e, Spot, ANYmal, and Go2.</p>
+<p>See <a href="../guides/controller_framework/">Controller Framework</a> for details.</p>
+<h2 id="debug-visualization">Debug Visualization</h2>
+<p>Hotkey-driven toggles during PIE for contacts, collision wireframes, joint axes, and visual meshes. Per-articulation and global toggles available via MjSimulate widget.</p>
+<p>See <a href="../guides/blueprint_reference/">Blueprint Reference</a> for all hotkeys.</p>
+<h2 id="camera-system">Camera System</h2>
+<ul>
+<li><strong>MjCamera</strong>: scene capture attached to MuJoCo sites, streams via ZMQ, respects post-process volumes</li>
+<li><strong>MjOrbitCamera</strong>: auto-orbiting cinematic camera with target detection, height oscillation, configurable focal length</li>
+<li><strong>MjKeyframeCamera</strong>: waypoint-based camera path with smooth interpolation, <code>O</code> key play/pause</li>
+</ul>
+<p>See <a href="../guides/blueprint_reference/#mjkeyframecameraactor">Blueprint Reference</a> for camera API details.</p>
+<h2 id="networking-zmq">Networking (ZMQ)</h2>
+<p>Binary pub/sub protocol broadcasting joint state, sensors, and camera images. Receives actuator targets and PD gains. Prefix-based filtering for multi-articulation scenes.</p>
+<p>See <a href="../guides/zmq_networking/">ZMQ Networking</a> for details.</p>
+<h2 id="python-integration-urlab_bridge">Python Integration (urlab_bridge)</h2>
+<ul>
+<li><strong>Policy GUI</strong>: DearPyGui dashboard for policy selection, articulation targeting, force twist override, motion/gait preset selection</li>
+<li><strong>UnrealEnv</strong>: RoboJuDo-compatible environment over ZMQ with auto-detection, forward kinematics, born-place alignment</li>
+<li>Pre-integrated policies: Unitree G1 locomotion (12/29 DOF), BeyondMimic (dance/violin/waltz/jump), Walk-These-Ways Go2, AMO, H2H, Smooth, ASAP</li>
+<li><strong>ROS 2 bridge</strong>: republishes ZMQ streams to standard ROS 2 topics</li>
+</ul>
+<h2 id="replay-system">Replay System</h2>
+<p>Record and play back full simulation state. Supports CSV trajectory import, snapshot capture/restore, and multi-session management.</p>
+<p>See <a href="../guides/blueprint_reference/">Blueprint Reference</a> for recording/replay API.</p>
+<h2 id="blueprint-api">Blueprint API</h2>
+<p>40+ BlueprintCallable functions for simulation control, state queries, actuator commands, snapshots, and replay.</p>
+<p>See <a href="../guides/blueprint_reference/">Scripting with Blueprints</a> for the full API reference.</p>
+<h2 id="mjsimulate-widget">MjSimulate Widget</h2>
+<ul>
+<li>In-editor dashboard replicating MuJoCo's simulate UI</li>
+<li>Physics options: timestep, solver, integrator, iterations, sim speed</li>
+<li>Per-actuator control sliders</li>
+<li>Joint state readouts</li>
+<li>Sensor value display</li>
+<li>Camera feed thumbnails</li>
+<li>Articulation selector dropdown</li>
+<li>Record/replay/snapshot controls</li>
+<li>Possess button for spring-arm camera follow</li>
+</ul>
+<h2 id="forces">Forces</h2>
+<ul>
+<li><strong>MjImpulseLauncher</strong>: velocity-based object launching (matching MuJoCo's object_launcher_plugin approach)</li>
+<li>Direct mode (arrow direction + speed) or targeted mode (ballistic arc toward target actor)</li>
+<li>Reset-and-fire for iterative testing during PIE</li>
+<li><code>F</code> key fires all launchers in scene</li>
+</ul>
+<h2 id="simulation-hotkeys">Simulation Hotkeys</h2>
+<p>See <a href="../guides/blueprint_reference/#hotkeys">Hotkeys</a> for the complete list of keyboard shortcuts.</p>
+<h2 id="mesh-preparation-tool">Mesh Preparation Tool</h2>
+<ul>
+<li><code>Scripts/clean_meshes.py</code>: XML-aware mesh converter</li>
+<li>Parses MJCF, detects GLB stem conflicts, renames automatically</li>
+<li>Converts OBJ/STL to GLB with UV preservation</li>
+<li>Strips embedded textures to prevent Interchange import conflicts</li>
+<li>Outputs updated <code>_ue.xml</code> ready for drag-and-drop import</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../js/umlconvert.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

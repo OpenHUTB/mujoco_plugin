@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Geometry & Collision - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Geometry \u0026 Collision";
+        var mkdocs_page_input_path = "guides/geometry_authoring.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Geometry & Collision</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/geometry_authoring.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="geometry-collision">Geometry &amp; Collision</h1>
+<p>How to define collision shapes — from primitives to decomposed meshes — and control which bodies collide.</p>
+<hr />
+<h2 id="geometry-types">Geometry Types</h2>
+<table>
+<thead>
+<tr>
+<th>Type</th>
+<th>Component</th>
+<th>Defined by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Box</td>
+<td><code>UMjBox</code></td>
+<td>Half-extents (via scale XYZ)</td>
+</tr>
+<tr>
+<td>Sphere</td>
+<td><code>UMjSphere</code></td>
+<td>Radius (via scale X)</td>
+</tr>
+<tr>
+<td>Cylinder</td>
+<td><code>UMjCylinder</code></td>
+<td>Radius (scale X) + half-height (scale Z)</td>
+</tr>
+<tr>
+<td>Capsule</td>
+<td><code>UMjGeom</code> (type=Capsule)</td>
+<td>Radius + half-height</td>
+</tr>
+<tr>
+<td>Mesh</td>
+<td><code>UMjGeom</code> (type=Mesh)</td>
+<td>Static Mesh asset</td>
+</tr>
+<tr>
+<td>Heightfield</td>
+<td><code>AMjHeightfieldActor</code></td>
+<td>Unreal Landscape data</td>
+</tr>
+</tbody>
+</table>
+<p>Use the standard Unreal transform gizmo to size shapes — the plugin reads component scale and maps it to MuJoCo size parameters.</p>
+<hr />
+<h2 id="primitives">Primitives</h2>
+<p>Fast, exact analytical collision. Add <code>UMjBox</code>, <code>UMjSphere</code>, or <code>UMjCylinder</code> as children of a <code>UMjBody</code>. Stack multiple on one body for compound shapes.</p>
+<h2 id="mesh-geoms">Mesh Geoms</h2>
+<p>For convex meshes, set <code>Type = Mesh</code> and assign a Static Mesh. MuJoCo computes the convex hull internally.</p>
+<p>For <strong>concave</strong> meshes, use CoACD decomposition — click "Decompose Mesh" on the geom, or set <code>ComplexMeshRequired</code> on a Quick Convert component.</p>
+<hr />
+<h2 id="quick-convert">Quick Convert</h2>
+<p><code>UMjQuickConvertComponent</code> on any Static Mesh actor — one-click physics body.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Static</code></td>
+<td>Fixed in place (no free joint)</td>
+</tr>
+<tr>
+<td><code>ComplexMeshRequired</code></td>
+<td>CoACD decomposition for concave meshes</td>
+</tr>
+<tr>
+<td><code>CoACDThreshold</code></td>
+<td>Decomposition detail (0.01–1.0, lower = more convex pieces)</td>
+</tr>
+<tr>
+<td><code>bDrivenByUnreal</code></td>
+<td>Unreal drives position, MuJoCo does not simulate</td>
+</tr>
+</tbody>
+</table>
+<h2 id="heightfield-terrain">Heightfield Terrain</h2>
+<p><code>AMjHeightfieldActor</code> converts Unreal Landscape geometry into a MuJoCo heightfield for terrain contact. Enable <code>bTraceComplex</code> for accurate mesh-level sampling of the landscape. Use <code>TraceWhitelist</code> to filter which actors are sampled (e.g., only terrain, not foliage).</p>
+<hr />
+<h2 id="geom-properties">Geom Properties</h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Friction</code></td>
+<td>Sliding, torsional, rolling coefficients</td>
+</tr>
+<tr>
+<td><code>Density</code></td>
+<td>Mass inferred from density × volume</td>
+</tr>
+<tr>
+<td><code>Margin</code></td>
+<td>Contact detection margin</td>
+</tr>
+<tr>
+<td><code>Solref</code> / <code>Solimp</code></td>
+<td>Solver stiffness/damping/impedance</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="contact-filtering">Contact Filtering</h2>
+<p><strong>Groups</strong> (0–5): integer tags on geoms used for organizing visibility in MuJoCo's native viewer. In URLab, group 2 is conventionally used for visual-only meshes (contype=0, conaffinity=0) and group 3 for collision-only meshes. Contact generation is controlled by <code>contype</code> and <code>conaffinity</code> bitmasks, not groups.</p>
+<p><strong>Contact Pairs</strong> (<code>UMjContactPair</code>): explicitly enable contact between two bodies.</p>
+<p><strong>Contact Exclusions</strong> (<code>UMjContactExclude</code>): disable contact between two bodies.</p>
+<p><strong>Bitmask</strong> (<code>Contype</code> / <code>Conaffinity</code>): scalable filtering for large scenes. Two geoms collide only if their type/affinity masks overlap.</p>
+<hr />
+<h2 id="debug-visualization">Debug Visualization</h2>
+<p>Collision debug viz draws geoms that belong to <strong>group 3</strong> OR have <strong>contype != 0 &amp;&amp; conaffinity != 0</strong>. This ensures foot contact spheres (which may not be in group 3 but do participate in contacts) are visible in the debug overlay.</p>
+<p>Press <strong>2</strong> to toggle visual mesh rendering. When visual meshes are hidden, only collision geometry is drawn — useful for inspecting contact shapes without visual clutter.</p>
+<hr />
+<h2 id="inertia-override">Inertia Override</h2>
+<p>MuJoCo infers mass from geom density and shape. For explicit control, add <code>UMjInertial</code> to the body with a specific mass, center of mass, and inertia matrix.</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

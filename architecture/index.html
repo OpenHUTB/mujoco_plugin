@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../img/favicon.ico" />
+    <title>Architecture - Mujoco 插件</title>
+    <link rel="stylesheet" href="../css/theme.css" />
+    <link rel="stylesheet" href="../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Architecture";
+        var mkdocs_page_input_path = "architecture.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href=".." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="..">首页</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Architecture</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/architecture.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="architecture">Architecture</h1>
+<h2 id="overview">Overview</h2>
+<p>UnrealRoboticsLab (URLab) integrates MuJoCo physics into Unreal Engine 5 as an editor plugin. <code>AAMjManager</code> is the top-level coordinator actor, but delegates core responsibilities to four <code>UActorComponent</code> subsystems: <code>UMjPhysicsEngine</code> (simulation), <code>UMjDebugVisualizer</code> (debug rendering), <code>UMjNetworkManager</code> (ZMQ discovery), and <code>UMjInputHandler</code> (hotkeys). The component system mirrors the MJCF element hierarchy -- each XML element type maps to a <code>UMjComponent</code> subclass attached to an <code>AMjArticulation</code> Blueprint. Physics runs on a dedicated async thread; the game thread reads results for rendering. ZMQ networking provides external control and sensor broadcasting.</p>
+<hr />
+<h2 id="subsystem-architecture">Subsystem Architecture</h2>
+<p><code>AAMjManager</code> delegates responsibilities to four <code>UActorComponent</code> subsystems, created via <code>CreateDefaultSubobject</code> in the constructor:</p>
+<div class="highlight"><pre><span></span><code>AAMjManager (thin coordinator)
+├── UMjPhysicsEngine       — simulation core
+├── UMjDebugVisualizer      — debug rendering
+├── UMjNetworkManager       — ZMQ discovery &amp; cameras
+└── UMjInputHandler         — hotkey processing
+</code></pre></div>
+<h3 id="umjphysicsengine">UMjPhysicsEngine</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</code></p>
+<p>Owns all simulation state: <code>m_spec</code>, <code>m_vfs</code>, <code>m_model</code>, <code>m_data</code>, <code>CallbackMutex</code>. Handles the full compile pipeline (<code>PreCompile</code>/<code>Compile</code>/<code>PostCompile</code>/<code>ApplyOptions</code>). Runs the async physics loop (<code>RunMujocoAsync</code>). Provides callback registration (<code>RegisterPreStepCallback</code>, <code>RegisterPostStepCallback</code>) so other subsystems and ZMQ components can hook into the step loop without direct coupling. Also provides <code>StepSync</code>, <code>Reset</code>, <code>Snapshot</code>/<code>Restore</code>.</p>
+<h3 id="umjdebugvisualizer">UMjDebugVisualizer</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
+<p>Owns <code>DebugData</code> (<code>FMuJoCoDebugData</code> from <code>MjDebugTypes.h</code>) and <code>DebugMutex</code>. <code>CaptureDebugData</code> is registered as a post-step callback on <code>UMjPhysicsEngine</code> — it copies contact data under the mutex on the physics thread. <code>TickComponent</code> renders contact force arrows/points on the game thread. Provides toggle methods for each debug visualization mode.</p>
+<h3 id="umjnetworkmanager">UMjNetworkManager</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></p>
+<p>Owns <code>ZmqComponents</code> discovery and camera registration/streaming. <code>DiscoverZmqComponents()</code> is called during BeginPlay to collect all <code>UMjZmqComponent</code> subcomponents on the manager actor.</p>
+<h3 id="umjinputhandler">UMjInputHandler</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></p>
+<p>Processes hotkeys in <code>TickComponent</code>. Dispatches to <code>UMjPhysicsEngine</code> (pause/reset), <code>UMjDebugVisualizer</code> (debug toggles), and scene actors (mesh visibility, collision wireframes, cameras).</p>
+<h3 id="communication-pattern">Communication Pattern</h3>
+<p>Subsystems communicate through:
+- <strong>Callbacks:</strong> <code>UMjPhysicsEngine</code> exposes <code>RegisterPreStepCallback</code>/<code>RegisterPostStepCallback</code>. Other subsystems register lambdas during BeginPlay.
+- <strong><code>GetOwner()</code> traversal:</strong> Subsystems access siblings via <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code> (e.g., <code>UMjInputHandler</code> finds <code>UMjPhysicsEngine</code> to call <code>Reset()</code>).
+- <strong>Direct access:</strong> External code accesses subsystem state directly via <code>Manager-&gt;PhysicsEngine-&gt;Options</code>, <code>Manager-&gt;DebugVisualizer-&gt;bShowDebug</code>, etc. <code>AAMjManager</code> has no duplicate properties — it is a pure coordinator. Blueprint-callable convenience methods like <code>SetPaused()</code>, <code>StepSync()</code>, and <code>ResetSimulation()</code> delegate to <code>PhysicsEngine</code>.</p>
+<hr />
+<h2 id="module-initialization">Module Initialization</h2>
+<p><strong>File:</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
+<p>DLL load order (sequential, each must succeed):</p>
+<ol>
+<li><code>mujoco.dll</code> (from <code>third_party/install/MuJoCo/bin/</code>)</li>
+<li><code>obj_decoder.dll</code> (same path)</li>
+<li><code>stl_decoder.dll</code> (same path)</li>
+<li><code>libzmq-v143-mt-4_3_6.dll</code> (from <code>third_party/install/libzmq/bin/</code>)</li>
+<li><code>lib_coacd.dll</code> (from <code>third_party/install/CoACD/bin/</code>)</li>
+</ol>
+<p>Search path strategy: plugin <code>third_party/install/{SubDir}/bin/</code> first (editor/development builds), then <code>FPlatformProcess::GetModulesDirectory()</code> (packaged builds where DLLs are staged next to the executable).</p>
+<p>In editor builds, the module also registers a "MuJoCo" asset category via <code>IAssetTools::RegisterAdvancedAssetCategory()</code>.</p>
+<hr />
+<h2 id="scene-lifecycle">Scene Lifecycle</h2>
+<h3 id="beginplay">BeginPlay</h3>
+<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code> -- <code>AAMjManager::BeginPlay()</code></p>
+<ol>
+<li><strong>Singleton enforcement.</strong> If <code>AAMjManager::Instance</code> is already set to a different actor, this instance logs an error and returns. Only one <code>AAMjManager</code> per level is supported.</li>
+<li><strong>Subsystem creation.</strong> The four subsystems (<code>UMjPhysicsEngine</code>, <code>UMjDebugVisualizer</code>, <code>UMjNetworkManager</code>, <code>UMjInputHandler</code>) are created via <code>CreateDefaultSubobject</code> in the constructor.</li>
+<li><strong>Auto-create ZMQ components.</strong> If no <code>UMjZmqComponent</code> subclasses exist on the manager actor, it creates a <code>UZmqSensorBroadcaster</code> (tcp://*:5555) and <code>UZmqControlSubscriber</code> (tcp://127.0.0.1:5556).</li>
+<li><strong>ZMQ discovery.</strong> <code>UMjNetworkManager::DiscoverZmqComponents()</code> collects all ZMQ components on the manager actor.</li>
+<li><strong>Auto-create replay manager.</strong> If no <code>AMjReplayManager</code> exists in the level, one is spawned.</li>
+<li><strong><code>Compile()</code></strong> -- delegates to <code>UMjPhysicsEngine</code> for spec construction and <code>mj_compile()</code> (see below).</li>
+<li><strong>Callback registration.</strong> Registers <code>UMjDebugVisualizer::CaptureDebugData</code> as a post-step callback on <code>UMjPhysicsEngine</code>.</li>
+<li><strong><code>UpdateCameraStreamingState()</code></strong> -- applies global camera broadcast toggle.</li>
+<li><strong><code>RunMujocoAsync()</code></strong> -- delegates to <code>UMjPhysicsEngine</code> to launch the physics thread.</li>
+<li><strong>Auto-create MjSimulate widget.</strong> Loads <code>/UnrealRoboticsLab/WBP_MjSimulate</code> Blueprint and adds it to the viewport (controlled by <code>bAutoCreateSimulateWidget</code>).</li>
+</ol>
+<h3 id="spec-construction-precompile">Spec Construction (PreCompile)</h3>
+<p><strong>File:</strong> <code>UMjPhysicsEngine::PreCompile()</code></p>
+<ol>
+<li>Creates a fresh <code>mjSpec</code> via <code>mj_makeSpec()</code> (radians mode: <code>compiler.degree = false</code>).</li>
+<li>Initializes the VFS via <code>mj_defaultVFS()</code>.</li>
+<li>Discovers all actors in the level via <code>UGameplayStatics::GetAllActorsOfClass()</code>.</li>
+<li>Processing order within the discovery loop:</li>
+<li><strong>Quick Convert:</strong> Any actor with <code>UMjQuickConvertComponent</code> calls <code>Setup(spec, vfs)</code>.</li>
+<li><strong>Articulations:</strong> Any <code>AMjArticulation</code> calls <code>Setup(spec, vfs)</code>.</li>
+<li><strong>Heightfields:</strong> Any <code>AMjHeightfieldActor</code> calls <code>Setup(spec, vfs)</code>.</li>
+<li>ZMQ component discovery is handled separately by <code>UMjNetworkManager::DiscoverZmqComponents()</code> during BeginPlay.</li>
+</ol>
+<p>Note: The discovery loop iterates all actors once. Quick Convert components and Articulations on the same actor are both processed (they are not mutually exclusive in the loop logic, though in practice they exist on separate actors).</p>
+<h3 id="articulation-setup">Articulation Setup</h3>
+<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code> -- <code>AMjArticulation::Setup()</code></p>
+<p>This is the most complex part of spec construction. Each articulation creates an isolated child spec that is later merged into the root.</p>
+<ol>
+<li><strong>Create child spec.</strong> <code>mj_makeSpec()</code> for isolation. Radians mode. Articulation-level <code>SimOptions</code> applied via <code>ApplyToSpec()</code>.</li>
+<li><strong>Create wrapper.</strong> <code>FMujocoSpecWrapper</code> wraps the child spec and VFS for convenient element creation.</li>
+<li><strong>Prefix.</strong> Set to <code>{ActorName}_</code> -- all elements in this articulation will be prefixed after <code>mjs_attach()</code>.</li>
+<li><strong>Processing order is critical:</strong></li>
+<li><strong>Defaults</strong> (must be first). <code>GetComponents&lt;UMjDefault&gt;()</code> then <code>m_Wrapper-&gt;AddDefault()</code> for each. Other elements reference these default classes.</li>
+<li><strong>WorldBody traversal.</strong> Finds the <code>UMjWorldBody</code> component, iterates its <code>GetAttachChildren()</code>. For each child:<ul>
+<li><code>UMjBody</code> (non-default) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code> (recursive)</li>
+<li><code>UMjFrame</code> (non-default) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code></li>
+</ul>
+</li>
+<li><strong>Tendons.</strong> <code>GetComponents&lt;UMjTendon&gt;()</code> then <code>RegisterToSpec()</code>. Must come after bodies so joint names exist.</li>
+<li><strong>Sensors.</strong> <code>GetComponents&lt;UMjSensor&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Actuators.</strong> <code>GetComponents&lt;UMjActuator&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Contact pairs.</strong> <code>GetComponents&lt;UMjContactPair&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Contact excludes.</strong> <code>GetComponents&lt;UMjContactExclude&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Equalities.</strong> <code>GetComponents&lt;UMjEquality&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Keyframes.</strong> <code>GetComponents&lt;UMjKeyframe&gt;()</code> then <code>RegisterToSpec()</code>.</li>
+<li><strong>Attach.</strong> <code>mjs_attach(attachmentFrame-&gt;element, childSpec-&gt;element, prefix, "")</code> merges the child spec into the root world body via an <code>mjsFrame</code>. The frame's pos/quat are set from the articulation actor's world transform (converted to MuJoCo coordinates). After attach, <code>m_ChildSpec</code> is set to nullptr (ownership transferred to root spec).</li>
+</ol>
+<h3 id="body-traversal-recursive">Body Traversal (Recursive)</h3>
+<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp</code> -- <code>UMjBody::Setup()</code></p>
+<p><code>UMjBody::Setup()</code> creates an <code>mjsBody</code> via the wrapper, then iterates <code>GetAttachChildren()</code>:</p>
+<ul>
+<li>Child <code>UMjBody</code> -&gt; recursive <code>Setup()</code></li>
+<li>Child <code>UMjFrame</code> -&gt; <code>Frame::Setup()</code></li>
+<li>Child <code>UMjGeom</code>, <code>UMjJoint</code>, <code>UMjSensor</code>, <code>UMjSite</code>, etc. -&gt; <code>RegisterToSpec()</code></li>
+</ul>
+<p>Mesh preparation (CoACD convex decomposition via <code>PrepareMeshForMuJoCo</code>) happens during geom registration.</p>
+<h3 id="compilation">Compilation</h3>
+<p><strong>File:</strong> <code>UMjPhysicsEngine::Compile()</code></p>
+<ol>
+<li>Calls <code>PreCompile()</code>.</li>
+<li><code>mj_compile(m_spec, &amp;m_vfs)</code> produces <code>mjModel*</code>.</li>
+<li><strong>On failure:</strong> retrieves error via <code>mjs_getError(m_spec)</code>, logs it, shows editor dialog (<code>FMessageDialog</code>). Returns without creating data.</li>
+<li><strong>On success:</strong></li>
+<li>If <code>bSaveDebugXml</code> is true: saves <code>scene_compiled.xml</code> and <code>scene_compiled.mjb</code> to <code>Saved/URLab/</code>, with file paths relativized.</li>
+<li>Creates <code>mjData</code> via <code>mj_makeData(m_model)</code>.</li>
+<li>Calls <code>ApplyOptions()</code> (applies manager-level option overrides to <code>m_model-&gt;opt</code>).</li>
+<li>Calls <code>PostCompile()</code>.</li>
+</ol>
+<h3 id="postcompile-binding">PostCompile (Binding)</h3>
+<p><strong>File:</strong> <code>UMjPhysicsEngine::PostCompile()</code></p>
+<ol>
+<li>Calls <code>PostSetup(model, data)</code> on each <code>UMjQuickConvertComponent</code>.</li>
+<li>Builds <code>m_ArticulationMap</code> (name -&gt; <code>AMjArticulation*</code>) for O(1) lookup.</li>
+<li>Calls <code>PostSetup(model, data)</code> on each <code>AMjArticulation</code>.</li>
+<li>Calls <code>PostSetup(model, data)</code> on each <code>AMjHeightfieldActor</code>.</li>
+</ol>
+<p><strong>Inside <code>AMjArticulation::PostSetup()</code>:</strong></p>
+<p>Each component calls <code>Bind(model, data, prefix)</code>. The <code>Bind()</code> method on <code>UMjComponent</code> calls <code>BindToView&lt;T&gt;()</code> which:</p>
+<ol>
+<li><strong>Path 1 (ID-based):</strong> If <code>m_SpecElement</code> is set, tries <code>mjs_getId(m_SpecElement)</code>. Validates the ID is within model bounds (guards against stale IDs after <code>mjs_attach</code>).</li>
+<li><strong>Path 2 (Name fallback):</strong> Constructs <code>{Prefix}{MjName}</code> (or <code>{Prefix}{GetName()}</code> if MjName is empty), calls <code>mj_name2id()</code>.</li>
+</ol>
+<p>This creates View structs (<code>BodyView</code>, <code>GeomView</code>, <code>JointView</code>, <code>ActuatorView</code>, <code>SensorView</code>, <code>TendonView</code>, <code>SiteView</code>) that cache raw pointers into <code>mjModel</code>/<code>mjData</code> arrays.</p>
+<p>PostSetup also populates component-name maps (<code>ActuatorComponentMap</code>, <code>JointComponentMap</code>, etc.) and MuJoCo-ID maps (<code>BodyIdMap</code>, <code>GeomIdMap</code>, etc.) for O(1) runtime access.</p>
+<hr />
+<h2 id="physics-loop-async-thread">Physics Loop (Async Thread)</h2>
+<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code> -- <code>UMjPhysicsEngine::RunMujocoAsync()</code></p>
+<p>Runs on a dedicated thread via <code>Async(EAsyncExecution::Thread, ...)</code>. Stored in <code>AsyncPhysicsFuture</code>.</p>
+<p>Each iteration (under <code>CallbackMutex</code> lock, owned by <code>UMjPhysicsEngine</code>):</p>
+<ol>
+<li><strong>Check <code>bPendingReset</code></strong> -&gt; <code>mj_resetData()</code> + <code>mj_forward()</code>. Broadcasts <code>OnSimulationReset</code> on game thread.</li>
+<li><strong>Check <code>bPendingRestore</code></strong> -&gt; <code>mj_setState()</code> with <code>PendingStateVector</code> + <code>mj_forward()</code>.</li>
+<li><strong>Registered pre-step callbacks</strong> (replaces direct ZMQ PreStep calls). ZMQ components register via <code>RegisterPreStepCallback()</code>.</li>
+<li><strong>ApplyControls</strong> on each articulation (writes <code>d-&gt;ctrl</code> from actuator values).</li>
+<li><strong>Physics step:</strong></li>
+<li>If <code>bIsPaused</code>: skip.</li>
+<li>If <code>CustomStepHandler</code> is bound: call it instead of <code>mj_step()</code> (used by replay playback).</li>
+<li>Otherwise: <code>mj_step(m_model, m_data)</code>.</li>
+<li><strong>Registered post-step callbacks</strong> (replaces direct ZMQ PostStep and debug capture calls). ZMQ components and <code>UMjDebugVisualizer::CaptureDebugData</code> register via <code>RegisterPostStepCallback()</code>.</li>
+<li><strong><code>OnPostStep</code> delegate</strong> (replay recording captures state here).</li>
+</ol>
+<p><strong>Timing:</strong> After releasing the mutex, the loop spin-waits (<code>FPlatformProcess::YieldThread()</code>) until <code>TargetInterval / SpeedFactor</code> has elapsed. <code>SimSpeedPercent</code> (5-100) controls the speed factor.</p>
+<hr />
+<h2 id="game-thread-tick">Game Thread (Tick)</h2>
+<p><strong>File:</strong> <code>AAMjManager::Tick()</code></p>
+<ol>
+<li><strong>Backward-compat pointer sync.</strong> Copies <code>m_model</code>/<code>m_data</code> from <code>UMjPhysicsEngine</code> so legacy callers that read <code>AAMjManager::m_model</code> still work.</li>
+<li>Hotkey processing and debug drawing are delegated to <code>UMjInputHandler</code> and <code>UMjDebugVisualizer</code> respectively (both tick via their own <code>TickComponent</code>).</li>
+</ol>
+<h3 id="umjinputhandlertickcomponent">UMjInputHandler::TickComponent</h3>
+<p>Processes hotkeys each frame and dispatches to the appropriate subsystem:</p>
+<ul>
+<li><code>1</code> -&gt; <code>DebugVisualizer-&gt;ToggleContactForces()</code></li>
+<li><code>2</code> -&gt; Toggle visual mesh visibility (scene actors)</li>
+<li><code>3</code> -&gt; Toggle articulation collision wireframes (scene actors)</li>
+<li><code>4</code> -&gt; Toggle joint debug axes (scene actors)</li>
+<li><code>5</code> -&gt; Toggle Quick Convert collision wireframes (scene actors)</li>
+<li><code>P</code> -&gt; <code>PhysicsEngine-&gt;TogglePause()</code></li>
+<li><code>R</code> -&gt; <code>PhysicsEngine-&gt;Reset()</code></li>
+<li><code>O</code> -&gt; Toggle orbit and keyframe cameras (scene actors)</li>
+<li><code>F</code> -&gt; Fire impulse launchers (scene actors)</li>
+</ul>
+<h3 id="umjdebugvisualizertickcomponent">UMjDebugVisualizer::TickComponent</h3>
+<p>If debug is enabled, reads <code>DebugData</code> (protected by <code>DebugMutex</code> on the visualizer), draws contact force arrows and points via <code>ULineBatchComponent</code> / <code>DrawDebugLine</code>.</p>
+<p><strong>Transform sync</strong> happens in <code>UMjBody::TickComponent()</code>:</p>
+<ul>
+<li>If <code>bDrivenByUnreal</code>: writes UE world transform to MuJoCo mocap body (<code>d-&gt;mocap_pos</code>, <code>d-&gt;mocap_quat</code>).</li>
+<li>Otherwise: reads MuJoCo <code>xpos</code>/<code>xquat</code> from <code>BodyView</code> and sets UE world transform via <code>SetWorldLocationAndRotation()</code>.</li>
+</ul>
+<hr />
+<h2 id="thread-safety">Thread Safety</h2>
+<table>
+<thead>
+<tr>
+<th>Mutex / Mechanism</th>
+<th>Owner</th>
+<th>Protects</th>
+<th>Used By</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CallbackMutex</code> (<code>FCriticalSection</code>)</td>
+<td><code>UMjPhysicsEngine</code></td>
+<td><code>m_model</code>, <code>m_data</code> during physics stepping</td>
+<td>Physics thread (main lock), <code>StepSync()</code></td>
+</tr>
+<tr>
+<td><code>DebugMutex</code> (<code>FCriticalSection</code>)</td>
+<td><code>UMjDebugVisualizer</code></td>
+<td><code>DebugData</code> (contact visualization buffer)</td>
+<td>Physics thread writes (via post-step callback), game thread reads (TickComponent)</td>
+</tr>
+<tr>
+<td><code>CameraMutex</code> (<code>FCriticalSection</code>)</td>
+<td><code>UMjNetworkManager</code></td>
+<td><code>ActiveCameras</code> array</td>
+<td>Register/Unregister from any thread</td>
+</tr>
+<tr>
+<td><code>bPendingReset</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
+<td><code>UMjPhysicsEngine</code></td>
+<td>Reset signal</td>
+<td>Game thread sets, physics thread reads/clears</td>
+</tr>
+<tr>
+<td><code>bPendingRestore</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
+<td><code>UMjPhysicsEngine</code></td>
+<td>Restore signal</td>
+<td>Game thread sets, physics thread reads/clears</td>
+</tr>
+<tr>
+<td><code>bIsPaused</code> (non-atomic, but written only from game thread)</td>
+<td><code>UMjPhysicsEngine</code></td>
+<td>Pause state</td>
+<td>Read by physics thread</td>
+</tr>
+<tr>
+<td><code>bShouldStopTask</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
+<td><code>UMjPhysicsEngine</code></td>
+<td>Shutdown signal</td>
+<td>Game thread sets in <code>EndPlay</code>, physics thread checks</td>
+</tr>
+<tr>
+<td><code>UMjActuator::InternalValue</code> / <code>NetworkValue</code></td>
+<td><code>UMjActuator</code></td>
+<td>Per-actuator control values</td>
+<td>Atomic reads/writes across threads</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="component-system">Component System</h2>
+<h3 id="base-umjcomponent">Base: UMjComponent</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/MjComponent.h</code></p>
+<p>Inherits <code>USceneComponent</code> + <code>IMjSpecElement</code>. All MuJoCo element components derive from this.</p>
+<p>Key members:</p>
+<ul>
+<li><code>m_SpecElement</code> (<code>mjsElement*</code>) -- set during <code>RegisterToSpec()</code>, used for ID resolution in <code>Bind()</code>.</li>
+<li><code>m_ID</code> (<code>int</code>) -- MuJoCo object ID, resolved during <code>Bind()</code>.</li>
+<li><code>m_Model</code>, <code>m_Data</code> -- cached pointers, set during <code>Bind()</code>.</li>
+<li><code>MjName</code> (<code>FString</code>) -- original MJCF name, stable for cross-referencing.</li>
+<li><code>bIsDefault</code> (<code>bool</code>) -- if true, this component is a default template, skipped by runtime discovery.</li>
+</ul>
+<p>Key methods:</p>
+<ul>
+<li><code>RegisterToSpec(FMujocoSpecWrapper&amp;, mjsBody*)</code> -- creates the spec element. Subclasses override.</li>
+<li><code>Bind(mjModel*, mjData*, Prefix)</code> -- resolves ID and caches model/data pointers.</li>
+<li><code>BindToView&lt;T&gt;(Prefix)</code> -- template method that creates a View struct. Tries <code>mjs_getId()</code> first (with bounds validation), falls back to <code>mj_name2id()</code>.</li>
+<li><code>ResolveDefault(mjSpec*, ClassName)</code> -- static helper to find <code>mjsDefault</code> by class name. Falls back to global default.</li>
+<li><code>FindEditorDefault()</code> -- editor-time default resolution without requiring an mjSpec.</li>
+<li><code>SetSpecElementName()</code> -- assigns unique name to spec element via wrapper deduplication.</li>
+</ul>
+<h3 id="view-structs">View Structs</h3>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Utils/MjBind.h</code></p>
+<p>Lightweight structs that cache raw pointers into <code>mjModel</code>/<code>mjData</code> arrays for zero-overhead runtime access. Each has a <code>static constexpr mjtObj obj_type</code> for template dispatch.</p>
+<table>
+<thead>
+<tr>
+<th>Struct</th>
+<th>obj_type</th>
+<th>Key Pointers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BodyView</code></td>
+<td><code>mjOBJ_BODY</code></td>
+<td><code>xpos</code>, <code>xquat</code>, <code>xfrc_applied</code>, <code>mass</code>, <code>mocap_id</code></td>
+</tr>
+<tr>
+<td><code>GeomView</code></td>
+<td><code>mjOBJ_GEOM</code></td>
+<td><code>xpos</code>, <code>xmat</code>, <code>size</code>, <code>type</code>, <code>contype</code>, <code>conaffinity</code>, <code>dataid</code></td>
+</tr>
+<tr>
+<td><code>JointView</code></td>
+<td><code>mjOBJ_JOINT</code></td>
+<td><code>qpos</code>, <code>qvel</code>, <code>qacc</code>, <code>xanchor</code>, <code>xaxis</code>, <code>range</code>, <code>stiffness</code>, <code>stiffnesspoly</code>, <code>damping</code>, <code>dampingpoly</code></td>
+</tr>
+<tr>
+<td><code>ActuatorView</code></td>
+<td><code>mjOBJ_ACTUATOR</code></td>
+<td><code>ctrl</code>, <code>force</code>, <code>length</code>, <code>ctrlrange</code>, <code>gainprm</code>, <code>biasprm</code></td>
+</tr>
+<tr>
+<td><code>SensorView</code></td>
+<td><code>mjOBJ_SENSOR</code></td>
+<td><code>data</code> (pointer into <code>sensordata</code>), <code>dim</code>, <code>adr</code>, <code>type</code></td>
+</tr>
+<tr>
+<td><code>TendonView</code></td>
+<td><code>mjOBJ_TENDON</code></td>
+<td><code>length</code>, <code>velocity</code>, <code>stiffness</code>, <code>stiffnesspoly</code>, <code>damping</code>, <code>dampingpoly</code>, <code>range</code></td>
+</tr>
+<tr>
+<td><code>SiteView</code></td>
+<td><code>mjOBJ_SITE</code></td>
+<td><code>xpos</code>, <code>xmat</code>, <code>size</code>, <code>type</code>, <code>body_id</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>BodyView</code> also provides traversal methods: <code>Bodies()</code>, <code>Geoms()</code>, <code>Joints()</code> for walking the compiled model hierarchy.</p>
+<p>A standalone template function <code>bind&lt;T&gt;(model, data, name)</code> provides name-based lookup.</p>
+<h3 id="default-system">Default System</h3>
+<p><code>UMjDefault</code> components store template properties mirroring the MJCF <code>&lt;default&gt;</code> hierarchy. Parent-child class chain is built via <code>FMujocoSpecWrapper::AddDefault()</code>. During articulation setup, <code>ExportTo(mjsDefault*)</code> iterates child components and writes their properties to the spec default. At registration time, components resolve their default class via <code>ResolveDefault()</code> which calls <code>mjs_findDefault()</code>.</p>
+<hr />
+<h2 id="coordinate-system">Coordinate System</h2>
+<p>MuJoCo uses right-handed Z-up coordinates in meters. Unreal uses left-handed Z-up in centimeters.</p>
+<p><strong>Position conversion</strong> (<code>MjUtils::MjToUEPosition</code> / <code>UEToMjPosition</code>):
+- X -&gt; X, Y -&gt; -Y, Z -&gt; Z
+- Scale: MuJoCo meters * 100 = Unreal centimeters</p>
+<p><strong>Rotation conversion</strong> (<code>MjUtils::MjToUERotation</code> / <code>UEToMjRotation</code>):
+- MuJoCo quaternion <code>[w, x, y, z]</code> -&gt; <code>FQuat</code> with X and Z components negated (to handle handedness flip).</p>
+<p>All conversion utilities are in <code>Source/URLab/Public/MuJoCo/Utils/MjUtils.h</code>.</p>
+<hr />
+<h2 id="imported-vs-user-built-articulations">Imported vs User-Built Articulations</h2>
+<p>There are two ways to create an <code>AMjArticulation</code>:</p>
+<p><strong>1. Imported from MJCF XML (drag-and-drop):</strong>
+- Uses <code>UMujocoImportFactory</code> -&gt; <code>UMujocoGenerationAction</code>
+- All components auto-generated from XML parsing
+- Default class hierarchy preserved as <code>UMjDefault</code> components
+- <code>MuJoCoXMLFile</code> property stores the source XML path
+- Mesh assets imported into Unreal Content Browser</p>
+<p><strong>2. User-built from scratch (right-click -&gt; New MuJoCo Articulation):</strong>
+- Uses <code>UMjArticulationFactory</code> -&gt; <code>UMujocoGenerationAction::SetupEmptyArticulation()</code>
+- Creates organizational hierarchy (Definitions, Defaults, Actuators, Sensors, etc.)
+- User manually adds components in the Blueprint editor
+- No XML file — components are authored directly</p>
+<p><strong>Both paths produce the same result:</strong> an <code>AMjArticulation</code> Blueprint with <code>UMjComponent</code> subclasses. At runtime, both go through the same Setup -&gt; Compile -&gt; Bind pipeline. The spec system doesn't know or care how the components were created.</p>
+<h3 id="special-case-flags">Special-Case Flags</h3>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>On</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bIsDefault</code></td>
+<td><code>UMjComponent</code></td>
+<td>Marks template components inside <code>&lt;default&gt;</code> blocks. Excluded from runtime discovery (<code>GetRuntimeComponents</code>), excluded from <code>RegisterToSpec</code> during body traversal.</td>
+</tr>
+<tr>
+<td><code>bIsQuickConverted</code></td>
+<td><code>UMjBody</code></td>
+<td>Set by Quick Convert. Enables mesh pivot offset correction during tick sync (UE meshes may have off-center pivots that MuJoCo doesn't know about).</td>
+</tr>
+<tr>
+<td><code>bDrivenByUnreal</code></td>
+<td><code>UMjBody</code></td>
+<td>Enables one-way coupling: UE transform drives MuJoCo mocap body. Used for kinematic objects where Unreal is authoritative.</td>
+</tr>
+<tr>
+<td><code>bFromToResolvedHalfLength</code></td>
+<td><code>UMjGeom</code></td>
+<td>Set during import when a <code>fromto</code> attribute was resolved to pos/quat/size. Controls how <code>ExportTo</code> writes the size — only the half-length slot is written, leaving radius to come from the default chain.</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="import-pipeline">Import Pipeline</h2>
+<p><strong>Files:</strong> <code>Source/URLabEditor/Private/MujocoImportFactory.cpp</code>, <code>Source/URLabEditor/Private/MjArticulationFactory.cpp</code></p>
+<h3 id="steps">Steps</h3>
+<ol>
+<li>User drags an <code>.xml</code> file into the Content Browser.</li>
+<li><code>UMujocoImportFactory::FactoryCreateFile()</code> triggers.</li>
+<li><strong>Mesh preprocessing:</strong> Auto-runs <code>Scripts/clean_meshes.py</code> (Python subprocess).</li>
+<li>Detects Python installation, auto-installs <code>trimesh</code> if missing.</li>
+<li>Parses the MJCF XML to find all mesh assets.</li>
+<li>Detects GLB stem conflicts (e.g., <code>link1.obj</code> and <code>link1.stl</code> both producing <code>link1.glb</code>).</li>
+<li>Renames conflicting files with counter suffix, updates XML.</li>
+<li>Converts all meshes to GLB (preserving UVs, stripping embedded textures).</li>
+<li>Produces <code>_ue.xml</code> with updated mesh references.</li>
+<li>Graceful fallback at every step — if Python/trimesh missing, uses raw XML.</li>
+<li>Creates an <code>AMjArticulation</code> Blueprint.</li>
+<li><code>UMujocoGenerationAction::GenerateForBlueprint()</code> parses the XML in four passes:</li>
+<li><strong>Pass 1:</strong> Parse assets (meshes with scales, textures with file paths, materials with RGBA/texture refs).</li>
+<li><strong>Pass 2:</strong> Parse defaults (class hierarchy — creates <code>UMjDefault</code> components with child geom/joint/actuator templates).</li>
+<li><strong>Pass 3:</strong> Import worldbody recursively (bodies, geoms, joints, sites become <code>UMjComponent</code> subclasses attached in the Blueprint hierarchy).</li>
+<li><strong>Pass 4:</strong> Import actuators, sensors, tendons, equalities, keyframes, contact pairs/excludes.</li>
+<li>Mesh import uses Unreal's asset tools with format priority: FBX &gt; GLB &gt; OBJ. Meshes saved to <code>/Meshes/</code> subfolder to avoid texture name collisions.</li>
+<li>Materials created as shared instances keyed by XML material name (<code>MI_white</code> shared by all geoms referencing <code>"white"</code>).</li>
+<li>Textures imported to asset folder, applied to material instances with <code>bUseTexture</code> flag.</li>
+<li>Final Blueprint compile via <code>FKismetEditorUtilities</code>.</li>
+</ol>
+<h3 id="import-normalization">Import Normalization</h3>
+<p>The importer normalizes several MJCF constructs for consistency:</p>
+<p><strong>FromTo resolution:</strong> All <code>fromto</code> attributes on geoms and sites are decomposed at import time into explicit <code>pos</code>, <code>quat</code>, and <code>size</code>:
+- <code>pos</code> = midpoint of the fromto segment
+- <code>quat</code> = rotation aligning local +Z with the fromto direction
+- <code>size[1]</code> = half-length (for capsule/cylinder), <code>size[2]</code> for box/ellipsoid
+- <code>size[0]</code> (radius) left untouched — inherited from defaults
+- <code>bFromToResolvedHalfLength</code> flag set so ExportTo knows to only write the half-length slot
+- The component's relative transform is set for accurate editor visualization</p>
+<p><strong>Default class visual transforms:</strong> When a geom inherits a transform from a default class (e.g., <code>class="visual_zflip"</code> with <code>quat="0 0 0 1"</code>), the importer walks the default hierarchy to find the transform and applies it as a visual offset to the <code>UStaticMeshComponent</code> child — NOT to the <code>UMjGeom</code> component itself (which would double-apply via the spec default system).</p>
+<p><strong>Orientation handling:</strong> All MJCF rotations (euler, axisangle, quat, xyaxes, zaxis) are converted to UE quaternions at import time using <code>MjOrientationUtils</code>. The <code>&lt;compiler&gt;</code> settings (angle="radian"/"degree", eulerseq) are respected.</p>
+<p><strong>Mesh name deduplication:</strong> <code>MjSpecWrapper::GetUniqueName()</code> appends <code>_1</code>, <code>_2</code>, etc. if a mesh/body/geom name already exists in the spec.</p>
+<hr />
+<h2 id="export-pipeline-runtime">Export Pipeline (Runtime)</h2>
+<p>Each component's <code>RegisterToSpec()</code> writes to an <code>mjsElement</code> via the <code>FMujocoSpecWrapper</code>. The component's <code>ExportTo()</code> method populates properties (type, size, pos, quat, friction, etc.).</p>
+<h3 id="override-flag-system">Override Flag System</h3>
+<p>Every exportable property has a corresponding <code>bOverride_*</code> bool. During <code>ExportTo()</code>:
+- If <code>bOverride_X == true</code>: the property is explicitly written to the spec element.
+- If <code>bOverride_X == false</code>: the property is NOT written, allowing MuJoCo's default system to provide the value.</p>
+<p>This is critical for round-trip fidelity: an imported geom with <code>class="collision"</code> that inherits <code>group=3</code> from its default should NOT have <code>group=3</code> written explicitly — that would bypass the default if the user later changes the default.</p>
+<h3 id="fromto-export">FromTo Export</h3>
+<p>Geoms with <code>bFromToResolvedHalfLength == true</code>:
+- If <code>bIsDefault</code>: writes raw fromto to the default's geom (MuJoCo handles size resolution for defaults).
+- If instance with <code>bOverride_Size == false</code>: writes only the half-length slot, letting the default provide the radius.
+- If instance with <code>bOverride_Size == true</code>: writes all size slots explicitly.</p>
+<h3 id="spec-attachment">Spec Attachment</h3>
+<p><code>mjs_attach()</code> merges the child spec into the root with the articulation's prefix, enabling multi-articulation scenes with unique namespaces. After attachment, all element names gain the prefix (e.g., <code>pelvis</code> becomes <code>g1_C_1_pelvis</code>). Runtime name lookups use this prefix.</p>
+<hr />
+<h2 id="zmq-networking">ZMQ Networking</h2>
+<p><strong>Files:</strong> <code>Source/URLab/Private/MuJoCo/Net/ZmqSensorBroadcaster.cpp</code>, <code>ZmqControlSubscriber.cpp</code></p>
+<p>Binary pub/sub protocol for minimal latency.</p>
+<p><strong>Topics:</strong>
+- <code>{prefix}/joint/{name}</code> -- joint state
+- <code>{prefix}/sensor/{name}</code> -- sensor reading
+- <code>{prefix}/base_state/</code> -- root body pose
+- <code>{prefix}/twist</code> -- twist command velocity
+- <code>{prefix}/control</code> -- actuator control values</p>
+<p><strong>Timing:</strong>
+- Sensor broadcast: <code>PostStep()</code> on the physics thread.
+- Control receive: <code>PreStep()</code> on the physics thread.</p>
+<p><strong>Control source:</strong> <code>EControlSource</code> enum (<code>ZMQ</code> or <code>UI</code>). Set globally on <code>AAMjManager::ControlSource</code>, with per-articulation override via <code>AMjArticulation::ControlSource</code>.</p>
+<p><strong>Info broadcast:</strong> JSON payload with actuator names, IDs, and ranges. Sent periodically for client discovery.</p>
+<hr />
+<h2 id="quick-convert">Quick Convert</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/QuickConvert/MjQuickConvertComponent.h</code></p>
+<p><code>UMjQuickConvertComponent</code> attaches to any Static Mesh actor for one-click physics integration.</p>
+<ul>
+<li>At <code>Setup()</code> time, creates an <code>MjBody</code> + <code>MjGeom</code> on the root world body.</li>
+<li>Runs CoACD convex decomposition with configurable threshold.</li>
+<li>Separates visual mesh (group 2) from collision mesh (group 3).</li>
+<li>Supports static, dynamic, or mocap body modes.</li>
+</ul>
+<hr />
+<h2 id="heightfield">Heightfield</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/QuickConvert/AMjHeightfieldActor.h</code></p>
+<p><code>AMjHeightfieldActor</code> samples Unreal landscape geometry via raycasts.</p>
+<ul>
+<li>Configurable resolution, trace channel, and actor whitelist.</li>
+<li><code>bTraceComplex</code> for accurate mesh sampling.</li>
+<li>Registers as <code>mjsHField</code> + static geom on the world body.</li>
+<li>Binary cache (<code>Saved/URLab/</code>) for fast recompilation.</li>
+</ul>
+<hr />
+<h2 id="replay-system">Replay System</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/Replay/MjReplayManager.h</code>, <code>MjReplayTypes.h</code></p>
+<ul>
+<li><strong>Recording:</strong> <code>OnPostStep</code> callback captures <code>qpos</code>/<code>qvel</code> per joint per frame.</li>
+<li><strong>Playback:</strong> <code>CustomStepHandler</code> replaces <code>mj_step()</code>, applies recorded <code>qpos</code> then calls <code>mj_forward()</code>.</li>
+<li><strong>CSV import:</strong> Supports external trajectory data with automatic joint name matching.</li>
+<li><strong>Snapshot/Restore:</strong> Full state capture via <code>mj_getState()</code> / <code>mj_setState()</code>. Game thread writes <code>PendingStateVector</code> then sets <code>bPendingRestore</code>; physics thread applies on next iteration.</li>
+<li><strong>Thread safety:</strong> Playback time is <code>std::atomic</code>. The <code>CustomStepHandler</code> runs inside <code>CallbackMutex</code>.</li>
+</ul>
+<hr />
+<h2 id="controller-system">Controller System</h2>
+<p><strong>Files:</strong> <code>Source/URLab/Public/MuJoCo/Components/Controllers/</code></p>
+<ul>
+<li><code>UMjArticulationController</code> -- abstract base class. Override <code>ComputeAndApply()</code> to implement control logic.</li>
+<li><code>UMjPDController</code> -- PD servo controller with per-actuator Kp/Kv/torque limits.</li>
+<li><code>UMjPassthroughController</code> -- passes control values directly to <code>d-&gt;ctrl</code>.</li>
+<li><code>UMjKeyframeController</code> -- cycles through preset keyframe sequences with smooth interpolation.</li>
+</ul>
+<p><strong>Discovery:</strong> During <code>PostSetup()</code>, the articulation calls <code>FindComponentByClass&lt;UMjArticulationController&gt;()</code>.</p>
+<p><strong>Bind:</strong> Maps actuator IDs to <code>qpos</code>/<code>qvel</code> addresses via <code>FActuatorBinding</code> structs for efficient access.</p>
+<p><strong>ApplyControls:</strong> <code>AMjArticulation::ApplyControls()</code> delegates to the controller's <code>ComputeAndApply()</code> if one is bound; otherwise falls back to writing actuator values directly to <code>d-&gt;ctrl</code>.</p>
+<hr />
+<h2 id="input-system">Input System</h2>
+<p><strong>Files:</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code>, <code>Source/URLab/Public/MuJoCo/Input/MjTwistController.h</code>, <code>Source/URLab/Public/MuJoCo/Net/MjInputMapping.h</code></p>
+<h3 id="mjinputhandler">MjInputHandler</h3>
+<p><code>UMjInputHandler</code> is an <code>UActorComponent</code> subsystem on <code>AAMjManager</code>. It processes debug/simulation hotkeys in <code>TickComponent</code> and dispatches to the appropriate subsystem or scene actors. See "Game Thread (Tick)" above for the full key mapping. It accesses sibling subsystems via <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code>.</p>
+<h3 id="mjtwistcontroller">MjTwistController</h3>
+<p>Added automatically to articulations on Possess. Captures WASD/gamepad input and stores twist commands (<code>vx</code>, <code>vy</code>, <code>yaw_rate</code>) for broadcasting over ZMQ.</p>
+<ul>
+<li>Uses Unreal's Enhanced Input System (<code>UInputAction</code>, <code>UInputMappingContext</code>)</li>
+<li>Input context added in <code>PossessedBy()</code>, removed in <code>UnPossessed()</code></li>
+<li><code>GetTwist()</code> returns the current twist vector (thread-safe, read by ZMQ broadcaster on physics thread)</li>
+<li>Supports 10 action keys (mapped to a bitmask) for discrete commands</li>
+<li><code>MaxVx</code>, <code>MaxVy</code>, <code>MaxYawRate</code> properties clamp the output</li>
+</ul>
+<h3 id="mjinputmapping">MjInputMapping</h3>
+<p>Configurable actuator-to-input binding system. Maps Enhanced Input actions directly to actuator SetControl calls. Each <code>FMjInputBinding</code> specifies:
+- Target actuator component
+- Input action reference
+- Scale multiplier
+- The binding fires <code>SetControl(value * scale)</code> on the Triggered event</p>
+<hr />
+<h2 id="simulation-options">Simulation Options</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjSimOptions.h</code></p>
+<p><code>FMuJoCoOptions</code> wraps MuJoCo's <code>mjOption</code> fields as UPROPERTYs (timestep, gravity, integrator, solver, iterations, etc.). Used in <strong>two contexts with different semantics</strong>:</p>
+<h3 id="on-amjarticulation-child-spec-options">On AMjArticulation (child spec options)</h3>
+<ul>
+<li>ALL fields are written to the child spec's <code>mjOption</code> before <code>mjs_attach()</code></li>
+<li>The <code>bOverride_*</code> toggles are <strong>ignored</strong> — every value applies unconditionally</li>
+<li>This defines the "native" physics settings for that robot model</li>
+</ul>
+<h3 id="on-aamjmanager-post-compile-overrides">On AAMjManager (post-compile overrides)</h3>
+<ul>
+<li>Acts as <strong>post-compile overrides</strong> on <code>m_model-&gt;opt</code> via <code>ApplyOptions()</code></li>
+<li>Only fields with <code>bOverride_* = true</code> are applied</li>
+<li>Fields with <code>bOverride_* = false</code> keep whatever the compiled model has (from the articulation specs or MJCF defaults)</li>
+<li>Called once after <code>mj_compile()</code> succeeds</li>
+</ul>
+<h3 id="resolution-order">Resolution order</h3>
+<ol>
+<li>MuJoCo's built-in defaults (from <code>&lt;option&gt;</code> in XML or MuJoCo hardcoded defaults)</li>
+<li>Articulation's <code>SimOptions</code> overwrites the child spec options during Setup</li>
+<li>After compilation, Manager's <code>Options</code> selectively overwrites <code>m_model-&gt;opt</code> fields</li>
+</ol>
+<p>This means: an articulation can set <code>timestep = 0.002</code> in its SimOptions, and the manager can override it to <code>timestep = 0.005</code> if <code>bOverride_Timestep = true</code> on the manager.</p>
+<hr />
+<h2 id="keyframes">Keyframes</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/Keyframes/MjKeyframe.h</code></p>
+<p><code>UMjKeyframe</code> components store named simulation state snapshots from the MJCF <code>&lt;keyframe&gt;</code> section:
+- <code>Time</code> -- simulation time
+- <code>Qpos</code> -- joint positions (array of doubles, size = nq)
+- <code>Qvel</code> -- joint velocities (array of doubles, size = nv)
+- <code>Act</code> -- actuator activations
+- <code>Ctrl</code> -- control values
+- <code>MocapPos</code> / <code>MocapQuat</code> -- mocap body transforms</p>
+<p>Registered to the spec during Setup (after bodies/joints). At runtime, <code>AMjArticulation::ResetToKeyframe()</code> teleports the robot to a named keyframe, and <code>HoldKeyframe()</code> continuously maintains the pose (via ctrl or direct qpos injection). The MjSimulate widget exposes these via a keyframe dropdown and Reset/Hold/Stop buttons.</p>
+<hr />
+<h2 id="editor-tools">Editor Tools</h2>
+<ul>
+<li><strong>MjSimulate widget</strong> (<code>WBP_MjSimulate</code>): Physics options, per-actuator sliders, debug visualization toggles, replay controls, possess button. Auto-created at BeginPlay.</li>
+<li><strong>ValidateSpec:</strong> Blueprint compile hook on <code>AMjArticulation</code>. Creates a temporary spec, runs <code>mj_compile()</code>, and reports errors without affecting the running simulation.</li>
+<li><strong>MjGeomDetailCustomization</strong> (<code>Source/URLabEditor/</code>): Custom Details panel for geom properties in the editor.</li>
+</ul>
+<hr />
+<h2 id="editor-workflow">Editor Workflow</h2>
+<h3 id="blueprint-compile-validation">Blueprint Compile Validation</h3>
+<p>When a user compiles an <code>AMjArticulation</code> Blueprint in the editor, <code>ValidateSpec()</code> runs automatically (hooked via <code>OnBlueprintCompiled</code>). This creates a temporary mjSpec, runs the full Setup() pipeline on it, and attempts <code>mj_compile()</code>. If compilation fails, a dialog shows the MuJoCo error message. This catches spec errors (missing joints, invalid ranges, etc.) at edit time rather than at Play.</p>
+<h3 id="mjsimulate-widget">MjSimulate Widget</h3>
+<p>Auto-created from <code>WBP_MjSimulate</code> Blueprint asset at BeginPlay. Provides:
+- Physics options: timestep, solver, integrator, iterations, sim speed
+- Per-actuator sliders (locked when control source is ZMQ)
+- Joint/sensor readouts
+- Articulation selector dropdown
+- Debug toggles (per-articulation and global)
+- Record/Replay/Snapshot controls
+- Possess button (attaches spring arm camera)</p>
+<h3 id="mjgeomdetailcustomization">MjGeomDetailCustomization</h3>
+<p>Custom Details panel for <code>UMjGeom</code> components. Adds "Decompose Mesh" and "Remove Decomposition" buttons for CoACD operations directly in the editor.</p>
+<hr />
+<h2 id="debug-visualization">Debug Visualization</h2>
+<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
+<p><code>UMjDebugVisualizer</code> is an <code>UActorComponent</code> subsystem on <code>AAMjManager</code>. It owns <code>DebugData</code> (<code>FMuJoCoDebugData</code>, defined in <code>MjDebugTypes.h</code>) and <code>DebugMutex</code>. Data capture runs on the physics thread via a registered post-step callback on <code>UMjPhysicsEngine</code>. Rendering runs on the game thread in <code>TickComponent</code>.</p>
+<p>Hotkeys (processed by <code>UMjInputHandler::TickComponent()</code>, dispatched to <code>UMjDebugVisualizer</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Key</th>
+<th>Toggle</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code></td>
+<td>Contact force arrows</td>
+</tr>
+<tr>
+<td><code>2</code></td>
+<td>Visual mesh visibility</td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>Articulation collision wireframes</td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>Joint axis/range arcs</td>
+</tr>
+<tr>
+<td><code>5</code></td>
+<td>Quick Convert collision wireframes</td>
+</tr>
+</tbody>
+</table>
+<p>Collision drawing logic: renders geoms in group 3 OR geoms where <code>contype != 0 &amp;&amp; conaffinity != 0</code>.</p>
+<p>Convex hull rendering uses <code>mesh_graph</code> data from MuJoCo (hull edges, not full mesh triangles).</p>
+<p>Both per-articulation (<code>bDrawDebugCollision</code>, <code>bDrawDebugJoints</code>, <code>bDrawDebugSites</code>) and global toggles (<code>bGlobalDrawDebugCollision</code>, etc.) are supported.</p>
+<hr />
+<h2 id="cinematic-tools">Cinematic Tools</h2>
+<p><strong>Files:</strong> <code>Source/URLab/Public/Cinematics/</code></p>
+<ul>
+<li><code>AMjOrbitCameraActor</code> -- auto-orbiting camera that tracks detected robots. Toggled via <code>O</code> key.</li>
+<li><code>AMjKeyframeCameraActor</code> -- waypoint-based camera path with smooth interpolation. Play/pause toggled via <code>O</code> key.</li>
+</ul>
+<hr />
+<h2 id="error-handling-and-failure-modes">Error Handling and Failure Modes</h2>
+<h3 id="compile-failure">Compile failure</h3>
+<p>If <code>mj_compile()</code> returns null, <code>mjs_getError(m_spec)</code> retrieves the error string. In editor builds, a dialog box shows the message. The error is also stored in <code>m_LastCompileError</code> (accessible via Blueprint). The simulation does not start — <code>m_model</code> and <code>m_data</code> remain null, and <code>RunMujocoAsync</code> checks for this before stepping.</p>
+<h3 id="mesh-import-failure">Mesh import failure</h3>
+<p><code>ImportSingleMesh()</code> tries multiple paths: GLB (via Interchange), then raw OBJ/STL (via FBX factory), then FBX fallback. If all fail, the geom component is created but has no visual mesh — it still exists in the spec as a collision primitive. A warning is logged. The compile still succeeds since MuJoCo doesn't need visual meshes.</p>
+<h3 id="zmq-connection-failure">ZMQ connection failure</h3>
+<p>ZMQ uses <code>bind()</code> not <code>connect()</code> — it listens on ports. If the port is already in use (e.g., previous PIE session didn't clean up), ZMQ will log an error but the simulation still runs. External clients simply can't connect. There is no retry logic — the user must restart PIE.</p>
+<h3 id="python-mesh-preprocessing-failure">Python mesh preprocessing failure</h3>
+<p>Every step of the auto-clean-meshes pipeline has a fallback:
+- Python not found → uses raw XML
+- trimesh not installed → attempts pip install, if that fails → uses raw XML
+- Script errors → uses raw XML
+- The import always proceeds; mesh preprocessing is best-effort</p>
+<h3 id="validatespec-failure">ValidateSpec failure</h3>
+<p>Shows a dialog with the MuJoCo error. Does NOT prevent the Blueprint from being saved — it's informational. The user can fix the issue and recompile.</p>
+<hr />
+<h2 id="debug-xml-diagnostics">Debug XML (Diagnostics)</h2>
+<p>When <code>bSaveDebugXml = true</code> on the AAMjManager, after successful compilation the system saves:
+- <code>Saved/URLab/scene_compiled.xml</code> — the full MuJoCo spec as XML
+- <code>Saved/URLab/scene_compiled.mjb</code> — the compiled binary model</p>
+<p>The XML undergoes path relativization: absolute paths like <code>C:/Users/.../Saved/URLab/ConvertedMeshes/...</code> are stripped to <code>ConvertedMeshes/...</code> relative to the output directory. Double slashes and <code>../</code> traversals are cleaned.</p>
+<p><strong>Diagnostic use:</strong> Diff the original MJCF XML against <code>scene_compiled.xml</code> to identify import/export mismatches. Missing elements, wrong property values, or broken default inheritance will be visible in the diff. The compiled XML can also be loaded directly into native MuJoCo (<code>mj_loadXML</code>) to verify it produces the same behavior.</p>
+<hr />
+<h2 id="key-file-reference">Key File Reference</h2>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Source/URLab/Private/URLab.cpp</code></td>
+<td>Module startup, DLL loading</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/AMjManager.h</code></td>
+<td>Manager actor header (thin coordinator)</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code></td>
+<td>Manager lifecycle, subsystem wiring</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</code></td>
+<td>Physics engine subsystem (spec, model, data, async loop)</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></td>
+<td>Debug visualization subsystem</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/MjDebugTypes.h</code></td>
+<td><code>FMuJoCoDebugData</code> shared struct</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></td>
+<td>Network/ZMQ discovery subsystem</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></td>
+<td>Input/hotkey subsystem</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/MjArticulation.h</code></td>
+<td>Articulation actor header</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code></td>
+<td>Articulation setup, attach</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Components/MjComponent.h</code></td>
+<td>Base component, BindToView</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Utils/MjBind.h</code></td>
+<td>View structs (BodyView, GeomView, etc.)</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Utils/MjUtils.h</code></td>
+<td>Coordinate conversions</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Core/Spec/MjSpecWrapper.h</code></td>
+<td>Spec element creation wrapper</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Components/Defaults/MjDefault.h</code></td>
+<td>Default system</td>
+</tr>
+<tr>
+<td><code>Source/URLabEditor/Private/MujocoImportFactory.cpp</code></td>
+<td>MJCF import pipeline</td>
+</tr>
+<tr>
+<td><code>Source/URLabEditor/Private/MjArticulationFactory.cpp</code></td>
+<td>Blueprint generation</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/Replay/MjReplayTypes.h</code></td>
+<td>Replay data structures</td>
+</tr>
+<tr>
+<td><code>Source/URLab/Public/MuJoCo/Net/MjZmqComponent.h</code></td>
+<td>ZMQ base component</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2025</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "..";</script>
+    <script src="../js/theme_extra.js"></script>
+    <script src="../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../js/umlconvert.js"></script>
+      <script src="../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
