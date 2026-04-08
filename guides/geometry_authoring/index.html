@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Geometry & Collision - Mujoco 插件</title>
+    <title>几何与碰撞 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Geometry \u0026 Collision";
+        var mkdocs_page_name = "\u51e0\u4f55\u4e0e\u78b0\u649e";
         var mkdocs_page_input_path = "guides/geometry_authoring.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Geometry & Collision</li>
+      <li class="breadcrumb-item active">几何与碰撞</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/geometry_authoring.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,130 +68,130 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="geometry-collision">Geometry &amp; Collision</h1>
-<p>How to define collision shapes — from primitives to decomposed meshes — and control which bodies collide.</p>
+                <h1 id="_1">几何与碰撞</h1>
+<p>如何定义碰撞形状（从基本体到分解网格）并控制哪些物体发生碰撞。</p>
 <hr />
-<h2 id="geometry-types">Geometry Types</h2>
+<h2 id="_2">几何类型</h2>
 <table>
 <thead>
 <tr>
-<th>Type</th>
-<th>Component</th>
-<th>Defined by</th>
+<th>类型</th>
+<th>部件</th>
+<th>定义</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Box</td>
+<td>盒子(Box)</td>
 <td><code>UMjBox</code></td>
-<td>Half-extents (via scale XYZ)</td>
+<td>半延伸（通过 XYZ 缩放）</td>
 </tr>
 <tr>
-<td>Sphere</td>
+<td>球体(Sphere)</td>
 <td><code>UMjSphere</code></td>
-<td>Radius (via scale X)</td>
+<td>半径（通过 X 轴缩放）</td>
 </tr>
 <tr>
-<td>Cylinder</td>
+<td>圆柱(Cylinder)</td>
 <td><code>UMjCylinder</code></td>
-<td>Radius (scale X) + half-height (scale Z)</td>
+<td>半径（X轴缩放）+半高（Z轴缩放）</td>
 </tr>
 <tr>
-<td>Capsule</td>
+<td>胶囊(Capsule)</td>
 <td><code>UMjGeom</code> (type=Capsule)</td>
-<td>Radius + half-height</td>
+<td>半径 + 半高</td>
 </tr>
 <tr>
-<td>Mesh</td>
+<td>网格(Mesh)</td>
 <td><code>UMjGeom</code> (type=Mesh)</td>
-<td>Static Mesh asset</td>
+<td>静态网格资产</td>
 </tr>
 <tr>
-<td>Heightfield</td>
+<td>高度场(Heightfield)</td>
 <td><code>AMjHeightfieldActor</code></td>
-<td>Unreal Landscape data</td>
+<td>虚幻景观数据</td>
 </tr>
 </tbody>
 </table>
-<p>Use the standard Unreal transform gizmo to size shapes — the plugin reads component scale and maps it to MuJoCo size parameters.</p>
+<p>使用标准的虚幻引擎变换 gizmo 来调整形状大小——该插件读取组件缩放并将其映射到 MuJoCo 尺寸参数。</p>
 <hr />
-<h2 id="primitives">Primitives</h2>
-<p>Fast, exact analytical collision. Add <code>UMjBox</code>, <code>UMjSphere</code>, or <code>UMjCylinder</code> as children of a <code>UMjBody</code>. Stack multiple on one body for compound shapes.</p>
-<h2 id="mesh-geoms">Mesh Geoms</h2>
-<p>For convex meshes, set <code>Type = Mesh</code> and assign a Static Mesh. MuJoCo computes the convex hull internally.</p>
-<p>For <strong>concave</strong> meshes, use CoACD decomposition — click "Decompose Mesh" on the geom, or set <code>ComplexMeshRequired</code> on a Quick Convert component.</p>
+<h2 id="_3">基本元素</h2>
+<p>快速、精确的碰撞分析。将 <code>UMjBox</code>、<code>UMjSphere</code> 或 <code>UMjCylinder</code> 添加为 <code>UMjBody</code> 的子对象。在一个实体上堆叠多个对象，可实现复合形状。</p>
+<h2 id="_4">网格几何体</h2>
+<p>对于凸网格，请将“类型”设置为“网格” <code>Type = Mesh</code>，并指定一个“静态网格(Static Mesh)”。MuJoCo 会在内部计算凸包。</p>
+<p>对于<strong>凹</strong>网格，请使用 CoACD 分解——单击几何体上的“分解网格(Decompose Mesh)”，或在“快速转换(Quick Convert)”组件上设置“需要复杂网格(<code>ComplexMeshRequired</code>)”。</p>
 <hr />
-<h2 id="quick-convert">Quick Convert</h2>
-<p><code>UMjQuickConvertComponent</code> on any Static Mesh actor — one-click physics body.</p>
+<h2 id="_5">快速转换</h2>
+<p><code>UMjQuickConvertComponent</code> 可应用于任何静态网格体动作者 — 一键式物理实体。</p>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Effect</th>
+<th>属性</th>
+<th>效果</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Static</code></td>
-<td>Fixed in place (no free joint)</td>
+<td>固定到位（无活动关节）</td>
 </tr>
 <tr>
 <td><code>ComplexMeshRequired</code></td>
-<td>CoACD decomposition for concave meshes</td>
+<td>凹网格的CoACD分解</td>
 </tr>
 <tr>
 <td><code>CoACDThreshold</code></td>
-<td>Decomposition detail (0.01–1.0, lower = more convex pieces)</td>
+<td>分解细节（0.01–1.0，数值越低表示凸块越多）</td>
 </tr>
 <tr>
 <td><code>bDrivenByUnreal</code></td>
-<td>Unreal drives position, MuJoCo does not simulate</td>
+<td>虚幻引擎驱动位置，MuJoCo 不进行模拟</td>
 </tr>
 </tbody>
 </table>
-<h2 id="heightfield-terrain">Heightfield Terrain</h2>
-<p><code>AMjHeightfieldActor</code> converts Unreal Landscape geometry into a MuJoCo heightfield for terrain contact. Enable <code>bTraceComplex</code> for accurate mesh-level sampling of the landscape. Use <code>TraceWhitelist</code> to filter which actors are sampled (e.g., only terrain, not foliage).</p>
+<h2 id="_6">高度场地形</h2>
+<p><code>AMjHeightfieldActor</code> 将虚幻引擎的地形几何体转换为 MuJoCo 高度场，用于地形接触。启用 <code>bTraceComplex</code> 可实现地形的精确网格级采样。使用 <code>TraceWhitelist</code> 可过滤要采样的动作者（例如，仅采样地形，不采样植被）。</p>
 <hr />
-<h2 id="geom-properties">Geom Properties</h2>
+<h2 id="_7">几何属性</h2>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Description</th>
+<th>属性</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Friction</code></td>
-<td>Sliding, torsional, rolling coefficients</td>
+<td>滑动系数、扭转系数、滚动系数</td>
 </tr>
 <tr>
 <td><code>Density</code></td>
-<td>Mass inferred from density × volume</td>
+<td>质量由密度乘以体积推断得出</td>
 </tr>
 <tr>
 <td><code>Margin</code></td>
-<td>Contact detection margin</td>
+<td>接触检测范围</td>
 </tr>
 <tr>
 <td><code>Solref</code> / <code>Solimp</code></td>
-<td>Solver stiffness/damping/impedance</td>
+<td>求解器刚度/阻尼/阻抗</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="contact-filtering">Contact Filtering</h2>
-<p><strong>Groups</strong> (0–5): integer tags on geoms used for organizing visibility in MuJoCo's native viewer. In URLab, group 2 is conventionally used for visual-only meshes (contype=0, conaffinity=0) and group 3 for collision-only meshes. Contact generation is controlled by <code>contype</code> and <code>conaffinity</code> bitmasks, not groups.</p>
-<p><strong>Contact Pairs</strong> (<code>UMjContactPair</code>): explicitly enable contact between two bodies.</p>
-<p><strong>Contact Exclusions</strong> (<code>UMjContactExclude</code>): disable contact between two bodies.</p>
-<p><strong>Bitmask</strong> (<code>Contype</code> / <code>Conaffinity</code>): scalable filtering for large scenes. Two geoms collide only if their type/affinity masks overlap.</p>
+<h2 id="_8">过滤接触</h2>
+<p><strong>组</strong>（0-5）：用于在 MuJoCo 原生查看器中组织几何体可见性的整数标签。在 URLab 中，组 2 通常用于仅显示可见性的网格（contype=0，conaffinity=0），组 3 用于仅显示碰撞的网格。接触生成由 <code>contype</code> 和 <code>conaffinity</code> 位掩码控制，而非组。</p>
+<p><strong>接触对</strong> (<code>UMjContactPair</code>): 明确允许两个物体之间接触。</p>
+<p><strong>接触排除</strong> (<code>UMjContactExclude</code>): 禁止两个物体之间的接触。</p>
+<p><strong>位掩码</strong> (<code>Contype</code> / <code>Conaffinity</code>): 适用于大型场景的可扩展过滤。只有当两个几何体的类型/亲和性掩码重叠时，它们才会发生碰撞。 </p>
 <hr />
-<h2 id="debug-visualization">Debug Visualization</h2>
-<p>Collision debug viz draws geoms that belong to <strong>group 3</strong> OR have <strong>contype != 0 &amp;&amp; conaffinity != 0</strong>. This ensures foot contact spheres (which may not be in group 3 but do participate in contacts) are visible in the debug overlay.</p>
-<p>Press <strong>2</strong> to toggle visual mesh rendering. When visual meshes are hidden, only collision geometry is drawn — useful for inspecting contact shapes without visual clutter.</p>
+<h2 id="_9">调试可视化</h2>
+<p>碰撞调试可视化会绘制属于 <strong>第 3 组</strong> 或 <strong>contype != 0</strong> 且 <strong>conaffinity != 0</strong> 的几何体。这确保了足部接触球体（可能不属于第 3 组，但参与了接触）在调试叠加层中可见。</p>
+<p>按 <strong>2</strong> 可切换可视化网格渲染。隐藏​​可视化网格时，仅绘制碰撞几何体——这有助于在不干扰视觉效果的情况下检查接触形状。</p>
 <hr />
-<h2 id="inertia-override">Inertia Override</h2>
-<p>MuJoCo infers mass from geom density and shape. For explicit control, add <code>UMjInertial</code> to the body with a specific mass, center of mass, and inertia matrix.</p>
+<h2 id="_10">惯性覆盖</h2>
+<p>MuJoCo 会根据几何体的密度和形状推断其质量。要进行显式控制，请将 <code>UMjInertial</code> 添加到具有特定质量、质心和惯性矩阵的物体中。</p>
               
             </div>
           </div><footer>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Controller Framework - Mujoco 插件</title>
+    <title>控制器框架 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Controller Framework";
+        var mkdocs_page_name = "\u63a7\u5236\u5668\u6846\u67b6";
         var mkdocs_page_input_path = "guides/controller_framework.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Controller Framework</li>
+      <li class="breadcrumb-item active">控制器框架</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/controller_framework.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,150 +68,150 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="controller-framework">Controller Framework</h1>
-<p>The controller framework lets you define how position targets become joint torques. Every articulation can have one controller component that intercepts the control pipeline at physics rate.</p>
-<h2 id="control-flow">Control Flow</h2>
-<div class="highlight"><pre><span></span><code>ZMQ / Blueprint → SetNetworkControl(target) on UMjActuator
+                <h1 id="_1">控制器框架</h1>
+<p>控制器框架允许您定义位置目标如何转化为关节扭矩。每个关节都可以有一个控制器组件，该组件以物理速率拦截控制管线。</p>
+<h2 id="_2">控制流</h2>
+<div class="highlight"><pre><span></span><code>ZMQ / 蓝图 → 在 UMjActuator 上 SetNetworkControl(target)
                          │
          AMjArticulation::ApplyControls()
                          │
               ┌──────────┴──────────┐
-              │ Controller found?   │ No controller
+              │找到控制器?          │ 没有控制器
               │                     │
      Controller.ComputeAndApply()  d-&gt;ctrl[id] = target
               │                     (direct write)
-     Custom control law runs
-     at every physics step
+         自定义控制律
+     在每个物理步骤中运行
 </code></pre></div>
-<p>If no controller component exists, <code>ApplyControls</code> writes the raw <code>NetworkValue</code> to <code>d-&gt;ctrl</code> — suitable for position actuators where MuJoCo handles PD internally.</p>
-<h2 id="built-in-controllers">Built-in Controllers</h2>
+<p>如果没有控制器组件，<code>ApplyControls</code> 会将原始 <code>NetworkValue</code> 写入 <code>d-&gt;ctrl</code> — 适用于 MuJoCo 在内部处理 PD 的位置执行器。</p>
+<h2 id="_3">内置控制器</h2>
 <table>
 <thead>
 <tr>
-<th>Controller</th>
-<th>Use Case</th>
+<th>控制器</th>
+<th>用例</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><strong>UMjPassthroughController</strong></td>
-<td>Direct write (same as no controller, but explicit)</td>
+<td>直接写入（与不使用控制器相同，但显式写入）</td>
 </tr>
 <tr>
 <td><strong>UMjPDController</strong></td>
-<td>Position target → PD torque at physics rate. For motor actuators.</td>
+<td>位置目标 → 物理速率下的PD扭矩。适用于运动执行器。</td>
 </tr>
 </tbody>
 </table>
 <h2 id="umjpdcontroller">UMjPDController</h2>
-<p>Computes <code>torque = Kp * (target - qpos) - Kv * qvel</code> every physics step. Targets are clamped to joint range. Use with <code>&lt;motor&gt;</code> actuators in the MJCF.</p>
-<p><strong>Properties:</strong></p>
+<p>每个物理步计算<code>torque = Kp * (target - qpos) - Kv * qvel</code>。目标值被限制在关节活动范围内。与 MJCF 中的 <code>&lt;motor&gt;</code> 执行器一起使用。</p>
+<p><strong>属性：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Type</th>
-<th>Description</th>
+<th>属性</th>
+<th>类型</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Kp</code></td>
 <td><code>TArray&lt;float&gt;</code></td>
-<td>Proportional gains, one per actuator</td>
+<td>每个执行器一个比例增益</td>
 </tr>
 <tr>
 <td><code>Kv</code></td>
 <td><code>TArray&lt;float&gt;</code></td>
-<td>Derivative gains</td>
+<td>微分增益</td>
 </tr>
 <tr>
 <td><code>TorqueLimits</code></td>
 <td><code>TArray&lt;float&gt;</code></td>
-<td>Symmetric torque clamps</td>
+<td>对称扭矩范围</td>
 </tr>
 <tr>
 <td><code>DefaultKp/Kv/TorqueLimit</code></td>
 <td><code>float</code></td>
-<td>Fallback for unset entries</td>
+<td>未设置条目的备用方案</td>
 </tr>
 </tbody>
 </table>
-<p>Gains can be pushed from Python via ZMQ <code>set_gains</code> message (name-keyed JSON).</p>
+<p>增益可以通过 Python 以 ZMQ <code>set_gains</code> 消息（名称键 JSON）的形式推送。</p>
 <h2 id="umjkeyframecontroller">UMjKeyframeController</h2>
-<p>A preset-based pose sequencer. Unlike <code>UMjPDController</code> and <code>UMjPassthroughController</code>, this is a <code>UActorComponent</code> (not derived from <code>UMjArticulationController</code>) — it writes actuator targets via <code>SetActuatorControl</code> at game-tick rate rather than intercepting the physics-rate control pipeline.</p>
-<p>Add it to an <code>AMjArticulation</code> actor. It auto-resolves the owner articulation on <code>BeginPlay</code>.</p>
-<p><strong>FMjKeyframePose struct:</strong></p>
+<p>一个基于预设的姿态序列器。与 <code>UMjPDController</code> 和 <code>UMjPassthroughController</code> 不同，这是一个 <code>UActorComponent</code>（并非派生自 <code>UMjArticulationController</code>）——它通过 <code>SetActuatorControl</code> 以游戏节拍速率写入执行器目标，而不是拦截物理速率控制管线。</p>
+<p>将其添加到 <code>AMjArticulation</code> 动作者中。它会在 <code>BeginPlay</code> 时自动解析所有者关节。</p>
+<p><strong>FMjKeyframePose 结构体：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Type</th>
-<th>Description</th>
+<th>字段</th>
+<th>类型</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>Name</code></td>
 <td><code>FString</code></td>
-<td>Display name (e.g., "Reach")</td>
+<td>显示名称（例如，“Reach”）</td>
 </tr>
 <tr>
 <td><code>Targets</code></td>
 <td><code>TArray&lt;float&gt;</code></td>
-<td>Actuator targets, ordered to match the articulation's actuator list</td>
+<td>执行器目标，按与关节执行器列表匹配的顺序排列</td>
 </tr>
 <tr>
 <td><code>HoldTime</code></td>
 <td><code>float</code></td>
-<td>Seconds to hold this pose before advancing</td>
+<td>保持这个姿势几秒钟后再继续前进</td>
 </tr>
 <tr>
 <td><code>BlendTime</code></td>
 <td><code>float</code></td>
-<td>Seconds to interpolate from the previous pose (ease-in-out)</td>
+<td>从前一个姿势插值所需的秒数（缓入缓出）</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Preset system:</strong> Call <code>GetPresetNames()</code> for available presets, then <code>LoadPreset(Name)</code> to populate the <code>Keyframes</code> array. In the Details panel, select from the <code>Preset</code> dropdown and tick <code>bLoadPreset</code> to apply.</p>
-<p><strong>Built-in presets:</strong> Franka (Reach-Grasp-Lift, Wave), UR5e (Pick-Place, Sweep), Spot (FR Knee Cycle, Wave, Sit), ANYmal (Sit, Weight Shift), Go2 (Stand-Crouch, Stretch).</p>
-<p><strong>Properties:</strong></p>
+<p><strong>预设系统：</strong> 调用 <code>GetPresetNames()</code> 获取可用预设，然后调用 <code>LoadPreset(Name)</code> 填充 <code>Keyframes</code> 数组。在“详细信息(Details)”面板中，从<code>Preset(预设)</code>下拉列表中选择预设，并勾选 <code>bLoadPreset</code> 以应用预设。</p>
+<p><strong>内置预设：</strong> Franka (伸手-抓握-抬起, Wave), UR5e (拾取-放置, Sweep), Spot (FR Knee Cycle, Wave, Sit), ANYmal (坐下，重心偏移), Go2 (站立-蹲伏，伸展)。</p>
+<p><strong>属性：</strong></p>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Default</th>
-<th>Description</th>
+<th>属性</th>
+<th>默认值</th>
+<th>描述</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>bAutoPlay</code></td>
 <td><code>true</code></td>
-<td>Start playing on BeginPlay</td>
+<td>在 BeginPlay 时候开始游戏</td>
 </tr>
 <tr>
 <td><code>StartDelay</code></td>
 <td><code>0.5s</code></td>
-<td>Delay before first keyframe</td>
+<td>第一个关键帧之前的延迟</td>
 </tr>
 <tr>
 <td><code>bLoop</code></td>
 <td><code>true</code></td>
-<td>Loop back to first keyframe after last</td>
+<td>循环回到最后一个关键帧后的第一个关键帧</td>
 </tr>
 <tr>
 <td><code>Preset</code></td>
 <td>empty</td>
-<td>Selected preset name</td>
+<td>选定的预设名称</td>
 </tr>
 </tbody>
 </table>
-<p><strong>Actions:</strong> <code>Play()</code>, <code>Stop()</code>, <code>GoToKeyframe(Index)</code>, <code>LoadPreset(Name)</code>.</p>
-<h2 id="per-articulation-control-source">Per-Articulation Control Source</h2>
-<p>The manager has a global <code>EControlSource</code> (UI or ZMQ). Each <code>AMjArticulation</code> can override this with its own <code>ControlSource</code> field (<code>uint8</code>: 0 = ZMQ, 1 = UI). This allows mixed control — some robots driven by the dashboard, others by an external policy — in the same scene.</p>
-<h2 id="writing-a-custom-controller">Writing a Custom Controller</h2>
-<p>Derive from <code>UMjArticulationController</code> and override <code>ComputeAndApply</code>:</p>
+<p><strong>操作：</strong> <code>Play()</code>, <code>Stop()</code>, <code>GoToKeyframe(Index)</code>, <code>LoadPreset(Name)</code>.</p>
+<h2 id="_4">每个关节的控制源</h2>
+<p>管理器拥有一个全局 <code>EControlSource</code>（UI 或 ZMQ）。每个 <code>AMjArticulation</code> 都可以使用自己的 <code>ControlSource</code> 字段（<code>uint8</code>：0 = ZMQ，1 = UI）覆盖此全局 <code>EControlSource</code>。这允许在同一场景中实现混合控制——一些机器人由控制面板驱动，另一些则由外部策略驱动。</p>
+<h2 id="_5">编写自定义控制器</h2>
+<p>派生自 <code>UMjArticulationController</code> 并重写 <code>ComputeAndApply</code> ：</p>
 <div class="highlight"><pre><span></span><code><span class="n">UCLASS</span><span class="p">(</span><span class="n">ClassGroup</span><span class="o">=</span><span class="p">(</span><span class="n">Custom</span><span class="p">),</span><span class="w"> </span><span class="n">meta</span><span class="o">=</span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
 <span class="k">class</span><span class="w"> </span><span class="nc">UMyController</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">UMjArticulationController</span>
 <span class="p">{</span>
@@ -235,18 +235,22 @@
 <span class="w">    </span><span class="p">}</span>
 <span class="p">};</span>
 </code></pre></div>
-<p>The <code>Bindings</code> array is populated automatically by <code>Bind()</code> — each entry maps an actuator to its joint's qpos/qvel addresses.</p>
-<h2 id="binding">Binding</h2>
-<p><code>Bind()</code> runs once after the MuJoCo model compiles. It resolves each actuator's joint transmission via <code>m-&gt;actuator_trnid</code> and stores the qpos/qvel addresses. Free and ball joints are skipped.</p>
-<p>Bindings are sorted by actuator MjID so the array index matches the order Python discovers actuators.</p>
-<h2 id="thread-safety">Thread Safety</h2>
-<p><code>ComputeAndApply</code> runs on the async physics thread. Read actuator values via <code>ResolveDesiredControl()</code> (atomic). Gain arrays accept benign torn reads during updates — individual float writes are atomic on x86/ARM.</p>
-<h2 id="adding-to-an-articulation">Adding to an Articulation</h2>
+<p><code>Bindings</code> 数组由 <code>Bind()</code> 自动填充——每个条目将执行器映射到其关节的 qpos/qvel 地址。</p>
+<h2 id="_6">绑定</h2>
+<p><code>Bind()</code> 函数在 MuJoCo 模型编译完成后运行一次。它通过 <code>m-&gt;actuator_trnid</code> 解析每个执行器的关节传动，并存储其 qpos/qvel 地址。自由关节和球形关节将被跳过。</p>
+<p>绑定操作按执行器 MjID 排序，因此数组索引与 Python 发现执行器的顺序一致。</p>
+<h2 id="_7">线程安全</h2>
+<p><code>ComputeAndApply</code> 函数在异步物理线程上运行。通过 <code>ResolveDesiredControl()</code> 函数（原子操作）读取执行器值。增益数组在更新期间可以接受良性撕裂读取——在 x86/ARM 架构上，单个浮点数写入操作是原子的。</p>
+<div class="admonition 笔记">
+<p class="admonition-title">笔记</p>
+<p>撕裂读取（Torn read）是指在多线程编程中，当一个线程正在写入一个变量时，另一个线程读取该变量，可能会导致读取到不一致的数据。例如，当一个线程将一个长整型变量赋值为某个值时，另一个线程可能只读取到该值的一部分，从而导致读取结果不完整或错误。这种现象通常发生在32位操作系统中，因为长整型变量的读取需要执行两次MOV指令，无法在一个时间内完成。为了避免这种问题，开发者可以使用线程同步机制，如锁或原子操作，确保在多线程环境中对共享资源的安全访问。</p>
+</div>
+<h2 id="_8">关节的补充说明</h2>
 <ol>
-<li>Open your AMjArticulation Blueprint</li>
-<li><strong>Add Component</strong> → search for your controller (e.g., <code>MjPDController</code>)</li>
-<li>Configure properties in the Details panel (or push via ZMQ)</li>
-<li>The controller activates automatically when <code>bEnabled = true</code> and <code>IsBound()</code></li>
+<li>打开您的 AMjArticulation 蓝图</li>
+<li><strong>添加组件</strong> → 搜索您的控制器（例如，<code>MjPDController</code>）</li>
+<li>在“详细信息(Details)”面板中配置属性（或通过 ZMQ 推送）</li>
+<li>当 <code>bEnabled = true</code> 且 <code>IsBound()</code> 时，控制器会自动激活。 </li>
 </ol>
               
             </div>
