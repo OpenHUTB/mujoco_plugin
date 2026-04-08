@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Architecture - Mujoco 插件</title>
+    <title>架构 - Mujoco 插件</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Architecture";
+        var mkdocs_page_name = "\u67b6\u6784";
         var mkdocs_page_input_path = "architecture.md";
         var mkdocs_page_url = null;
       </script>
@@ -58,7 +58,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Architecture</li>
+      <li class="breadcrumb-item active">架构</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/architecture.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -68,11 +68,11 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="architecture">Architecture</h1>
-<h2 id="overview">Overview</h2>
+                <h1 id="_1">架构</h1>
+<h2 id="_2">概述</h2>
 <p>UnrealRoboticsLab (URLab) integrates MuJoCo physics into Unreal Engine 5 as an editor plugin. <code>AAMjManager</code> is the top-level coordinator actor, but delegates core responsibilities to four <code>UActorComponent</code> subsystems: <code>UMjPhysicsEngine</code> (simulation), <code>UMjDebugVisualizer</code> (debug rendering), <code>UMjNetworkManager</code> (ZMQ discovery), and <code>UMjInputHandler</code> (hotkeys). The component system mirrors the MJCF element hierarchy -- each XML element type maps to a <code>UMjComponent</code> subclass attached to an <code>AMjArticulation</code> Blueprint. Physics runs on a dedicated async thread; the game thread reads results for rendering. ZMQ networking provides external control and sensor broadcasting.</p>
 <hr />
-<h2 id="subsystem-architecture">Subsystem Architecture</h2>
+<h2 id="_3">子系统架构</h2>
 <p><code>AAMjManager</code> delegates responsibilities to four <code>UActorComponent</code> subsystems, created via <code>CreateDefaultSubobject</code> in the constructor:</p>
 <div class="highlight"><pre><span></span><code>AAMjManager (thin coordinator)
 ├── UMjPhysicsEngine       — simulation core
@@ -92,14 +92,14 @@
 <h3 id="umjinputhandler">UMjInputHandler</h3>
 <p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></p>
 <p>Processes hotkeys in <code>TickComponent</code>. Dispatches to <code>UMjPhysicsEngine</code> (pause/reset), <code>UMjDebugVisualizer</code> (debug toggles), and scene actors (mesh visibility, collision wireframes, cameras).</p>
-<h3 id="communication-pattern">Communication Pattern</h3>
+<h3 id="_4">通讯模式</h3>
 <p>Subsystems communicate through:
 - <strong>Callbacks:</strong> <code>UMjPhysicsEngine</code> exposes <code>RegisterPreStepCallback</code>/<code>RegisterPostStepCallback</code>. Other subsystems register lambdas during BeginPlay.
 - <strong><code>GetOwner()</code> traversal:</strong> Subsystems access siblings via <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code> (e.g., <code>UMjInputHandler</code> finds <code>UMjPhysicsEngine</code> to call <code>Reset()</code>).
 - <strong>Direct access:</strong> External code accesses subsystem state directly via <code>Manager-&gt;PhysicsEngine-&gt;Options</code>, <code>Manager-&gt;DebugVisualizer-&gt;bShowDebug</code>, etc. <code>AAMjManager</code> has no duplicate properties — it is a pure coordinator. Blueprint-callable convenience methods like <code>SetPaused()</code>, <code>StepSync()</code>, and <code>ResetSimulation()</code> delegate to <code>PhysicsEngine</code>.</p>
 <hr />
-<h2 id="module-initialization">Module Initialization</h2>
-<p><strong>File:</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
+<h2 id="_5">模块初始化</h2>
+<p><strong>文件:</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
 <p>DLL load order (sequential, each must succeed):</p>
 <ol>
 <li><code>mujoco.dll</code> (from <code>third_party/install/MuJoCo/bin/</code>)</li>
@@ -111,7 +111,7 @@
 <p>Search path strategy: plugin <code>third_party/install/{SubDir}/bin/</code> first (editor/development builds), then <code>FPlatformProcess::GetModulesDirectory()</code> (packaged builds where DLLs are staged next to the executable).</p>
 <p>In editor builds, the module also registers a "MuJoCo" asset category via <code>IAssetTools::RegisterAdvancedAssetCategory()</code>.</p>
 <hr />
-<h2 id="scene-lifecycle">Scene Lifecycle</h2>
+<h2 id="_6">场景声明周期</h2>
 <h3 id="beginplay">BeginPlay</h3>
 <p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code> -- <code>AAMjManager::BeginPlay()</code></p>
 <ol>
@@ -140,7 +140,7 @@
 </ol>
 <p>Note: The discovery loop iterates all actors once. Quick Convert components and Articulations on the same actor are both processed (they are not mutually exclusive in the loop logic, though in practice they exist on separate actors).</p>
 <h3 id="articulation-setup">Articulation Setup</h3>
-<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code> -- <code>AMjArticulation::Setup()</code></p>
+<p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code> -- <code>AMjArticulation::Setup()</code></p>
 <p>This is the most complex part of spec construction. Each articulation creates an isolated child spec that is later merged into the root.</p>
 <ol>
 <li><strong>Create child spec.</strong> <code>mj_makeSpec()</code> for isolation. Radians mode. Articulation-level <code>SimOptions</code> applied via <code>ApplyToSpec()</code>.</li>
@@ -171,8 +171,8 @@
 <li>Child <code>UMjGeom</code>, <code>UMjJoint</code>, <code>UMjSensor</code>, <code>UMjSite</code>, etc. -&gt; <code>RegisterToSpec()</code></li>
 </ul>
 <p>Mesh preparation (CoACD convex decomposition via <code>PrepareMeshForMuJoCo</code>) happens during geom registration.</p>
-<h3 id="compilation">Compilation</h3>
-<p><strong>File:</strong> <code>UMjPhysicsEngine::Compile()</code></p>
+<h3 id="_7">编译</h3>
+<p><strong>文件</strong> <code>UMjPhysicsEngine::Compile()</code></p>
 <ol>
 <li>Calls <code>PreCompile()</code>.</li>
 <li><code>mj_compile(m_spec, &amp;m_vfs)</code> produces <code>mjModel*</code>.</li>
@@ -183,8 +183,8 @@
 <li>Calls <code>ApplyOptions()</code> (applies manager-level option overrides to <code>m_model-&gt;opt</code>).</li>
 <li>Calls <code>PostCompile()</code>.</li>
 </ol>
-<h3 id="postcompile-binding">PostCompile (Binding)</h3>
-<p><strong>File:</strong> <code>UMjPhysicsEngine::PostCompile()</code></p>
+<h3 id="_8">后编译 (绑定)</h3>
+<p><strong>文件:</strong> <code>UMjPhysicsEngine::PostCompile()</code></p>
 <ol>
 <li>Calls <code>PostSetup(model, data)</code> on each <code>UMjQuickConvertComponent</code>.</li>
 <li>Builds <code>m_ArticulationMap</code> (name -&gt; <code>AMjArticulation*</code>) for O(1) lookup.</li>
@@ -200,8 +200,8 @@
 <p>This creates View structs (<code>BodyView</code>, <code>GeomView</code>, <code>JointView</code>, <code>ActuatorView</code>, <code>SensorView</code>, <code>TendonView</code>, <code>SiteView</code>) that cache raw pointers into <code>mjModel</code>/<code>mjData</code> arrays.</p>
 <p>PostSetup also populates component-name maps (<code>ActuatorComponentMap</code>, <code>JointComponentMap</code>, etc.) and MuJoCo-ID maps (<code>BodyIdMap</code>, <code>GeomIdMap</code>, etc.) for O(1) runtime access.</p>
 <hr />
-<h2 id="physics-loop-async-thread">Physics Loop (Async Thread)</h2>
-<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code> -- <code>UMjPhysicsEngine::RunMujocoAsync()</code></p>
+<h2 id="_9">物理循环 (异步线程)</h2>
+<p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code> -- <code>UMjPhysicsEngine::RunMujocoAsync()</code></p>
 <p>Runs on a dedicated thread via <code>Async(EAsyncExecution::Thread, ...)</code>. Stored in <code>AsyncPhysicsFuture</code>.</p>
 <p>Each iteration (under <code>CallbackMutex</code> lock, owned by <code>UMjPhysicsEngine</code>):</p>
 <ol>
@@ -218,8 +218,8 @@
 </ol>
 <p><strong>Timing:</strong> After releasing the mutex, the loop spin-waits (<code>FPlatformProcess::YieldThread()</code>) until <code>TargetInterval / SpeedFactor</code> has elapsed. <code>SimSpeedPercent</code> (5-100) controls the speed factor.</p>
 <hr />
-<h2 id="game-thread-tick">Game Thread (Tick)</h2>
-<p><strong>File:</strong> <code>AAMjManager::Tick()</code></p>
+<h2 id="_10">游戏线程 (节拍信号)</h2>
+<p><strong>文件:</strong> <code>AAMjManager::Tick()</code></p>
 <ol>
 <li><strong>Backward-compat pointer sync.</strong> Copies <code>m_model</code>/<code>m_data</code> from <code>UMjPhysicsEngine</code> so legacy callers that read <code>AAMjManager::m_model</code> still work.</li>
 <li>Hotkey processing and debug drawing are delegated to <code>UMjInputHandler</code> and <code>UMjDebugVisualizer</code> respectively (both tick via their own <code>TickComponent</code>).</li>
@@ -245,14 +245,14 @@
 <li>Otherwise: reads MuJoCo <code>xpos</code>/<code>xquat</code> from <code>BodyView</code> and sets UE world transform via <code>SetWorldLocationAndRotation()</code>.</li>
 </ul>
 <hr />
-<h2 id="thread-safety">Thread Safety</h2>
+<h2 id="_11">线程安全</h2>
 <table>
 <thead>
 <tr>
-<th>Mutex / Mechanism</th>
-<th>Owner</th>
-<th>Protects</th>
-<th>Used By</th>
+<th>Mutex / 机制</th>
+<th>所有者</th>
+<th>保护</th>
+<th>使用者</th>
 </tr>
 </thead>
 <tbody>
@@ -307,11 +307,11 @@
 </tbody>
 </table>
 <hr />
-<h2 id="component-system">Component System</h2>
+<h2 id="_12">组件系统</h2>
 <h3 id="base-umjcomponent">Base: UMjComponent</h3>
 <p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/MjComponent.h</code></p>
 <p>Inherits <code>USceneComponent</code> + <code>IMjSpecElement</code>. All MuJoCo element components derive from this.</p>
-<p>Key members:</p>
+<p>关键成员:</p>
 <ul>
 <li><code>m_SpecElement</code> (<code>mjsElement*</code>) -- set during <code>RegisterToSpec()</code>, used for ID resolution in <code>Bind()</code>.</li>
 <li><code>m_ID</code> (<code>int</code>) -- MuJoCo object ID, resolved during <code>Bind()</code>.</li>
@@ -319,7 +319,7 @@
 <li><code>MjName</code> (<code>FString</code>) -- original MJCF name, stable for cross-referencing.</li>
 <li><code>bIsDefault</code> (<code>bool</code>) -- if true, this component is a default template, skipped by runtime discovery.</li>
 </ul>
-<p>Key methods:</p>
+<p>关键方法:</p>
 <ul>
 <li><code>RegisterToSpec(FMujocoSpecWrapper&amp;, mjsBody*)</code> -- creates the spec element. Subclasses override.</li>
 <li><code>Bind(mjModel*, mjData*, Prefix)</code> -- resolves ID and caches model/data pointers.</li>
@@ -334,7 +334,7 @@
 <table>
 <thead>
 <tr>
-<th>Struct</th>
+<th>结构体</th>
 <th>obj_type</th>
 <th>Key Pointers</th>
 </tr>
@@ -379,10 +379,10 @@
 </table>
 <p><code>BodyView</code> also provides traversal methods: <code>Bodies()</code>, <code>Geoms()</code>, <code>Joints()</code> for walking the compiled model hierarchy.</p>
 <p>A standalone template function <code>bind&lt;T&gt;(model, data, name)</code> provides name-based lookup.</p>
-<h3 id="default-system">Default System</h3>
+<h3 id="_13">默认系统</h3>
 <p><code>UMjDefault</code> components store template properties mirroring the MJCF <code>&lt;default&gt;</code> hierarchy. Parent-child class chain is built via <code>FMujocoSpecWrapper::AddDefault()</code>. During articulation setup, <code>ExportTo(mjsDefault*)</code> iterates child components and writes their properties to the spec default. At registration time, components resolve their default class via <code>ResolveDefault()</code> which calls <code>mjs_findDefault()</code>.</p>
 <hr />
-<h2 id="coordinate-system">Coordinate System</h2>
+<h2 id="_14">坐标系统</h2>
 <p>MuJoCo uses right-handed Z-up coordinates in meters. Unreal uses left-handed Z-up in centimeters.</p>
 <p><strong>Position conversion</strong> (<code>MjUtils::MjToUEPosition</code> / <code>UEToMjPosition</code>):
 - X -&gt; X, Y -&gt; -Y, Z -&gt; Z
@@ -438,7 +438,7 @@
 </tbody>
 </table>
 <hr />
-<h2 id="import-pipeline">Import Pipeline</h2>
+<h2 id="_15">导入管线</h2>
 <p><strong>Files:</strong> <code>Source/URLabEditor/Private/MujocoImportFactory.cpp</code>, <code>Source/URLabEditor/Private/MjArticulationFactory.cpp</code></p>
 <h3 id="steps">Steps</h3>
 <ol>
