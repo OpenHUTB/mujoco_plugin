@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>URLab Bridge - Mujoco 插件</title>
+    <title>URLab 桥接 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "URLab Bridge";
+        var mkdocs_page_name = "URLab \u6865\u63a5";
         var mkdocs_page_input_path = "guides/policy_bridge.md";
         var mkdocs_page_url = null;
       </script>
@@ -41,7 +41,77 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">URLab 桥接</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#what-it-does">What It Does</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#zmq-protocol">ZMQ Protocol</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#using-the-bridge-directly">Using the Bridge Directly</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#robojudo-integration">RoboJuDo Integration</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#go2-walk-these-ways-policy">Go2 Walk-These-Ways Policy</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#motor-vs-position-actuators">Motor vs Position Actuators</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#force-twist-override">Force Twist Override</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#multi-articulation-scenes">Multi-Articulation Scenes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mesh-preparation">Mesh Preparation</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#debugging-tools">Debugging Tools</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
                 </li>
               </ul>
       </div>
@@ -58,7 +128,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">URLab Bridge</li>
+      <li class="breadcrumb-item active">URLab 桥接</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/policy_bridge.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -235,6 +305,10 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../zmq_networking/" class="btn btn-neutral float-left" title="ZMQ 网络与 ROS 2"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../../architecture/" class="btn btn-neutral float-right" title="架构">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -260,6 +334,10 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
         </span>
     
     
+      <span><a href="../zmq_networking/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../../architecture/" style="color: #fcfcfc">后一页 &raquo;</a></span>
     
   </span>
 </div>

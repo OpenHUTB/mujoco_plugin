@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>几何与碰撞 - Mujoco 插件</title>
+    <title>几何体与碰撞 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u51e0\u4f55\u4e0e\u78b0\u649e";
+        var mkdocs_page_name = "\u51e0\u4f55\u4f53\u4e0e\u78b0\u649e";
         var mkdocs_page_input_path = "guides/geometry_authoring.md";
         var mkdocs_page_url = null;
       </script>
@@ -41,7 +41,67 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">几何体与碰撞</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_2">几何类型</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">基本元素</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">网格几何体</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_5">快速转换</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">高度场地形</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">几何属性</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">过滤接触</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_9">调试可视化</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_10">惯性覆盖</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
                 </li>
               </ul>
       </div>
@@ -58,7 +118,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">几何与碰撞</li>
+      <li class="breadcrumb-item active">几何体与碰撞</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/geometry_authoring.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -195,6 +255,10 @@
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../mujoco_import/" class="btn btn-neutral float-left" title="MJCF 导入"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../controller_framework/" class="btn btn-neutral float-right" title="控制器框架">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -220,6 +284,10 @@
         </span>
     
     
+      <span><a href="../mujoco_import/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../controller_framework/" style="color: #fcfcfc">后一页 &raquo;</a></span>
     
   </span>
 </div>

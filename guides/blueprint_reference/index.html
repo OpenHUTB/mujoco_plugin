@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>使用蓝图和 C++ 进行脚本编写 - Mujoco 插件</title>
+    <title>使用蓝图编写脚本 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u4f7f\u7528\u84dd\u56fe\u548c C++ \u8fdb\u884c\u811a\u672c\u7f16\u5199";
+        var mkdocs_page_name = "\u4f7f\u7528\u84dd\u56fe\u7f16\u5199\u811a\u672c";
         var mkdocs_page_input_path = "guides/blueprint_reference.md";
         var mkdocs_page_url = null;
       </script>
@@ -41,7 +41,81 @@
 
       <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../..">首页</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">使用蓝图编写脚本</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#_1">获取参考</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">使用组件</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">控制执行器</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">读取传感器</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_5">碰撞响应</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">仿真生命周期</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">快照</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#api">关键帧 API</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">记录和回放</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_9">切换控制源</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mjkeyframecontroller">MjKeyframeController</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mjkeyframecameraactor">MjKeyframeCameraActor</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mjimpulselauncher">MjImpulseLauncher</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_10">快捷键</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">每个关节的控制源</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mujoco">高级：直接访问 MuJoCo</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
                 </li>
               </ul>
       </div>
@@ -58,7 +132,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">使用蓝图和 C++ 进行脚本编写</li>
+      <li class="breadcrumb-item active">使用蓝图编写脚本</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/blueprint_reference.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -377,6 +451,10 @@
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../possession_twist/" class="btn btn-neutral float-left" title="持有和扭转控制"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../zmq_networking/" class="btn btn-neutral float-right" title="ZMQ 网络与 ROS 2">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -402,6 +480,10 @@
         </span>
     
     
+      <span><a href="../possession_twist/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../zmq_networking/" style="color: #fcfcfc">后一页 &raquo;</a></span>
     
   </span>
 </div>
