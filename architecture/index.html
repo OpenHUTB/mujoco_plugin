@@ -70,186 +70,219 @@
               
                 <h1 id="_1">架构</h1>
 <h2 id="_2">概述</h2>
-<p>UnrealRoboticsLab (URLab) integrates MuJoCo physics into Unreal Engine 5 as an editor plugin. <code>AAMjManager</code> is the top-level coordinator actor, but delegates core responsibilities to four <code>UActorComponent</code> subsystems: <code>UMjPhysicsEngine</code> (simulation), <code>UMjDebugVisualizer</code> (debug rendering), <code>UMjNetworkManager</code> (ZMQ discovery), and <code>UMjInputHandler</code> (hotkeys). The component system mirrors the MJCF element hierarchy -- each XML element type maps to a <code>UMjComponent</code> subclass attached to an <code>AMjArticulation</code> Blueprint. Physics runs on a dedicated async thread; the game thread reads results for rendering. ZMQ networking provides external control and sensor broadcasting.</p>
+<p>UnrealRoboticsLab (URLab) 将 MuJoCo 物理引擎集成到虚幻引擎中，作为编辑器插件。<code>AAMjManager</code> 是顶层协调器参与者（Actor），但它将核心职责委托给四个 <code>UActorComponent</code> 子系统：<code>UMjPhysicsEngine</code>（物理模拟）、<code>UMjDebugVisualizer</code>（调试渲染）、<code>UMjNetworkManager</code>（ZMQ 发现）和 <code>UMjInputHandler</code>（热键）。组件系统与 MJCF 元素层级结构相对应——每个 XML 元素类型都映射到一个附加到 <code>AMjArticulation</code> 蓝图的 <code>UMjComponent</code> 子类。物理引擎运行在专用的异步线程中；游戏线程读取结果进行渲染。ZMQ 网络提供外部控制和传感器广播功能。</p>
 <hr />
 <h2 id="_3">子系统架构</h2>
-<p><code>AAMjManager</code> delegates responsibilities to four <code>UActorComponent</code> subsystems, created via <code>CreateDefaultSubobject</code> in the constructor:</p>
-<div class="highlight"><pre><span></span><code>AAMjManager (thin coordinator)
-├── UMjPhysicsEngine       — simulation core
-├── UMjDebugVisualizer      — debug rendering
-├── UMjNetworkManager       — ZMQ discovery &amp; cameras
-└── UMjInputHandler         — hotkey processing
+<p><code>AAMjManager</code> 将职责委托给四个  <code>UActorComponent</code> 子系统，这些子系统是通过构造函数中的 <code>CreateDefaultSubobject</code> 创建的：</p>
+<div class="highlight"><pre><span></span><code>AAMjManager (轻量级协调器)
+├── UMjPhysicsEngine       — 模拟核心
+├── UMjDebugVisualizer      — 调试渲染
+├── UMjNetworkManager       — ZMQ 发现与相机
+└── UMjInputHandler         — 热键处理
 </code></pre></div>
 <h3 id="umjphysicsengine">UMjPhysicsEngine</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</code></p>
-<p>Owns all simulation state: <code>m_spec</code>, <code>m_vfs</code>, <code>m_model</code>, <code>m_data</code>, <code>CallbackMutex</code>. Handles the full compile pipeline (<code>PreCompile</code>/<code>Compile</code>/<code>PostCompile</code>/<code>ApplyOptions</code>). Runs the async physics loop (<code>RunMujocoAsync</code>). Provides callback registration (<code>RegisterPreStepCallback</code>, <code>RegisterPostStepCallback</code>) so other subsystems and ZMQ components can hook into the step loop without direct coupling. Also provides <code>StepSync</code>, <code>Reset</code>, <code>Snapshot</code>/<code>Restore</code>.</p>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</code></p>
+<p>拥有所有仿真状态：<code>m_spec</code>、<code>m_vfs</code>、<code>m_model</code>、<code>m_data</code> 和 <code>回调互斥量(CallbackMutex)</code>。处理完整的编译流程（<code>预编译(PreCompile)</code>/<code>编译(Compile)</code>/<code>后编译(PostCompile)</code>/<code>应用选项(ApplyOptions)</code>）。运行异步物理循环（<code>RunMujocoAsync</code>）。提供回调注册（<code>RegisterPreStepCallback</code>、<code>RegisterPostStepCallback</code>），以便其他子系统和 ZMQ 组件可以接入步进循环而无需直接耦合。此外，还提供 <code>StepSync</code>、<code>Reset</code> 和<code>快照(Snapshot)</code>/<code>恢复(Restore)</code>功能。</p>
 <h3 id="umjdebugvisualizer">UMjDebugVisualizer</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
-<p>Owns <code>DebugData</code> (<code>FMuJoCoDebugData</code> from <code>MjDebugTypes.h</code>) and <code>DebugMutex</code>. <code>CaptureDebugData</code> is registered as a post-step callback on <code>UMjPhysicsEngine</code> — it copies contact data under the mutex on the physics thread. <code>TickComponent</code> renders contact force arrows/points on the game thread. Provides toggle methods for each debug visualization mode.</p>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
+<p>拥有 <code>DebugData</code>（来自 <code>MjDebugTypes.h</code> 的 <code>FMuJoCoDebugData</code>）和 <code>DebugMutex</code>。<code>CaptureDebugData</code> 注册为 <code>UMjPhysicsEngine</code> 的后步骤回调函数——它将物理线程上互斥锁下的接触数据复制到该线程。<code>TickComponent</code> 在游戏线程上渲染接触力箭头/点。为每种调试可视化模式提供切换方法。</p>
 <h3 id="umjnetworkmanager">UMjNetworkManager</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></p>
-<p>Owns <code>ZmqComponents</code> discovery and camera registration/streaming. <code>DiscoverZmqComponents()</code> is called during BeginPlay to collect all <code>UMjZmqComponent</code> subcomponents on the manager actor.</p>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></p>
+<p>负责 <code>ZmqComponents</code> 的发现和相机注册/流传输。在 BeginPlay 期间调用 <code>DiscoverZmqComponents()</code> 来收集管理器参与者上的所有 <code>UMjZmqComponent</code> 子组件。</p>
 <h3 id="umjinputhandler">UMjInputHandler</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></p>
-<p>Processes hotkeys in <code>TickComponent</code>. Dispatches to <code>UMjPhysicsEngine</code> (pause/reset), <code>UMjDebugVisualizer</code> (debug toggles), and scene actors (mesh visibility, collision wireframes, cameras).</p>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></p>
+<p>处理 <code>TickComponent</code> 中的热键。向 <code>UMjPhysicsEngine</code>（暂停/重置）、<code>UMjDebugVisualizer</code>（调试切换）和场景参与者（网格可见性、碰撞线框、相机）分发。</p>
 <h3 id="_4">通讯模式</h3>
-<p>Subsystems communicate through:
-- <strong>Callbacks:</strong> <code>UMjPhysicsEngine</code> exposes <code>RegisterPreStepCallback</code>/<code>RegisterPostStepCallback</code>. Other subsystems register lambdas during BeginPlay.
-- <strong><code>GetOwner()</code> traversal:</strong> Subsystems access siblings via <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code> (e.g., <code>UMjInputHandler</code> finds <code>UMjPhysicsEngine</code> to call <code>Reset()</code>).
-- <strong>Direct access:</strong> External code accesses subsystem state directly via <code>Manager-&gt;PhysicsEngine-&gt;Options</code>, <code>Manager-&gt;DebugVisualizer-&gt;bShowDebug</code>, etc. <code>AAMjManager</code> has no duplicate properties — it is a pure coordinator. Blueprint-callable convenience methods like <code>SetPaused()</code>, <code>StepSync()</code>, and <code>ResetSimulation()</code> delegate to <code>PhysicsEngine</code>.</p>
+<p>子系统通过以下方式通信：</p>
+<ul>
+<li>
+<p><strong>回调：</strong> <code>UMjPhysicsEngine</code> 公开了 <code>RegisterPreStepCallback</code>/<code>RegisterPostStepCallback</code>。其他子系统在 BeginPlay 期间注册 lambda 表达式。</p>
+</li>
+<li>
+<p><strong><code>GetOwner()</code> 遍历:</strong> 子系统通过 <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code> 访问兄弟组件（例如，<code>UMjInputHandler</code> 找到 <code>UMjPhysicsEngine</code> 来调用 <code>Reset()</code>）。</p>
+</li>
+<li>
+<p><strong>直接访问：</strong> 外部代码可通过 <code>Manager-&gt;PhysicsEngine-&gt;Options</code>、<code>Manager-&gt;DebugVisualizer-&gt;bShowDebug</code> 等直接访问子系统状态。<code>AAMjManager</code> 没有重复属性——它是一个纯粹的协调器。诸如 <code>SetPaused()</code>、<code>StepSync()</code> 和 <code>ResetSimulation()</code> 等蓝图可调用的便捷方法委托给 <code>PhysicsEngine</code>。</p>
+</li>
+</ul>
 <hr />
 <h2 id="_5">模块初始化</h2>
-<p><strong>文件:</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
-<p>DLL load order (sequential, each must succeed):</p>
+<p><strong>文件：</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
+<p>DLL 加载顺序（顺序加载，每个 DLL 必须成功加载）：</p>
 <ol>
-<li><code>mujoco.dll</code> (from <code>third_party/install/MuJoCo/bin/</code>)</li>
-<li><code>obj_decoder.dll</code> (same path)</li>
-<li><code>stl_decoder.dll</code> (same path)</li>
-<li><code>libzmq-v143-mt-4_3_6.dll</code> (from <code>third_party/install/libzmq/bin/</code>)</li>
-<li><code>lib_coacd.dll</code> (from <code>third_party/install/CoACD/bin/</code>)</li>
+<li><code>mujoco.dll</code> (从 <code>third_party/install/MuJoCo/bin/</code>)</li>
+<li><code>obj_decoder.dll</code> (相同路径)</li>
+<li><code>stl_decoder.dll</code> (相同路径)</li>
+<li><code>libzmq-v143-mt-4_3_6.dll</code> (从 <code>third_party/install/libzmq/bin/</code>)</li>
+<li><code>lib_coacd.dll</code> (从 <code>third_party/install/CoACD/bin/</code>)</li>
 </ol>
-<p>Search path strategy: plugin <code>third_party/install/{SubDir}/bin/</code> first (editor/development builds), then <code>FPlatformProcess::GetModulesDirectory()</code> (packaged builds where DLLs are staged next to the executable).</p>
-<p>In editor builds, the module also registers a "MuJoCo" asset category via <code>IAssetTools::RegisterAdvancedAssetCategory()</code>.</p>
+<p>搜索路径策略：首先是 <code>third_party/install/{SubDir}/bin/</code>（编辑器/开发版本），然后是 <code>FPlatformProcess::GetModulesDirectory()</code>（DLL 与可执行文件放在一起的打包版本）。</p>
+<p>在编辑器构建中，该模块还通过 <code>IAssetTools::RegisterAdvancedAssetCategory()</code> 注册了“MuJoCo”资产类别。</p>
 <hr />
 <h2 id="_6">场景声明周期</h2>
 <h3 id="beginplay">BeginPlay</h3>
-<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code> -- <code>AAMjManager::BeginPlay()</code></p>
+<p><strong>文件：</strong> <code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code> -- <code>AAMjManager::BeginPlay()</code></p>
 <ol>
-<li><strong>Singleton enforcement.</strong> If <code>AAMjManager::Instance</code> is already set to a different actor, this instance logs an error and returns. Only one <code>AAMjManager</code> per level is supported.</li>
-<li><strong>Subsystem creation.</strong> The four subsystems (<code>UMjPhysicsEngine</code>, <code>UMjDebugVisualizer</code>, <code>UMjNetworkManager</code>, <code>UMjInputHandler</code>) are created via <code>CreateDefaultSubobject</code> in the constructor.</li>
-<li><strong>Auto-create ZMQ components.</strong> If no <code>UMjZmqComponent</code> subclasses exist on the manager actor, it creates a <code>UZmqSensorBroadcaster</code> (tcp://*:5555) and <code>UZmqControlSubscriber</code> (tcp://127.0.0.1:5556).</li>
-<li><strong>ZMQ discovery.</strong> <code>UMjNetworkManager::DiscoverZmqComponents()</code> collects all ZMQ components on the manager actor.</li>
-<li><strong>Auto-create replay manager.</strong> If no <code>AMjReplayManager</code> exists in the level, one is spawned.</li>
-<li><strong><code>Compile()</code></strong> -- delegates to <code>UMjPhysicsEngine</code> for spec construction and <code>mj_compile()</code> (see below).</li>
-<li><strong>Callback registration.</strong> Registers <code>UMjDebugVisualizer::CaptureDebugData</code> as a post-step callback on <code>UMjPhysicsEngine</code>.</li>
-<li><strong><code>UpdateCameraStreamingState()</code></strong> -- applies global camera broadcast toggle.</li>
-<li><strong><code>RunMujocoAsync()</code></strong> -- delegates to <code>UMjPhysicsEngine</code> to launch the physics thread.</li>
-<li><strong>Auto-create MjSimulate widget.</strong> Loads <code>/UnrealRoboticsLab/WBP_MjSimulate</code> Blueprint and adds it to the viewport (controlled by <code>bAutoCreateSimulateWidget</code>).</li>
+<li><strong>单例模式强制执行。</strong> 如果 <code>AAMjManager::Instance</code> 已分配给其他参与者，则此实例会记录错误并返回。每个级别仅支持一个 <code>AAMjManager</code>。</li>
+<li><strong>子系统创建。</strong> 四个子系统（<code>UMjPhysicsEngine</code>、<code>UMjDebugVisualizer``UMjNetworkManager</code>、<code>UMjInputHandler</code>）通过构造函数中的 <code>CreateDefaultSubobject</code> 创建。</li>
+<li><strong>自动创建 ZMQ 组件。</strong> 如果管理器参与者上不存在 <code>UMjZmqComponent</code> 子类，则会创建一个 <code>UZmqSensorBroadcaster</code> (tcp://*:5555) 和一个 <code>UZmqControlSubscriber</code> (tcp://127.0.0.1:5556)。 </li>
+<li><strong>ZMQ 发现。</strong> <code>UMjNetworkManager::DiscoverZmqComponents()</code> 收集管理器参与者上的所有 ZMQ 组件。</li>
+<li><strong>自动创建回放管理器。</strong> 如果关卡中不存在  <code>AMjReplayManager</code>，则会生成一个。</li>
+<li><strong><code>Compile()</code></strong> -- 委托给 <code>UMjPhysicsEngine</code> 进行规范构建和 <code>mj_compile()</code>（见下文）。</li>
+<li><strong>回调注册。</strong> <code>UMjDebugVisualizer::CaptureDebugData</code> 注册为 <code>UMjPhysicsEngine</code> 上的步骤后回调。</li>
+<li><strong><code>UpdateCameraStreamingState()</code></strong> -- 应用全局相机广播切换。</li>
+<li><strong><code>RunMujocoAsync()</code></strong> -- 委托给 <code>UMjPhysicsEngine</code> 来启动物理线程。</li>
+<li><strong>自动创建 MjSimulate 小部件。</strong> 加载 <code>/UnrealRoboticsLab/WBP_MjSimulate</code> 蓝图并将其添加到视口（由 <code>bAutoCreateSimulateWidget</code> 控制）。</li>
 </ol>
-<h3 id="spec-construction-precompile">Spec Construction (PreCompile)</h3>
-<p><strong>File:</strong> <code>UMjPhysicsEngine::PreCompile()</code></p>
-<ol>
-<li>Creates a fresh <code>mjSpec</code> via <code>mj_makeSpec()</code> (radians mode: <code>compiler.degree = false</code>).</li>
-<li>Initializes the VFS via <code>mj_defaultVFS()</code>.</li>
-<li>Discovers all actors in the level via <code>UGameplayStatics::GetAllActorsOfClass()</code>.</li>
-<li>Processing order within the discovery loop:</li>
-<li><strong>Quick Convert:</strong> Any actor with <code>UMjQuickConvertComponent</code> calls <code>Setup(spec, vfs)</code>.</li>
-<li><strong>Articulations:</strong> Any <code>AMjArticulation</code> calls <code>Setup(spec, vfs)</code>.</li>
-<li><strong>Heightfields:</strong> Any <code>AMjHeightfieldActor</code> calls <code>Setup(spec, vfs)</code>.</li>
-<li>ZMQ component discovery is handled separately by <code>UMjNetworkManager::DiscoverZmqComponents()</code> during BeginPlay.</li>
-</ol>
-<p>Note: The discovery loop iterates all actors once. Quick Convert components and Articulations on the same actor are both processed (they are not mutually exclusive in the loop logic, though in practice they exist on separate actors).</p>
-<h3 id="articulation-setup">Articulation Setup</h3>
-<p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code> -- <code>AMjArticulation::Setup()</code></p>
-<p>This is the most complex part of spec construction. Each articulation creates an isolated child spec that is later merged into the root.</p>
-<ol>
-<li><strong>Create child spec.</strong> <code>mj_makeSpec()</code> for isolation. Radians mode. Articulation-level <code>SimOptions</code> applied via <code>ApplyToSpec()</code>.</li>
-<li><strong>Create wrapper.</strong> <code>FMujocoSpecWrapper</code> wraps the child spec and VFS for convenient element creation.</li>
-<li><strong>Prefix.</strong> Set to <code>{ActorName}_</code> -- all elements in this articulation will be prefixed after <code>mjs_attach()</code>.</li>
-<li><strong>Processing order is critical:</strong></li>
-<li><strong>Defaults</strong> (must be first). <code>GetComponents&lt;UMjDefault&gt;()</code> then <code>m_Wrapper-&gt;AddDefault()</code> for each. Other elements reference these default classes.</li>
-<li><strong>WorldBody traversal.</strong> Finds the <code>UMjWorldBody</code> component, iterates its <code>GetAttachChildren()</code>. For each child:<ul>
-<li><code>UMjBody</code> (non-default) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code> (recursive)</li>
-<li><code>UMjFrame</code> (non-default) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code></li>
-</ul>
-</li>
-<li><strong>Tendons.</strong> <code>GetComponents&lt;UMjTendon&gt;()</code> then <code>RegisterToSpec()</code>. Must come after bodies so joint names exist.</li>
-<li><strong>Sensors.</strong> <code>GetComponents&lt;UMjSensor&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Actuators.</strong> <code>GetComponents&lt;UMjActuator&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Contact pairs.</strong> <code>GetComponents&lt;UMjContactPair&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Contact excludes.</strong> <code>GetComponents&lt;UMjContactExclude&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Equalities.</strong> <code>GetComponents&lt;UMjEquality&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Keyframes.</strong> <code>GetComponents&lt;UMjKeyframe&gt;()</code> then <code>RegisterToSpec()</code>.</li>
-<li><strong>Attach.</strong> <code>mjs_attach(attachmentFrame-&gt;element, childSpec-&gt;element, prefix, "")</code> merges the child spec into the root world body via an <code>mjsFrame</code>. The frame's pos/quat are set from the articulation actor's world transform (converted to MuJoCo coordinates). After attach, <code>m_ChildSpec</code> is set to nullptr (ownership transferred to root spec).</li>
-</ol>
-<h3 id="body-traversal-recursive">Body Traversal (Recursive)</h3>
-<p><strong>File:</strong> <code>Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp</code> -- <code>UMjBody::Setup()</code></p>
-<p><code>UMjBody::Setup()</code> creates an <code>mjsBody</code> via the wrapper, then iterates <code>GetAttachChildren()</code>:</p>
+<h3 id="_7">规范构建（预编译）</h3>
+<p><strong>文件：</strong> <code>UMjPhysicsEngine::PreCompile()</code></p>
+<p>1.通过 <code>mj_makeSpec()</code> 创建一个新的 <code>mjSpec</code>（弧度模式：<code>compiler.degree = false</code>）。 </p>
+<p>2.通过 <code>mj_defaultVFS()</code> 初始化虚拟文件系统(Virtual File System, VFS)。</p>
+<p>3.通过 <code>UGameplayStatics::GetAllActorsOfClass()</code> 发现关卡中的所有参与者。</p>
+<p>4.在发现循环中按顺序处理</p>
 <ul>
-<li>Child <code>UMjBody</code> -&gt; recursive <code>Setup()</code></li>
-<li>Child <code>UMjFrame</code> -&gt; <code>Frame::Setup()</code></li>
-<li>Child <code>UMjGeom</code>, <code>UMjJoint</code>, <code>UMjSensor</code>, <code>UMjSite</code>, etc. -&gt; <code>RegisterToSpec()</code></li>
+<li><strong>快速转换：</strong> 任何带有 <code>UMjQuickConvertComponent</code> 的参与者都会调用 <code>Setup(spec, vfs)</code>。</li>
+<li><strong>关节：</strong> 任何 <code>AMjArticulation</code> 都会调用 <code>Setup(spec, vfs)</code>。</li>
+<li><strong>高度场：</strong> 任何 <code>AMjHeightfieldActor</code> 都会调用 Setup(spec, vfs)。</li>
 </ul>
-<p>Mesh preparation (CoACD convex decomposition via <code>PrepareMeshForMuJoCo</code>) happens during geom registration.</p>
-<h3 id="_7">编译</h3>
+<p>5.ZMQ 组件的发现由 <code>UMjNetworkManager::DiscoverZmqComponents()</code> 在 BeginPlay 期间单独处理。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+</div>
+<p>发现循环会遍历所有参与者一次。同一参与者上的快速转换组件和关节都会被处理（尽管在循环逻辑中它们并非互斥，但实际上它们存在于不同的参与者上）。</p>
+<h3 id="_8">关节设置</h3>
+<p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp</code> -- <code>AMjArticulation::Setup()</code></p>
+<p>这是规范构建中最复杂的部分。每个关节都会创建一个独立的子规范，该子规范随后会合并到根规范中。</p>
+<p>1.<strong>创建子规范。</strong> 使用 <code>mj_makeSpec()</code> 进行隔离。弧度模式。通过 <code>ApplyToSpec()</code> 应用关节级 <code>模拟选项(SimOptions)</code>。</p>
+<p>2.<strong>创建封装器。</strong> <code>FMujocoSpecWrapper</code> 封装子规范和虚拟文件系统(VFS)，以便于创建元素。</p>
+<p>3.<strong>前缀。</strong> 设置为 <code>{ActorName}_</code> -- 此表达式中的所有元素都将在 <code>mjs_attach()</code> 之后添加前缀。</p>
+<p>4.<strong>处理顺序至关重要：</strong></p>
+<ul>
+<li>
+<p><strong>默认</strong> （必须放在首位）。首先调用 <code>GetComponents&lt;UMjDefault&gt;()</code>，然后对每个组件调用 <code>m_Wrapper-&gt;AddDefault()</code>。其他元素引用这些默认类。</p>
+</li>
+<li>
+<p><strong>遍历 WorldBody。</strong> 找到 <code>UMjWorldBody</code> 组件，并迭代其 <code>GetAttachChildren()</code> 方法。对于每个子组件：
+   <code>UMjBody</code> (非默认) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code> (递归)；
+   <code>UMjFrame</code> (非默认) -&gt; <code>Setup(nullptr, nullptr, wrapper)</code>。</p>
+</li>
+<li>
+<p><strong>肌腱。</strong> 首先调用 <code>GetComponents&lt;UMjTendon&gt;()</code>，然后调用 <code>RegisterToSpec()</code>。必须在实体组件之后调用，以便关节名称存在。</p>
+</li>
+<li>
+<p><strong>传感器。</strong> 首先调用 <code>GetComponents&lt;UMjSensor&gt;()</code>，然后调用 <code>RegisterToSpec()</code>。 </p>
+</li>
+<li>
+<p><strong>执行器。</strong> 首先调用 <code>GetComponents&lt;UMjActuator&gt;()</code>，然后调用 <code>RegisterToSpec()</code>。</p>
+</li>
+<li>
+<p><strong>接触对。</strong> 首先调用 <code>GetComponents&lt;UMjContactPair&gt;()</code>，然后调用 <code>RegisterToSpec()</code>。</p>
+</li>
+<li>
+<p><strong>接触排除。</strong> <code>GetComponents&lt;UMjContactExclude&gt;()</code> then <code>RegisterToSpec()</code>.</p>
+</li>
+<li>
+<p><strong>相等性(Equalities)。</strong> 先调用 <code>GetComponents&lt;UMjEquality&gt;()</code> 然后 <code>RegisterToSpec()</code>。</p>
+</li>
+<li>
+<p><strong>关键帧。</strong> 先调用 <code>GetComponents&lt;UMjKeyframe&gt;()</code>，然后调用 <code>RegisterToSpec()</code>.</p>
+</li>
+</ul>
+<p>5.<strong>附着。</strong> <code>mjs_attach(attachmentFrame-&gt;element, childSpec-&gt;element, prefix, "")</code> 通过 <code>mjsFrame</code> 将子模型合并到根世界主体(world body)中。帧的 pos/quat 值由关节参与者的世界变换（转换为 MuJoCo 坐标）设置。附加完成后，<code>m_ChildSpec</code> 被设置为 nullptr（所有权转移给根模型）。</p>
+<h3 id="_9">刚体遍历（递归）</h3>
+<p><strong>文件：</strong> <code>Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp</code> -- <code>UMjBody::Setup()</code></p>
+<p><code>UMjBody::Setup()</code> 通过封装器创建一个 <code>mjsBody</code>，然后迭代 <code>GetAttachChildren()</code>：</p>
+<ul>
+<li>子对象 <code>UMjBody</code> -&gt; 递归 <code>Setup()</code></li>
+<li>子对象 <code>UMjFrame</code> -&gt; <code>Frame::Setup()</code></li>
+<li>子对象 <code>UMjGeom</code>, <code>UMjJoint</code>, <code>UMjSensor</code>, <code>UMjSite</code> 等 -&gt; <code>RegisterToSpec()</code></li>
+</ul>
+<p>网格准备（通过 <code>PrepareMeshForMuJoCo</code> 进行 CoACD 凸分解）在几何体配准期间进行。</p>
+<h3 id="_10">编译</h3>
 <p><strong>文件</strong> <code>UMjPhysicsEngine::Compile()</code></p>
-<ol>
-<li>Calls <code>PreCompile()</code>.</li>
-<li><code>mj_compile(m_spec, &amp;m_vfs)</code> produces <code>mjModel*</code>.</li>
-<li><strong>On failure:</strong> retrieves error via <code>mjs_getError(m_spec)</code>, logs it, shows editor dialog (<code>FMessageDialog</code>). Returns without creating data.</li>
-<li><strong>On success:</strong></li>
-<li>If <code>bSaveDebugXml</code> is true: saves <code>scene_compiled.xml</code> and <code>scene_compiled.mjb</code> to <code>Saved/URLab/</code>, with file paths relativized.</li>
-<li>Creates <code>mjData</code> via <code>mj_makeData(m_model)</code>.</li>
-<li>Calls <code>ApplyOptions()</code> (applies manager-level option overrides to <code>m_model-&gt;opt</code>).</li>
-<li>Calls <code>PostCompile()</code>.</li>
-</ol>
-<h3 id="_8">后编译 (绑定)</h3>
+<p>1.调用 <code>PreCompile()</code>。</p>
+<p>2.<code>mj_compile(m_spec, &amp;m_vfs)</code> 产生 <code>mjModel*</code>。</p>
+<p>3.<strong>失败时：</strong> 通过 <code>mjs_getError(m_spec)</code> 获取错误信息，记录错误日志，并显示编辑器对话框 (<code>FMessageDialog</code>)。返回，不创建数据。</p>
+<p>4.<strong>成功时：</strong></p>
+<ul>
+<li>如果 <code>bSaveDebugXml</code> 为 true：将 <code>scene_compiled.xml</code> 和 <code>scene_compiled.mjb</code> 保存到 <code>Saved/URLab/</code> 目录，文件路径为相对路径。</li>
+<li>通过 <code>mjData</code> 创建 <code>mj_makeData(m_model)</code>.</li>
+<li>调用 <code>ApplyOptions()</code>（将管理器级别的选项覆盖应用于 <code>m_model-&gt;opt</code>）。</li>
+<li>调用 <code>PostCompile()</code>.</li>
+</ul>
+<h3 id="_11">后编译 (绑定)</h3>
 <p><strong>文件:</strong> <code>UMjPhysicsEngine::PostCompile()</code></p>
 <ol>
-<li>Calls <code>PostSetup(model, data)</code> on each <code>UMjQuickConvertComponent</code>.</li>
-<li>Builds <code>m_ArticulationMap</code> (name -&gt; <code>AMjArticulation*</code>) for O(1) lookup.</li>
-<li>Calls <code>PostSetup(model, data)</code> on each <code>AMjArticulation</code>.</li>
-<li>Calls <code>PostSetup(model, data)</code> on each <code>AMjHeightfieldActor</code>.</li>
+<li>对每个 <code>UMjQuickConvertComponent</code> 调用 <code>PostSetup(model, data)</code>。</li>
+<li>构建查找时间复杂度为 O(1) 的 <code>m_ArticulationMap</code> (name -&gt; <code>AMjArticulation*</code>) 。</li>
+<li>对每个 <code>AMjArticulation</code> 调用 <code>PostSetup(model, data)</code>。 </li>
+<li>对每个 <code>AMjHeightfieldActor</code> 调用 <code>PostSetup(model, data)</code>。</li>
 </ol>
-<p><strong>Inside <code>AMjArticulation::PostSetup()</code>:</strong></p>
-<p>Each component calls <code>Bind(model, data, prefix)</code>. The <code>Bind()</code> method on <code>UMjComponent</code> calls <code>BindToView&lt;T&gt;()</code> which:</p>
+<p><strong>在 <code>AMjArticulation::PostSetup()</code> 函数内部：</strong></p>
+<p>每个组件都会调用 <code>Bind(model, data, prefix)</code>。<code>UMjComponent</code> 组件的 <code>Bind()</code> 方法会调用 <code>BindToView&lt;T&gt;()</code> 函数，该函数会执行以下操作：</p>
 <ol>
-<li><strong>Path 1 (ID-based):</strong> If <code>m_SpecElement</code> is set, tries <code>mjs_getId(m_SpecElement)</code>. Validates the ID is within model bounds (guards against stale IDs after <code>mjs_attach</code>).</li>
-<li><strong>Path 2 (Name fallback):</strong> Constructs <code>{Prefix}{MjName}</code> (or <code>{Prefix}{GetName()}</code> if MjName is empty), calls <code>mj_name2id()</code>.</li>
+<li><strong>路径 1 (基于 ID):</strong> 如果设置了 <code>m_SpecElement</code>，则尝试使用 <code>mjs_getId(m_SpecElement)</code>。验证 ID 是否在模型范围内（防止在 <code>mjs_attach</code> 之后使用过时的 ID）。 </li>
+<li><strong>路径 2 (名称回退):</strong> 构造 <code>{Prefix}{MjName}</code>（如果 MjName 为空，则构造 <code>{Prefix}{GetName()}</code>），并调用 <code>mj_name2id()</code> 函数。</li>
 </ol>
-<p>This creates View structs (<code>BodyView</code>, <code>GeomView</code>, <code>JointView</code>, <code>ActuatorView</code>, <code>SensorView</code>, <code>TendonView</code>, <code>SiteView</code>) that cache raw pointers into <code>mjModel</code>/<code>mjData</code> arrays.</p>
-<p>PostSetup also populates component-name maps (<code>ActuatorComponentMap</code>, <code>JointComponentMap</code>, etc.) and MuJoCo-ID maps (<code>BodyIdMap</code>, <code>GeomIdMap</code>, etc.) for O(1) runtime access.</p>
+<p>此操作会创建视图结构体（<code>BodyView</code>、<code>GeomView</code>、<code>JointView</code>、<code>ActuatorView</code>、<code>SensorView</code>、<code>TendonView</code>、<code>SiteView</code>），这些结构体将原始指针缓存到 <code>mjModel</code>/<code>mjData</code> 数组中。</p>
+<p>PostSetup 还会填充组件名称映射（<code>ActuatorComponentMap</code>、<code>JointComponentMap</code> 等）和 MuJoCo-ID 映射（<code>BodyIdMap</code>、<code>GeomIdMap</code> 等），以实现 O(1) 运行时访问。</p>
 <hr />
-<h2 id="_9">物理循环 (异步线程)</h2>
+<h2 id="_12">物理循环 (异步线程)</h2>
 <p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code> -- <code>UMjPhysicsEngine::RunMujocoAsync()</code></p>
-<p>Runs on a dedicated thread via <code>Async(EAsyncExecution::Thread, ...)</code>. Stored in <code>AsyncPhysicsFuture</code>.</p>
-<p>Each iteration (under <code>CallbackMutex</code> lock, owned by <code>UMjPhysicsEngine</code>):</p>
-<ol>
-<li><strong>Check <code>bPendingReset</code></strong> -&gt; <code>mj_resetData()</code> + <code>mj_forward()</code>. Broadcasts <code>OnSimulationReset</code> on game thread.</li>
-<li><strong>Check <code>bPendingRestore</code></strong> -&gt; <code>mj_setState()</code> with <code>PendingStateVector</code> + <code>mj_forward()</code>.</li>
-<li><strong>Registered pre-step callbacks</strong> (replaces direct ZMQ PreStep calls). ZMQ components register via <code>RegisterPreStepCallback()</code>.</li>
-<li><strong>ApplyControls</strong> on each articulation (writes <code>d-&gt;ctrl</code> from actuator values).</li>
-<li><strong>Physics step:</strong></li>
-<li>If <code>bIsPaused</code>: skip.</li>
-<li>If <code>CustomStepHandler</code> is bound: call it instead of <code>mj_step()</code> (used by replay playback).</li>
-<li>Otherwise: <code>mj_step(m_model, m_data)</code>.</li>
-<li><strong>Registered post-step callbacks</strong> (replaces direct ZMQ PostStep and debug capture calls). ZMQ components and <code>UMjDebugVisualizer::CaptureDebugData</code> register via <code>RegisterPostStepCallback()</code>.</li>
-<li><strong><code>OnPostStep</code> delegate</strong> (replay recording captures state here).</li>
-</ol>
-<p><strong>Timing:</strong> After releasing the mutex, the loop spin-waits (<code>FPlatformProcess::YieldThread()</code>) until <code>TargetInterval / SpeedFactor</code> has elapsed. <code>SimSpeedPercent</code> (5-100) controls the speed factor.</p>
+<p>通过 <code>Async(EAsyncExecution::Thread, ...)</code> 在专用线程上运行。存储在 <code>AsyncPhysicsFuture</code> 中。</p>
+<p>每次迭代（在 <code>UMjPhysicsEngine</code> 持有的 <code>CallbackMutex</code> 锁下）：</p>
+<p>1.<strong>检查 <code>bPendingReset</code></strong> -&gt; <code>mj_resetData()</code> + <code>mj_forward()</code>. 在游戏线程上广播 <code>OnSimulationReset</code>。 </p>
+<p>2.<strong>检查 <code>bPendingRestore</code></strong> -&gt; <code>mj_setState()</code> 使用 <code>PendingStateVector</code> + <code>mj_forward()</code>。</p>
+<p>3.<strong>注册预步回调</strong> (取代直接调用 ZMQ PreStep)。 ZMQ 组件通过 <code>RegisterPreStepCallback()</code> 注册。</p>
+<p>4.对每个关节应用 <strong>ApplyControls</strong>（根据执行器值写入 <code>d-&gt;ctrl</code>）。 </p>
+<p>5.<strong>物理步骤：</strong></p>
+<ul>
+<li>
+<p>如果 <code>bIsPaused</code>：跳过。</p>
+</li>
+<li>
+<p>如果已经绑定 <code>CustomStepHandler</code>：调用它而不是 <code>mj_step()</code>（用于回放）。</p>
+</li>
+<li>
+<p>否则：<code>mj_step(m_model, m_data)</code>。</p>
+</li>
+</ul>
+<p>6.<strong>已注册的步骤后回调函数</strong> （取代直接调用 ZMQ PostStep 和调试捕获函数）。ZMQ 组件和 <code>UMjDebugVisualizer::CaptureDebugData</code> 通过 <code>RegisterPostStepCallback()</code> 进行注册。</p>
+<p>7.<strong><code>OnPostStep</code> 委托</strong> （回放录制在此处捕获状态）。</p>
+<p><strong>时序：</strong> 释放互斥锁后，循环会进行自旋等待（<code>FPlatformProcess::YieldThread()</code>），直到 <code>TargetInterval / SpeedFactor</code> 的时间过去。<code>SimSpeedPercent</code> 控制速度因子。 </p>
 <hr />
-<h2 id="_10">游戏线程 (节拍信号)</h2>
+<h2 id="_13">游戏线程 (节拍信号)</h2>
 <p><strong>文件:</strong> <code>AAMjManager::Tick()</code></p>
 <ol>
-<li><strong>Backward-compat pointer sync.</strong> Copies <code>m_model</code>/<code>m_data</code> from <code>UMjPhysicsEngine</code> so legacy callers that read <code>AAMjManager::m_model</code> still work.</li>
-<li>Hotkey processing and debug drawing are delegated to <code>UMjInputHandler</code> and <code>UMjDebugVisualizer</code> respectively (both tick via their own <code>TickComponent</code>).</li>
+<li><strong>向后兼容的指针同步。</strong> 从 <code>UMjPhysicsEngine</code> 复制 <code>m_model</code>/<code>m_data</code>，以便读取 <code>AAMjManager::m_model</code> 的旧版调用者仍然可以正常工作。</li>
+<li>热键处理和调试绘图分别委托给 <code>UMjInputHandler</code> 和 <code>UMjDebugVisualizer</code>（两者都通过各自的 <code>TickComponent</code> 发送节拍）。 </li>
 </ol>
 <h3 id="umjinputhandlertickcomponent">UMjInputHandler::TickComponent</h3>
-<p>Processes hotkeys each frame and dispatches to the appropriate subsystem:</p>
+<p>每帧处理热键并分派至相应的子系统：</p>
 <ul>
 <li><code>1</code> -&gt; <code>DebugVisualizer-&gt;ToggleContactForces()</code></li>
-<li><code>2</code> -&gt; Toggle visual mesh visibility (scene actors)</li>
-<li><code>3</code> -&gt; Toggle articulation collision wireframes (scene actors)</li>
-<li><code>4</code> -&gt; Toggle joint debug axes (scene actors)</li>
-<li><code>5</code> -&gt; Toggle Quick Convert collision wireframes (scene actors)</li>
+<li><code>2</code> -&gt; 切换视觉网格可见性（场景参与者）</li>
+<li><code>3</code> -&gt; 切换关节碰撞线框（场景参与者）</li>
+<li><code>4</code> -&gt; 切换关节调试轴（场景参与者）</li>
+<li><code>5</code> -&gt; 切换快速转换碰撞线框（场景参与者）</li>
 <li><code>P</code> -&gt; <code>PhysicsEngine-&gt;TogglePause()</code></li>
 <li><code>R</code> -&gt; <code>PhysicsEngine-&gt;Reset()</code></li>
-<li><code>O</code> -&gt; Toggle orbit and keyframe cameras (scene actors)</li>
-<li><code>F</code> -&gt; Fire impulse launchers (scene actors)</li>
+<li><code>O</code> -&gt; 切换轨道和关键帧相机（场景参与者）</li>
+<li><code>F</code> -&gt; 发射脉冲发射器（场景参与者）</li>
 </ul>
 <h3 id="umjdebugvisualizertickcomponent">UMjDebugVisualizer::TickComponent</h3>
-<p>If debug is enabled, reads <code>DebugData</code> (protected by <code>DebugMutex</code> on the visualizer), draws contact force arrows and points via <code>ULineBatchComponent</code> / <code>DrawDebugLine</code>.</p>
-<p><strong>Transform sync</strong> happens in <code>UMjBody::TickComponent()</code>:</p>
+<p>如果启用调试模式，则读取 <code>DebugData</code>（可视化器上受 <code>DebugMutex</code> 保护），并通过 <code>ULineBatchComponent</code> / <code>DrawDebugLine</code> 绘制接触力箭头和点。</p>
+<p><strong>变换同步</strong> 在 <code>UMjBody::TickComponent()</code> 中进行：</p>
 <ul>
-<li>If <code>bDrivenByUnreal</code>: writes UE world transform to MuJoCo mocap body (<code>d-&gt;mocap_pos</code>, <code>d-&gt;mocap_quat</code>).</li>
-<li>Otherwise: reads MuJoCo <code>xpos</code>/<code>xquat</code> from <code>BodyView</code> and sets UE world transform via <code>SetWorldLocationAndRotation()</code>.</li>
+<li>如果 <code>bDrivenByUnreal</code>：将 UE 世界变换写入 MuJoCo 动作捕捉模型（<code>d-&gt;mocap_pos</code>，<code>d-&gt;mocap_quat</code>）。 </li>
+<li>否则：从 <code>BodyView</code> 读取 MuJoCo <code>xpos</code>/<code>xquat</code>，并通过 <code>SetWorldLocationAndRotation()</code> 设置 UE 世界变换。 </li>
 </ul>
 <hr />
-<h2 id="_11">线程安全</h2>
+<h2 id="_14">线程安全</h2>
 <table>
 <thead>
 <tr>
-<th>Mutex / 机制</th>
+<th>互斥量/机制</th>
 <th>所有者</th>
 <th>保护</th>
 <th>使用者</th>
@@ -259,84 +292,84 @@
 <tr>
 <td><code>CallbackMutex</code> (<code>FCriticalSection</code>)</td>
 <td><code>UMjPhysicsEngine</code></td>
-<td><code>m_model</code>, <code>m_data</code> during physics stepping</td>
-<td>Physics thread (main lock), <code>StepSync()</code></td>
+<td>物理步进期间的 <code>m_model</code>, <code>m_data</code></td>
+<td>物理线程（主锁）, <code>StepSync()</code></td>
 </tr>
 <tr>
 <td><code>DebugMutex</code> (<code>FCriticalSection</code>)</td>
 <td><code>UMjDebugVisualizer</code></td>
-<td><code>DebugData</code> (contact visualization buffer)</td>
-<td>Physics thread writes (via post-step callback), game thread reads (TickComponent)</td>
+<td>调试数据<code>DebugData</code>（接触可视化缓冲区）</td>
+<td>物理线程写入（通过步骤后回调），游戏线程读取</td>
 </tr>
 <tr>
 <td><code>CameraMutex</code> (<code>FCriticalSection</code>)</td>
 <td><code>UMjNetworkManager</code></td>
-<td><code>ActiveCameras</code> array</td>
-<td>Register/Unregister from any thread</td>
+<td><code>ActiveCameras</code> 数组</td>
+<td>在任何线程中注册/取消注册</td>
 </tr>
 <tr>
 <td><code>bPendingReset</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
 <td><code>UMjPhysicsEngine</code></td>
-<td>Reset signal</td>
-<td>Game thread sets, physics thread reads/clears</td>
+<td>复位信号</td>
+<td>游戏线程设置，物理线程读取/清除</td>
 </tr>
 <tr>
 <td><code>bPendingRestore</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
 <td><code>UMjPhysicsEngine</code></td>
-<td>Restore signal</td>
-<td>Game thread sets, physics thread reads/clears</td>
+<td>恢复信号</td>
+<td>游戏线程设置，物理线程读取/清除</td>
 </tr>
 <tr>
-<td><code>bIsPaused</code> (non-atomic, but written only from game thread)</td>
+<td><code>bIsPaused</code>（非原子操作，但仅从游戏线程写入）</td>
 <td><code>UMjPhysicsEngine</code></td>
-<td>Pause state</td>
-<td>Read by physics thread</td>
+<td>暂停状态</td>
+<td>由物理线程读取</td>
 </tr>
 <tr>
 <td><code>bShouldStopTask</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
 <td><code>UMjPhysicsEngine</code></td>
-<td>Shutdown signal</td>
-<td>Game thread sets in <code>EndPlay</code>, physics thread checks</td>
+<td>关闭信号</td>
+<td>游戏线程在 <code>EndPlay</code> 中设置，物理线程进行检查</td>
 </tr>
 <tr>
 <td><code>UMjActuator::InternalValue</code> / <code>NetworkValue</code></td>
 <td><code>UMjActuator</code></td>
-<td>Per-actuator control values</td>
-<td>Atomic reads/writes across threads</td>
+<td>每个执行器控制值</td>
+<td>跨线程的原子读写操作</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="_12">组件系统</h2>
-<h3 id="base-umjcomponent">Base: UMjComponent</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Components/MjComponent.h</code></p>
-<p>Inherits <code>USceneComponent</code> + <code>IMjSpecElement</code>. All MuJoCo element components derive from this.</p>
+<h2 id="_15">组件系统</h2>
+<h3 id="umjcomponent">基类：UMjComponent</h3>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Components/MjComponent.h</code></p>
+<p>继承自 <code>USceneComponent</code> 和 <code>IMjSpecElement</code>。所有 MuJoCo 元素组件均派生自此基类。</p>
 <p>关键成员:</p>
 <ul>
-<li><code>m_SpecElement</code> (<code>mjsElement*</code>) -- set during <code>RegisterToSpec()</code>, used for ID resolution in <code>Bind()</code>.</li>
-<li><code>m_ID</code> (<code>int</code>) -- MuJoCo object ID, resolved during <code>Bind()</code>.</li>
-<li><code>m_Model</code>, <code>m_Data</code> -- cached pointers, set during <code>Bind()</code>.</li>
-<li><code>MjName</code> (<code>FString</code>) -- original MJCF name, stable for cross-referencing.</li>
-<li><code>bIsDefault</code> (<code>bool</code>) -- if true, this component is a default template, skipped by runtime discovery.</li>
+<li><code>m_SpecElement</code> (<code>mjsElement*</code>) -- 在 <code>RegisterToSpec()</code> 期间设置，用于 <code>Bind()</code> 中的 ID 解析。</li>
+<li><code>m_ID</code> (<code>int</code>) -- MuJoCo 对象 ID，在 <code>Bind()</code> 期间解析。</li>
+<li><code>m_Model</code>, <code>m_Data</code> -- 缓存指针，在 <code>Bind()</code> 期间设置。</li>
+<li><code>MjName</code> (<code>FString</code>) -- 原始 MJCF 名称，用于交叉引用。</li>
+<li><code>bIsDefault</code> (<code>bool</code>) -- 如果为 true，则此组件为默认模板，运行时查找时会跳过。</li>
 </ul>
 <p>关键方法:</p>
 <ul>
-<li><code>RegisterToSpec(FMujocoSpecWrapper&amp;, mjsBody*)</code> -- creates the spec element. Subclasses override.</li>
-<li><code>Bind(mjModel*, mjData*, Prefix)</code> -- resolves ID and caches model/data pointers.</li>
-<li><code>BindToView&lt;T&gt;(Prefix)</code> -- template method that creates a View struct. Tries <code>mjs_getId()</code> first (with bounds validation), falls back to <code>mj_name2id()</code>.</li>
-<li><code>ResolveDefault(mjSpec*, ClassName)</code> -- static helper to find <code>mjsDefault</code> by class name. Falls back to global default.</li>
-<li><code>FindEditorDefault()</code> -- editor-time default resolution without requiring an mjSpec.</li>
-<li><code>SetSpecElementName()</code> -- assigns unique name to spec element via wrapper deduplication.</li>
+<li><code>RegisterToSpec(FMujocoSpecWrapper&amp;, mjsBody*)</code> -- 创建 spec 元素。子类会重写此方法。</li>
+<li><code>Bind(mjModel*, mjData*, Prefix)</code> -- 解析 ID 并缓存模型/数据指针。</li>
+<li><code>BindToView&lt;T&gt;(Prefix)</code> -- 创建 View 结构体的模板方法。首先尝试使用 <code>mjs_getId()</code>（带有边界验证），如果失败则回退到 <code>mj_name2id()</code>。</li>
+<li><code>ResolveDefault(mjSpec*, ClassName)</code> -- 通过类名查找 <code>mjsDefault</code> 的静态辅助方法。如果失败则回退到全局默认值。</li>
+<li><code>FindEditorDefault()</code> -- 编辑器时解析默认值，无需 mjSpec。</li>
+<li><code>SetSpecElementName()</code> -- 通过封装器去重为 spec 元素分配唯一名称。 </li>
 </ul>
-<h3 id="view-structs">View Structs</h3>
-<p><strong>File:</strong> <code>Source/URLab/Public/MuJoCo/Utils/MjBind.h</code></p>
-<p>Lightweight structs that cache raw pointers into <code>mjModel</code>/<code>mjData</code> arrays for zero-overhead runtime access. Each has a <code>static constexpr mjtObj obj_type</code> for template dispatch.</p>
+<h3 id="_16">查看结构体</h3>
+<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Utils/MjBind.h</code></p>
+<p>轻量级结构体，将原始指针缓存到 <code>mjModel</code>/<code>mjData</code> 数组中，实现零开销运行时访问。每个结构体都有一个 <code>static constexpr mjtObj obj_type</code> 用于模板分发。</p>
 <table>
 <thead>
 <tr>
 <th>结构体</th>
-<th>obj_type</th>
-<th>Key Pointers</th>
+<th>对象类型</th>
+<th>关键指针</th>
 </tr>
 </thead>
 <tbody>
@@ -377,92 +410,116 @@
 </tr>
 </tbody>
 </table>
-<p><code>BodyView</code> also provides traversal methods: <code>Bodies()</code>, <code>Geoms()</code>, <code>Joints()</code> for walking the compiled model hierarchy.</p>
-<p>A standalone template function <code>bind&lt;T&gt;(model, data, name)</code> provides name-based lookup.</p>
-<h3 id="_13">默认系统</h3>
-<p><code>UMjDefault</code> components store template properties mirroring the MJCF <code>&lt;default&gt;</code> hierarchy. Parent-child class chain is built via <code>FMujocoSpecWrapper::AddDefault()</code>. During articulation setup, <code>ExportTo(mjsDefault*)</code> iterates child components and writes their properties to the spec default. At registration time, components resolve their default class via <code>ResolveDefault()</code> which calls <code>mjs_findDefault()</code>.</p>
+<p><code>BodyView</code> 还提供了遍历方法：<code>Bodies()</code>、<code>Geoms()</code> 和 <code>Joints()</code>，用于遍历已编译的模型层次结构。</p>
+<p>独立的模板函数 <code>bind&lt;T&gt;(model, data, name)</code> 提供基于名称的查找功能。</p>
+<h3 id="_17">默认系统</h3>
+<p><code>UMjDefault</code> 组件存储的模板属性与 MJCF 的 <code>&lt;default&gt;</code> 层级结构相对应。父子类链通过 <code>FMujocoSpecWrapper::AddDefault()</code> 构建。在组件配置设置期间，<code>ExportTo(mjsDefault*)</code> 会遍历子组件并将其属性写入规范默认值。在注册时，组件通过 <code>ResolveDefault()</code> 解析其默认类，该函数会调用 <code>mjs_findDefault()</code>。</p>
 <hr />
-<h2 id="_14">坐标系统</h2>
-<p>MuJoCo uses right-handed Z-up coordinates in meters. Unreal uses left-handed Z-up in centimeters.</p>
-<p><strong>Position conversion</strong> (<code>MjUtils::MjToUEPosition</code> / <code>UEToMjPosition</code>):
+<h2 id="_18">坐标系统</h2>
+<p>MuJoCo使用右手坐标系，Z 轴朝上，单位为米。而虚幻引擎使用左手坐标系，Z 轴朝上，单位为厘米。</p>
+<p><strong>位置转换</strong> (<code>MjUtils::MjToUEPosition</code> / <code>UEToMjPosition</code>):
 - X -&gt; X, Y -&gt; -Y, Z -&gt; Z
-- Scale: MuJoCo meters * 100 = Unreal centimeters</p>
-<p><strong>Rotation conversion</strong> (<code>MjUtils::MjToUERotation</code> / <code>UEToMjRotation</code>):
-- MuJoCo quaternion <code>[w, x, y, z]</code> -&gt; <code>FQuat</code> with X and Z components negated (to handle handedness flip).</p>
-<p>All conversion utilities are in <code>Source/URLab/Public/MuJoCo/Utils/MjUtils.h</code>.</p>
+- 比例：MuJoCo 米 * 100 = 虚幻引擎的厘米</p>
+<p><strong>旋转转换</strong> (<code>MjUtils::MjToUERotation</code> / <code>UEToMjRotation</code>):
+- MuJoCo四元数 <code>[w, x, y, z]</code> -&gt; <code>FQuat</code>，其中 X 和 Z 分量取反（以处理手性翻转）。</p>
+<p>所有转换工具都在 <code>Source/URLab/Public/MuJoCo/Utils/MjUtils.h</code> 文件中。</p>
 <hr />
-<h2 id="imported-vs-user-built-articulations">Imported vs User-Built Articulations</h2>
-<p>There are two ways to create an <code>AMjArticulation</code>:</p>
-<p><strong>1. Imported from MJCF XML (drag-and-drop):</strong>
-- Uses <code>UMujocoImportFactory</code> -&gt; <code>UMujocoGenerationAction</code>
-- All components auto-generated from XML parsing
-- Default class hierarchy preserved as <code>UMjDefault</code> components
-- <code>MuJoCoXMLFile</code> property stores the source XML path
-- Mesh assets imported into Unreal Content Browser</p>
-<p><strong>2. User-built from scratch (right-click -&gt; New MuJoCo Articulation):</strong>
-- Uses <code>UMjArticulationFactory</code> -&gt; <code>UMujocoGenerationAction::SetupEmptyArticulation()</code>
-- Creates organizational hierarchy (Definitions, Defaults, Actuators, Sensors, etc.)
-- User manually adds components in the Blueprint editor
-- No XML file — components are authored directly</p>
-<p><strong>Both paths produce the same result:</strong> an <code>AMjArticulation</code> Blueprint with <code>UMjComponent</code> subclasses. At runtime, both go through the same Setup -&gt; Compile -&gt; Bind pipeline. The spec system doesn't know or care how the components were created.</p>
-<h3 id="special-case-flags">Special-Case Flags</h3>
+<h2 id="_19">导入与用于自制的关节</h2>
+<p>创建 <code>AMjArticulation</code> 有两种方法：</p>
+<p><strong>1. 从MJCF XML导入（拖放式）：</strong>
+- 使用 <code>UMujocoImportFactory</code> -&gt; <code>UMujocoGenerationAction</code>
+- 所有组件均通过 XML 解析自动生成
+- 默认类层次结构保留为 <code>UMjDefault</code> 组件
+- <code>MuJoCoXMLFile</code> 属性用于存储源 XML 路径
+- 导入到虚幻内容浏览器(Content Browser)的网格资源</p>
+<p><strong>2. 用户从零开始构建（右键点击 -&gt; 新建 MuJoCo 关节）：</strong>
+- 使用 <code>UMjArticulationFactory</code> -&gt; <code>UMujocoGenerationAction::SetupEmptyArticulation()</code>
+- 创建组织层次结构（定义、默认值、执行器、传感器等）
+- 用户在蓝图编辑器中手动添加组件
+- 无XML文件 — 组件直接编写</p>
+<p><strong>这两种路径都会产生相同的结果：</strong> 一个包含 <code>UMjComponent</code> 子类的 <code>AMjArticulation</code> 蓝图。在运行时，两者都会经历相同的设置(Setup)-&gt;编译(Compile)-&gt;绑定(Bind)流程。规范系统并不知晓或关心组件是如何创建的。 </p>
+<h3 id="_20">特殊情况标志</h3>
 <table>
 <thead>
 <tr>
-<th>Flag</th>
+<th>标志</th>
 <th>On</th>
-<th>Purpose</th>
+<th>目的</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>bIsDefault</code></td>
 <td><code>UMjComponent</code></td>
-<td>Marks template components inside <code>&lt;default&gt;</code> blocks. Excluded from runtime discovery (<code>GetRuntimeComponents</code>), excluded from <code>RegisterToSpec</code> during body traversal.</td>
+<td>在 <code>&lt;default&gt;</code> 块内标记模板组件。这些组件在运行时发现（<code>GetRuntimeComponents</code>）时被排除，在遍历主体时也被排除在 <code>RegisterToSpec</code> 之外。</td>
 </tr>
 <tr>
 <td><code>bIsQuickConverted</code></td>
 <td><code>UMjBody</code></td>
-<td>Set by Quick Convert. Enables mesh pivot offset correction during tick sync (UE meshes may have off-center pivots that MuJoCo doesn't know about).</td>
+<td>由 Quick Convert 设置。在时间步同步期间启用网格枢轴偏移校正（UE 网格可能具有 MuJoCo 不知道的偏心枢轴）。</td>
 </tr>
 <tr>
 <td><code>bDrivenByUnreal</code></td>
 <td><code>UMjBody</code></td>
-<td>Enables one-way coupling: UE transform drives MuJoCo mocap body. Used for kinematic objects where Unreal is authoritative.</td>
+<td>实现单向耦合：UE 变换驱动 MuJoCo 运动捕捉体。用于以虚幻引擎为准的运动学对象。</td>
 </tr>
 <tr>
 <td><code>bFromToResolvedHalfLength</code></td>
 <td><code>UMjGeom</code></td>
-<td>Set during import when a <code>fromto</code> attribute was resolved to pos/quat/size. Controls how <code>ExportTo</code> writes the size — only the half-length slot is written, leaving radius to come from the default chain.</td>
+<td>在导入过程中，当 <code>fromto</code> 属性解析为位置/四元数/尺寸值时，设置此属性。控制 <code>ExportTo</code> 如何写入尺寸值——仅写入半长槽，半径值则来自默认链。</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="_15">导入管线</h2>
-<p><strong>Files:</strong> <code>Source/URLabEditor/Private/MujocoImportFactory.cpp</code>, <code>Source/URLabEditor/Private/MjArticulationFactory.cpp</code></p>
-<h3 id="steps">Steps</h3>
-<ol>
-<li>User drags an <code>.xml</code> file into the Content Browser.</li>
-<li><code>UMujocoImportFactory::FactoryCreateFile()</code> triggers.</li>
-<li><strong>Mesh preprocessing:</strong> Auto-runs <code>Scripts/clean_meshes.py</code> (Python subprocess).</li>
-<li>Detects Python installation, auto-installs <code>trimesh</code> if missing.</li>
-<li>Parses the MJCF XML to find all mesh assets.</li>
-<li>Detects GLB stem conflicts (e.g., <code>link1.obj</code> and <code>link1.stl</code> both producing <code>link1.glb</code>).</li>
-<li>Renames conflicting files with counter suffix, updates XML.</li>
-<li>Converts all meshes to GLB (preserving UVs, stripping embedded textures).</li>
-<li>Produces <code>_ue.xml</code> with updated mesh references.</li>
-<li>Graceful fallback at every step — if Python/trimesh missing, uses raw XML.</li>
-<li>Creates an <code>AMjArticulation</code> Blueprint.</li>
-<li><code>UMujocoGenerationAction::GenerateForBlueprint()</code> parses the XML in four passes:</li>
-<li><strong>Pass 1:</strong> Parse assets (meshes with scales, textures with file paths, materials with RGBA/texture refs).</li>
-<li><strong>Pass 2:</strong> Parse defaults (class hierarchy — creates <code>UMjDefault</code> components with child geom/joint/actuator templates).</li>
-<li><strong>Pass 3:</strong> Import worldbody recursively (bodies, geoms, joints, sites become <code>UMjComponent</code> subclasses attached in the Blueprint hierarchy).</li>
-<li><strong>Pass 4:</strong> Import actuators, sensors, tendons, equalities, keyframes, contact pairs/excludes.</li>
-<li>Mesh import uses Unreal's asset tools with format priority: FBX &gt; GLB &gt; OBJ. Meshes saved to <code>/Meshes/</code> subfolder to avoid texture name collisions.</li>
-<li>Materials created as shared instances keyed by XML material name (<code>MI_white</code> shared by all geoms referencing <code>"white"</code>).</li>
-<li>Textures imported to asset folder, applied to material instances with <code>bUseTexture</code> flag.</li>
-<li>Final Blueprint compile via <code>FKismetEditorUtilities</code>.</li>
-</ol>
+<h2 id="_21">导入管线</h2>
+<p><strong>文件：</strong> <code>Source/URLabEditor/Private/MujocoImportFactory.cpp</code>, <code>Source/URLabEditor/Private/MjArticulationFactory.cpp</code></p>
+<h3 id="_22">步骤</h3>
+<p>1.用户将一个 <code>.xml</code> 文件拖入内容浏览器(Content Browser)。</p>
+<p>2.<code>UMujocoImportFactory::FactoryCreateFile()</code> 触发。</p>
+<p>3.<strong>网格预处理：</strong> 自动运行<code>Scripts/clean_meshes.py</code>（Python子进程）。 </p>
+<ul>
+<li>
+<p>检测 Python 安装情况，若未安装则自动安装 <code>trimesh</code>。 </p>
+</li>
+<li>
+<p>解析 MJCF XML 文件以查找所有网格资产。</p>
+</li>
+<li>
+<p>检测 GLB 文件中的 stem 冲突（例如，<code>link1.obj</code> 和 <code>link1.stl</code> 都生成了 <code>link1.glb</code>文件）。</p>
+</li>
+<li>
+<p>使用计数器后缀重命名冲突的文件，并更新 XML。</p>
+</li>
+<li>
+<p>将所有网格转换为 GLB 格式（保留 UVs，移除嵌入纹理）。</p>
+</li>
+<li>
+<p>生成带有更新网格引用的  <code>_ue.xml</code> 文件。</p>
+</li>
+<li>
+<p>每一步都有优雅的回退机制——如果 Python/trimesh 缺失，则使用原始 XML。 </p>
+</li>
+</ul>
+<p>4.创建一个 <code>AMjArticulation</code> 蓝图。</p>
+<p>5.<code>UMujocoGenerationAction::GenerateForBlueprint()</code> 通过四个步骤解析 XML：</p>
+<ul>
+<li>
+<p><strong>第一步：</strong> 解析资产（带缩放的网格、带文件路径的纹理、带 RGBA/纹理引用的材质）。</p>
+</li>
+<li>
+<p><strong>第二步：</strong> 解析默认设置（类层次结构 — 创建带有子几何体/关节/执行器模板的 <code>UMjDefault</code> 组件）。</p>
+</li>
+<li>
+<p><strong>第三步：</strong> 递归导入世界刚体 worldbody（刚体、几何体、关节、位点成为附加在蓝图层次结构中的 <code>UMjComponent</code> 子类）。 </p>
+</li>
+<li>
+<p><strong>第四步：</strong> 导入执行器、传感器、肌腱、equalities、关键帧、接触对/排除对。</p>
+</li>
+</ul>
+<p>6.网格导入使用虚幻引擎的资产工具，格式优先级为：FBX &gt; GLB &gt; OBJ。网格保存在<code>/Meshes/</code> 子文件夹中，以避免纹理名称冲突。 </p>
+<p>7.以 XML 材质名称（所有引用 <code>"white"</code> 的几何体共享的 <code>MI_white</code>）为键，创建作为共享实例的材质。</p>
+<p>8.纹理已导入到资源文件夹，并已应用于带有 <code>bUseTexture</code> 标志的材质实例。 </p>
+<p>9.通过 <code>FKismetEditorUtilities</code> 进行最终蓝图编译。</p>
 <h3 id="import-normalization">Import Normalization</h3>
 <p>The importer normalizes several MJCF constructs for consistency:</p>
 <p><strong>FromTo resolution:</strong> All <code>fromto</code> attributes on geoms and sites are decomposed at import time into explicit <code>pos</code>, <code>quat</code>, and <code>size</code>:
