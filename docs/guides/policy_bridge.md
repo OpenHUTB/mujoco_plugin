@@ -1,33 +1,33 @@
-# URLab Bridge
+# URLab 桥接器
 
-The URLab Bridge is a separate companion repository (`urlab_bridge`) in the same GitHub organization. It provides Python-side middleware between external systems and URLab's MuJoCo simulation, communicating over ZMQ for RL policy deployment, remote teleoperation, data logging, sensor monitoring, and custom control pipelines.
+URLab 桥接器是同一 GitHub 组织下的一个独立配套仓库 (`urlab_bridge`)。 它在外部系统与 URLab 的 MuJoCo 仿真之间提供 Python 端中间件，通过 ZMQ 进行通信，用于强化学习策略部署、远程遥操作、数据记录、传感器监控以及自定义控制流程。
 
-## What It Does
+##功能说明
 
-- Bidirectional ZMQ communication: receives joint state, sensor data, base state, and camera images from Unreal; sends actuator commands and PD gains back
-- Remote control: drive robots from Python scripts, Jupyter notebooks, ROS 2 nodes, or any ZMQ-capable system
-- Policy deployment: run pretrained RL policies (locomotion, motion imitation, quadruped gaits) against the Unreal simulation
-- Sensor monitoring: real-time dashboard (DearPyGui) for visualizing joint states, sensor readouts, and camera feeds
-- Handles articulation discovery, joint mapping, and actuator ID resolution automatically
-- Provides forward kinematics for body position computation
-- Prefix-based filtering for multi-articulation scenes
-- Supports both position targets (for position actuators) and torque targets (for motor + PD)
+- 双向 ZMQ 通信：从虚幻引擎接收关节状态、传感器数据、基座状态和相机图像； 向虚幻引擎回传执行器控制指令与 PD 增益
+- 远程控制：通过 Python 脚本、Jupyter 笔记本、ROS 2 节点或任何支持 ZMQ 的系统控制机器人
+- 策略部署：在虚幻仿真环境中运行预训练的强化学习策略（移动、动作模仿、四足步态等）
+- 传感器监控：使用实时仪表盘（DearPyGui）可视化关节状态、传感器读数和相机画面
+- 自动处理机械结构识别、关节映射和执行器 ID 解析
+- 提供正运动学计算，用于获取机身位置
+- 支持多机械结构场景下的基于前缀的消息过滤
+- 同时支持位置目标（用于位置执行器）和扭矩目标（用于电机 + PD 控制）
 
-## Architecture
+## 架构
 
 ```
 ┌─────────────────────────────────┐     ZMQ      ┌──────────────────┐
-│  Python (URLab Bridge)          │◄────────────►│  Unreal (URLab)  │
+│  Python（URLab 桥接器）         │◄────────────►│  虚幻引擎（URLab）│
 │                                 │              │                  │
-│  Your Control System            │  joint state │  MuJoCo physics  │
-│    ├─ RL Policy (RoboJuDo)      │◄─────────────│  ZMQ Broadcaster │
-│    ├─ Custom Controller         │              │                  │
-│    └─ Teleoperation             │  ctrl targets│  ZMQ Subscriber  │
+│  你的控制系统                   │  关节状态     │  MuJoCo 物理引擎 │
+│    ├─ 强化学习策略 (RoboJuDo)   │◄─────────────│  ZMQ 广播器      │
+│    ├─ 自定义控制器              │              │                  │
+│    └─ 遥操作                    │  控制目标    │  ZMQ 订阅器      │
 │                                 │─────────────►│  → d->ctrl       │
 └─────────────────────────────────┘              └──────────────────┘
 ```
 
-## Setup
+## 环境配置
 
 ```bash
 cd Plugins/UnrealRoboticsLab/urlab_bridge
@@ -36,103 +36,100 @@ uv venv --python 3.11 .venv
 uv pip install numpy pyzmq
 ```
 
-For RL policy support (RoboJuDo):
+如需支持强化学习策略（RoboJuDo）：
 ```bash
 uv pip install -e RoboJuDo
 uv pip install dearpygui opencv-python
 cd RoboJuDo && git submodule update --init --recursive
 ```
 
-## ZMQ Protocol
+## ZMQ 协议
 
-For ZMQ protocol details, topic formats, and message structures, see [ZMQ Networking](zmq_networking.md).
+FZMQ 协议详情、主题格式和消息结构请参见 [ZMQ Networking](zmq_networking.md).
 
-## Using the Bridge Directly
-
-For custom controllers without RoboJuDo:
-
+## 直接使用桥接器
+如需在不使用 RoboJuDo 的情况下编写自定义控制器：
 ```python
 from urlab_policy.unreal_env import ZmqLink
 import struct, time, numpy as np
 
 zmq = ZmqLink("tcp://127.0.0.1:5555", "tcp://127.0.0.1:5556")
-time.sleep(1)  # Wait for connection
+time.sleep(1)  # 等待连接建立
 
-# Read state
+# 读取状态
 messages = zmq.drain()
 for topic, payload in messages.items():
     if "/joint/" in topic and len(payload) == 16:
         jid, pos, vel, acc = struct.unpack("<Ifff", payload)
         print(f"Joint {jid}: pos={pos:.3f}")
 
-# Send control (12 actuators, all to zero)
+# 发送控制指令（12 个执行器，全部置零）
 targets = np.zeros(12)
 zmq.send_control("my_robot_prefix", targets)
 
 zmq.close()
 ```
 
-## RoboJuDo Integration
+## RoboJuDo 集成
 
-For running pretrained RL policies, the bridge wraps [RoboJuDo](https://github.com/HansZ8/RoboJuDo) as the policy runtime.
+F为运行预训练强化学习策略，该桥接器封装了[RoboJuDo](https://github.com/HansZ8/RoboJuDo)作为策略运行环境。
 
-**GUI:**
+**图形界面:**
 ```powershell
 .venv\Scripts\activate
 $env:PYTHONPATH = "src"
 python src\urlab_policy\policy_gui.py
 ```
 
-**CLI:**
+**命令行界面：**
 ```bash
 python src/run_policy.py --policy unitree --prefix g1
 ```
 
-Available policies are registered in `policy_registry.py`. Each entry defines the policy config class, environment config, DOF count, and controller type.
+可用的策略均在 `policy_registry.py`中注册。每一项都定义了策略配置类、环境配置、自由度数量和控制器类型。
 
-### Go2 Walk-These-Ways Policy
+### Go2 行走策略
 
-12-DOF quadruped policy with gait conditioning. Supports preset gaits: Trot, Pronk, Bound, and Pace. Requires a checkpoint download (see `RoboJuDo/checkpoints/` README for links).
+12 自由度四足机器人步态策略。支持预设步态：小跑、腾跃、跳跃和平步。需要下载模型权重（链接见 `RoboJuDo/checkpoints/` 下的 README）。
 
-## Motor vs Position Actuators
+## 电机执行器 vs 位置执行器
 
-| Approach | MJCF Actuator | Control Signal | PD Location |
-|----------|--------------|----------------|-------------|
-| Position | `<position kp="100" kv="5">` | Position target (rad) | MuJoCo internal |
-| Motor + PD | `<motor forcerange="-88 88">` | Position target (rad) | C++ UMjPDController |
+| 控制方式 | MJCF 执行器 | 控制信号 | PD 控制位置 |
+|----------|-------------|----------|-------------|
+| 位置控制 | `<position kp="100" kv="5">` | 位置目标（弧度） | MuJoCo 内部 |
+| 电机 + PD | `<motor forcerange="-88 88">` | 位置目标（弧度） | C++ UMjPDController |
 
-Position actuators are simpler and more stable. Motor + PD matches training dynamics exactly but requires gain configuration. Use the GUI checkbox to toggle.
+位置执行器更简单、更稳定。 电机 + PD 与训练动力学完全一致，但需要配置控制增益。可通过图形界面复选框进行切换。
 
-## Configuration
+##配置项
 
-Key settings in `env_config.py`:
+ `env_config.py`中的关键配置：
 
-| Field | Default | Must Match |
+|字段|	默认值|	必须匹配|
 |-------|---------|------------|
-| `sim_dt` | 0.002 | Unreal manager timestep |
-| `sim_decimation` | 10 | Policy frequency = 1/(sim_dt * decimation) |
-| `state_endpoint` | tcp://127.0.0.1:5555 | ZmqSensorBroadcaster endpoint (PUB) |
-| `control_endpoint` | tcp://127.0.0.1:5556 | ZmqControlSubscriber endpoint (SUB) |
+|'sim_dt'|	0.002|	虚幻引擎管理器时间步长|
+|'sim_decimation'|	10|	策略频率 = 1/(sim_dt * decimation)|
+|'state_endpoint'|	tcp://127.0.0.1:5555|	ZMQ 传感器广播器地址（PUB）|
+|'control_endpoint'|	tcp://127.0.0.1:5556|	ZMQ 控制订阅器地址（SUB）|
 
-All Unreal-side sockets bind; the Python bridge connects. See [ZMQ Networking](zmq_networking.md) for topic formats and port assignments.
+虚幻引擎端所有套接字均为绑定模式，Python 桥接器为连接模式。主题格式与端口分配请参见 [ZMQ Networking](zmq_networking.md) 。
 
-## Force Twist Override
+## 强制运动覆盖
 
-The policy GUI provides a force twist override that lets you send manual velocity commands (vx, vy, yaw_rate) directly, bypassing keyboard possession input. Useful for scripted motion or testing without possessing the articulation in Unreal.
+策略图形界面提供强制运动覆盖功能，允许直接发送手动速度指令（vx、vy、偏航速率）， 绕过键盘操控输入。适用于脚本化运动，或无需在虚幻中操控机械结构即可进行测试。
 
-## Multi-Articulation Scenes
+## 多机械结构场景
+ZMQ 主题使用基于前缀的过滤 (`<prefix>/joint/...`, `<prefix>/control`, 等)。在包含多个机械结构的场景中，每个结构都使用自己的前缀进行发布和订阅。Python 端按前缀过滤接收消息，将状态分发给对应的策略实例。
 
-ZMQ topics use prefix-based filtering (`<prefix>/joint/...`, `<prefix>/control`, etc.). In scenes with multiple articulations, each one publishes and subscribes under its own prefix. The Python side filters incoming messages by prefix to route state to the correct policy instance.
+## 网格模型预处理
 
-## Mesh Preparation
+在导入前使用 `Scripts/clean_meshes.py` o convert meshes to GLB and resolve filename conflicts before import.
 
-Use `Scripts/clean_meshes.py` to convert meshes to GLB and resolve filename conflicts before import.
+## 调试工具
 
-## Debugging Tools
-
-| Script | Purpose |
+| 脚本 |	用途|
 |--------|---------|
-| `zmq_visualizer_gui.py` | Standalone ZMQ state viewer with sliders |
-| `policy_gui.py` | Full policy runner with visualization |
-| `test_native_mujoco.py` | Run policy in native MuJoCo viewer (ground truth) |
-| `test_compare_targets.py` | Log targets for native vs Unreal comparison |
+|'zmq_visualizer_gui.py'|	带滑动条的独立 ZMQ 状态查看器|
+|'policy_gui.py'|	带可视化界面的完整策略运行工具|
+|'test_native_mujoco.py'|	在原生 MuJoCo 查看器中运行策略（基准真值）|
+|'test_compare_targets.py'|	记录控制目标，用于原生与虚幻版本对比|
