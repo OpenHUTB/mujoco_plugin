@@ -75,29 +75,29 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_1">插件端组件</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#timing">Timing</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">时间顺序</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#topics-sensor-broadcast">Topics (Sensor Broadcast)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_3">话题（传感器广播）</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#topics-control-receive">Topics (Control Receive)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_4">话题（控制接收）</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#info-broadcast-port-5557">Info Broadcast (Port 5557)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#5557">信息广播（端口 5557）</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#control-source">Control Source</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_5">控制源</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#urlab_bridge-ros-2">urlab_bridge (ROS 2)</a>
+    <li class="toctree-l2"><a class="reference internal" href="#urlab_bridge-ros-2">urlab_bridge （ROS 2）</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#quick-test-no-ros-needed">Quick test (no ROS needed)</a>
+    <li class="toctree-l3"><a class="reference internal" href="#ros">快速测试（无需ROS）</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#ros-2-rebroadcaster">ROS 2 rebroadcaster</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#connecting-from-python">Connecting from Python</a>
+    <li class="toctree-l2"><a class="reference internal" href="#python">从Python连接</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#troubleshooting">Troubleshooting</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">故障排除</a>
     </li>
     </ul>
                 </li>
@@ -181,22 +181,22 @@
 </tbody>
 </table>
 <p>所有虚幻引擎端的套接字都使用 <code>zmq_bind()</code> 函数。外部客户端使用 <code>zmq_connect()</code> 函数。</p>
-<h3 id="timing">Timing</h3>
-<p>ZMQ callbacks run directly on the physics thread:</p>
+<h3 id="_2">时间顺序</h3>
+<p>ZMQ回调直接在物理线程上运行:</p>
 <ol>
-<li><strong>PreStep</strong> — <code>UZmqControlSubscriber</code> reads incoming commands → writes to <code>mjData.ctrl</code></li>
-<li><strong>mj_step()</strong> — physics advances</li>
-<li><strong>PostStep</strong> — <code>UZmqSensorBroadcaster</code> reads <code>mjData</code> → publishes</li>
+<li><strong>PreStep（前置步骤）</strong> — 读取传入指令→ 写入至<code>UZmqControlSubscriber</code>的<code>mjData.ctrl</code></li>
+<li><strong>mj_step()</strong> — 执行物理步骤（仿真推进）</li>
+<li><strong>PostStep（后置步骤）</strong> — <code>UZmqSensorBroadcaster</code> 读取 <code>mjData</code> →发布</li>
 </ol>
-<p>One-timestep latency between command and response. Camera frames run on their own background thread so they never stall the physics loop.</p>
-<h3 id="topics-sensor-broadcast">Topics (Sensor Broadcast)</h3>
-<p>All messages are multipart: topic string + binary payload. Topics are prefixed with the articulation actor name:</p>
+<p>指令与响应之间存在单步延迟。相机画面在独立的后台线程中运行，因此不会阻塞物理循环。</p>
+<h3 id="_3">话题（传感器广播）</h3>
+<p>所有消息均为多部分组成：主题字符串+二进制有效负载。话题以铰链参与者名称作为前缀：</p>
 <table>
 <thead>
 <tr>
-<th>Topic Pattern</th>
-<th>Payload</th>
-<th>Source</th>
+<th>话题模式</th>
+<th>有效负载</th>
+<th>数据</th>
 </tr>
 </thead>
 <tbody>
@@ -223,17 +223,17 @@
 <tr>
 <td><code>{Name}/actions</code></td>
 <td><code>int32</code> bitmask</td>
-<td>TwistController (only sent when non-zero)</td>
+<td>TwistController (仅非零时发送)</td>
 </tr>
 </tbody>
 </table>
-<h3 id="topics-control-receive">Topics (Control Receive)</h3>
-<p>The control subscriber filters on <code>{Name}/control</code> and <code>{Name}/set_gains</code>:</p>
+<h3 id="_4">话题（控制接收）</h3>
+<p>控制订阅器会对<code>{Name}/control</code> 和<code>{Name}/set_gains</code> 进行话题过滤：:</p>
 <table>
 <thead>
 <tr>
-<th>Topic Pattern</th>
-<th>Payload</th>
+<th>话题模式</th>
+<th>有效负载</th>
 </tr>
 </thead>
 <tbody>
@@ -247,34 +247,32 @@
 </tr>
 </tbody>
 </table>
-<h3 id="info-broadcast-port-5557">Info Broadcast (Port 5557)</h3>
-<p>The control subscriber periodically publishes a JSON discovery message on the info endpoint containing actuator names, IDs, ranges, and camera endpoints. This is sent frequently at startup (every 50 steps for the first 5s), then every 500 steps (~1s).</p>
-<blockquote>
-<p><strong>Multi-articulation filtering:</strong> In multi-robot scenes, subscribe with the articulation name prefix (e.g., <code>sub.setsockopt_string(zmq.SUBSCRIBE, "Robot_A/")</code>) to receive only that robot's data.</p>
-</blockquote>
-<h3 id="control-source">Control Source</h3>
-<p><code>EControlSource</code> determines whether actuators respond to ZMQ or dashboard input. Set it globally on the manager or per-articulation:</p>
+<h3 id="5557">信息广播（端口 5557）</h3>
+<p>控制订阅器会通过信息端点周期性发布 JSON 格式的发现消息，内容包含执行器名称、ID、取值范围以及相机端点。启动阶段发送频率较高（前 5 秒内每 50 个物理步发送一次），之后改为每 500 个物理步发送一次（约 1 秒）。</p>
+<p>铰链节体过滤： 在多机器人场景中，使用铰链名称前缀进行订阅（例如 <code>sub.setsockopt_string(zmq.SUBSCRIBE, "Robot_A/")</code>），即可仅接收对应机器人的数据。</p>
+<h3 id="_5">控制源</h3>
+<p><code>EControlSource</code>用于确定执行器是响应 ZMQ 指令还是仪表板输入。可在管理器上进行全局设置，也可按单个铰链体分别设置：</p>
 <div class="highlight"><pre><span></span><code>Manager-&gt;SetControlSource(EControlSource::ZMQ);
 </code></pre></div>
 <hr />
-<h2 id="urlab_bridge-ros-2">urlab_bridge (ROS 2)</h2>
-<p>The <strong>urlab_bridge</strong> (separate companion repository, same GitHub organization) is the Python-side middleware. It sits between the plugin's ZMQ streams and any external system (ROS 2, RL policies, custom scripts):</p>
+<h2 id="urlab_bridge-ros-2">urlab_bridge （ROS 2）</h2>
+<p><strong>urlab_bridge</strong>（独立的配套仓库，同一个 GitHub 组织）是 Python 端的中间件。它位于插件的 ZMQ 流和任何外部系统（ROS 2、强化策略、自定义脚本）之间：</p>
 <div class="highlight"><pre><span></span><code>Unreal (ZMQ binary) → urlab_bridge → ROS 2 topics
 </code></pre></div>
-<p>It subscribes to the ZMQ sensor and camera endpoints, unpacks the binary payloads, and publishes to standard ROS 2 topics (<code>/joint_states</code>, <code>/sensor_data</code>, <code>/camera/image_raw</code>). Multi-robot namespacing is handled automatically.</p>
-<p><strong>Why a separate bridge?</strong></p>
+<p>它同意ZMQ传感器和相机端点，解包二进制有效载荷，并发布到标准ROS 2话题。多机器人命名空间自动处理。<code>/joint_states/sensor_data/camera/image_raw</code></p>
+<p><strong>为什么要单独建立渠道？</strong></p>
 <ul>
-<li>Keeps the Unreal plugin free of ROS build dependencies (ament, colcon, etc.)</li>
-<li>The bridge is pure Python with <code>pyzmq</code> + <code>rclpy</code> — easy to install, easy to modify</li>
-<li>Users who do not need ROS never have to think about it</li>
-<li>Users who do need ROS get standard topic interfaces without any plugin changes</li>
+<li>保持Unreal插件免受ROS构建依赖（如ament、colcon等）</li>
+<li>桥接器纯为Python加+——安装简单，修改也容易 <code>pyzmq rclpy</code></li>
+<li>不需要ROS的用户根本不用考虑</li>
+<li>需要ROS的用户则获得标准话题界面，无需插件更改</li>
 </ul>
-<h3 id="quick-test-no-ros-needed">Quick test (no ROS needed)</h3>
+<h3 id="ros">快速测试（无需ROS）</h3>
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>run<span class="w"> </span>src/zmq_visualizer.py<span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--main_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="w"> </span><span class="se">\</span>
 <span class="w">    </span>--camera_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5558&quot;</span>
 </code></pre></div>
-<p>Prints live joint states and opens an OpenCV window for camera frames.</p>
+<p>打印实时关节状态，并打开 OpenCV 窗口以显示相机帧</p>
 <h3 id="ros-2-rebroadcaster">ROS 2 rebroadcaster</h3>
 <div class="highlight"><pre><span></span><code><span class="c1"># Source your ROS 2 environment first (Humble, Jazzy, etc.)</span>
 uv<span class="w"> </span>run<span class="w"> </span>src/ros2_broadcaster.py<span class="w"> </span><span class="se">\</span>
@@ -282,8 +280,8 @@ uv<span class="w"> </span>run<span class="w"> </span>src/ros2_broadcaster.py<spa
 <span class="w">    </span>--camera_endpoint<span class="o">=</span><span class="s2">&quot;tcp://127.0.0.1:5558&quot;</span>
 </code></pre></div>
 <hr />
-<h2 id="connecting-from-python">Connecting from Python</h2>
-<p>Minimal <code>pyzmq</code> example:</p>
+<h2 id="python">从Python连接</h2>
+<p>简单的 <code>pyzmq</code> 例子:</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">zmq</span><span class="o">,</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">ctx</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">Context</span><span class="p">()</span>
@@ -313,10 +311,10 @@ uv<span class="w"> </span>run<span class="w"> </span>src/ros2_broadcaster.py<spa
     <span class="n">pub</span><span class="o">.</span><span class="n">send_multipart</span><span class="p">([</span><span class="sa">b</span><span class="s2">&quot;MyRobot/control &quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">])</span>
 </code></pre></div>
 <hr />
-<h2 id="troubleshooting">Troubleshooting</h2>
-<p><strong>No data arriving</strong> — check that endpoints match (protocol, IP, port). All Unreal-side sockets <em>bind</em>; external clients <em>connect</em>.</p>
-<p><strong>Controls have no effect</strong> — verify <code>ControlSource</code> is set to <code>ZMQ</code>. Note the control topic requires a trailing space in the subscription filter (e.g., <code>"MyRobot/control "</code>).</p>
-<p><strong>Camera frames blank</strong> — make sure <code>bEnableZmqBroadcast = true</code> on the camera component and the model compiled successfully.</p>
+<h2 id="_6">故障排除</h2>
+<p><strong>没有数据到达</strong>检查终端是否匹配（协议、IP、端口）。所有虚幻端插槽<em>绑定</em>;外部客户端连接。</p>
+<p><strong>控制项不起作用</strong> — 校正设置为 。注意，控制话题需要订阅筛选器中的尾部空格（例如，）。<code>ControlSourceZMQ"MyRobot/control "</code></p>
+<p><strong>相机帧空白</strong> — 确保 <code>bEnableZmqBroadcast = true</code> 相机组件和模型成功编译</p>
               
             </div>
           </div><footer>
