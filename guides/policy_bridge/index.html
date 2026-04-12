@@ -75,33 +75,33 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">URLab 桥接</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#what-it-does">What It Does</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_1">功能</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#architecture">Architecture</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">架构</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#setup">Setup</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">安装</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#zmq-protocol">ZMQ Protocol</a>
+    <li class="toctree-l2"><a class="reference internal" href="#zmq">ZMQ 协议</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#using-the-bridge-directly">Using the Bridge Directly</a>
+    <li class="toctree-l2"><a class="reference internal" href="#bridge">直接使用 Bridge</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#robojudo-integration">RoboJuDo Integration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#robojudo">RoboJuDo 集成</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#go2-walk-these-ways-policy">Go2 Walk-These-Ways Policy</a>
+    <li class="toctree-l3"><a class="reference internal" href="#go2-walk-these-ways">Go2 Walk-These-Ways 策略</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#motor-vs-position-actuators">Motor vs Position Actuators</a>
+    <li class="toctree-l2"><a class="reference internal" href="#vs">运动执行器 vs 位置执行器</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#configuration">Configuration</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">配置</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#force-twist-override">Force Twist Override</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_5">强制速度覆盖</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#multi-articulation-scenes">Multi-Articulation Scenes</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_6">多铰链场景</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#mesh-preparation">Mesh Preparation</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">网格处理</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#debugging-tools">Debugging Tools</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">调试工具</a>
     </li>
     </ul>
                 </li>
@@ -139,19 +139,19 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="urlab-bridge">URLab Bridge</h1>
-<p>The URLab Bridge is a separate companion repository (<code>urlab_bridge</code>) in the same GitHub organization. It provides Python-side middleware between external systems and URLab's MuJoCo simulation, communicating over ZMQ for RL policy deployment, remote teleoperation, data logging, sensor monitoring, and custom control pipelines.</p>
-<h2 id="what-it-does">What It Does</h2>
+<p>URLab Bridge 是同一 GitHub 组织下的独立配套仓库（<code>urlab_bridge</code>）。它在外部系统和 URLab 的 MuJoCo 仿真之间提供 Python 侧的中间件，通过 ZMQ 进行通信，用于强化学习策略部署、远程遥操作、数据记录、传感器监控和自定义控制流程。</p>
+<h2 id="_1">功能</h2>
 <ul>
-<li>Bidirectional ZMQ communication: receives joint state, sensor data, base state, and camera images from Unreal; sends actuator commands and PD gains back</li>
-<li>Remote control: drive robots from Python scripts, Jupyter notebooks, ROS 2 nodes, or any ZMQ-capable system</li>
-<li>Policy deployment: run pretrained RL policies (locomotion, motion imitation, quadruped gaits) against the Unreal simulation</li>
-<li>Sensor monitoring: real-time dashboard (DearPyGui) for visualizing joint states, sensor readouts, and camera feeds</li>
-<li>Handles articulation discovery, joint mapping, and actuator ID resolution automatically</li>
-<li>Provides forward kinematics for body position computation</li>
-<li>Prefix-based filtering for multi-articulation scenes</li>
-<li>Supports both position targets (for position actuators) and torque targets (for motor + PD)</li>
+<li>双向 ZMQ 通信：从 Unreal 接收关节状态、传感器数据、基座状态和相机图像；向 Unreal 发送执行器指令和 PD 增益</li>
+<li>远程控制：从 Python 脚本、Jupyter notebook、ROS 2 节点或任何支持 ZMQ 的系统驱动机器人</li>
+<li>策略部署：针对 Unreal 仿真运行预训练的强化学习策略（运动、动作模仿、四足步态）</li>
+<li>传感器监控：实时仪表盘（DearPyGui），用于可视化关节状态、传感器读数和相机画面</li>
+<li>自动处理关节发现、关节映射和执行器 ID 解析</li>
+<li>提供用于身体位置计算的正向运动学</li>
+<li>面向多关节机构场景的前缀式消息过滤机制</li>
+<li>同时支持位置目标（适用于位置执行器）与力矩目标（适用于运动 + PD 控制）。</li>
 </ul>
-<h2 id="architecture">Architecture</h2>
+<h2 id="_2">架构</h2>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────┐     ZMQ      ┌──────────────────┐
 │  Python (URLab Bridge)          │◄────────────►│  Unreal (URLab)  │
 │                                 │              │                  │
@@ -160,23 +160,23 @@
 │    ├─ Custom Controller         │              │                  │
 │    └─ Teleoperation             │  ctrl targets│  ZMQ Subscriber  │
 │                                 │─────────────►│  → d-&gt;ctrl       │
-└─────────────────────────────────┘              └──────────────────┘
+└─────────────────────────────────┘              └──────────────────┘         
 </code></pre></div>
-<h2 id="setup">Setup</h2>
+<h2 id="_3">安装</h2>
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>Plugins/UnrealRoboticsLab/urlab_bridge
 uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11
 uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.11<span class="w"> </span>.venv
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>pyzmq
 </code></pre></div>
-<p>For RL policy support (RoboJuDo):
+<p>用于强化学习策略支持（RoboJuDo）
 <div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>RoboJuDo
 uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dearpygui<span class="w"> </span>opencv-python
 <span class="nb">cd</span><span class="w"> </span>RoboJuDo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
 </code></pre></div></p>
-<h2 id="zmq-protocol">ZMQ Protocol</h2>
-<p>For ZMQ protocol details, topic formats, and message structures, see <a href="../zmq_networking/">ZMQ Networking</a>.</p>
-<h2 id="using-the-bridge-directly">Using the Bridge Directly</h2>
-<p>For custom controllers without RoboJuDo:</p>
+<h2 id="zmq">ZMQ 协议</h2>
+<p>有关 ZMQ 协议的详细信息、主题格式和消息结构，请参阅 ZMQ 网络文档。(zmq_networking.md).</p>
+<h2 id="bridge">直接使用 Bridge</h2>
+<p>无需 RoboJuDo 的自定义控制器示例：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">urlab_policy.unreal_env</span> <span class="kn">import</span> <span class="n">ZmqLink</span>
 <span class="kn">import</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
@@ -196,109 +196,109 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 
 <span class="n">zmq</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </code></pre></div>
-<h2 id="robojudo-integration">RoboJuDo Integration</h2>
-<p>For running pretrained RL policies, the bridge wraps <a href="https://github.com/HansZ8/RoboJuDo">RoboJuDo</a> as the policy runtime.</p>
-<p><strong>GUI:</strong>
+<h2 id="robojudo">RoboJuDo 集成</h2>
+<p>为了运行预训练的 RL 策略,该 bridge 将<a href="https://github.com/HansZ8/RoboJuDo">RoboJuDo</a>封装为策略运行时。 </p>
+<p><strong>GUI(图形界面):</strong>
 <div class="highlight"><pre><span></span><code><span class="p">.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">activate</span>
 <span class="nv">$env:PYTHONPATH</span> <span class="p">=</span> <span class="s2">&quot;src&quot;</span>
 <span class="n">python</span> <span class="n">src</span><span class="p">\</span><span class="n">urlab_policy</span><span class="p">\</span><span class="n">policy_gui</span><span class="p">.</span><span class="n">py</span>
 </code></pre></div></p>
-<p><strong>CLI:</strong>
+<p><strong>CLI(命令行):</strong>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/run_policy.py<span class="w"> </span>--policy<span class="w"> </span>unitree<span class="w"> </span>--prefix<span class="w"> </span>g1
 </code></pre></div></p>
-<p>Available policies are registered in <code>policy_registry.py</code>. Each entry defines the policy config class, environment config, DOF count, and controller type.</p>
-<h3 id="go2-walk-these-ways-policy">Go2 Walk-These-Ways Policy</h3>
-<p>12-DOF quadruped policy with gait conditioning. Supports preset gaits: Trot, Pronk, Bound, and Pace. Requires a checkpoint download (see <code>RoboJuDo/checkpoints/</code> README for links).</p>
-<h2 id="motor-vs-position-actuators">Motor vs Position Actuators</h2>
+<p>可用策略在<code>policy_registry.py</code>中注册。每个条目定义了策略配置类、环境配置、自由度数量和控制器类型。</p>
+<h3 id="go2-walk-these-ways">Go2 Walk-These-Ways 策略</h3>
+<p>12 自由度的四足策略，支持步态调节。提供预设步态：Trot（小跑）、Pronk（跳跃）、Bound（弹跳）和 Pace（侧对步）。需要下载检查点文件(详见文件  <code>RoboJuDo/checkpoints/</code> README).</p>
+<h2 id="vs">运动执行器 vs 位置执行器</h2>
 <table>
 <thead>
 <tr>
-<th>Approach</th>
-<th>MJCF Actuator</th>
-<th>Control Signal</th>
-<th>PD Location</th>
+<th>方式</th>
+<th>MJCF 执行器</th>
+<th>控制信号</th>
+<th>PD 位置</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td>Position</td>
 <td><code>&lt;position kp="100" kv="5"&gt;</code></td>
-<td>Position target (rad)</td>
-<td>MuJoCo internal</td>
+<td>位置目标（弧度）</td>
+<td>MuJoCo 内部</td>
 </tr>
 <tr>
 <td>Motor + PD</td>
 <td><code>&lt;motor forcerange="-88 88"&gt;</code></td>
-<td>Position target (rad)</td>
+<td>位置目标（弧度 ）</td>
 <td>C++ UMjPDController</td>
 </tr>
 </tbody>
 </table>
-<p>Position actuators are simpler and more stable. Motor + PD matches training dynamics exactly but requires gain configuration. Use the GUI checkbox to toggle.</p>
-<h2 id="configuration">Configuration</h2>
-<p>Key settings in <code>env_config.py</code>:</p>
+<p>位置执行器更简单、更稳定。运动+PD 方式与训练动力学完全匹配，但需要配置增益。使用 GUI 中的复选框进行切换。</p>
+<h2 id="_4">配置</h2>
+<p><code>env_config.py</code>中的关键设置：</p>
 <table>
 <thead>
 <tr>
-<th>Field</th>
-<th>Default</th>
-<th>Must Match</th>
+<th>字段</th>
+<th>默认值</th>
+<th>必须匹配</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>sim_dt</code></td>
 <td>0.002</td>
-<td>Unreal manager timestep</td>
+<td>Unreal 管理器时间步长</td>
 </tr>
 <tr>
 <td><code>sim_decimation</code></td>
 <td>10</td>
-<td>Policy frequency = 1/(sim_dt * decimation)</td>
+<td>策略频率 = 1/(sim_dt * decimation)</td>
 </tr>
 <tr>
 <td><code>state_endpoint</code></td>
 <td>tcp://127.0.0.1:5555</td>
-<td>ZmqSensorBroadcaster endpoint (PUB)</td>
+<td>ZmqSensorBroadcaster 端点 (PUB)</td>
 </tr>
 <tr>
 <td><code>control_endpoint</code></td>
 <td>tcp://127.0.0.1:5556</td>
-<td>ZmqControlSubscriber endpoint (SUB)</td>
+<td>ZmqControlSubscriber 端点 (SUB)</td>
 </tr>
 </tbody>
 </table>
-<p>All Unreal-side sockets bind; the Python bridge connects. See <a href="../zmq_networking/">ZMQ Networking</a> for topic formats and port assignments.</p>
-<h2 id="force-twist-override">Force Twist Override</h2>
-<p>The policy GUI provides a force twist override that lets you send manual velocity commands (vx, vy, yaw_rate) directly, bypassing keyboard possession input. Useful for scripted motion or testing without possessing the articulation in Unreal.</p>
-<h2 id="multi-articulation-scenes">Multi-Articulation Scenes</h2>
-<p>ZMQ topics use prefix-based filtering (<code>&lt;prefix&gt;/joint/...</code>, <code>&lt;prefix&gt;/control</code>, etc.). In scenes with multiple articulations, each one publishes and subscribes under its own prefix. The Python side filters incoming messages by prefix to route state to the correct policy instance.</p>
-<h2 id="mesh-preparation">Mesh Preparation</h2>
-<p>Use <code>Scripts/clean_meshes.py</code> to convert meshes to GLB and resolve filename conflicts before import.</p>
-<h2 id="debugging-tools">Debugging Tools</h2>
+<p>所有套接字在虚幻引擎端进行绑定，Python 桥接端负责连接。话题格式与端口分配详见<a href="../zmq_networking/">ZMQ Networking</a> </p>
+<h2 id="_5">强制速度覆盖</h2>
+<p>策略 GUI 提供了强制速度覆盖功能，允许您直接发送手动速度指令（vx, vy, yaw_rate），绕过键盘操作输入。适用于脚本化运动或在 Unreal 中无需操作关节即可进行测试。</p>
+<h2 id="_6">多铰链场景</h2>
+<p>ZMQ 话题采用前缀匹配过滤机制（如<code>&lt;prefix&gt;/joint/...</code>, <code>&lt;prefix&gt;/control</code>,等）。在多铰链设备场景中，每个设备均以自身专属前缀进行消息的发布与订阅；Python 端会根据该前缀对接收的消息进行过滤，将状态数据路由至对应的策略实例。</p>
+<h2 id="_7">网格处理</h2>
+<p>在导入之前，使用 <code>Scripts/clean_meshes.py</code>  将网格转换为 GLB 格式并解决文件名冲突。</p>
+<h2 id="_8">调试工具</h2>
 <table>
 <thead>
 <tr>
-<th>Script</th>
-<th>Purpose</th>
+<th>脚本</th>
+<th>用途</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>zmq_visualizer_gui.py</code></td>
-<td>Standalone ZMQ state viewer with sliders</td>
+<td>独立的 ZMQ 状态查看器，带滑块</td>
 </tr>
 <tr>
 <td><code>policy_gui.py</code></td>
-<td>Full policy runner with visualization</td>
+<td>完整的策略运行器，带可视化</td>
 </tr>
 <tr>
 <td><code>test_native_mujoco.py</code></td>
-<td>Run policy in native MuJoCo viewer (ground truth)</td>
+<td>在原生 MuJoCo 查看器中运行策略（真实情况对比）</td>
 </tr>
 <tr>
 <td><code>test_compare_targets.py</code></td>
-<td>Log targets for native vs Unreal comparison</td>
+<td>记录原生与 Unreal 的目标值以便比较</td>
 </tr>
 </tbody>
 </table>
