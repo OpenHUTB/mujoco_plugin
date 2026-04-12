@@ -1,6 +1,6 @@
 # URLab Bridge
 
-URLab Bridge 是同一 GitHub 组织下的独立配套仓库（urlab_bridge）。它在外部系统和 URLab 的 MuJoCo 仿真之间提供 Python 侧的中间件，通过 ZMQ 进行通信，用于强化学习策略部署、远程遥操作、数据记录、传感器监控和自定义控制流程。
+URLab Bridge 是同一 GitHub 组织下的独立配套仓库（`urlab_bridge`）。它在外部系统和 URLab 的 MuJoCo 仿真之间提供 Python 侧的中间件，通过 ZMQ 进行通信，用于强化学习策略部署、远程遥操作、数据记录、传感器监控和自定义控制流程。
 
 ## 功能
 
@@ -88,7 +88,7 @@ python src\urlab_policy\policy_gui.py
 python src/run_policy.py --policy unitree --prefix g1
 ```
 
-可用策略在 'policy_registry.py' 中注册。每个条目定义了策略配置类、环境配置、自由度数量和控制器类型。
+可用策略在`policy_registry.py`中注册。每个条目定义了策略配置类、环境配置、自由度数量和控制器类型。
 
 ### Go2 Walk-These-Ways 策略
 
@@ -105,7 +105,7 @@ python src/run_policy.py --policy unitree --prefix g1
 
 ## 配置
 
-'env_config.py' 中的关键设置：
+`env_config.py`中的关键设置：
 
 | 字段 | 默认值 | 必须匹配 |
 |-------|---------|------------|
@@ -127,7 +127,7 @@ ZMQ 话题采用前缀匹配过滤机制（如`<prefix>/joint/...`, `<prefix>/co
 
 ## 网格处理
 
-在导入之前，使用 'Scripts/clean_meshes.py' 将网格转换为 GLB 格式并解决文件名冲突。
+在导入之前，使用 `Scripts/clean_meshes.py`  将网格转换为 GLB 格式并解决文件名冲突。
 
 ## 调试工具
 
