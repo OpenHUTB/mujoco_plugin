@@ -119,7 +119,7 @@ python src/run_policy.py --policy unitree --prefix g1
 
 ## 强制速度覆盖
 
-策略 GUI 提供了强制速度覆盖功能，允许您直接发送手动速度指令（vx, vy, yaw_rate），绕过键盘操作输入。适用于脚本化运动或在 Unreal 中无需操作关节即可进行测试。
+策略 GUI 提供了强制速度覆盖功能，允许您直接发送手动速度指令（vx, vy, yaw_rate），绕过键盘操作输入。适用于脚本化运动或在 Unreal 中无需操作铰链即可进行测试。
 
 ## 多铰链场景
 
