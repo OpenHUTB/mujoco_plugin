@@ -26,68 +26,70 @@ Unreal Robotics Lab 使用 [ZeroMQ](https://zeromq.org) 进行所有外部通信
 
 所有虚幻引擎端的套接字都使用 `zmq_bind()` 函数。外部客户端使用 `zmq_connect()` 函数。
 
-### 时间顺序
+### 时序
 
-ZMQ回调直接在物理线程上运行:
+ZMQ 回调直接运行在物理线程上：
 
-1. **PreStep（前置步骤）** — 读取传入指令→ 写入至`UZmqControlSubscriber`的`mjData.ctrl`
-2. **mj_step()** — 执行物理步骤（仿真推进）
-3. **PostStep（后置步骤）** — `UZmqSensorBroadcaster` 读取 `mjData` →发布
+1. **PreStep** — `UZmqControlSubscriber` 读取传入命令 → 写入 `mjData.ctrl`
+2. **mj_step()** — 物理推进
+3. **PostStep** — `UZmqSensorBroadcaster` 读取 `mjData` → 发布
+命令与响应之间固定为一个时间步的延迟。相机帧在独立后台线程运行，因此不会阻塞物理循环。
 
-指令与响应之间存在单步延迟。相机画面在独立的后台线程中运行，因此不会阻塞物理循环。
+###主题（传感器广播）
 
-### 话题（传感器广播）
-所有消息均为多部分组成：主题字符串+二进制有效负载。话题以铰链参与者名称作为前缀：
+所有消息都是多部分：主题字符串 + 二进制负载。
+主题以机械臂 Actor 名称为前缀：
 
-| 话题模式 | 有效负载 | 数据 |
+| Topic Pattern | Payload | Source |
 |---------------|---------|--------|
-| `{Name}/joint/{JointName}` | `int32 id, float pos, float vel, float acc` (16 bytes) | `UMjJoint::BuildBinaryPayload` |
-| `{Name}/sensor/{SensorName}` | `int32 id, float[] values` (4 + 4*dim bytes) | `UMjSensor::BuildBinaryPayload` |
-| `{Name}/base_state/{JointName}` | `7 x float64` (pos xyz + quat wxyz) | `UMjFreeJoint::BuildBinaryPayload` |
+| `{Name}/joint/{JointName}` | `int32 id, float pos, float vel, float acc` (16 字节) | `UMjJoint::BuildBinaryPayload` |
+| `{Name}/sensor/{SensorName}` | `int32 id, float[] values` (4 + 4*dim 字节) | `UMjSensor::BuildBinaryPayload` |
+| `{Name}/base_state/{JointName}` | `7 x float64` (位置 xyz + 四元数 wxyz) | `UMjFreeJoint::BuildBinaryPayload` |
 | `{Name}/twist` | `3 x float32`: vx, vy, yaw_rate | TwistController |
-| `{Name}/actions` | `int32` bitmask | TwistController (仅非零时发送) |
+| `{Name}/actions` | `int32` 位掩码 | TwistController (only sent when non-zero) |
 
-### 话题（控制接收）
+### 主题（控制接收）
 
-控制订阅器会对` {Name}/control` 和` {Name}/set_gains` 进行话题过滤：:
+控制订阅者过滤 {Name}/control 和 {Name}/set_gains：
 
-| 话题模式  | 有效负载  |
+| Topic Pattern | Payload |
 |---------------|---------|
 | `{Name}/control` | `int32 count`, then `count` x `(int32 actuator_id, float value)` |
 | `{Name}/set_gains` | JSON: `{"joint_name": {"kp": float, "kv": float, "torque_limit": float}, ...}` |
 
 ### 信息广播（端口 5557）
-控制订阅器会通过信息端点周期性发布 JSON 格式的发现消息，内容包含执行器名称、ID、取值范围以及相机端点。启动阶段发送频率较高（前 5 秒内每 50 个物理步发送一次），之后改为每 500 个物理步发送一次（约 1 秒）。
+控制订阅者定期在 info 端点上发布一个 JSON 发现消息，包含执行器名称、ID、范围以及相机端点。启动时频繁发送（前 5 秒内每 50 步一次），之后每 500 步（约 1 秒）一次。
 
-铰链节体过滤： 在多机器人场景中，使用铰链名称前缀进行订阅（例如 `sub.setsockopt_string(zmq.SUBSCRIBE, "Robot_A/")`），即可仅接收对应机器人的数据。
+> **多机械臂过滤:** 在多机器人场景中，使用机械臂名称前缀订阅（例如 sub.setsockopt_string(zmq.SUBSCRIBE, "Robot_A/")）以仅接收该机器人的数据。
 
 ### 控制源
-`EControlSource `用于确定执行器是响应 ZMQ 指令还是仪表板输入。可在管理器上进行全局设置，也可按单个铰链体分别设置：
 
+`EControlSource`  决定执行器响应 ZMQ 还是仪表盘输入
+可在管理器上全局设置，或按每个机械臂设置：
 ```
 Manager->SetControlSource(EControlSource::ZMQ);
 ```
 
 ---
 
-## urlab_bridge （ROS 2）
-**urlab_bridge**（独立的配套仓库，同一个 GitHub 组织）是 Python 端的中间件。它位于插件的 ZMQ 流和任何外部系统（ROS 2、强化策略、自定义脚本）之间：
+## urlab_bridge (ROS 2)
+
+**urlab_bridge** 同一 GitHub 组织下的独立配套仓库）是 Python 端的中间件。它位于插件的 ZMQ 数据流与任何外部系统（ROS 2、强化学习策略、自定义脚本）之间：
 
 ```
 Unreal (ZMQ binary) → urlab_bridge → ROS 2 topics
 ```
 
-它同意ZMQ传感器和相机端点，解包二进制有效载荷，并发布到标准ROS 2话题。多机器人命名空间自动处理。`/joint_states/sensor_data/camera/image_raw`
+它订阅 ZMQ 传感器和相机端点，解包二进制负载，并发布到标准 ROS 2 话题 (`/joint_states`, `/sensor_data`, `/camera/image_raw`). 多机器人命名空间会自动处理。
 
-**为什么要单独建立渠道？**
+**为什么使用独立的桥接器？**
 
-* 保持Unreal插件免受ROS构建依赖（如ament、colcon等）
-* 桥接器纯为Python加+——安装简单，修改也容易 `pyzmq rclpy`
-* 不需要ROS的用户根本不用考虑
-* 需要ROS的用户则获得标准话题界面，无需插件更改
+- 保持虚幻引擎插件无需 ROS 构建依赖（ament、colcon 等）
+- 桥接器是纯 Python，使用 pyzmq + rclpy — 易于安装，易于修改
+- 不需要 ROS 的用户永远不必考虑它
+- 需要 ROS 的用户无需任何插件更改即可获得标准话题接口
 
-
-### 快速测试（无需ROS）
+### 快速测试（无需 ROS）
 
 ```bash
 uv run src/zmq_visualizer.py \
@@ -95,12 +97,11 @@ uv run src/zmq_visualizer.py \
     --camera_endpoint="tcp://127.0.0.1:5558"
 ```
 
-打印实时关节状态，并打开 OpenCV 窗口以显示相机帧
-
+实时打印关节状态并打开一个 OpenCV 窗口显示相机画面。
 ### ROS 2 rebroadcaster
 
 ```bash
-# Source your ROS 2 environment first (Humble, Jazzy, etc.)
+# 先加载您的 ROS 2 环境（Humble、Jazzy 等）
 uv run src/ros2_broadcaster.py \
     --main_endpoint="tcp://127.0.0.1:5555" \
     --camera_endpoint="tcp://127.0.0.1:5558"
@@ -108,21 +109,19 @@ uv run src/ros2_broadcaster.py \
 
 ---
 
-## 从Python连接
-
-简单的 `pyzmq` 例子:
-
+## 从 Python 连接
+最简 `pyzmq` 示例：
 ```python
 import zmq, struct, numpy as np
 
 ctx = zmq.Context()
 
-# Receive sensor data (Unreal binds, we connect)
+#  接收传感器数据（Unreal 绑定，我们连接）
 sub = ctx.socket(zmq.SUB)
 sub.connect("tcp://127.0.0.1:5555")
 sub.setsockopt_string(zmq.SUBSCRIBE, "MyRobot/")
 
-# Send controls (Unreal binds SUB on 5556, we connect PUB)
+# 发送控制（Unreal 在 5556 上绑定 SUB，我们连接 PUB）
 pub = ctx.socket(zmq.PUB)
 pub.connect("tcp://127.0.0.1:5556")
 
@@ -134,7 +133,7 @@ while True:
         jid, pos, vel, acc = struct.unpack("<Ifff", data)
         print(f"Joint {jid}: pos={pos:.3f}")
 
-    # Send control: 3 actuators example
+    # 发送控制：3 个执行器示例
     num = 3
     payload = struct.pack("<I", num)  # count
     for i in range(num):
@@ -145,9 +144,8 @@ while True:
 ---
 
 ## 故障排除
+**无数据到达** —检查端点是否匹配（协议、IP、端口）。所有虚幻引擎端套接字均执行*bind*; 外部客户端执行*connect*.
 
-**没有数据到达**检查终端是否匹配（协议、IP、端口）。所有虚幻端插槽*绑定*;外部客户端连接。
+**控制无效** —确认`ControlSource` 已设置为 `ZMQ`. 注意控制主题在订阅过滤器中需要尾部空格 (例如, `"MyRobot/control "`).
 
-**控制项不起作用** — 校正设置为 。注意，控制话题需要订阅筛选器中的尾部空格（例如，）。`ControlSourceZMQ"MyRobot/control "`
-
-**相机帧空白** — 确保 `bEnableZmqBroadcast = true` 相机组件和模型成功编译
+**相机帧空白** — 确保相机组件上`bEnableZmqBroadcast = true` 且模型编译成功。
