@@ -270,7 +270,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 </table>
 <p>所有套接字在虚幻引擎端进行绑定，Python 桥接端负责连接。话题格式与端口分配详见<a href="../zmq_networking/">ZMQ Networking</a> </p>
 <h2 id="_5">强制速度覆盖</h2>
-<p>策略 GUI 提供了强制速度覆盖功能，允许您直接发送手动速度指令（vx, vy, yaw_rate），绕过键盘操作输入。适用于脚本化运动或在 Unreal 中无需操作关节即可进行测试。</p>
+<p>策略 GUI 提供了强制速度覆盖功能，允许您直接发送手动速度指令（vx, vy, yaw_rate），绕过键盘操作输入。适用于脚本化运动或在 Unreal 中无需操作铰链即可进行测试。</p>
 <h2 id="_6">多铰链场景</h2>
 <p>ZMQ 话题采用前缀匹配过滤机制（如<code>&lt;prefix&gt;/joint/...</code>, <code>&lt;prefix&gt;/control</code>,等）。在多铰链设备场景中，每个设备均以自身专属前缀进行消息的发布与订阅；Python 端会根据该前缀对接收的消息进行过滤，将状态数据路由至对应的策略实例。</p>
 <h2 id="_7">网格处理</h2>
