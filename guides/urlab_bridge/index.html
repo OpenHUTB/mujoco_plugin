@@ -132,24 +132,24 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 <p>仪表盘（关节、传感器、摄像头、执行器控制）无需策略扩展即可正常工作。只有当您需要运行神经网络策略时才需要 RoboJuDo。</p>
 <p>需要 Python 3.11 或更高版本。</p>
 <h2 id="_2">快速开始</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># 启动仪表盘 (关节/传感器/相机 viewer, actuator control, optional policy runner)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># 启动仪表盘 (关节/传感器/相机查看器、执行器控制、可选策略运行器)</span>
 uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--ui
 
-<span class="c1"># Run a specific policy headless</span>
+<span class="c1"># 以无头模式（不打开图形界面）运行特定策略</span>
 uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>unitree_12dof<span class="w"> </span>--prefix<span class="w"> </span>g1
 
-<span class="c1"># Test ZMQ connection</span>
+<span class="c1"># 测试 ZMQ 连接</span>
 uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--test<span class="w"> </span>--prefix<span class="w"> </span>g1
 </code></pre></div>
-<h2 id="available-policies">Available Policies</h2>
+<h2 id="_3">可用策略</h2>
 <table>
 <thead>
 <tr>
-<th>Key</th>
-<th>Robot</th>
-<th>DOF</th>
-<th>Description</th>
-<th style="text-align: center;">Requires PHC</th>
+<th>关键字</th>
+<th>机器人</th>
+<th>自由度（Degrees of Freedom, DOF）</th>
+<th>描述</th>
+<th style="text-align: center;">需要永久人形控制（Perpetual Humanoid Control , PHC）</th>
 </tr>
 </thead>
 <tbody>
@@ -157,69 +157,69 @@ uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> 
 <td><code>unitree_12dof</code></td>
 <td>G1</td>
 <td>12</td>
-<td>Basic walking -- WASD twist control</td>
+<td>基本行走——WASD 扭转控制</td>
 <td style="text-align: center;"></td>
 </tr>
 <tr>
 <td><code>unitree_wo_gait</code></td>
 <td>G1</td>
 <td>29</td>
-<td>Full body walking without gait clock</td>
+<td>无需步态时钟即可进行全身行走</td>
 <td style="text-align: center;"></td>
 </tr>
 <tr>
 <td><code>smooth</code></td>
 <td>G1</td>
 <td>29</td>
-<td>Smoother walking policy</td>
+<td>更平稳的步行策略</td>
 <td style="text-align: center;"></td>
 </tr>
 <tr>
 <td><code>beyondmimic_dance</code></td>
 <td>G1</td>
 <td>29</td>
-<td>Motion imitation -- dance</td>
+<td>动作模仿——舞蹈</td>
 <td style="text-align: center;">Y</td>
 </tr>
 <tr>
 <td><code>h2h</code></td>
 <td>G1</td>
 <td>21</td>
-<td>Human motion retargeting</td>
+<td>人体运动重定向</td>
 <td style="text-align: center;">Y</td>
 </tr>
 <tr>
 <td><code>amo</code></td>
 <td>G1</td>
 <td>29</td>
-<td>Adaptive motion optimization</td>
+<td>自适应运动优化</td>
 <td style="text-align: center;">Y</td>
 </tr>
 <tr>
 <td><code>twist_tracker</code></td>
 <td>G1</td>
 <td>12</td>
-<td>Motion tracker with twist</td>
+<td>带扭动功能的运动追踪器</td>
 <td style="text-align: center;">Y</td>
 </tr>
 <tr>
 <td><code>go2_wtw</code></td>
 <td>Go2</td>
 <td>12</td>
-<td>Walk-These-Ways rough-terrain locomotion</td>
+<td>沿着这些路行走的崎岖地形</td>
 <td style="text-align: center;"></td>
 </tr>
 </tbody>
 </table>
-<p>Policies marked <strong>PHC</strong> require the <a href="https://github.com/ZhengyiLuo/PHC">PHC submodule</a> installed inside RoboJuDo.</p>
-<h2 id="zmq-protocol">ZMQ Protocol</h2>
-<p>URLab publishes binary-packed data over ZeroMQ PUB/SUB sockets. All topics are prefixed with the articulation name (e.g. <code>g1/</code>).</p>
+<p>标记为 <strong>PHC</strong> 的策略需要 RoboJuDo 内部安装 <a href="https://github.com/ZhengyiLuo/PHC">PHC 子模块</a>。</p>
+<h2 id="zmq">ZMQ 协议</h2>
+<p>URLab 通过 ZeroMQ PUB/SUB 套接字发布二进制打包的数据。所有主题都以划分名称为前缀（例如 <code>g1/</code>）。</p>
 <table>
 <thead>
 <tr>
-<th>Topic Pattern</th>
-<th>Direction</th>
-<th>Payload Format</th>
+<th>主题模式</th>
+<th>方向</th>
+<th>有效载荷格式</th>
 </tr>
 </thead>
 <tbody>
@@ -246,20 +246,20 @@ uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> 
 </tbody>
 </table>
 <ul>
-<li><strong>State socket</strong> (default <code>tcp://127.0.0.1:5555</code>): joints + sensors at up to 1000 Hz.</li>
-<li><strong>Control socket</strong> (default <code>tcp://127.0.0.1:5556</code>): policy sends target positions.</li>
-<li><strong>Camera socket</strong> (default <code>tcp://127.0.0.1:5558</code>): high-bandwidth image stream on a separate socket.</li>
+<li><strong>状态套接字</strong>（默认 <code>tcp://127.0.0.1:5555</code>）：关节和传感器数据，最高采样率达 1000 Hz。</li>
+<li><strong>控制套接字</strong>（默认 <code>tcp://127.0.0.1:5556</code>）：策略发送目标位置。</li>
+<li><strong>相机套接字</strong>（默认 <code>tcp://127.0.0.1:5558</code>）：通过单独的套接字传输高带宽图像流。</li>
 </ul>
-<h2 id="ros-2-bridge">ROS 2 Bridge</h2>
-<p><code>ros2_broadcaster.py</code> republishes ZMQ streams as standard ROS 2 topics (JointState, Image, Float64MultiArray). Requires a sourced ROS 2 workspace (Humble/Jazzy).</p>
+<h2 id="ros-2">ROS 2 桥接</h2>
+<p><code>ros2_broadcaster.py</code> 将 ZMQ 流重新发布为标准的 ROS 2 主题（JointState、Image、Float64MultiArray）。需要已加载的 ROS 2 工作空间（Humble/Jazzy）。</p>
 <div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>/opt/ros/humble/setup.bash
 uv<span class="w"> </span>run<span class="w"> </span>src/ros2_broadcaster.py
 </code></pre></div>
-<h2 id="license">License</h2>
+<h2 id="_4">许可证</h2>
 <p>Apache 2.0 -- see <a href="LICENSE">LICENSE</a>.</p>
 <p>Copyright 2026 Jonathan Embley-Riches.</p>
-<h2 id="related">Related</h2>
-<p>This package is the Python companion to <a href="https://github.com/URLab-Sim/UnrealRoboticsLab">Unreal Robotics Lab</a>, an Unreal Engine plugin embedding MuJoCo physics for sim-to-real robotics research.</p>
+<h2 id="_5">相关软件包</h2>
+<p>该软件包是 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab">Unreal Robotics Lab</a> 的 Python 配套软件包，Unreal Robotics Lab 是一个 Unreal Engine 插件，嵌入了 MuJoCo 物理引擎，用于模拟到现实的机器人研究。</p>
               
             </div>
           </div><footer>

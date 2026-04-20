@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>Debug Visualization - Mujoco 插件</title>
+    <title>调试可视化 - Mujoco 插件</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Debug Visualization";
+        var mkdocs_page_name = "\u8c03\u8bd5\u53ef\u89c6\u5316";
         var mkdocs_page_input_path = "debug_visualization.md";
         var mkdocs_page_url = null;
       </script>
@@ -98,7 +98,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Debug Visualization</li>
+      <li class="breadcrumb-item active">调试可视化</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/debug_visualization.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -108,170 +108,172 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="debug-visualization">Debug Visualization</h1>
-<p>Runtime overlays for inspecting the MuJoCo simulation during PIE. All toggles live on <code>UMjDebugVisualizer</code> (auto-created on <code>AAMjManager</code>) and are driven by number-row hotkeys from <code>UMjInputHandler</code>. Tune the exposed properties live from the Details panel on the Manager actor.</p>
+                <h1 id="_1">调试可视化</h1>
+<p>用于在 PIE 期间检查 MuJoCo 仿真的运行时叠加层。所有切换开关均位于 <code>UMjDebugVisualizer</code>（由 <code>AAMjManager</code> 自动创建）上，并由 <code>UMjInputHandler</code> 中的数字行热键驱动。可在 Manager Actor 的“详细信息(Details panel)”面板中实时调整公开的属性。</p>
 <hr />
-<h2 id="hotkeys">Hotkeys</h2>
+<h2 id="_2">快捷键</h2>
 <table>
 <thead>
 <tr>
-<th>Key</th>
+<th>键</th>
 <th>Toggle</th>
-<th>Purpose</th>
+<th>目的</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>1</code></td>
-<td>Contact force arrows</td>
-<td>Yellow arrows at each active contact, scaled by normal force magnitude.</td>
+<td>接触力箭头</td>
+<td>每个有效接触点处都有黄色箭头，箭头大小按法向力的大小缩放。</td>
 </tr>
 <tr>
 <td><code>2</code></td>
-<td>Articulation visual-mesh visibility</td>
-<td>Hide the imported visual meshes (keeps collision/debug overlays).</td>
+<td>铰链视觉网格可见性</td>
+<td>隐藏导入的视觉网格（保留碰撞/调试叠加层）。</td>
 </tr>
 <tr>
 <td><code>3</code></td>
-<td>Articulation collision wireframes</td>
-<td>Magenta wireframes of every collision geom on articulations.</td>
+<td>关节碰撞线框图</td>
+<td>铰链上每个碰撞几何体的洋红色线框图。</td>
 </tr>
 <tr>
 <td><code>4</code></td>
-<td>Joint axes + limit arcs</td>
-<td>Coloured arrows at each joint showing axis direction and current/limit angle.</td>
+<td>关节轴 + 极限弧</td>
+<td>每个关节处均有彩色箭头，指示轴线方向和当前/极限角度。</td>
 </tr>
 <tr>
 <td><code>5</code></td>
-<td>Quick-Convert collision wireframes</td>
-<td>Same as <code>3</code> but for props spawned via <code>UMjQuickConvertComponent</code>.</td>
+<td>快速转换碰撞线框图</td>
+<td>与第 <code>3</code> 步相同，但适用于通过 <code>UMjQuickConvertComponent</code> 生成的道具。</td>
 </tr>
 <tr>
 <td><code>6</code></td>
-<td>Cycle body-shader overlay</td>
-<td><strong>Off → Island → Instance Segmentation → Semantic Segmentation → Off.</strong> See below.</td>
+<td>循环体着色器叠加</td>
+<td><strong>Off → Island → 实例分割 → 语义分割Semantic Segmentation → Off.</strong> 见下文。</td>
 </tr>
 <tr>
 <td><code>7</code></td>
-<td>Tendon/muscle smooth-tube rendering</td>
-<td>Spline-mesh tubes along every tendon path, thickness and colour driven by muscle activation. See below.</td>
+<td>肌腱/肌肉光滑管状渲染</td>
+<td>肌腱路径上分布着网状管，其粗细和颜色由肌肉激活决定。见下图。</td>
 </tr>
 <tr>
 <td><code>P</code></td>
-<td>Pause/resume the physics thread</td>
+<td>暂停(Pause)/恢复物理线程</td>
 <td></td>
 </tr>
 <tr>
 <td><code>R</code></td>
-<td>Reset simulation state</td>
+<td>重置(Reset)仿真状态</td>
 <td></td>
 </tr>
 <tr>
 <td><code>O</code></td>
-<td>Toggle orbit and keyframe cameras</td>
+<td>切换轨道和关键帧相机</td>
 <td></td>
 </tr>
 <tr>
 <td><code>F</code></td>
-<td>Fire all <code>AMjImpulseLauncher</code> actors</td>
+<td>解雇所有 <code>AMjImpulseLauncher</code> 参与者</td>
 <td></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="body-shader-overlay-key-6">Body shader overlay (key <code>6</code>)</h2>
-<p>Cycles through three modes plus Off. Repaints every articulation primitive geom, every imported mesh geom, and every <code>UMjQuickConvertComponent</code> actor's static-mesh components. Original materials are cached on first apply and restored when the mode returns to Off or PIE ends.</p>
+<h2 id="6">刚体着色器叠加（按键 <code>6</code>）</h2>
+<p>循环切换三种模式以及“关闭”模式。重绘所有铰链图元几何体、所有导入的网格几何体以及所有 <code>UMjQuickConvertComponent</code> 参与者的静态网格组件。首次应用时会缓存原始材质，并在模式返回“关闭”或 PIE 结束时恢复。</p>
 <h3 id="island">Island</h3>
-<p>Colour each body by its <strong>constraint island</strong> — the group of bodies mutually connected through active contacts, joint limits, equality constraints, or friction loss. Implementation mirrors MuJoCo's native visualiser (<code>engine_vis_visualize.c::addGeomGeoms</code>) exactly:</p>
+<p>根据<strong>约束岛(constraint island)</strong>（通过活动接触、关节限制、相等约束或摩擦损失相互连接的物体组）为每个物体着色。实现方式与 MuJoCo 的原生可视化工具 (<code>engine_vis_visualize.c::addGeomGeoms</code>) 完全一致：</p>
 <ul>
-<li>Looks up the body's first DOF via <code>body_weldid</code> → <code>body_dofadr</code>.</li>
-<li>Reads <code>mjData.dof_island[dof]</code>; if ≥ 0 the body is in an active island, seed = <code>island_dofadr[island]</code>.</li>
-<li>If <code>-1</code> and sleep is enabled, falls back to <code>tree_dofadr[dof_treeid[dof]]</code> (optionally passed through <code>mj_sleepCycle</code> for sleeping trees so a cluster of bodies resting on each other shares one colour).</li>
-<li>Seed is fed through a Halton sequence (bases 7/3/5) to produce a HSV colour, matching upstream byte-for-byte.</li>
+<li>通过 <code>body_weldid</code> → <code>body_dofadr</code> 查找刚体的第一个自由度。</li>
+<li>读取 <code>mjData.dof_island[dof]</code>；如果 ≥ 0，则物体位于活动岛屿中，seed = <code>island_dofadr[island]</code>。</li>
+<li>如果为 <code>-1</code> 且启用了睡眠模式，则回退到 <code>tree_dofadr[dof_treeid[dof]]</code>（对于睡眠树，可以选择通过 <code>mj_sleepCycle</code> 传递，以便相互重叠的物体簇共享一种颜色）。</li>
+<li>Seed 通过 Halton 序列（基数 7/3/5）生成 HSV 颜色，与上游逐字节匹配。</li>
 </ul>
-<p>Bodies with no DOFs (worldbody, welded-to-world) appear neutral grey.</p>
-<h3 id="instance-segmentation">Instance Segmentation</h3>
-<p>Each body gets a unique Halton-keyed hue mixed from the articulation class hash and the body id. Useful for generating pixel-accurate per-body segmentation masks from a <code>USceneCapture2D</code> or a <code>UMjCamera</code> — because the overlay paints real materials, it shows up in any standard render pass.</p>
-<h3 id="semantic-segmentation">Semantic Segmentation</h3>
-<p>Bodies belonging to the same articulation <em>class</em> (not instance) share a hue. Two Blueprints instanced from <code>BP_Humanoid</code> both read as one colour; a <code>BP_KitchenTable</code> reads as a different colour. For Quick-Convert props, the hue is keyed off the first static-mesh asset on the actor so props sharing a mesh group together.</p>
-<h3 id="sleep-modulation">Sleep modulation</h3>
-<p>Independent of mode. When <code>bModulateBySleep</code> is on (default), sleeping bodies are dimmed and desaturated — <code>V *= SleepValueScale</code> (default 0.35), <code>S *= SleepSaturationScale</code> (default 0.9). Matches the upstream MuJoCo behaviour; the defaults are slightly more aggressive than upstream so the effect is clearly readable under Unreal's PBR lighting.</p>
-<p>Tune the two scales live in the Details panel if sleep needs to read even stronger (lower <code>SleepValueScale</code>) or you want fully-grey sleeping bodies (drop <code>SleepSaturationScale</code> to 0).</p>
-<h3 id="how-its-rendered">How it's rendered</h3>
-<p>One <code>UMaterialInstanceDynamic</code> per painted mesh, parented on <code>/Engine/BasicShapes/BasicShapeMaterial</code>. At <code>BeginPlay</code> the visualiser probes that material for a vector parameter named <code>Color</code> / <code>BaseColor</code> / <code>Tint</code> and uses the first match. No plugin-shipped <code>.uasset</code> materials — stays portable across UE versions.</p>
+<p>没有自由度的刚体（世界物体worldbody、焊接到世界的物体）显示为中性灰色。</p>
+<h3 id="_3">实例分割</h3>
+<p>每个刚体都会获得一个独特的 Halton 键控色调，该色调由关节类哈希值和刚体 ID 混合而成。这对于从 <code>USceneCapture2D</code> 或 <code>UMjCamera</code> 生成像素级精确的身体分割掩膜非常有用——因为叠加层绘制的是真实材质，所以它会在任何标准渲染通道中显示出来。</p>
+<h3 id="_4">语义分割</h3>
+<p>属于同一铰链<em>类</em>（而非同一实例）的刚体共享一个色调。两个从 BP_Humanoid 实例化的蓝图都显示为同一种颜色；而 <code>BP_KitchenTable</code> 则显示为另一种颜色。对于快速转换道具，色调以参与者上的第一个静态网格资源为键控对象，因此共享同一网格的道具会被分组在一起。</p>
+<h3 id="_5">睡眠模式调节</h3>
+<p>与模式无关。当 <code>bModulateBySleep</code> 开启（默认）时，睡眠状态下的物体会变暗并降低饱和度——<code>V *= SleepValueScale</code>（默认 0.35），<code>S *= SleepSaturationScale</code>（默认 0.9）。与上游 MuJoCo 的行为一致；默认值比上游略微激进，因此在虚幻引擎的 PBR 光照下效果清晰可见。</p>
+<p>如果需要更强的睡眠效果（降低 <code>SleepValueScale</code>）或想要完全灰色的睡眠物体（将 <code>SleepSaturationScale</code> 降至 0），可以在“细节(Details)”面板中实时调整这两个比例。</p>
+<h3 id="_6">渲染方式</h3>
+<p>每个绘制的网格体对应一个 <code>UMaterialInstanceDynamic</code>，父级为 <code>/Engine/BasicShapes/BasicShapeMaterial</code>。在 <code>BeginPlay</code> 事件中，可视化工具会探测该材质中名为 <code>Color</code> / <code>BaseColor</code> / <code>Tint</code> 的矢量参数，并使用第一个匹配项。没有插件自带的 <code>.uasset</code> 材质——可在不同的虚幻引擎版本之间兼容。</p>
 <hr />
-<h2 id="tendon-muscle-rendering-key-7">Tendon / muscle rendering (key <code>7</code>)</h2>
-<p>Renders every <code>&lt;spatial&gt;</code> / <code>&lt;fixed&gt;</code> tendon as a smooth tube. For muscle actuators (dyntype <code>mjDYN_MUSCLE</code> with tendon transmission), tube thickness and colour both track the muscle's activation in real time.</p>
-<h3 id="visual-encoding">Visual encoding</h3>
+<h2 id="7">肌腱/肌肉渲染（键 <code>7</code>）</h2>
+<p>将每个<code>&lt;spatial&gt;</code> / <code>&lt;fixed&gt;</code>肌腱渲染为光滑的管状结构。对于肌肉致动器（dyntype <code>mjDYN_MUSCLE</code>，肌腱传输），管状结构的粗细和颜色均实时跟踪肌肉的激活状态。</p>
+<h3 id="_7">视觉编码</h3>
 <table>
 <thead>
 <tr>
-<th>Signal</th>
-<th>Visual</th>
+<th>信号</th>
+<th>视觉</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Muscle activation (0–1)</td>
-<td>Radius scales from <code>0.5×</code> (relaxed) to <code>2.0×</code> (fully contracted). Colour lerps from dark blue to bright red.</td>
+<td>肌肉激活 (0–1)</td>
+<td>半径缩放范围从 <code>0.5 倍</code>  （松弛状态）到 <code>2.0 倍</code>（完全收缩状态）。颜色缩放范围从深蓝色到亮红色。</td>
 </tr>
 <tr>
-<td>Limited tendon length (no muscle driver)</td>
-<td>Same colour/radius lerp, driven by <code>(ten_length − range_lo) / (range_hi − range_lo)</code>.</td>
+<td>肌腱长度有限（无肌肉驱动）</td>
+<td>相同颜色/半径插值，由<code>(ten_length − range_lo) / (range_hi − range_lo)</code>驱动</td>
 </tr>
 <tr>
-<td>Neutral tendon (no muscle, no limit)</td>
-<td>Mid-purple at nominal radius.</td>
+<td>中性肌腱（无肌肉，无限制）</td>
+<td>中等紫色，半径为标称值。</td>
 </tr>
 </tbody>
 </table>
-<p>Per-tube colouring is real: each segment owns its own <code>UMaterialInstanceDynamic</code> (via <code>UPrimitiveComponent::CreateDynamicMaterialInstance</code>) so two muscles on the same arm read distinctly.</p>
-<h3 id="path-construction">Path construction</h3>
-<p>Each tendon's path is pulled from <code>mjData.wrap_xpos</code> / <code>wrap_obj</code> / <code>ten_wrapadr</code> / <code>ten_wrapnum</code> — this is MuJoCo's post-kinematics tendon path, including tangent points where the tendon touches a wrapping geom. The visualiser:</p>
+<p>每个肌腱段的颜色区分是真实存在的：每个肌腱段都拥有自己的 <code>UMaterialInstanceDynamic</code>（通过 <code>UPrimitiveComponent::CreateDynamicMaterialInstance</code> 创建），因此同一只手臂上的两块肌肉的颜色会截然不同。</p>
+<h3 id="_8">路径构建</h3>
+<p>每条肌腱的路径都取自 <code>mjData.wrap_xpos</code> / <code>wrap_obj</code> / <code>ten_wrapadr</code> / <code>ten_wrapnum</code>——这是 MuJoCo 的运动学后肌腱路径，包括肌腱与包裹几何体相切的切点。可视化工具：</p>
 <ol>
-<li>Walks consecutive wrap indices exactly like MuJoCo's own renderer (<code>engine_vis_visualize.c::addSpatialTendonGeoms</code>), skipping pulley endpoints (<code>wrap_obj == -2</code>).</li>
-<li>When two consecutive wrap points share the same geom id (i.e. a cylinder or sphere wrap), subdivides the chord with <code>TendonArcSubdivisions</code> (default 6) intermediate points along a spherical interpolation about the geom's world position — so the tendon curves <em>around</em> the geom instead of jumping straight across, which is what MuJoCo's own viewer skips.</li>
-<li>Averages tangent directions at every interior wrap point, producing C1-continuous joins between segments.</li>
+<li>按照 MuJoCo 自身的渲染器（<code>engine_vis_visualize.c::addSpatialTendonGeoms</code>）的方式，遍历连续的包裹索引，并跳过滑轮端点（<code>wrap_obj == -2</code>）。</li>
+<li>当两个连续的包裹点共享相同的几何体 ID 时（例如，圆柱体或球体包裹），会沿着围绕几何体世界位置的球面插值，使用 <code>TendonArcSubdivisions</code>（默认值为 6）中间点细分弦长——这样肌腱就会<em>围绕</em>几何体弯曲，而不是像 MuJoCo 自身的查看器那样直接跳跃。 </li>
+<li>对每个内部包裹点的切线方向进行平均，从而在各段之间生成 C1 连续连接。</li>
 </ol>
-<h3 id="how-its-rendered_1">How it's rendered</h3>
-<p>Pool of <code>USplineMeshComponent</code>s deforming <code>/Engine/BasicShapes/Cylinder.Cylinder</code> along each segment. The cylinder ships with a 50 cm base radius, so <code>TendonTubeRadius</code> is converted to an engine scale via <code>scale = radius_cm / 50</code>. Components are created lazily, reused frame-to-frame, and hidden (not destroyed) when the tendon count drops.</p>
-<p>No physics, no collision, no shadow casting, not selectable in the viewport.</p>
+<h3 id="_9">渲染方式</h3>
+<p>一组 <code>USplineMeshComponent</code> 沿每个线段对 <code>/Engine/BasicShapes/Cylinder.Cylinder</code> 进行变形。圆柱体初始半径为 50 厘米，因此 <code>TendonTubeRadius</code> 通过 <code>scale = radius_cm / 50</code> 转换为引擎比例。组件采用惰性创建，逐帧重复使用，并在肌腱数量减少时隐藏（而非销毁）。</p>
+<p>无物理效果、无碰撞、无阴影投射，且在视口中不可选择。</p>
 <h3 id="tuning">Tuning</h3>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Default</th>
-<th>Notes</th>
+<th>属性</th>
+<th>默认值</th>
+<th>笔记</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>TendonTubeRadius</code></td>
-<td>0.25 cm</td>
-<td>Nominal tube radius. Muscle activation scales up to 2×.</td>
+<td>0.25 厘米</td>
+<td>标称管半径。肌肉激活程度最高可达 2 倍。</td>
 </tr>
 <tr>
 <td><code>TendonArcSubdivisions</code></td>
 <td>6</td>
-<td>Intermediate points per geom-wrap arc. Drop to 0 for MuJoCo's flat chord look.</td>
+<td>每个几何体环绕弧的中间点数。降至 0 可实现 MuJoCo 的扁平弦线外观。</td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="camera-interaction-known-issue">Camera interaction (known issue)</h2>
-<p>Because the overlays swap real materials on real <code>UStaticMeshComponent</code>s, anything rendering the level — <code>USceneCaptureComponent2D</code>, <code>UMjCamera</code>, screenshot tools — captures the overlay, not the underlying scene. That's desirable for synthetic-data pipelines (Semantic Segmentation mode gives you free ground-truth masks) but unwanted if you need the RGB observation stream to stay photoreal.</p>
-<p>Workarounds today:
-- Toggle the overlay off (<code>6</code> until Off) before capturing RGB frames.
-- Script toggles around capture windows if you're generating training data.</p>
-<p>A per-camera opt-out flag is on the roadmap.</p>
-<hr />
-<h2 id="implementation-references">Implementation references</h2>
+<h2 id="_10">相机交互（已知问题）</h2>
+<p>由于叠加层会替换真实 <code>UStaticMeshComponents</code> 上的真实材质，因此任何渲染关卡的工具（例如 <code>USceneCaptureComponent2D</code>、<code>UMjCamera</code> 和截图工具）都会捕获叠加层，而不是底层场景。这对于合成数据管线来说是理想的（语义分割模式可以提供免费的真实掩码），但如果您需要 RGB 观测流保持照片级真实感，则这是不希望出现的。</p>
+<p>目前可用的解决方法：</p>
 <ul>
-<li>Hotkey dispatch — <a href="../../Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp">MjInputHandler.cpp</a></li>
-<li>Snapshot capture (physics thread) — <a href="../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">MjDebugVisualizer.cpp:<code>CaptureDebugData</code></a></li>
-<li>Island Halton colour helper — <a href="../../Source/URLab/Private/MuJoCo/Utils/MjColor.cpp">MjColor.cpp</a> (matches MuJoCo's upstream exactly, covered by <code>URLab.Color.*</code> automation tests)</li>
-<li>Upstream reference — MuJoCo's <a href="https://github.com/google-deepmind/mujoco/blob/main/src/engine/engine_vis_visualize.c"><code>engine_vis_visualize.c</code></a></li>
+<li>在捕获 RGB 帧之前，关闭叠加层（按下 <code>6</code> 键直至关闭）。</li>
+<li>如果您正在生成训练数据，脚本会自动调整捕获窗口。</li>
+</ul>
+<p>每个摄像头的单独退出选项已列入开发计划。</p>
+<hr />
+<h2 id="_11">实现参考</h2>
+<ul>
+<li>热键调度 — <a href="../../Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp">MjInputHandler.cpp</a></li>
+<li>快照捕获（物理线程） — <a href="../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">MjDebugVisualizer.cpp:<code>CaptureDebugData</code></a></li>
+<li>霍尔顿岛颜色辅助函数 — <a href="../../Source/URLab/Private/MuJoCo/Utils/MjColor.cpp">MjColor.cpp</a> (与 MuJoCo 上游完全匹配，并由 <code>URLab.Color.*</code> 自动化测试覆盖)</li>
+<li>上游参考 — MuJoCo 的 <a href="https://github.com/google-deepmind/mujoco/blob/main/src/engine/engine_vis_visualize.c"><code>engine_vis_visualize.c</code></a></li>
 </ul>
               
             </div>
