@@ -175,12 +175,12 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/URLab
    Windows 的预编译二进制文件包含在 <code>third_party/install/</code>（MuJoCo、libzmq、CoACD）中。
    <em>(如果您在此处遇到编译器栈溢出错误，请参阅下面的 <a href="#troubleshooting">故障排除</a> 部分。</em></li>
 <li>
-<p><strong>注册该模块：</strong> 打开您的主机项目的 <code>.Build.cs</code> 文件（例如，<code>Source/YourProject/YourProject.Build.cs</code>），并将<code>"UnrealRoboticsLab"</code>添加到您的<code>PublicDependencyModuleNames</code>中：
+<p>（不需要）<strong>注册该模块：</strong> 打开您的主机项目（新建HelloWorld项目，新建空项目会编译报错）的 <code>.Build.cs</code> 文件（例如，<code>Source/YourProject/YourProject.Build.cs</code>），并将<code>"UnrealRoboticsLab"</code>添加到您的<code>PublicDependencyModuleNames</code>中：
    <div class="highlight"><pre><span></span><code><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Core&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CoreUObject&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Engine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;InputCore&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UnrealRoboticsLab&quot;</span><span class="w"> </span><span class="p">});</span>
 </code></pre></div></p>
 </li>
 <li>
-<p><strong>编译：</strong> 右键点击您的<code>.uproject</code>文件，选择<strong>Generate Visual Studio project files</strong>，然后打开解决方案并在您的集成开发环境中<strong>构建</strong>您的项目。</p>
+<p>（不需要，双击.uproject文件即可提示编译）<strong>编译：</strong> 右键点击您的<code>.uproject</code>文件，选择<strong>Generate Visual Studio project files</strong>，然后打开解决方案并在您的集成开发环境中<strong>构建</strong>您的项目。</p>
 </li>
 <li>
 <p><strong>显示资产：</strong> 在虚幻内容浏览器中，点击 <strong>设置(Settings)</strong>（齿轮图标）并勾选 <strong>显示插件内容(Show Plugin Content)</strong>。此操作是查看用户界面组件和插件资源所必需的。</p>
@@ -204,7 +204,7 @@ uv<span class="w"> </span>sync
 <h3 id="mjcf-xml">来自 MJCF XML</h3>
 <ol>
 <li>获取机器人 XML（例如，来自 <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> ）。</li>
-<li>将 XML 文件拖入虚幻引擎内容浏览器。首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）——这些包默认已安装在虚幻引擎自带的 Python 环境中，因此无需额外设置。您也可以根据需要选择其他 Python 解释器。</li>
+<li>将 XML 文件（比如：人形机器人<a href="https://github.com/google-deepmind/mujoco_menagerie/tree/main/unitree_g1">mujoco_menagerie\unitree_g1\g1_with_hands.xml</a> ，肌肉骨骼人解析不完全）拖入虚幻引擎内容浏览器。首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）——这些包默认已安装在虚幻引擎自带的 Python 环境中，因此无需额外设置。您也可以根据需要选择其他 Python 解释器。</li>
 <li>蓝图会自动生成，其中包含所有关节、实体、执行器和传感器等组件。</li>
 </ol>
 <h3 id="_5">快速转换（静态网格）</h3>
@@ -248,6 +248,7 @@ uv<span class="w"> </span>sync
 </code></pre></div>
 <p>所有的功能都是可调用的蓝图<code>BlueprintCallable</code>.</p>
 <h2 id="_10">调式可视化</h2>
+<p>有关完整的 PIE 叠加层（接触力、碰撞线框、关节轴、约束岛、实例/语义分割和肌肉/肌腱管）以及驱动它们的快捷键，请参阅 <a href="../debug_visualization/">调试可视化指南</a>。</p>
 <p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 了解键盘快捷键。</p>
 <h2 id="_11">后续步骤</h2>
 <ul>
@@ -264,7 +265,11 @@ uv<span class="w"> </span>sync
 <ul>
 <li><strong>解决方法：</strong> 将 Visual Studio 更新至最新版本（<strong>VS 2022 (17.10+)</strong> 或以上版本）或 <strong>VS 2025</strong>（这是 MuJoCo CI 的参考版本）。</li>
 <li><strong>应变方法：</strong> 通过运行以下命令强制设置更大的栈大小：<code>cmake -B build ... -DCMAKE_CXX_FLAGS="/F10000000"</code></li>
+<li><strong>相关Issues</strong>：<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/issues/5">github的Issue</a> ，报错信息：</li>
 </ul>
+<p><div class="highlight"><pre><span></span><code>error MSB6006: “CL.exe”已退出，代码为 -1073741571。 [D:\work\donghaiwang\UnrealRoboticsLab\third_party\MuJoCo\src\build\plugin\sensor\sensor.vcxproj]
+</code></pre></div>
+   未解决，暂时使用下载的发行版发到<code>UnrealRoboticsLab\third_party\install\MuJoCo</code>目录下</p>
 <h3 id="ui">UI：“模拟”仪表盘未显示</h3>
 <p>UI 与上下文相关，需要满足特定条件：</p>
 <ul>

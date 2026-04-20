@@ -133,7 +133,7 @@
 <hr />
 <h2 id="_1">导入</h2>
 <ol>
-<li>将  <code>.xml</code> 文件拖入虚幻 <strong>内容浏览器(Content Browser)</strong> 。</li>
+<li>将 <code>.xml</code> 文件拖入虚幻 <strong>内容浏览器(Content Browser)</strong> 。</li>
 <li>首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）。默认情况下，这些包会安装到 UE 自带的 Python 环境中，无需额外配置 Python。您也可以通过对话框选择自定义解释器（conda、venv 等）。所选路径会保存到 <code>Config/LocalUnrealRoboticsLab.ini</code> 文件中（每个机器单独保存，不会提交到源代码控制系统）。</li>
 <li><code>UMujocoImportFactory</code> 使用配置的 Python 运行 <code>Scripts/clean_meshes.py</code>:</li>
 <li>解析 XML 以查找所有引用的网格资产</li>
