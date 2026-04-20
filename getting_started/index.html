@@ -71,6 +71,16 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_11">后续步骤</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_12">故障排除</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD）</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ui">UI：“模拟”仪表盘未显示</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_13">仿真：机器人处于静态状态</a>
+    </li>
+        </ul>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -143,25 +153,41 @@
 <ul>
 <li>虚幻引擎 5.4+</li>
 <li>Windows 10/11</li>
+<li><strong>C++ 工程:</strong> 此插件包含源代码，无法在仅使用蓝图的项目中使用。</li>
+<li><strong>Visual Studio 2022 / 2025</strong> (带有 "Game development with C++" 工作负载)。</li>
 <li>Python 3.11+ (可选，用于外部策略控制)</li>
 </ul>
 <h2 id="_3">安装</h2>
+<p><strong>⚠️ 重要提示：</strong> 这是一个 C++ 插件。您<strong>必须</strong>使用 C++ 项目。如果您的项目仅包含蓝图，请在开始之前通过<em>Tools &gt; New C++ Class</em>添加一个空的 C++ 类。</p>
 <ol>
 <li>将代码库克隆到你的虚幻引擎项目 <code>Plugins/</code> 目录中：
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;YourProject/Plugins&quot;</span>
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/URLab-Sim/UnrealRoboticsLab.git
 </code></pre></div></li>
-<li>构建第三方依赖项（一次）：
+<li>构建第三方依赖项（一次）。在启动引擎之前，您必须先获取并安装 MuJoCo 所需的依赖项。请打开 <strong>PowerShell</strong>，然后运行以下命令：
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>UnrealRoboticsLab/third_party
-<span class="c1"># 运行 third_party/build_all.ps1</span>
+.<span class="se">\b</span>uild_all.ps1
 </code></pre></div>
-   Windows 的预编译二进制文件包含在 <code>third_party/install/</code>（MuJoCo、libzmq、CoACD）中。</li>
-<li>在虚幻引擎中打开你的 <code>.uproject</code> 文件 -- 插件会自动加载。</li>
-<li>（可选）设置用于外部控制的 Python 桥接：
+   Windows 的预编译二进制文件包含在 <code>third_party/install/</code>（MuJoCo、libzmq、CoACD）中。
+   <em>(如果您在此处遇到编译器栈溢出错误，请参阅下面的 <a href="#troubleshooting">故障排除</a> 部分。</em></li>
+<li>
+<p><strong>注册该模块：</strong> 打开您的主机项目的 <code>.Build.cs</code> 文件（例如，<code>Source/YourProject/YourProject.Build.cs</code>），并将<code>"UnrealRoboticsLab"</code>添加到您的<code>PublicDependencyModuleNames</code>中：
+   <div class="highlight"><pre><span></span><code><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Core&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CoreUObject&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Engine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;InputCore&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;UnrealRoboticsLab&quot;</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div></p>
+</li>
+<li>
+<p><strong>编译：</strong> 右键点击您的<code>.uproject</code>文件，选择<strong>Generate Visual Studio project files</strong>，然后打开解决方案并在您的集成开发环境中<strong>构建</strong>您的项目。</p>
+</li>
+<li>
+<p><strong>显示资产：</strong> 在虚幻内容浏览器中，点击 <strong>设置(Settings)</strong>（齿轮图标）并勾选 <strong>显示插件内容(Show Plugin Content)</strong>。此操作是查看用户界面组件和插件资源所必需的。</p>
+</li>
+<li>
+<p><strong>（可选）Python 桥接：</strong> 为外部控制设置桥接：
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>UnrealRoboticsLab/urlab_bridge
 pip<span class="w"> </span>install<span class="w"> </span>uv
 uv<span class="w"> </span>sync
-</code></pre></div></li>
+</code></pre></div></p>
+</li>
 </ol>
 <h2 id="_4">导入你的第一个机器人</h2>
 <h3 id="mjcf-xml">来自 MJCF XML</h3>
@@ -214,12 +240,29 @@ uv<span class="w"> </span>sync
 <p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 了解键盘快捷键。</p>
 <h2 id="_11">后续步骤</h2>
 <ul>
-<li><a href="../features/">features.md</a> -- 完整功能参考</li>
+<li><a href="../features/">特性</a> -- 完整功能参考</li>
 <li><a href="../guides/mujoco_import/">MJCF 导入</a> -- 导入管道详情</li>
 <li><a href="../guides/blueprint_reference/">蓝图参考</a> -- 所有蓝图可调用函数和快捷键</li>
 <li><a href="../guides/zmq_networking/">ZMQ 网络</a> -- 协议、主题和 Python 示例</li>
 <li><a href="../guides/policy_bridge/">策略桥接</a> -- 强化学习策略部署</li>
 <li><a href="guides/developer_tools.md">开发者工具</a> -- 模式跟踪、 XML 调试、构建/测试技能</li>
+</ul>
+<h2 id="_12">故障排除</h2>
+<h3 id="msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD）</h3>
+<p>如果 <code>build_all.ps1</code> 脚本因错误代码 <code>-1073741571</code> 而失败，这表明您的编译器在处理 MuJoCo 复杂的传感器模板时已耗尽了内部内存。</p>
+<ul>
+<li><strong>解决方法：</strong> 将 Visual Studio 更新至最新版本（<strong>VS 2022 (17.10+)</strong> 或以上版本）或 <strong>VS 2025</strong>（这是 MuJoCo CI 的参考版本）。</li>
+<li><strong>应变方法：</strong> 通过运行以下命令强制设置更大的栈大小：<code>cmake -B build ... -DCMAKE_CXX_FLAGS="/F10000000"</code></li>
+</ul>
+<h3 id="ui">UI：“模拟”仪表盘未显示</h3>
+<p>UI 与上下文相关，需要满足特定条件：
+* 确保关卡中存在 <code>MjManager</code> 参与者。
+* 在 <code>MjManager</code> 设置中，确认 <code>bAutoCreateSimulateWidget</code> 已启用。 
+* 确保您已按照安装指南中的 <strong>"显示资产(Show Assets)"</strong> 步骤操作，以使引擎能够访问 UI 小部件。</p>
+<h3 id="_13">仿真：机器人处于静态状态</h3>
+<ul>
+<li><strong>控制源：</strong>检查 <code>MjManager</code> 或 <code>MjArticulation</code> 的<strong>控制源</strong>是否设置为 <strong>UI</strong>。如果设置为 <strong>ZMQ</strong>，则 UI 滑块将被忽略。</li>
+<li><strong>物理状态：</strong> 确保 <code>MjManager</code> 未暂停，并且机器人组件设置中未将其设置为<code>静态(Static)</code>。 </li>
 </ul>
               
             </div>
