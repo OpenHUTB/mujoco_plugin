@@ -204,7 +204,7 @@ uv<span class="w"> </span>sync
 <h3 id="mjcf-xml">来自 MJCF XML</h3>
 <ol>
 <li>获取机器人 XML（例如，来自 <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> ）。</li>
-<li>将 XML 文件拖入 Unreal 内容浏览器。导入程序会自动运行 <code>Scripts/clean_meshes.py</code> ，将网格转换为 GLB 格式（如果缺少 Python，则会优雅地回退到其他格式）。 </li>
+<li>将 XML 文件拖入虚幻引擎内容浏览器。首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）——这些包默认已安装在虚幻引擎自带的 Python 环境中，因此无需额外设置。您也可以根据需要选择其他 Python 解释器。</li>
 <li>蓝图会自动生成，其中包含所有关节、实体、执行器和传感器等组件。</li>
 </ol>
 <h3 id="_5">快速转换（静态网格）</h3>

@@ -134,12 +134,13 @@
 <h2 id="_1">导入</h2>
 <ol>
 <li>将  <code>.xml</code> 文件拖入虚幻 <strong>内容浏览器(Content Browser)</strong> 。</li>
-<li><code>UMujocoImportFactory</code> 自动作为子进程运行 <code>Scripts/clean_meshes.py</code>：</li>
+<li>首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）。默认情况下，这些包会安装到 UE 自带的 Python 环境中，无需额外配置 Python。您也可以通过对话框选择自定义解释器（conda、venv 等）。所选路径会保存到 <code>Config/LocalUnrealRoboticsLab.ini</code> 文件中（每个机器单独保存，不会提交到源代码控制系统）。</li>
+<li><code>UMujocoImportFactory</code> 使用配置的 Python 运行 <code>Scripts/clean_meshes.py</code>:</li>
 <li>解析 XML 以查找所有引用的网格资产</li>
 <li>检测 GLB stem 冲突（例如，<code>link1.obj</code> 和 <code>link1.stl</code> 两者都产生 <code>link1.glb</code>），并重命名它们。</li>
 <li>将网格转换为 GLB 格式（保留 UV，去除嵌入纹理）</li>
 <li>生成带有更新网格参考的<code>_ue.xml</code></li>
-<li>优雅回退方案：如果缺少 Python 或 trimesh，则使用原始 XML 代替。</li>
+<li>如果用户跳过 Python 设置，则会使用原始 XML（某些网格可能无法正确显示）。</li>
 <li>工厂通过四次解析过程创建 <code>AMjArticulation</code> 蓝图：</li>
 <li><strong>第一阶段：</strong> 资产（带缩放的网格、带文件路径的纹理、带 RGBA/纹理引用的材质）</li>
 <li><strong>第二阶段：</strong> 默认值（类层次结构作为 <code>UMjDefault</code> 组件）</li>
@@ -266,11 +267,15 @@
 <hr />
 <h2 id="_6">网格资产</h2>
 <p>导入程序会查找 XML 文件所在目录下的网格文件。 到的网格文件会被复制到导入目标目录下的 <code>/Meshes/</code> 子文件夹中，以避免纹理名称冲突，然后在编译期间注册到 MuJoCo 的 VFS 中。</p>
-<p><strong>格式优先级：</strong> FBX &gt; GLB &gt; OBJ。导入器会尝试使用 <code>ImportSingleMesh()</code> 函数导入多种路径：首先是 GLB（通过 Interchange），然后是原始 OBJ/STL（通过 FBX 工厂），最后是 FBX 回退。如果所有路径都失败，则会创建不带可视网格的几何体，但该几何体仍作为碰撞图元存在。此时会记录一条警告信息，但编译仍然会成功。</p>
-<p><strong>自动网格准备：</strong> <code>clean_meshes_trimesh.py</code> 脚本会在导入过程中自动运行（参见上文 <a href="#importing">导入</a> 部分）。您也可以手动运行它：</p>
+<p><strong>格式优先级：</strong> GLB &gt; OBJ。导入器首先尝试导入 GLB 文件（通过 Interchange），然后尝试导入原始 OBJ/STL 文件。如果所有路径都失败，则会创建不带可视网格的几何体，但该几何体仍作为碰撞图元存在。此时会记录一条警告信息，但编译仍然会成功。</p>
+<p><strong>自动网格准备：</strong> <code>clean_meshes.py</code> 脚本会在导入过程中自动运行（参见上文 <a href="#importing">导入</a> 部分）。您也可以手动运行它：</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>Scripts/clean_meshes.py<span class="w"> </span>path/to/robot.xml
 </code></pre></div>
 <p>这将生成一个包含更新后的网格引用的 <code>_ue.xml</code> 文件，您可以将其拖入 Unreal 中，而不是使用原始 XML 文件。</p>
+<p><strong>更改 Python 解释器：</strong> 插件会将您的 Python 路径存储在插件目录下的 <code>Config/LocalUnrealRoboticsLab.ini</code> 文件中。该文件已被 .gitignore 忽略（每台机器单独设置）。要切换解释器，您可以删除该文件（下次导入时对话框将重新出现），或者直接编辑该文件： </p>
+<div class="highlight"><pre><span></span><code><span class="k">[PythonSettings]</span>
+<span class="na">PythonPath</span><span class="o">=</span><span class="s">C:/Users/you/miniconda3/envs/myenv/python.exe</span>
+</code></pre></div>
 <hr />
 <h2 id="_7">调试导入问题</h2>
 <p>启用 <code>AAMjManager</code> 的 <code>bSaveDebugXml</code> 功能，即可在编译后将 <code>scene_compiled.xml</code> 和 <code>scene_compiled.mjb</code> 保存到 <code>Saved/URLab/</code> 目录。对比原始 MJCF 和编译后的 XML 文件，找出导入/导出不匹配之处（例如缺少元素、属性值错误、默认继承关系损坏）。编译后的 XML 文件也可以加载到原生 MuJoCo 中进行验证。更多信息请参阅 <a href="developer_tools.md">开发者工具</a> 。</p>
