@@ -77,6 +77,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#ui">UI：“模拟”仪表盘未显示</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#ue">旧版UE：内容资源无法加载</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#_13">仿真：机器人处于静态状态</a>
     </li>
         </ul>
@@ -151,16 +153,18 @@
                 <h1 id="_1">入门</h1>
 <h2 id="_2">先决条件</h2>
 <ul>
-<li>虚幻引擎 5.4+</li>
-<li>Windows 10/11</li>
+<li><strong>虚幻引擎 5.7+：</strong> C++插件代码和第三方库应该可以在早期的 UE5 版本上编译，但内置的<code>.uasset</code>文件（UI组件、材质、输入映射）是在5.7版本中序列化的，因此不向下兼容。核心模拟功能在旧版本上仍然可以运行，但仪表盘UI和一些编辑器功能将会缺失。如果确实需要支持旧版本，我们可以考虑提供兼容的资源。</li>
+<li><strong>Windows 10/11：</strong>Linux 还在实验阶段。</li>
+<li><strong>MuJoCo 3.7+：</strong>集成在 <code>third_party/</code> 目录中（从源代码构建）。</li>
 <li><strong>C++ 工程:</strong> 此插件包含源代码，无法在仅使用蓝图的项目中使用。</li>
-<li><strong>Visual Studio 2022 / 2025</strong> (带有 "Game development with C++" 工作负载)。</li>
+<li><strong>Visual Studio 2022</strong> (带有 "Game development with C++" 工作负载)。</li>
 <li>Python 3.11+ (可选，用于外部策略控制)</li>
+<li><strong><a href="https://github.com/astral-sh/uv">uv</a></strong> -- 可选，用于 Python 依赖管理</li>
 </ul>
 <h2 id="_3">安装</h2>
 <p><strong>⚠️ 重要提示：</strong> 这是一个 C++ 插件。您<strong>必须</strong>使用 C++ 项目。如果您的项目仅包含蓝图，请在开始之前通过<em>Tools &gt; New C++ Class</em>添加一个空的 C++ 类。</p>
 <ol>
-<li>将代码库克隆到你的虚幻引擎项目 <code>Plugins/</code> 目录中：
+<li>将插件仓库克隆到你的虚幻引擎项目 <code>Plugins/</code> 目录中：
    <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span><span class="s2">&quot;YourProject/Plugins&quot;</span>
 git<span class="w"> </span>clone<span class="w"> </span>https://github.com/URLab-Sim/UnrealRoboticsLab.git
 </code></pre></div></li>
@@ -182,8 +186,15 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/URLab
 <p><strong>显示资产：</strong> 在虚幻内容浏览器中，点击 <strong>设置(Settings)</strong>（齿轮图标）并勾选 <strong>显示插件内容(Show Plugin Content)</strong>。此操作是查看用户界面组件和插件资源所必需的。</p>
 </li>
 <li>
-<p><strong>（可选）Python 桥接：</strong> 为外部控制设置桥接：
-   <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>UnrealRoboticsLab/urlab_bridge
+<p><strong>(可选) C++ 集成：</strong> 如果您想在自己的 C++ 代码中直接使用 URLab 类型（例如，<code>#include "MuJoCo/Core/AMjManager.h"</code>, 强制转换为 <code>AMjArticulation*</code>），请将 <code>"URLab"</code> 添加到项目的 <code>.Build.cs</code> 文件中：
+   <div class="highlight"><pre><span></span><code><span class="n">PublicDependencyModuleNames</span><span class="p">.</span><span class="n">AddRange</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="kt">string</span><span class="p">[]</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="s">&quot;Core&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;CoreUObject&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;Engine&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;InputCore&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;URLab&quot;</span><span class="w"> </span><span class="p">});</span>
+</code></pre></div>
+   如果您仅通过编辑器、蓝图或 ZMQ 使用插件，则<strong>无需执行此操作</strong>。</p>
+</li>
+<li>
+<p><strong>（可选）Python 桥接：</strong> 配套的 <a href="https://github.com/URLab-Sim/urlab_bridge">urlab_bridge</a> 软件包提供用于外部控制、强化学习策略部署和 ROS 2 桥接的 Python 中间件。请参阅其 README 文件以获取设置说明。：
+   <div class="highlight"><pre><span></span><code><span class="c1"># 已移到 urlab_bridge 仓库</span>
+<span class="nb">cd</span><span class="w"> </span>UnrealRoboticsLab/urlab_bridge
 pip<span class="w"> </span>install<span class="w"> </span>uv
 uv<span class="w"> </span>sync
 </code></pre></div></p>
@@ -255,10 +266,23 @@ uv<span class="w"> </span>sync
 <li><strong>应变方法：</strong> 通过运行以下命令强制设置更大的栈大小：<code>cmake -B build ... -DCMAKE_CXX_FLAGS="/F10000000"</code></li>
 </ul>
 <h3 id="ui">UI：“模拟”仪表盘未显示</h3>
-<p>UI 与上下文相关，需要满足特定条件：
-* 确保关卡中存在 <code>MjManager</code> 参与者。
-* 在 <code>MjManager</code> 设置中，确认 <code>bAutoCreateSimulateWidget</code> 已启用。 
-* 确保您已按照安装指南中的 <strong>"显示资产(Show Assets)"</strong> 步骤操作，以使引擎能够访问 UI 小部件。</p>
+<p>UI 与上下文相关，需要满足特定条件：</p>
+<ul>
+<li>确保关卡中存在 <code>MjManager</code> 参与者。</li>
+<li>在 <code>MjManager</code> 设置中，确认 <code>bAutoCreateSimulateWidget</code> 已启用。 </li>
+<li>确保您已按照安装指南中的 <strong>"显示资产(Show Assets)"</strong> 步骤操作，以使引擎能够访问 UI 小部件。</li>
+</ul>
+<h3 id="ue">旧版UE：内容资源无法加载</h3>
+<p>捆绑的 <code>.uasset</code> 文件（UI 组件、材质、输入映射）是用 UE 5.7 保存的，无法在早期版本中加载。C++ 插件代码可以编译，核心仿真也能运行，但仪表盘 UI 和一些编辑器功能会缺失。</p>
+<p>我们强烈建议您升级到 UE 5.7，因为这是我们唯一测试和支持的版本。如果无法升级，并且您同时安装了 UE 5.7 和旧版本，您可以通过复制粘贴的方式重新创建资源：</p>
+<ol>
+<li>在 <strong>UE 5.7</strong> 中打开插件项目，并打开您需要的控件/材质/输入资产。</li>
+<li>在编辑器图表中选择所有节点（Ctrl+A），然后复制（Ctrl+C）。</li>
+<li>在<strong>旧版本的 UE</strong> 中，创建一个相同类型的新资源（例如，一个父级为 <code>MjSimulateWidget</code> 的控件蓝图）。</li>
+<li>粘贴（Ctrl+V）——节点和层级结构将跨版本迁移。</li>
+<li>保存新资源。现在它与您的引擎版本兼容了。 </li>
+</ol>
+<p>此方法适用于 UMG 控件蓝图、材质图表和输入映射资产。</p>
 <h3 id="_13">仿真：机器人处于静态状态</h3>
 <ul>
 <li><strong>控制源：</strong>检查 <code>MjManager</code> 或 <code>MjArticulation</code> 的<strong>控制源</strong>是否设置为 <strong>UI</strong>。如果设置为 <strong>ZMQ</strong>，则 UI 滑块将被忽略。</li>
