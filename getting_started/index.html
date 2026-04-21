@@ -167,7 +167,7 @@
 <li><strong>C++ 工程:</strong> 此插件包含源代码，无法在仅使用蓝图的项目中使用。</li>
 <li><strong>Visual Studio 2022</strong> (带有 "Game development with C++" 工作负载)。</li>
 <li>Python 3.11+ (可选，用于外部策略控制)</li>
-<li><strong><a href="https://github.com/astral-sh/uv">uv</a></strong> -- 可选，用于 Python 依赖管理</li>
+<li><a href="https://github.com/astral-sh/uv"><strong>uv</strong></a>：可选，用于 Python 依赖管理</li>
 </ul>
 <h2 id="_3">安装</h2>
 <p><strong>⚠️ 重要提示：</strong> 这是一个 C++ 插件。您<strong>必须</strong>使用 C++ 项目。如果您的项目仅包含蓝图，请在开始之前通过<em>Tools &gt; New C++ Class</em>添加一个空的 C++ 类。</p>
@@ -232,6 +232,7 @@ uv<span class="w"> </span>sync
 <li>点击播放（Play）——物理模拟自动开始。</li>
 <li>MjSimulate 小部件将显示（如果管理器中 <code>bAutoCreateSimulateWidget</code> 已启用）。</li>
 </ol>
+<p><img alt="" src="../images/launch_in_editor.jpg" /></p>
 <h2 id="_7">控制机器人</h2>
 <h3 id="_8">从仪表盘</h3>
 <ul>
@@ -244,7 +245,7 @@ uv<span class="w"> </span>sync
 <li>安装：<code>uv sync</code> (或者 <code>pip install -e .</code>).</li>
 <li>运行策略：<code>python src/run.py --policy unitree_12dof</code></li>
 <li>或者使用图形用户界面：<code>python src/run.py --ui</code></li>
-<li>选择您的关节和策略，点击开始。</li>
+<li>选择您的铰链（Articulation）和策略（Policy），点击开始（Start Policy）。</li>
 </ol>
 <p><img alt="" src="../images/run_ui.jpg" /></p>
 <h3 id="_9">从蓝图</h3>
