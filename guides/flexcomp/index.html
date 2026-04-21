@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Flexcomp — Deformable Bodies - Mujoco 插件</title>
+    <title>柔性组件（flexible component, Flexcomp） — 可变形体 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Flexcomp \u2014 Deformable Bodies";
+        var mkdocs_page_name = "\u67d4\u6027\u7ec4\u4ef6\uff08flexible component, Flexcomp\uff09 \u2014 \u53ef\u53d8\u5f62\u4f53";
         var mkdocs_page_input_path = "guides/flexcomp.md";
         var mkdocs_page_url = null;
       </script>
@@ -85,6 +85,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF Schema Coverage</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
                 </li>
               </ul>
@@ -106,7 +110,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Flexcomp — Deformable Bodies</li>
+      <li class="breadcrumb-item active">柔性组件（flexible component, Flexcomp） — 可变形体</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/flexcomp.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -116,33 +120,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="flexcomp-deformable-bodies">Flexcomp — Deformable Bodies</h1>
-<p>Flexcomp is MuJoCo's macro for generating deformable soft bodies: ropes (1D), cloth (2D), and volumetric bodies (3D). URLab's <code>UMjFlexcomp</code> component wraps this feature so you can author, import, simulate, and visualize flex bodies inside Unreal.</p>
-<h2 id="what-gets-generated">What gets generated</h2>
-<p>A single <code>&lt;flexcomp&gt;</code> expands (at compile time) into:</p>
+                <h1 id="flexible-component-flexcomp">柔性组件（flexible component, Flexcomp） — 可变形体</h1>
+<p>Flexcomp 是 MuJoCo 的宏，用于生成可变形软体：绳索（ropes, 1D）、布料（cloth, 2D）和体积体（volumetric bodies, 3D）。ULab 的 <code>UMjFlexcomp</code> 组件封装了此功能，使您可以在 Unreal 中创建、导入、模拟和可视化柔性体。</p>
+<h2 id="_1">生成内容</h2>
+<p>单个 <code>&lt;flexcomp&gt;</code> 在编译时会展开为：</p>
 <ul>
-<li>A <code>&lt;flex&gt;</code> element (the actual deformable, with physics properties)</li>
-<li>Multiple child bodies — one per non-pinned vertex (for <code>dof="full"</code> / <code>"radial"</code>), or 8 corner nodes (for <code>dof="trilinear"</code>), or 27 corner nodes (for <code>dof="quadratic"</code>)</li>
-<li>Slider joints on each generated body</li>
+<li>一个 <code>&lt;flex&gt;</code> 元素（实际可变形部分，具有物理属性）</li>
+<li>多个子体 — 每个非固定顶点对应一个子体（对于 <code>dof="full"</code> / <code>"radial"</code>)，或 8 个角节点（对于 <code>dof="trilinear"</code>)，或 27 个角节点（对于 <code>dof="quadratic"</code>)） </li>
+<li>每个生成的子体上都有滑块关节</li>
 </ul>
-<p>URLab leverages MuJoCo's own macro expander — we serialize the component's attributes back to an <code>&lt;flexcomp&gt;</code> XML fragment, parse it with <code>mj_parseXMLString</code>, and attach the resulting sub-spec into the parent body via <code>mjs_attach</code>. Every flex feature MuJoCo supports (grid/mesh/direct geometry, pins, elasticity, edge stiffness, contact filtering) works automatically.</p>
-<h2 id="quick-import">Quick import</h2>
-<p>The standard drag-and-drop MJCF import pipeline handles <code>&lt;flexcomp&gt;</code> natively. Files that reference meshes (e.g. <code>&lt;flexcomp type="mesh" file="bunny.obj"&gt;</code>) are auto-converted to GLB by the Python preprocessor alongside other mesh assets. The imported Blueprint contains a <code>UMjFlexcomp</code> component with all attributes populated and, for <code>type="mesh"</code>, a child <code>UStaticMeshComponent</code> used as the rendering source.</p>
-<p>See the bunny example:
+<p>URLab 利用 MuJoCo 自带的宏展开器——我们将组件的属性序列化回 <code>&lt;flexcomp&gt;</code> XML 片段，使用 <code>mj_parseXMLString</code> 解析它，然后通过 <code>mjs_attach</code> 将生成的子规范附加到父组件主体中。MuJoCo 支持的所有 flex 特性（网格/面片/直接几何体、引脚、弹性、边刚度、接触过滤）均可自动工作。</p>
+<h2 id="_2">快速导入</h2>
+<p>标准的拖放式 MJCF 导入流程可原生处理 <code>&lt;flexcomp&gt;</code>。引用网格的文件（例如 <code>&lt;flexcomp type="mesh" file="bunny.obj"&gt;</code>）会与其他网格资源一起，由 Python 预处理器自动转换为 GLB 格式。导入的蓝图包含一个所有属性都已填充的 <code>UMjFlexcomp</code> 组件，并且对于 <code>type="mesh</code>，还包含一个用作渲染源的子 <code>UStaticMeshComponent</code>。</p>
+<p>请参阅兔子（bunny）示例：</p>
 <div class="highlight"><pre><span></span><code><span class="nt">&lt;flexcomp</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;mesh&quot;</span><span class="w"> </span><span class="na">file=</span><span class="s">&quot;bunny.obj&quot;</span><span class="w"> </span><span class="na">pos=</span><span class="s">&quot;0 0 .1&quot;</span><span class="w"> </span><span class="na">dim=</span><span class="s">&quot;2&quot;</span><span class="w"> </span><span class="na">euler=</span><span class="s">&quot;90 0 0&quot;</span>
 <span class="w">          </span><span class="na">radius=</span><span class="s">&quot;.001&quot;</span><span class="w"> </span><span class="na">rgba=</span><span class="s">&quot;0 .7 .7 1&quot;</span><span class="w"> </span><span class="na">mass=</span><span class="s">&quot;.05&quot;</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;softbody&quot;</span><span class="w"> </span><span class="na">dof=</span><span class="s">&quot;trilinear&quot;</span><span class="nt">&gt;</span>
 <span class="w">    </span><span class="nt">&lt;elasticity</span><span class="w"> </span><span class="na">young=</span><span class="s">&quot;1e3&quot;</span><span class="w"> </span><span class="na">poisson=</span><span class="s">&quot;0.1&quot;</span><span class="w"> </span><span class="na">damping=</span><span class="s">&quot;0.001&quot;</span><span class="w"> </span><span class="na">elastic2d=</span><span class="s">&quot;stretch&quot;</span><span class="nt">/&gt;</span>
 <span class="w">    </span><span class="nt">&lt;contact</span><span class="w"> </span><span class="na">selfcollide=</span><span class="s">&quot;none&quot;</span><span class="w"> </span><span class="na">internal=</span><span class="s">&quot;false&quot;</span><span class="nt">/&gt;</span>
 <span class="nt">&lt;/flexcomp&gt;</span>
-</code></pre></div></p>
-<h2 id="authoring-in-blueprint">Authoring in Blueprint</h2>
-<p>Add a <code>UMjFlexcomp</code> component to an <code>AMjArticulation</code> Blueprint. Required properties:</p>
+</code></pre></div>
+<h2 id="_3">在蓝图中进行创作</h2>
+<p>向 <code>AMjArticulation</code> 蓝图添加 <code>UMjFlexcomp</code> 组件。必需属性：</p>
 <table>
 <thead>
 <tr>
-<th>Property</th>
-<th>Default</th>
-<th>Notes</th>
+<th>属性</th>
+<th>默认</th>
+<th>笔记</th>
 </tr>
 </thead>
 <tbody>
@@ -178,54 +182,54 @@
 </tr>
 </tbody>
 </table>
-<p>Optional physics/visual properties follow the same <code>bOverride_X</code> pattern used throughout the plugin — toggle to override MuJoCo defaults, leave off to inherit. Categories: Contact, Edge, Elasticity, Pin.</p>
-<h2 id="visualization">Visualization</h2>
-<p>At runtime, <code>UMjFlexcomp::Bind</code> creates a <code>UDynamicMeshComponent</code> mirroring the source static mesh (geometry, UVs, normals copied from LOD 0). Each tick, deformed vertex positions are read from <code>mjData.flexvert_xpos</code>, mapped through the welded→raw remap table, and pushed via <code>FastNotifyPositionsUpdated</code>. The source static mesh is hidden; its material is reused on the dynamic mesh.</p>
-<p><strong>Known limitation — TAA ghosting.</strong> Because UE's <code>FLocalVertexFactory</code> has no previous-position vertex stream and there is no public API to provide one, CPU-deformed meshes produce zero motion vectors. Temporal Anti-Aliasing then accumulates stale previous-frame samples, producing visible smearing/ghost trails on fast deformation. Workarounds:</p>
+<p>可选的物理/视觉属性遵循插件中通用的 <code>bOverride_X</code> 模式——切换以覆盖 MuJoCo 默认值，关闭则继承默认值。类别：接触、边缘、弹性、销钉。</p>
+<h2 id="_4">可视化</h2>
+<p>运行时，<code>UMjFlexcomp::Bind</code> 会创建一个 <code>UDynamicMeshComponent</code>，该组件镜像源静态网格（几何体、UV 和法线均从 LOD 0 复制）。每个游戏节拍，都会从 <code>mjData.flexvert_xpos</code> 读取变形后的顶点位置，通过 welded→raw 重映射表进行映射，并通过 <code>FastNotifyPositionsUpdated</code> 推送。源静态网格会被隐藏；其材质会在动态网格上重用。</p>
+<p><strong>已知限制——TAA 重影。</strong> 由于 UE 的 <code>FLocalVertexFactory</code> 没有前一帧位置顶点流，也没有公开的 API 提供此功能，因此 CPU 变形的网格会产生零运动矢量。时间抗锯齿 (Temporal Anti-Aliasing, TAA) 会累积过时的前一帧采样，从而在快速变形时产生可见的拖影/重影。解决方法：</p>
 <ul>
-<li>Set <strong>Project Settings → Rendering → Anti-Aliasing Method → FXAA</strong> (or <code>r.AntiAliasingMethod=1</code> in DefaultEngine.ini) for flex-heavy scenes.</li>
-<li>Use slow, squishy simulations where the effect is subtle.</li>
-<li>A future proper fix requires either a custom vertex factory with a previous-position stream (~1000 LoC + forked shader) or a material-based WPO approach with paired current/previous position textures.</li>
+<li>对于弹性较大的场景，请将<strong>Project Settings → Rendering → Anti-Aliasing Method</strong>设置为 <code>FXAA</code>（或在 DefaultEngine.ini 中设置 <code>r.AntiAliasingMethod=1</code>）。 </li>
+<li>使用缓慢、柔和的模拟，以减少影响。</li>
+<li>未来的彻底修复方案需要自定义顶点工厂，并添加前一帧位置流（约 1000 行代码 + 分支着色器），或者采用基于材质的 WPO 方法，并使用配对的当前位置/前一帧位置纹理。</li>
 </ul>
-<h2 id="supported-dof-modes">Supported DOF modes</h2>
+<h2 id="degree-of-freedom-dof">支持的自由度（Degree of Freedom, DOF）模式</h2>
 <table>
 <thead>
 <tr>
 <th>DOF</th>
-<th>Bodies generated</th>
-<th>Use case</th>
+<th>生成的刚体</th>
+<th>用例</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>full</code></td>
-<td>One body per non-pinned vertex, 3 slider joints each</td>
-<td>High-fidelity soft body where every vertex moves independently</td>
+<td>每个非固定顶点对应一个实体，每个实体有3个滑块关节。</td>
+<td>高保真软体，其中每个顶点均可独立运动</td>
 </tr>
 <tr>
 <td><code>radial</code></td>
-<td>One body per non-pinned vertex, 1 radial slider joint</td>
-<td>Inflatable shapes (radial deformation only)</td>
+<td>每个非铰接顶点一个实体，1 个径向滑块关节</td>
+<td>充气形状（仅限径向变形）</td>
 </tr>
 <tr>
 <td><code>trilinear</code></td>
-<td>8 corner bodies, 3 sliders each (24 DOFs total)</td>
-<td>Smooth bulk deformation of a whole shape; scales to high vertex counts</td>
+<td>8 个角体，每个角体 3 个滑块（总共 24 个自由度）</td>
+<td>整体形状的平滑形变；可扩展至高顶点数</td>
 </tr>
 <tr>
 <td><code>quadratic</code></td>
-<td>27 corner bodies, 3 sliders each (81 DOFs total)</td>
-<td>Higher-order deformation; more detail than trilinear</td>
+<td>27 个角体，每个角体 3 个滑块（总共 81 个自由度）</td>
+<td>高阶形变；比三线性形变细节更丰富</td>
 </tr>
 </tbody>
 </table>
-<p>Use <code>trilinear</code> for meshes with thousands of vertices. <code>full</code> DOF on a 2500-vertex bunny creates ~7500 joints, which is slow.</p>
-<h2 id="known-limitations-todos">Known limitations &amp; TODOs</h2>
+<p>对于拥有数千个顶点的网格，请使用三线性插值 <code>trilinear</code>。对一个拥有 2500 个顶点的兔子进行完全（<code>full</code>）自由度建模会生成大约 7500 个关节，速度很慢。</p>
+<h2 id="_5">已知限制和待办事项</h2>
 <ul>
-<li><strong>TAA ghosting</strong> on the procedural visualization (see above).</li>
-<li><strong><code>bRigid</code> flexcomps</strong> are attached to the parent body as static surface; they don't deform.</li>
-<li><strong>Raw <code>&lt;flex&gt;</code> elements</strong> (without the <code>&lt;flexcomp&gt;</code> macro) aren't directly supported — authors should use <code>&lt;flexcomp&gt;</code> to generate them.</li>
-<li><strong>Per-vertex velocity output</strong> to UE's velocity buffer is not implemented — blocks proper motion blur and TSR on deforming geometry.</li>
+<li>程序化可视化中的 <strong>TAA 重影</strong>（见上文）。</li>
+<li>刚性柔性组件（<strong><code>bRigid</code> flexcomps</strong>）作为静态表面附加到父物体上；它们不会变形。 </li>
+<li><strong>原始 <code>&lt;flex&gt;</code> 元素</strong> （不带 <code>&lt;flexcomp&gt;</code> 宏）不被直接支持——作者应使用 <code>&lt;flexcomp&gt;</code> 来生成它们。 </li>
+<li>尚未实现将<strong>每个顶点的速度输出</strong>到 UE 的速度缓冲区——这会阻止对变形几何体进行正确的运动模糊和时间超分辨率（Temporal Super Resolution, TSR） 处理。  </li>
 </ul>
               
             </div>

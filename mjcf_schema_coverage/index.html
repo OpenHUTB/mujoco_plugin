@@ -84,6 +84,50 @@
                 <li class="toctree-l1"><a class="reference internal" href="../guides/policy_bridge/">URLab 桥接</a>
                 </li>
               </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">MJCF Schema Coverage</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#summary">Summary</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#body">刚体（body）</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#joint">joint</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#geom">geom</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#site">site</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#actuator-common-attributes">actuator (common attributes)</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#actuator-types">actuator types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#sensor-types">sensor types</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#tendon">tendon</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#equality">equality</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#default">default</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#compiler">compiler</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#option">option</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#keyframekey">keyframe/key</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#contact">contact</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#asset">asset</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#flexcomp">flexcomp</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#flex-element-compiled-output">Flex element (compiled output)</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../architecture/">架构</a>
                 </li>
@@ -116,128 +160,135 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="mjcf-schema-coverage">MJCF Schema Coverage</h1>
-<p>Checked against: <strong>MuJoCo 3.7.0</strong> (C API / mjSpec)
-Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
+                <h1 id="mjcf">MJCF 模式覆盖率</h1>
+<p>已与以下版本进行比对：</p>
+<ul>
+<li>
+<p><strong>MuJoCo 3.7.0</strong>（C API / mjSpec）</p>
+</li>
+<li>
+<p>插件版本：UnrealRoboticsLab 主分支，2026-04-18</p>
+</li>
+</ul>
 <h2 id="summary">Summary</h2>
 <table>
 <thead>
 <tr>
-<th>Category</th>
-<th>Supported</th>
-<th>Import-Only</th>
-<th>Missing</th>
-<th>Total</th>
+<th>类别</th>
+<th>支持</th>
+<th>仅限导入</th>
+<th>丢失</th>
+<th>全部</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>body</td>
+<td>刚体（body）</td>
 <td>7</td>
 <td>0</td>
 <td>3</td>
 <td>10</td>
 </tr>
 <tr>
-<td>joint</td>
+<td>关节（joint）</td>
 <td>18</td>
 <td>0</td>
 <td>2</td>
 <td>20</td>
 </tr>
 <tr>
-<td>geom</td>
+<td>几何（geom）</td>
 <td>22</td>
 <td>0</td>
 <td>5</td>
 <td>27</td>
 </tr>
 <tr>
-<td>site</td>
+<td>位点（site）</td>
 <td>10</td>
 <td>0</td>
 <td>2</td>
 <td>12</td>
 </tr>
 <tr>
-<td>actuator (common)</td>
+<td>执行器（actuator） (common)</td>
 <td>14</td>
 <td>0</td>
 <td>2</td>
 <td>16</td>
 </tr>
 <tr>
-<td>actuator types</td>
+<td>执行器类型</td>
 <td>10</td>
 <td>0</td>
 <td>0</td>
 <td>10</td>
 </tr>
 <tr>
-<td>sensor types</td>
+<td>传感器类型</td>
 <td>41</td>
 <td>0</td>
 <td>0</td>
 <td>41</td>
 </tr>
 <tr>
-<td>tendon</td>
+<td>肌腱（tendon）</td>
 <td>16</td>
 <td>0</td>
 <td>1</td>
 <td>17</td>
 </tr>
 <tr>
-<td>equality</td>
+<td>等式约束（equality）</td>
 <td>10</td>
 <td>0</td>
 <td>0</td>
 <td>10</td>
 </tr>
 <tr>
-<td>default</td>
+<td>默认</td>
 <td>6</td>
 <td>0</td>
 <td>5</td>
 <td>11</td>
 </tr>
 <tr>
-<td>compiler</td>
+<td>编译器</td>
 <td>5</td>
 <td>0</td>
 <td>2</td>
 <td>7</td>
 </tr>
 <tr>
-<td>option</td>
+<td>选项</td>
 <td>17</td>
 <td>0</td>
 <td>3</td>
 <td>20</td>
 </tr>
 <tr>
-<td>keyframe</td>
+<td>关键帧（keyframe）</td>
 <td>6</td>
 <td>0</td>
 <td>0</td>
 <td>6</td>
 </tr>
 <tr>
-<td>contact</td>
+<td>接触（contact）</td>
 <td>2</td>
 <td>0</td>
 <td>0</td>
 <td>2</td>
 </tr>
 <tr>
-<td>asset</td>
+<td>资产（asset）</td>
 <td>3</td>
 <td>0</td>
 <td>1</td>
 <td>4</td>
 </tr>
 <tr>
-<td>flexcomp</td>
+<td><a href="../guides/flexcomp/">柔性组件</a>（flexible component, flexcomp）</td>
 <td>22</td>
 <td>0</td>
 <td>2</td>
@@ -246,13 +297,13 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 </tbody>
 </table>
 <hr />
-<h2 id="body">body</h2>
+<h2 id="body">刚体（body）</h2>
 <table>
 <thead>
 <tr>
-<th>Attribute</th>
-<th>Status</th>
-<th>Notes</th>
+<th>属性</th>
+<th>状态</th>
+<th>备注</th>
 </tr>
 </thead>
 <tbody>
@@ -1738,7 +1789,7 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 </tr>
 </tbody>
 </table>
-<h2 id="flexcomp">flexcomp</h2>
+<h2 id="flexcomp"><a href="../guides/flexcomp/">flexcomp</a></h2>
 <p>URLab parses <code>&lt;flexcomp&gt;</code> into a <code>UMjFlexcomp</code> component and, at spec registration, serializes back to an MJCF fragment that MuJoCo's own parser expands via <code>mjs_attach</code>. All geometry types and DOF modes work without plugin-side reimplementation.</p>
 <table>
 <thead>
@@ -1876,6 +1927,10 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../guides/policy_bridge/" class="btn btn-neutral float-left" title="URLab 桥接"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../architecture/" class="btn btn-neutral float-right" title="架构">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -1901,6 +1956,10 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
         </span>
     
     
+      <span><a href="../guides/policy_bridge/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../architecture/" style="color: #fcfcfc">后一页 &raquo;</a></span>
     
   </span>
 </div>
