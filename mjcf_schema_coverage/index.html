@@ -461,7 +461,7 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 <tr>
 <td>type</td>
 <td>SUPPORTED</td>
-<td>Import: string -&gt; enum (plane/hfield/sphere/capsule/ellipsoid/cylinder/box/mesh/sdf). Export: writes <code>Geom-&gt;type</code></td>
+<td>Import: string -&gt; enum (plane/hfield/sphere/capsule/ellipsoid/cylinder/box/mesh/sdf). Export: writes <code>Geom-&gt;type</code>. Primitives with a dedicated UE visualizer class: box (<code>UMjBox</code>), sphere (<code>UMjSphere</code>), cylinder (<code>UMjCylinder</code>), capsule (<code>UMjCapsule</code>, composite of engine cylinder + two sphere caps). Other types (ellipsoid, plane, hfield, sdf) use the base <code>UMjGeom</code> without a visualizer mesh.</td>
 </tr>
 <tr>
 <td>contype</td>
