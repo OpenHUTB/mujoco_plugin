@@ -65,23 +65,25 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_7">调试可视化</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_8">相机系统</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">交互式扰动</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_9">相机系统</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#zero-message-queuezmq">网络 (Zero Message Queue、ZMQ)</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#python-urlab_bridge">Python 集成 (urlab_bridge)</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_9">重放系统</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_10">重放系统</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#api">蓝图 API</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#mjsimulate">MjSimulate 小部件</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_10">力</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">力</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_11">模拟快捷键</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_12">模拟快捷键</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_12">网格制备工具</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_13">网格制备工具</a>
     </li>
     </ul>
                 </li>
@@ -100,6 +102,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../guides/perturbation/">交互式扰动</a>
                 </li>
               </ul>
               <ul>
@@ -217,7 +223,10 @@
 <p>有关所有快捷键，请参阅蓝图参考。有关完整的快捷键表和各模式的详细信息，请参阅调试可视化。</p>
 <p>请参阅 <a href="../guides/blueprint_reference/">蓝图参考文档</a> 以获取所有快捷键。</p>
 <p>有关完整的热键表和每种模式的详细信息，请参阅 <a href="../guides/debug_visualization/">调试可视化</a> 。</p>
-<h2 id="_8">相机系统</h2>
+<h2 id="_8">交互式扰动</h2>
+<p>在 PIE 期间，可通过鼠标进行身体操控。双击鼠标左键选择，按住 Ctrl 键并拖动鼠标右键平移，按住 Ctrl 键并拖动鼠标左键旋转——手势映射与 MuJoCo 的模拟(<code>simulate</code>)查看器相同。由上游的 <code>mjv_applyPerturbForce</code> / <code>mjv_applyPerturbPose</code> 原语驱动，因此弹簧感完全相同。暂停时也可用，方便手动绘制姿势（与快照关键帧捕获配合使用效果更佳）。</p>
+<p>有关手势映射、gizmo 参考和暂停模式工作流程，请参阅 <a href="../guides/perturbation/">交互式扰动</a> 。</p>
+<h2 id="_9">相机系统</h2>
 <ul>
 <li><strong>MjCamera</strong>: 场景捕获功能已集成到 MuJoCo 站点；每个摄像头可设置不同的捕获模式<code>CaptureMode</code>，包括照片级 RGB、深度、语义分割或实例分割；通过 ZMQ 进行流传输；支持后处理体积。</li>
 <li><strong>MjOrbitCamera</strong>: 具备目标检测、高度摆动和可配置焦距的自动旋转影视级摄像机</li>
@@ -235,7 +244,7 @@
 <li>预集成策略：Unitree G1 移动（12/29 自由度）、BeyondMimic（舞蹈/小提琴/华尔兹/跳跃）、Walk-These-Ways Go2、AMO、H2H、Smooth、ASAP</li>
 <li><strong>ROS 2 桥接器</strong>: 将 ZMQ 流重新发布到标准 ROS 2 主题</li>
 </ul>
-<h2 id="_9">重放系统</h2>
+<h2 id="_10">重放系统</h2>
 <p>记录和重放完整的仿真状态。支持 CSV 轨迹导入、快照捕获/恢复和多会话管理。</p>
 <p>有关记录/回放 API 的信息，请参阅 <a href="../guides/blueprint_reference/">蓝图参考文档</a> 。</p>
 <h2 id="api">蓝图 API</h2>
@@ -253,16 +262,16 @@
 <li>记录/回放/快照的控制</li>
 <li>拥有用于弹簧臂相机跟随的按钮</li>
 </ul>
-<h2 id="_10">力</h2>
+<h2 id="_11">力</h2>
 <ul>
 <li><strong>MjImpulseLauncher</strong>: 基于速度的对象启动（与 MuJoCo 的 object_launcher_plugin 方法相匹配）</li>
 <li>直接模式（箭头方向+速度）或目标模式（弹道弧线指向目标参与者）</li>
 <li>在 PIE 期间进行迭代测试的重置和触发</li>
 <li>按 <code>F</code> 键触发场景中的所有启动器</li>
 </ul>
-<h2 id="_11">模拟快捷键</h2>
+<h2 id="_12">模拟快捷键</h2>
 <p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 以获取完整的键盘快捷键列表。</p>
-<h2 id="_12">网格制备工具</h2>
+<h2 id="_13">网格制备工具</h2>
 <ul>
 <li><code>Scripts/clean_meshes.py</code>: 支持 XML 的网状转换器</li>
 <li>解析 MJCF，检测 GLB stem 冲突，自动重命名</li>

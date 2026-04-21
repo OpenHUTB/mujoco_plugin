@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>交互式扰动 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u4ea4\u4e92\u5f0f\u6270\u52a8";
+        var mkdocs_page_input_path = "guides/perturbation.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">交互式扰动</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#gestures">Gestures</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#running-vs-paused">Running vs paused</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#gizmos">Gizmos</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#implementation-notes">Implementation notes</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">交互式扰动</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/perturbation.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="interactive-perturbation">Interactive Perturbation</h1>
+<p>Mouse-driven manipulation of bodies during PIE. Gesture mapping matches MuJoCo's <code>simulate</code> viewer, and under the hood the plugin calls the same <code>mjv_applyPerturbForce</code> / <code>mjv_applyPerturbPose</code> primitives — so the spring feel, force falloff, and paused-teleport semantics are identical to upstream.</p>
+<p>Driven by <code>UMjPerturbation</code> (auto-created on <code>AAMjManager</code>). <code>UMjInputHandler</code> owns the gesture detection.</p>
+<hr />
+<h2 id="gestures">Gestures</h2>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Double-click LMB</strong> on a body</td>
+<td>Select. No force applied. Selection persists until you double-click elsewhere or on empty space.</td>
+</tr>
+<tr>
+<td><strong>Ctrl + RMB drag</strong></td>
+<td>Translate the selected body along the cursor plane at the selection depth.</td>
+</tr>
+<tr>
+<td><strong>Ctrl + LMB drag</strong></td>
+<td>Rotate the selected body about the camera-aligned axis.</td>
+</tr>
+<tr>
+<td>Release the mouse button</td>
+<td>Stop drag. Selection persists, forces clear on the next physics step.</td>
+</tr>
+</tbody>
+</table>
+<p>Camera look/move input is disabled while a drag is active so the cursor motion drives the body rather than the view.</p>
+<hr />
+<h2 id="running-vs-paused">Running vs paused</h2>
+<table>
+<thead>
+<tr>
+<th>State</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Running</strong></td>
+<td><code>mjv_applyPerturbForce</code> writes a virtual spring force into <code>xfrc_applied</code>. The body integrates under physics — it can collide, swing, settle. Release and the force is cleared on the next pre-step.</td>
+</tr>
+<tr>
+<td><strong>Paused</strong> (<code>P</code>)</td>
+<td><code>mjv_applyPerturbPose</code> teleports the body to the reference pose and <code>mj_forward</code> propagates <code>qpos → xpos</code>. Hold Ctrl and drag to pose the body statically. Release keeps the pose frozen.</td>
+</tr>
+</tbody>
+</table>
+<p>Combine paused perturbation with the snapshot widget to capture keyframes by hand: pause, drag the body into position, hit <strong>Save Snapshot</strong>, then resume. The snapshot records the current <code>qpos</code> / <code>ctrl</code> — so the pose you manually dialled in replays exactly.</p>
+<hr />
+<h2 id="gizmos">Gizmos</h2>
+<p>While a drag is active <code>UMjPerturbation::DrawDebugSpring</code> overlays:</p>
+<ul>
+<li><strong>Red sphere</strong> at the selection point on the body (follows the body through the drag).</li>
+<li><strong>Green arrow</strong> during translate: from the selection point to the reference target. Length = position error the spring is solving.</li>
+<li><strong>Yellow arrow</strong> during rotate: the tangent direction <code>ω × r</code> — the linear motion the rotation spring is trying to produce at the selection point. Naturally shrinks to zero as the body catches up, so it doesn't wobble when the rotation axis changes direction mid-drag.</li>
+</ul>
+<hr />
+<h2 id="implementation-notes">Implementation notes</h2>
+<ul>
+<li><strong>Selection persists across drags.</strong> Clicking with Ctrl held never reselects; only a plain double-click moves the selection. This avoids fat-finger re-selection during a rotate-then-translate sequence.</li>
+<li><strong>Cursor capture workaround.</strong> UE's LMB and RMB capture freezes <code>GetMousePosition</code> / <code>GetInputMouseDelta</code> during a drag. To get real motion we register a Slate <code>IInputProcessor</code> (<code>FMjMouseDeltaProcessor</code>) that accumulates raw <code>FPointerEvent</code> deltas <em>before</em> Slate's capture layer zeroes them. Translate then rebuilds a virtual cursor screen position from the click pos + accumulated pixels and deprojects through that.</li>
+<li><strong>No force leak on release.</strong> The pre-step callback zeros <code>d-&gt;xfrc_applied</code> every running step, matching simulate's contract — otherwise the last force would stay latched on the previously perturbed body and it would drift indefinitely.</li>
+<li><strong>Rotation clamp.</strong> The reference quaternion is limited to ±90° relative to the body's current I-frame (same as <code>simulate.cc::mjv_movePerturb</code>). Without this the spring can stall or thrash if the ref drifts too far from reality.</li>
+</ul>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../debug_visualization/">Debug Visualization</a> — hotkey reference, including the quick-convert wireframe overlay useful for diagnosing rest-pose issues.</li>
+<li>MuJoCo upstream: <a href="https://github.com/google-deepmind/mujoco/blob/main/simulate/simulate.cc"><code>simulate.cc::mjv_movePerturb</code></a> for the reference implementation of the gesture math.</li>
+</ul>
+              
+            </div>
+          </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../debug_visualization/" class="btn btn-neutral float-left" title="调试可视化"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../possession_twist/" class="btn btn-neutral float-right" title="持有和扭转控制">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+      <span><a href="../debug_visualization/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../possession_twist/" style="color: #fcfcfc">后一页 &raquo;</a></span>
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
