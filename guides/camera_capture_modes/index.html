@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Camera Capture Modes - Mujoco 插件</title>
+    <title>相机捕获模式 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Camera Capture Modes";
+        var mkdocs_page_name = "\u76f8\u673a\u6355\u83b7\u6a21\u5f0f";
         var mkdocs_page_input_path = "guides/camera_capture_modes.md";
         var mkdocs_page_url = null;
       </script>
@@ -106,7 +106,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Camera Capture Modes</li>
+      <li class="breadcrumb-item active">相机捕获模式</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/camera_capture_modes.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -116,92 +116,92 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="camera-capture-modes">Camera Capture Modes</h1>
-<p>Every <code>UMjCamera</code> has a <code>CaptureMode</code> property that decides what the render target contains. One mode per camera — spawn multiple cameras if you need multiple streams (RGB + depth + masks) from the same viewpoint.</p>
+                <h1 id="_1">相机捕获模式</h1>
+<p>每个 <code>UMjCamera</code> 都有一个 <code>CaptureMode</code> 属性，用于决定渲染目标包含的内容。每个摄像机只能使用一种模式；如果需要从同一视点获取多个数据流（RGB + 深度 + 掩膜），则可以生成多个摄像机。</p>
 <table>
 <thead>
 <tr>
-<th>Mode</th>
-<th>Output</th>
-<th>Render target format</th>
-<th>Scene capture source</th>
+<th>模式</th>
+<th>输出</th>
+<th>渲染目标格式</th>
+<th>场景捕获源</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><code>Real</code> (default)</td>
-<td>Photoreal RGB. Matches viewport look, respects post-process volumes.</td>
+<td><code>Real</code> (默认)</td>
+<td>照片级RGB色彩模式。与视口外观匹配，并保留后期处理后的体积。</td>
 <td><code>RTF_RGBA8_SRGB</code></td>
 <td><code>SCS_FinalToneCurveHDR</code></td>
 </tr>
 <tr>
 <td><code>Depth</code></td>
-<td>Linear scene depth in centimetres, single float per pixel.</td>
+<td>线性场景深度（厘米），每个像素一个浮点数。</td>
 <td><code>RTF_R32f</code></td>
 <td><code>SCS_SceneDepth</code></td>
 </tr>
 <tr>
 <td><code>SemanticSegmentation</code></td>
-<td>Per-actor-class flat tint. Two instances of the same Blueprint share a colour; different Blueprints get different colours.</td>
+<td>每个角色类都采用统一的色调。同一蓝图的两个实例共享一种颜色；不同的蓝图使用不同的颜色。</td>
 <td><code>RTF_RGBA8</code></td>
 <td><code>SCS_FinalToneCurveHDR</code> + <code>PRM_UseShowOnlyList</code></td>
 </tr>
 <tr>
 <td><code>InstanceSegmentation</code></td>
-<td>Per-body unique tint. Every rigid body gets its own hue.</td>
+<td>每个刚体都有其独特的色调。</td>
 <td><code>RTF_RGBA8</code></td>
 <td><code>SCS_FinalToneCurveHDR</code> + <code>PRM_UseShowOnlyList</code></td>
 </tr>
 </tbody>
 </table>
 <hr />
-<h2 id="configuring-a-camera">Configuring a camera</h2>
-<p>Set <code>CaptureMode</code> on a <code>UMjCamera</code> component in the Details panel. For <code>Depth</code>, also set <code>DepthNearCm</code> (default 10 cm) and <code>DepthFarCm</code> (default 10000 cm) — the UI preview and raw depth values are normalised against this range.</p>
-<p><code>CaptureMode</code> is read at <code>SetStreamingEnabled(true)</code> time. To change mode on a running camera, toggle streaming off and on:</p>
+<h2 id="_2">配置相机</h2>
+<p>在“详细信息(Details)”面板中，为 <code>UMjCamera</code> 组件设置 <code>CaptureMode</code>。对于深度，同时设置 <code>DepthNearCm</code>（默认值 10 厘米）和 <code>DepthFarCm</code>（默认值 10000 厘米）——UI 预览和原始深度值将根据此范围进行归一化。</p>
+<p><code>CaptureMode</code> 在 <code>SetStreamingEnabled(true)</code> 时读取。要更改正在运行的相机的模式，请切换流的开关：</p>
 <div class="highlight"><pre><span></span><code><span class="n">Cam</span><span class="o">-&gt;</span><span class="n">SetStreamingEnabled</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
 <span class="n">Cam</span><span class="o">-&gt;</span><span class="n">CaptureMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EMjCameraMode</span><span class="o">::</span><span class="n">Depth</span><span class="p">;</span>
 <span class="n">Cam</span><span class="o">-&gt;</span><span class="n">SetStreamingEnabled</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
 </code></pre></div>
-<p>Or, from the simulate widget, reselect the articulation (which rebinds all feed entries).</p>
+<p>或者，从模拟小部件中，重新选择铰链（这将重新绑定所有输入条目）。</p>
 <hr />
-<h2 id="coexistence-multiple-modes-in-one-frame">Coexistence — multiple modes in one frame</h2>
-<p>Seg modes work without swapping materials on the real meshes, so an RGB camera and a seg camera can stream simultaneously in the same frame with no contamination either way.</p>
-<p>Under the hood, <code>UMjDebugVisualizer</code> maintains a refcounted <strong>sibling-mesh pool</strong> per seg mode. The first seg camera that streams triggers the pool build; additional cameras on the same mode share it; the pool is torn down when the last subscriber unsubscribes.</p>
+<h2 id="_3">共存——同一帧中的多种模式</h2>
+<p>分段模式无需交换真实网格的材质即可工作，因此 RGB 摄像机和分段摄像机可以在同一帧中同时进行流传输，互不干扰。</p>
+<p>在底层，<code>UMjDebugVisualizer</code> 为每个分段模式维护一个引用计数的<strong>同级网格池</strong>。第一个开始流传输的分段摄像机触发该池的创建；同一模式下的其他摄像机共享该池；当最后一个订阅者取消订阅时，该池将被销毁。</p>
 <ul>
-<li>Sibling components duplicate every articulation visual mesh and every Quick-Convert static mesh with an unlit tint MID.</li>
-<li>They are <code>bVisibleInSceneCaptureOnly = true</code> and also disable reflection captures, sky captures, ray-tracing contribution, distance-field lighting, and dynamic indirect lighting — so secondary lighting passes can't leak a faint tinge into the main viewport.</li>
-<li>Seg cameras use <code>PrimitiveRenderMode = PRM_UseShowOnlyList</code> to render only their pool.</li>
-<li>Non-seg URLab cameras (<code>Real</code>, <code>Depth</code>) refresh their <code>HiddenComponents</code> list against the live pools each tick so a late-starting seg camera never contaminates a running RGB stream.</li>
+<li>同级组件会复制每个铰链视觉网格和每个快速转换的静态网格，并赋予其未光照色调的动态材质实例（Material Instance Dynamic, MID）。</li>
+<li>它们的 <code>bVisibleInSceneCaptureOnly</code> 属性设置为 <code>true</code>，并且还会禁用反射捕获、天空捕获、光线追踪贡献、距离场光照和动态间接光照——这样，辅助光照通道就不会将微弱的色调泄漏到主视口中。</li>
+<li>分割相机使用 <code>PrimitiveRenderMode = PRM_UseShowOnlyList</code> 仅渲染其组件池。</li>
+<li>非分割 URLab 摄像机（真实<code>Real</code>、深度<code>Depth</code>）会在每个帧周期刷新其 <code>HiddenComponents</code> 列表，以确保延迟启动的分割相机不会污染正在运行的 RGB 流。</li>
 </ul>
-<p>Cost: up to 3 components per body while both seg pools are active (original + instance sibling + semantic sibling). Each view still draws N primitives — per-view draw count is unchanged. Pools are lazy, so RGB-only sessions pay zero.</p>
+<p>成本：当两个分割组件池都处于活动状态时（原始组件池 + 实例同级组件池 + 语义同级组件池），每个物体最多需要 3 个组件。每个视图仍然绘制 N 个图元——每个视图的绘制数量不变。组件池是惰性的，因此仅渲染 RGB 的会话成本为零。</p>
 <hr />
-<h2 id="simulate-widget-preview">Simulate widget preview</h2>
-<p>The simulate widget's camera panel shows every <code>UMjCamera</code> on the selected articulation, each rendering its configured mode live. No extra setup — the feed entry inspects <code>CaptureMode</code> and picks the right display path:</p>
+<h2 id="_4">模拟组件预览</h2>
+<p>模拟组件的相机面板会显示所选铰链上的每个 <code>UMjCamera</code>，每个组件都会实时渲染其配置的模式。无需额外设置——信息流条目会检查 <code>CaptureMode</code> 并选择正确的显示路径：</p>
 <ul>
-<li><code>Real</code> / <code>SemanticSegmentation</code> / <code>InstanceSegmentation</code> — the render target binds directly as the slate brush resource.</li>
-<li><code>Depth</code> — an R32f RT can't be a slate brush. The entry CPU-copies the R channel each tick into a BGRA <code>UTexture2D</code>, mapping <code>depth ∈ [DepthNearCm, DepthFarCm]</code> to grayscale <code>[0, 255]</code>, and binds that texture instead.</li>
+<li><code>Real</code> / <code>SemanticSegmentation</code> / <code>InstanceSegmentation</code> — 渲染目标直接绑定为 Slate 画笔资源。</li>
+<li><code>Depth</code> — R32f RT 不能用作 Slate 画笔。入口 CPU 会在每个帧周期将 R 通道复制到 BGRA <code>UTexture2D</code> 中，将 <code>depth ∈ [DepthNearCm, DepthFarCm]</code> 映射到灰度 <code>[0, 255]</code>，并绑定该纹理。 </li>
 </ul>
-<p>The depth preview path is synchronous (<code>ReadLinearColorPixels</code> flushes rendering commands). Fine for debug UI; if you need headless depth capture at full framerate, use the render-target readback directly in Blueprint or C++ rather than the widget preview.</p>
+<p>深度预览路径是同步的（<code>ReadLinearColorPixels</code> 会刷新渲染命令）。这对于调试 UI 来说没问题；如果需要在全帧速率下进行无头深度捕获，请直接在蓝图或 C++ 中使用渲染目标回读，而不是使用控件预览。</p>
 <hr />
-<h2 id="zmq-broadcast">ZMQ broadcast</h2>
-<p><code>bEnableZmqBroadcast</code> continues to work for <code>Real</code>, <code>SemanticSegmentation</code>, and <code>InstanceSegmentation</code> — the existing BGRA worker transports all three.</p>
-<p><code>Depth</code> mode skips ZMQ broadcast (a float-transport path isn't wired yet) and logs a one-shot warning. Track the depth-stream follow-up if you need it.</p>
+<h2 id="zmq">ZMQ 广播</h2>
+<p><code>bEnableZmqBroadcast</code> 继续支持 <code>Real</code>、<code>SemanticSegmentation</code> 和 <code>InstanceSegmentation</code>——现有的 BGRA 工作进程会传输这三种数据。</p>
+<p>深度（<code>Depth</code>）模式会跳过 ZMQ 广播（尚未配置浮点传输路径），并记录一次性警告。如有需要，请跟踪深度流的后续操作。</p>
 <hr />
-<h2 id="known-v1-limitations">Known v1 limitations</h2>
+<h2 id="v1">已知 v1 版本限制</h2>
 <ul>
-<li><strong>Seg tints are lit-shaded, not flat.</strong> Seg cameras use <code>SCS_FinalToneCurveHDR</code> because <code>BasicShapeMaterial</code>'s <code>Color</code> parameter isn't wired directly to the BaseColor G-buffer. Scene lighting therefore modulates the tint. Good enough for visual debugging; not pixel-exact for ground-truth segmentation masks. The cleanest fix is a plugin-shipped unlit parent material — on the roadmap.</li>
-<li><strong>Mode changes mid-PIE require toggling streaming off/on.</strong> The render target format is mode-specific (<code>RTF_RGBA8</code> vs <code>RTF_R32f</code>), and live reconfiguration isn't wired.</li>
-<li><strong>Runtime articulation spawn.</strong> The sibling pool is built on first seg subscriber. Articulations or Quick-Convert props that spawn <em>after</em> a seg camera is already streaming won't appear in its output until the pool is rebuilt (toggle that seg camera's streaming off/on to force a rebuild).</li>
-<li><strong>Third-party <code>USceneCaptureComponent2D</code>.</strong> User-authored scene captures outside URLab's management won't automatically hide siblings — they'll see them as regular primitives (since siblings are <code>bVisibleInSceneCaptureOnly = true</code>, they <em>are</em> visible to scene captures by definition). Add the sibling pool to that component's <code>HiddenComponents</code> manually if this is a problem.</li>
+<li><strong>分割着色采用光照阴影效果，而非平面着色。</strong> 分割相机使用 <code>SCS_FinalToneCurveHDR</code>，因为 <code>BasicShapeMaterial</code> 的 <code>Color</code> 参数并未直接连接到 BaseColor G 缓冲区。因此，场景光照会调节着色。这对于视觉调试来说足够好，但对于真实分割掩码而言并非像素级精确。最简洁的解决方案是插件自带的无光照父材质——已列入开发计划。 </li>
+<li><strong>PIE 过程中模式的更改需要切换流的开启/关闭。</strong> 渲染目标格式与模式相关（<code>RTF_RGBA8</code> 与 <code>RTF_R32f</code>），并且不支持实时重新配置。</li>
+<li><strong>运行时生成铰链。</strong> 兄弟池基于第一个分段订阅者构建。在分割相机已开始流传输<em>后</em>生成的铰链或快速转换属性，在兄弟池重建之前不会出现在其输出中（切换该分割相机的流传输状态即可强制重建）。</li>
+<li><strong>第三方 <code>USceneCaptureComponent2D</code>.</strong> 用户在 ULab 管理之外创建的场景捕获不会自动隐藏兄弟组件——它们会将其视为普通图元（因为兄弟组件的 <code>bVisibleInSceneCaptureOnly = true</code>，根据定义，它们<em>对</em>场景捕获可见）。如果这造成问题，请手动将兄弟池添加到该组件的 <code>HiddenComponents</code> 中。</li>
 </ul>
 <hr />
-<h2 id="implementation-references">Implementation references</h2>
+<h2 id="_5">实现参考</h2>
 <ul>
-<li>Mode enum + per-camera state — <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCameraTypes.h">MjCameraTypes.h</a>, <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h">MjCamera.h</a></li>
-<li>Per-mode render target + scene-capture setup — <a href="../../Source/URLab/Private/MuJoCo/Components/Sensors/MjCamera.cpp">MjCamera.cpp::SetupRenderTarget</a></li>
-<li>Pool lifecycle — <a href="../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">MjDebugVisualizer.cpp::AcquireSegPool / BuildSegPool / DestroySegPool</a></li>
-<li>Depth preview — <a href="../../Source/URLab/Private/UI/MjCameraFeedEntry.cpp">MjCameraFeedEntry.cpp::UpdateDepthPreview</a></li>
-<li>Automation coverage — <code>URLab.Camera.*</code> in <a href="../../Source/URLabEditor/Private/Tests/MjCameraTests.cpp">MjCameraTests.cpp</a></li>
+<li>模式枚举 + 每个摄像机的状态 — <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCameraTypes.h">MjCameraTypes.h</a>, <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h">MjCamera.h</a></li>
+<li>每个模式的渲染目标 + 场景捕获设置 — <a href="../../Source/URLab/Private/MuJoCo/Components/Sensors/MjCamera.cpp">MjCamera.cpp::SetupRenderTarget</a></li>
+<li>池生命周期 — <a href="../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">MjDebugVisualizer.cpp::AcquireSegPool / BuildSegPool / DestroySegPool</a></li>
+<li>深度预览 — <a href="../../Source/URLab/Private/UI/MjCameraFeedEntry.cpp">MjCameraFeedEntry.cpp::UpdateDepthPreview</a></li>
+<li>自动化测试覆盖率 — <code>URLab.Camera.*</code> in <a href="../../Source/URLabEditor/Private/Tests/MjCameraTests.cpp">MjCameraTests.cpp</a></li>
 </ul>
               
             </div>
