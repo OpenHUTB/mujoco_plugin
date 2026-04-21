@@ -171,16 +171,25 @@
 └─────────────────────────────────┘              └──────────────────┘         
 </code></pre></div>
 <h2 id="_3">安装</h2>
-<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>Plugins/UnrealRoboticsLab/urlab_bridge
-uv<span class="w"> </span>python<span class="w"> </span>install<span class="w"> </span><span class="m">3</span>.11
-uv<span class="w"> </span>venv<span class="w"> </span>--python<span class="w"> </span><span class="m">3</span>.11<span class="w"> </span>.venv
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>numpy<span class="w"> </span>pyzmq
+<p>该桥接模块是一个<strong>独立的代码仓库</strong>—— <a href="https://github.com/URLab-Sim/urlab_bridge">https://github.com/URLab-Sim/urlab_bridge</a> 。您可以将其克隆到任何位置；它无需与 URLab 插件放在同一仓库中。它使用 <a href="https://docs.astral.sh/uv/">uv</a> 进行 Python 环境管理；需要 Python 3.11 或更高版本。</p>
+<div class="highlight"><pre><span></span><code><span class="n">git</span> <span class="n">clone</span> <span class="n">https</span><span class="p">://</span><span class="n">github</span><span class="p">.</span><span class="n">com</span><span class="p">/</span><span class="n">URLab-Sim</span><span class="p">/</span><span class="n">urlab_bridge</span><span class="p">.</span><span class="n">git</span>
+<span class="nb">cd </span><span class="n">urlab_bridge</span>
 </code></pre></div>
-<p>用于强化学习策略支持（RoboJuDo）
-<div class="highlight"><pre><span></span><code>uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>RoboJuDo
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>dearpygui<span class="w"> </span>opencv-python
-<span class="nb">cd</span><span class="w"> </span>RoboJuDo<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span>git<span class="w"> </span>submodule<span class="w"> </span>update<span class="w"> </span>--init<span class="w"> </span>--recursive
-</code></pre></div></p>
+<p>最低安装要求（核心仪表盘 + ZMQ — 无策略）：</p>
+<div class="highlight"><pre><span></span><code><span class="n">uv</span> <span class="n">sync</span>
+</code></pre></div>
+<p>这会创建一个 <code>.venv/</code> 目录，强制 Python 版本为 3.11 或更高，并安装 <code>pyzmq</code>、<code>numpy</code>、<code>opencv-python</code> 和 <code>dearpygui</code>。</p>
+<p>为了支持强化学习策略（添加 <code>torch</code>、<code>onnxruntime</code>、<code>mujoco</code> 等）：</p>
+<div class="highlight"><pre><span></span><code><span class="n">uv</span> <span class="n">sync</span> <span class="p">-</span><span class="n">-extra</span> <span class="n">policy</span>
+<span class="n">uv</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-e</span> <span class="p">./</span><span class="n">RoboJuDo</span>
+</code></pre></div>
+<p>如果 RoboJuDo 安装卡住（这是 <code>uv/setuptools</code> 动态依赖解析方面的一个已知问题），请使用 <code>--no-deps</code>，因为它所需的一切都已包含在策略<code>policy</code>附加文件中，然后添加它特有的两个依赖项：</p>
+<div class="highlight"><pre><span></span><code><span class="n">uv</span> <span class="n">pip</span> <span class="n">install</span> <span class="p">-</span><span class="n">-no-deps</span> <span class="n">-e</span> <span class="p">./</span><span class="n">RoboJuDo</span>
+<span class="n">uv</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">pygame</span> <span class="n">pynput</span>
+</code></pre></div>
+<p>依赖 PHC 的策略还需要：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">RoboJuDo</span> <span class="p">&amp;&amp;</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="p">-</span><span class="n">-init</span> <span class="p">-</span><span class="n">-recursive</span>
+</code></pre></div>
 <h2 id="zmq">ZMQ 协议</h2>
 <p>有关 ZMQ 协议的详细信息、主题格式和消息结构，请参阅 ZMQ 网络文档。(zmq_networking.md).</p>
 <h2 id="bridge">直接使用 Bridge</h2>
@@ -189,16 +198,16 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 <span class="kn">import</span> <span class="nn">struct</span><span class="o">,</span> <span class="nn">time</span><span class="o">,</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 
 <span class="n">zmq</span> <span class="o">=</span> <span class="n">ZmqLink</span><span class="p">(</span><span class="s2">&quot;tcp://127.0.0.1:5555&quot;</span><span class="p">,</span> <span class="s2">&quot;tcp://127.0.0.1:5556&quot;</span><span class="p">)</span>
-<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># Wait for connection</span>
+<span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># 等待连接</span>
 
-<span class="c1"># Read state</span>
+<span class="c1"># 读取状态</span>
 <span class="n">messages</span> <span class="o">=</span> <span class="n">zmq</span><span class="o">.</span><span class="n">drain</span><span class="p">()</span>
 <span class="k">for</span> <span class="n">topic</span><span class="p">,</span> <span class="n">payload</span> <span class="ow">in</span> <span class="n">messages</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
     <span class="k">if</span> <span class="s2">&quot;/joint/&quot;</span> <span class="ow">in</span> <span class="n">topic</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span> <span class="o">==</span> <span class="mi">16</span><span class="p">:</span>
         <span class="n">jid</span><span class="p">,</span> <span class="n">pos</span><span class="p">,</span> <span class="n">vel</span><span class="p">,</span> <span class="n">acc</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="s2">&quot;&lt;Ifff&quot;</span><span class="p">,</span> <span class="n">payload</span><span class="p">)</span>
         <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Joint </span><span class="si">{</span><span class="n">jid</span><span class="si">}</span><span class="s2">: pos=</span><span class="si">{</span><span class="n">pos</span><span class="si">:</span><span class="s2">.3f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-<span class="c1"># Send control (12 actuators, all to zero)</span>
+<span class="c1"># 发送控制 (12 执行器，全部归零)</span>
 <span class="n">targets</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">12</span><span class="p">)</span>
 <span class="n">zmq</span><span class="o">.</span><span class="n">send_control</span><span class="p">(</span><span class="s2">&quot;my_robot_prefix&quot;</span><span class="p">,</span> <span class="n">targets</span><span class="p">)</span>
 
@@ -212,7 +221,7 @@ uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </s
 <span class="n">python</span> <span class="n">src</span><span class="p">\</span><span class="n">urlab_policy</span><span class="p">\</span><span class="n">policy_gui</span><span class="p">.</span><span class="n">py</span>
 </code></pre></div></p>
 <p><strong>CLI(命令行):</strong>
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/run_policy.py<span class="w"> </span>--policy<span class="w"> </span>unitree<span class="w"> </span>--prefix<span class="w"> </span>g1
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>unitree<span class="w"> </span>--prefix<span class="w"> </span>g1
 </code></pre></div></p>
 <p>可用策略在<code>policy_registry.py</code>中注册。每个条目定义了策略配置类、环境配置、自由度数量和控制器类型。</p>
 <h3 id="go2-walk-these-ways">Go2 Walk-These-Ways 策略</h3>
