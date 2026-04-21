@@ -127,12 +127,12 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 
 <span class="c1"># 运行策略 (可选):</span>
 uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>policy<span class="w">            </span><span class="c1"># + PyTorch, ONNX 等</span>
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./RoboJuDo<span class="w">     </span><span class="c1"># 策略框架 (内置的子模块)</span>
+uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./RoboJuDo<span class="w">     </span><span class="c1"># 策略框架 (内置的子模块)：安装模块 robojudo</span>
 </code></pre></div>
 <p>仪表盘（关节、传感器、摄像头、执行器控制）无需策略扩展即可正常工作。只有当您需要运行神经网络策略时才需要 RoboJuDo。</p>
 <p>需要 Python 3.11 或更高版本。</p>
 <h2 id="_2">快速开始</h2>
-<div class="highlight"><pre><span></span><code><span class="c1"># 启动仪表盘 (关节/传感器/相机查看器、执行器控制、可选策略运行器)</span>
+<div class="highlight"><pre><span></span><code><span class="c1"># 启动仪表盘 (关节/传感器/相机查看器、执行器控制、可选策略运行器)，注意在关卡中必须放置 AMjManager，否则连接不上</span>
 uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--ui
 
 <span class="c1"># 以无头模式（不打开图形界面）运行特定策略</span>

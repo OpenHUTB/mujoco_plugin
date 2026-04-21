@@ -210,13 +210,13 @@ uv<span class="w"> </span>sync
 <h3 id="_5">快速转换（静态网格）</h3>
 <ol>
 <li>在关卡中放置静态网格体对象（家具、道具等）。</li>
-<li>给每个动作者添加一个 <code>MjQuickConvertComponent</code>。</li>
+<li>给每个参与者添加一个 <code>MjQuickConvertComponent</code>。</li>
 <li>设置为 <strong>动态(Dynamic)</strong> 表示物理碰撞，设置为 <strong>静态(Static)</strong> 表示固定碰撞。</li>
 <li>启用 <code>ComplexMeshRequired</code> 非凸形状（使用 CoACD 分解）。</li>
 </ol>
 <h2 id="_6">场景设置</h2>
 <ol>
-<li>在你的关卡中放置一个 <code>MjManager</code> 动作者（每个关卡一个）。 </li>
+<li>在你的关卡中放置一个 <code>MjManager</code> 参与者（<strong>必须</strong>每个关卡一个）。 </li>
 <li>将导入的机器人蓝图放置在关卡中。</li>
 <li>点击播放（Play）——物理模拟自动开始。</li>
 <li>MjSimulate 小部件将显示（如果管理器中 <code>bAutoCreateSimulateWidget</code> 已启用）。</li>
