@@ -67,15 +67,15 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">交互式扰动</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#gestures">Gestures</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">手势</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#running-vs-paused">Running vs paused</a>
+    <li class="toctree-l2"><a class="reference internal" href="#vs">运行中 vs 暂停中</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#gizmos">Gizmos</a>
+    <li class="toctree-l2"><a class="reference internal" href="#gizmos">小工具（Gizmos）</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#implementation-notes">Implementation notes</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_3">实现说明</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#see-also">See also</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">另请参阅</a>
     </li>
     </ul>
                 </li>
@@ -128,80 +128,80 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="interactive-perturbation">Interactive Perturbation</h1>
-<p>Mouse-driven manipulation of bodies during PIE. Gesture mapping matches MuJoCo's <code>simulate</code> viewer, and under the hood the plugin calls the same <code>mjv_applyPerturbForce</code> / <code>mjv_applyPerturbPose</code> primitives — so the spring feel, force falloff, and paused-teleport semantics are identical to upstream.</p>
-<p>Driven by <code>UMjPerturbation</code> (auto-created on <code>AAMjManager</code>). <code>UMjInputHandler</code> owns the gesture detection.</p>
+                <h1 id="_1">交互式扰动</h1>
+<p>在 PIE 过程中，通过鼠标驱动操控物体。手势映射与 MuJoCo 的模拟查看器相匹配，插件底层调用了相同的 <code>mjv_applyPerturbForce</code> / <code>mjv_applyPerturbPose</code> 原语——因此弹簧感、力衰减和暂停传送语义与上游完全相同。</p>
+<p>由 <code>UMjPerturbation</code>（在 <code>AAMjManager</code> 上自动创建）驱动。<code>UMjInputHandler</code> 负责手势检测。</p>
 <hr />
-<h2 id="gestures">Gestures</h2>
+<h2 id="_2">手势</h2>
 <table>
 <thead>
 <tr>
-<th>Input</th>
-<th>Action</th>
+<th>输入</th>
+<th>动作</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Double-click LMB</strong> on a body</td>
-<td>Select. No force applied. Selection persists until you double-click elsewhere or on empty space.</td>
+<td>在刚体上<strong>双击鼠标左键</strong>（Left Mouse Button, LMB）</td>
+<td>选中。未施加任何力。选中状态会一直保持，直到您双击其他位置或空白处。</td>
 </tr>
 <tr>
-<td><strong>Ctrl + RMB drag</strong></td>
-<td>Translate the selected body along the cursor plane at the selection depth.</td>
+<td><strong>Ctrl + 鼠标右键（Right Mouse Button, RMB）拖动</strong></td>
+<td>将选定的物体沿光标平面平移至选定深度。</td>
 </tr>
 <tr>
-<td><strong>Ctrl + LMB drag</strong></td>
-<td>Rotate the selected body about the camera-aligned axis.</td>
+<td><strong>Ctrl + 鼠标左键拖动</strong></td>
+<td>绕相机轴线旋转选定物体。</td>
 </tr>
 <tr>
-<td>Release the mouse button</td>
-<td>Stop drag. Selection persists, forces clear on the next physics step.</td>
+<td>松开鼠标按钮</td>
+<td>停止拖动。选择状态保持，强制在下一个物理步骤中清除。</td>
 </tr>
 </tbody>
 </table>
-<p>Camera look/move input is disabled while a drag is active so the cursor motion drives the body rather than the view.</p>
+<p>拖动操作激活时，相机视角/移动输入功能将被禁用，因此光标移动将驱动刚体移动，而非视角移动。</p>
 <hr />
-<h2 id="running-vs-paused">Running vs paused</h2>
+<h2 id="vs">运行中 vs 暂停中</h2>
 <table>
 <thead>
 <tr>
-<th>State</th>
-<th>Behaviour</th>
+<th>状态</th>
+<th>行为</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td><strong>Running</strong></td>
-<td><code>mjv_applyPerturbForce</code> writes a virtual spring force into <code>xfrc_applied</code>. The body integrates under physics — it can collide, swing, settle. Release and the force is cleared on the next pre-step.</td>
+<td><strong>运行中</strong></td>
+<td><code>mjv_applyPerturbForce</code> 函数会向 <code>xfrc_applied</code> 函数中写入一个虚拟弹簧力。物体会根据物理引擎进行积分——它可以碰撞、摆动和稳定下来。释放该力后，在下一个预处理步骤中，该力将被清除。</td>
 </tr>
 <tr>
-<td><strong>Paused</strong> (<code>P</code>)</td>
-<td><code>mjv_applyPerturbPose</code> teleports the body to the reference pose and <code>mj_forward</code> propagates <code>qpos → xpos</code>. Hold Ctrl and drag to pose the body statically. Release keeps the pose frozen.</td>
+<td><strong>暂停中</strong> (<code>P</code>)</td>
+<td><code>mjv_applyPerturbPose</code> 将身体瞬间移动到参考姿势，<code>mj_forward</code> 将 <code>qpos</code> 传播到 <code>xpos</code>。按住 Ctrl 键并拖动可静态固定身体姿势。松开 Ctrl 键可保持姿势固定。</td>
 </tr>
 </tbody>
 </table>
-<p>Combine paused perturbation with the snapshot widget to capture keyframes by hand: pause, drag the body into position, hit <strong>Save Snapshot</strong>, then resume. The snapshot records the current <code>qpos</code> / <code>ctrl</code> — so the pose you manually dialled in replays exactly.</p>
+<p>将暂停扰动功能与快照控件结合使用，即可手动捕捉关键帧：暂停，将身体拖动到指定位置，点击“保存快照(<strong>Save Snapshot</strong>)”，然后继续操作。快照会记录当前的 <code>qpos</code>/<code>ctrl</code> 值，因此您手动调整的姿势可以精确重现。</p>
 <hr />
-<h2 id="gizmos">Gizmos</h2>
-<p>While a drag is active <code>UMjPerturbation::DrawDebugSpring</code> overlays:</p>
+<h2 id="gizmos">小工具（Gizmos）</h2>
+<p>拖动操作激活时，<code>UMjPerturbation::DrawDebugSpring</code> 会显示以下叠加层：</p>
 <ul>
-<li><strong>Red sphere</strong> at the selection point on the body (follows the body through the drag).</li>
-<li><strong>Green arrow</strong> during translate: from the selection point to the reference target. Length = position error the spring is solving.</li>
-<li><strong>Yellow arrow</strong> during rotate: the tangent direction <code>ω × r</code> — the linear motion the rotation spring is trying to produce at the selection point. Naturally shrinks to zero as the body catches up, so it doesn't wobble when the rotation axis changes direction mid-drag.</li>
+<li>物体上选定点的<strong>红色球体</strong>（拖动过程中会跟随物体移动）。</li>
+<li>平移过程中的<strong>绿色箭头</strong>：从选定点指向参考目标。长度 = 弹簧正在修正的位置误差。 </li>
+<li>旋转过程中的<strong>黄色箭头</strong>：切线方向 <code>ω × r</code> — 旋转弹簧试图在选定点产生的线性运动。随着物体逐渐跟上，该箭头会自然收缩至零，因此在拖动过程中旋转轴改变方向时不会发生晃动。 </li>
 </ul>
 <hr />
-<h2 id="implementation-notes">Implementation notes</h2>
+<h2 id="_3">实现说明</h2>
 <ul>
-<li><strong>Selection persists across drags.</strong> Clicking with Ctrl held never reselects; only a plain double-click moves the selection. This avoids fat-finger re-selection during a rotate-then-translate sequence.</li>
-<li><strong>Cursor capture workaround.</strong> UE's LMB and RMB capture freezes <code>GetMousePosition</code> / <code>GetInputMouseDelta</code> during a drag. To get real motion we register a Slate <code>IInputProcessor</code> (<code>FMjMouseDeltaProcessor</code>) that accumulates raw <code>FPointerEvent</code> deltas <em>before</em> Slate's capture layer zeroes them. Translate then rebuilds a virtual cursor screen position from the click pos + accumulated pixels and deprojects through that.</li>
-<li><strong>No force leak on release.</strong> The pre-step callback zeros <code>d-&gt;xfrc_applied</code> every running step, matching simulate's contract — otherwise the last force would stay latched on the previously perturbed body and it would drift indefinitely.</li>
-<li><strong>Rotation clamp.</strong> The reference quaternion is limited to ±90° relative to the body's current I-frame (same as <code>simulate.cc::mjv_movePerturb</code>). Without this the spring can stall or thrash if the ref drifts too far from reality.</li>
+<li><strong>选择状态在拖动过程中保持不变。</strong> 按住 Ctrl 键单击不会重新选择；只有双击才会移动选区。这避免了在旋转和平移序列中因误触而重新选择。</li>
+<li><strong>光标捕获变通方案。</strong> UE 的鼠标左键和鼠标右键捕获会在拖动过程中冻结 <code>GetMousePosition</code> / <code>GetInputMouseDelta</code> 函数。为了获得真实的移动效果，我们注册了一个 Slate <code>IInputProcessor</code>（<code>FMjMouseDeltaProcessor</code>），它会在 Slate 的捕获层将原始 <code>FPointerEvent</code> 增量值清零<em>之前</em>累积这些增量值。然后，平移操作会根据点击位置加上累积的像素值重建虚拟光标屏幕位置，并以此进行反投影。</li>
+<li><strong>释放时无力泄漏。</strong> 预处理回调函数会在每个运行步骤中将 <code>d-&gt;xfrc_applied</code> 清零，以符合模拟的约定——否则，最后一个力会一直作用在之前受扰动的物体上，导致物体无限漂移。 </li>
+<li><strong>旋转限制。</strong> 参考四元数相对于物体当前 I 坐标系的范围限制在 ±90° 以内（与 <code>simulate.cc::mjv_movePerturb</code> 相同）。如果没有此限制，当参考值偏离实际值过远时，弹簧可能会卡住或剧烈抖动。 </li>
 </ul>
 <hr />
-<h2 id="see-also">See also</h2>
+<h2 id="_4">另请参阅</h2>
 <ul>
-<li><a href="../debug_visualization/">Debug Visualization</a> — hotkey reference, including the quick-convert wireframe overlay useful for diagnosing rest-pose issues.</li>
-<li>MuJoCo upstream: <a href="https://github.com/google-deepmind/mujoco/blob/main/simulate/simulate.cc"><code>simulate.cc::mjv_movePerturb</code></a> for the reference implementation of the gesture math.</li>
+<li><a href="../debug_visualization/">调试可视化</a> — 热键参考，包括用于诊断静止姿势问题的快速转换线框叠加层。</li>
+<li>MuJoCo 上游： <a href="https://github.com/google-deepmind/mujoco/blob/main/simulate/simulate.cc"><code>simulate.cc::mjv_movePerturb</code></a> ，其中包含手势数学的参考实现。</li>
 </ul>
               
             </div>
