@@ -305,9 +305,7 @@
 <p><strong>文件：</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
 <p>DLL 加载顺序（顺序加载，每个 DLL 必须成功加载）：</p>
 <ol>
-<li><code>mujoco.dll</code> (从 <code>third_party/install/MuJoCo/bin/</code>)</li>
-<li><code>obj_decoder.dll</code> (相同路径)</li>
-<li><code>stl_decoder.dll</code> (相同路径)</li>
+<li><code>mujoco.dll</code> (从 <code>third_party/install/MuJoCo/bin/</code>) — 自 MuJoCo 3.7.0 版本起，obj/stl 解码器已编译到此 DLL 中；早期版本中提供的独立 <code>obj_decoder.dll</code> / <code>stl_decoder.dll</code> 不应加载（插件注册冲突）。 </li>
 <li><code>libzmq-v143-mt-4_3_6.dll</code> (从 <code>third_party/install/libzmq/bin/</code>)</li>
 <li><code>lib_coacd.dll</code> (从 <code>third_party/install/CoACD/bin/</code>)</li>
 </ol>

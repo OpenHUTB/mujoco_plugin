@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Camera Capture Modes - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Camera Capture Modes";
+        var mkdocs_page_input_path = "guides/camera_capture_modes.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Camera Capture Modes</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/camera_capture_modes.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="camera-capture-modes">Camera Capture Modes</h1>
+<p>Every <code>UMjCamera</code> has a <code>CaptureMode</code> property that decides what the render target contains. One mode per camera — spawn multiple cameras if you need multiple streams (RGB + depth + masks) from the same viewpoint.</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Output</th>
+<th>Render target format</th>
+<th>Scene capture source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Real</code> (default)</td>
+<td>Photoreal RGB. Matches viewport look, respects post-process volumes.</td>
+<td><code>RTF_RGBA8_SRGB</code></td>
+<td><code>SCS_FinalToneCurveHDR</code></td>
+</tr>
+<tr>
+<td><code>Depth</code></td>
+<td>Linear scene depth in centimetres, single float per pixel.</td>
+<td><code>RTF_R32f</code></td>
+<td><code>SCS_SceneDepth</code></td>
+</tr>
+<tr>
+<td><code>SemanticSegmentation</code></td>
+<td>Per-actor-class flat tint. Two instances of the same Blueprint share a colour; different Blueprints get different colours.</td>
+<td><code>RTF_RGBA8</code></td>
+<td><code>SCS_FinalToneCurveHDR</code> + <code>PRM_UseShowOnlyList</code></td>
+</tr>
+<tr>
+<td><code>InstanceSegmentation</code></td>
+<td>Per-body unique tint. Every rigid body gets its own hue.</td>
+<td><code>RTF_RGBA8</code></td>
+<td><code>SCS_FinalToneCurveHDR</code> + <code>PRM_UseShowOnlyList</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="configuring-a-camera">Configuring a camera</h2>
+<p>Set <code>CaptureMode</code> on a <code>UMjCamera</code> component in the Details panel. For <code>Depth</code>, also set <code>DepthNearCm</code> (default 10 cm) and <code>DepthFarCm</code> (default 10000 cm) — the UI preview and raw depth values are normalised against this range.</p>
+<p><code>CaptureMode</code> is read at <code>SetStreamingEnabled(true)</code> time. To change mode on a running camera, toggle streaming off and on:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Cam</span><span class="o">-&gt;</span><span class="n">SetStreamingEnabled</span><span class="p">(</span><span class="nb">false</span><span class="p">);</span>
+<span class="n">Cam</span><span class="o">-&gt;</span><span class="n">CaptureMode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EMjCameraMode</span><span class="o">::</span><span class="n">Depth</span><span class="p">;</span>
+<span class="n">Cam</span><span class="o">-&gt;</span><span class="n">SetStreamingEnabled</span><span class="p">(</span><span class="nb">true</span><span class="p">);</span>
+</code></pre></div>
+<p>Or, from the simulate widget, reselect the articulation (which rebinds all feed entries).</p>
+<hr />
+<h2 id="coexistence-multiple-modes-in-one-frame">Coexistence — multiple modes in one frame</h2>
+<p>Seg modes work without swapping materials on the real meshes, so an RGB camera and a seg camera can stream simultaneously in the same frame with no contamination either way.</p>
+<p>Under the hood, <code>UMjDebugVisualizer</code> maintains a refcounted <strong>sibling-mesh pool</strong> per seg mode. The first seg camera that streams triggers the pool build; additional cameras on the same mode share it; the pool is torn down when the last subscriber unsubscribes.</p>
+<ul>
+<li>Sibling components duplicate every articulation visual mesh and every Quick-Convert static mesh with an unlit tint MID.</li>
+<li>They are <code>bVisibleInSceneCaptureOnly = true</code> and also disable reflection captures, sky captures, ray-tracing contribution, distance-field lighting, and dynamic indirect lighting — so secondary lighting passes can't leak a faint tinge into the main viewport.</li>
+<li>Seg cameras use <code>PrimitiveRenderMode = PRM_UseShowOnlyList</code> to render only their pool.</li>
+<li>Non-seg URLab cameras (<code>Real</code>, <code>Depth</code>) refresh their <code>HiddenComponents</code> list against the live pools each tick so a late-starting seg camera never contaminates a running RGB stream.</li>
+</ul>
+<p>Cost: up to 3 components per body while both seg pools are active (original + instance sibling + semantic sibling). Each view still draws N primitives — per-view draw count is unchanged. Pools are lazy, so RGB-only sessions pay zero.</p>
+<hr />
+<h2 id="simulate-widget-preview">Simulate widget preview</h2>
+<p>The simulate widget's camera panel shows every <code>UMjCamera</code> on the selected articulation, each rendering its configured mode live. No extra setup — the feed entry inspects <code>CaptureMode</code> and picks the right display path:</p>
+<ul>
+<li><code>Real</code> / <code>SemanticSegmentation</code> / <code>InstanceSegmentation</code> — the render target binds directly as the slate brush resource.</li>
+<li><code>Depth</code> — an R32f RT can't be a slate brush. The entry CPU-copies the R channel each tick into a BGRA <code>UTexture2D</code>, mapping <code>depth ∈ [DepthNearCm, DepthFarCm]</code> to grayscale <code>[0, 255]</code>, and binds that texture instead.</li>
+</ul>
+<p>The depth preview path is synchronous (<code>ReadLinearColorPixels</code> flushes rendering commands). Fine for debug UI; if you need headless depth capture at full framerate, use the render-target readback directly in Blueprint or C++ rather than the widget preview.</p>
+<hr />
+<h2 id="zmq-broadcast">ZMQ broadcast</h2>
+<p><code>bEnableZmqBroadcast</code> continues to work for <code>Real</code>, <code>SemanticSegmentation</code>, and <code>InstanceSegmentation</code> — the existing BGRA worker transports all three.</p>
+<p><code>Depth</code> mode skips ZMQ broadcast (a float-transport path isn't wired yet) and logs a one-shot warning. Track the depth-stream follow-up if you need it.</p>
+<hr />
+<h2 id="known-v1-limitations">Known v1 limitations</h2>
+<ul>
+<li><strong>Seg tints are lit-shaded, not flat.</strong> Seg cameras use <code>SCS_FinalToneCurveHDR</code> because <code>BasicShapeMaterial</code>'s <code>Color</code> parameter isn't wired directly to the BaseColor G-buffer. Scene lighting therefore modulates the tint. Good enough for visual debugging; not pixel-exact for ground-truth segmentation masks. The cleanest fix is a plugin-shipped unlit parent material — on the roadmap.</li>
+<li><strong>Mode changes mid-PIE require toggling streaming off/on.</strong> The render target format is mode-specific (<code>RTF_RGBA8</code> vs <code>RTF_R32f</code>), and live reconfiguration isn't wired.</li>
+<li><strong>Runtime articulation spawn.</strong> The sibling pool is built on first seg subscriber. Articulations or Quick-Convert props that spawn <em>after</em> a seg camera is already streaming won't appear in its output until the pool is rebuilt (toggle that seg camera's streaming off/on to force a rebuild).</li>
+<li><strong>Third-party <code>USceneCaptureComponent2D</code>.</strong> User-authored scene captures outside URLab's management won't automatically hide siblings — they'll see them as regular primitives (since siblings are <code>bVisibleInSceneCaptureOnly = true</code>, they <em>are</em> visible to scene captures by definition). Add the sibling pool to that component's <code>HiddenComponents</code> manually if this is a problem.</li>
+</ul>
+<hr />
+<h2 id="implementation-references">Implementation references</h2>
+<ul>
+<li>Mode enum + per-camera state — <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCameraTypes.h">MjCameraTypes.h</a>, <a href="../../Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h">MjCamera.h</a></li>
+<li>Per-mode render target + scene-capture setup — <a href="../../Source/URLab/Private/MuJoCo/Components/Sensors/MjCamera.cpp">MjCamera.cpp::SetupRenderTarget</a></li>
+<li>Pool lifecycle — <a href="../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">MjDebugVisualizer.cpp::AcquireSegPool / BuildSegPool / DestroySegPool</a></li>
+<li>Depth preview — <a href="../../Source/URLab/Private/UI/MjCameraFeedEntry.cpp">MjCameraFeedEntry.cpp::UpdateDepthPreview</a></li>
+<li>Automation coverage — <code>URLab.Camera.*</code> in <a href="../../Source/URLabEditor/Private/Tests/MjCameraTests.cpp">MjCameraTests.cpp</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

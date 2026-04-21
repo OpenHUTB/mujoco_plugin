@@ -219,11 +219,12 @@
 <p>有关完整的热键表和每种模式的详细信息，请参阅 <a href="../guides/debug_visualization/">调试可视化</a> 。</p>
 <h2 id="_8">相机系统</h2>
 <ul>
-<li><strong>MjCamera</strong>: 场景捕获功能，连接到 MuJoCo 位点，通过 ZMQ 进行流传输，并遵循后期处理体积(volume)。</li>
+<li><strong>MjCamera</strong>: 场景捕获功能已集成到 MuJoCo 站点；每个摄像头可设置不同的捕获模式<code>CaptureMode</code>，包括照片级 RGB、深度、语义分割或实例分割；通过 ZMQ 进行流传输；支持后处理体积。</li>
 <li><strong>MjOrbitCamera</strong>: 具备目标检测、高度摆动和可配置焦距的自动旋转影视级摄像机</li>
 <li><strong>MjKeyframeCamera</strong>: 基于路径点的相机路径，具有平滑插值、<code>O</code> 关键帧播放/暂停功能</li>
 </ul>
-<p>有关相机 API 的详细信息，请参阅 <a href="../guides/blueprint_reference/#mjkeyframecameraactor">蓝图参考文档</a> 。</p>
+<p>有关每种模式的行为和模拟小部件预览，请参阅 <a href="../guides/camera_capture_modes/">相机捕获模式</a> ；
+有关相机 API 的详细信息，请参阅 <a href="../guides/blueprint_reference/#mjkeyframecameraactor">蓝图参考文档</a> 。</p>
 <h2 id="zero-message-queuezmq">网络 (Zero Message Queue、ZMQ)</h2>
 <p>采用二进制发布/订阅协议广播关节状态、传感器和摄像头图像。接收执行器目标值和PD增益。针对多关节场景采用基于前缀的滤波。</p>
 <p>详情请参阅 <a href="../guides/zmq_networking/">ZMQ 网络文档</a> 。</p>

@@ -298,13 +298,9 @@
 </table>
 <hr />
 <h2 id="_10">相机交互（已知问题）</h2>
-<p>由于叠加层会替换真实 <code>UStaticMeshComponents</code> 上的真实材质，因此任何渲染关卡的工具（例如 <code>USceneCaptureComponent2D</code>、<code>UMjCamera</code> 和截图工具）都会捕获叠加层，而不是底层场景。这对于合成数据管线来说是理想的（语义分割模式可以提供免费的真实掩码），但如果您需要 RGB 观测流保持照片级真实感，则这是不希望出现的。</p>
-<p>目前可用的解决方法：</p>
-<ul>
-<li>在捕获 RGB 帧之前，关闭叠加层（按下 <code>6</code> 键直至关闭）。</li>
-<li>如果您正在生成训练数据，脚本会自动调整捕获窗口。</li>
-</ul>
-<p>每个摄像头的单独退出选项已列入开发计划。</p>
+<p>由于快捷键 6 的叠加层会替换实际 <code>UStaticMeshComponents</code> 上的真实材质，因此任何渲染关卡的工具（例如 <code>USceneCaptureComponent2D</code>、<code>UMjCamera</code> 和截图工具）都会捕获叠加层，而不是底层场景。该叠加层本质上是一个视口调试工具。</p>
+<p>对于需要始终输出纯 RGB、深度或分割图像（无论视口状态如何）的持续摄像机流，请改用每个摄像机的捕获模式——参见 <a href="../camera_capture_modes/">相机捕获模式</a>。这些模式与快捷键 6 无关：实例分割摄像机 <code>InstanceSegmentation</code> 即使在视口叠加层关闭时也会输出遮罩，而真实相机 <code>Real</code> 即使在视口显示孤岛时也会输出逼真的 RGB 图像。</p>
+<p>如果您需要在通过 <code>UMjCamera</code> 捕获 RGB 的同时激活热键 6 叠加层，请在捕获窗口之前将叠加层关闭（按 <code>6</code> 直到关闭）。</p>
 <hr />
 <h2 id="_11">实现参考</h2>
 <ul>

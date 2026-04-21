@@ -113,8 +113,8 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="mjcf-schema-coverage">MJCF Schema Coverage</h1>
-<p>Checked against: <strong>MuJoCo 3.4</strong> (C API / mjSpec)
-Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
+<p>Checked against: <strong>MuJoCo 3.7.0</strong> (C API / mjSpec)
+Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 <h2 id="summary">Summary</h2>
 <table>
 <thead>
@@ -164,10 +164,10 @@ Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
 </tr>
 <tr>
 <td>actuator types</td>
-<td>9</td>
+<td>10</td>
 <td>0</td>
 <td>0</td>
-<td>9</td>
+<td>10</td>
 </tr>
 <tr>
 <td>sensor types</td>
@@ -185,10 +185,10 @@ Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
 </tr>
 <tr>
 <td>equality</td>
-<td>7</td>
+<td>10</td>
 <td>0</td>
 <td>0</td>
-<td>7</td>
+<td>10</td>
 </tr>
 <tr>
 <td>default</td>
@@ -865,6 +865,11 @@ Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
 <td>SUPPORTED</td>
 <td><code>MjAdhesionActuator</code>. Parses <code>gain</code>. Uses <code>mjs_setToAdhesion</code></td>
 </tr>
+<tr>
+<td>dcmotor</td>
+<td>SUPPORTED</td>
+<td><code>MjDcMotorActuator</code>. Parses <code>motorconst</code>, <code>resistance</code>, <code>nominal</code>, <code>saturation</code>, <code>inductance</code>, <code>cogging</code>, <code>controller</code>, <code>thermal</code>, <code>lugre</code>, <code>input</code>. Uses <code>mjs_setToDCMotor</code> (MuJoCo 3.7.0+).</td>
+</tr>
 </tbody>
 </table>
 <h2 id="sensor-types">sensor types</h2>
@@ -1310,6 +1315,21 @@ Plugin version: UnrealRoboticsLab main branch, 2026-03-28</p>
 <td>tendon</td>
 <td>SUPPORTED</td>
 <td>Parses tendon1/tendon2, polycoef. Exports via <code>Eq-&gt;data</code></td>
+</tr>
+<tr>
+<td>flex</td>
+<td>SUPPORTED</td>
+<td>Parses <code>flex</code> attribute into <code>Obj1</code>. Fixes all edge lengths of a flex (MuJoCo 3.5.0+).</td>
+</tr>
+<tr>
+<td>flexvert</td>
+<td>SUPPORTED</td>
+<td>Parses <code>flex</code> attribute into <code>Obj1</code>. Fixes all vertex lengths of a flex (MuJoCo 3.5.0+).</td>
+</tr>
+<tr>
+<td>flexstrain</td>
+<td>SUPPORTED</td>
+<td>Parses <code>flex</code> attribute into <code>Obj1</code>. Constrains strain of a trilinear/quadratic flex (MuJoCo 3.6.0+).</td>
 </tr>
 </tbody>
 </table>
