@@ -236,6 +236,13 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 <td>1</td>
 <td>4</td>
 </tr>
+<tr>
+<td>flexcomp</td>
+<td>22</td>
+<td>0</td>
+<td>2</td>
+<td>24</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -1731,6 +1738,141 @@ Plugin version: UnrealRoboticsLab main branch, 2026-04-18</p>
 </tr>
 </tbody>
 </table>
+<h2 id="flexcomp">flexcomp</h2>
+<p>URLab parses <code>&lt;flexcomp&gt;</code> into a <code>UMjFlexcomp</code> component and, at spec registration, serializes back to an MJCF fragment that MuJoCo's own parser expands via <code>mjs_attach</code>. All geometry types and DOF modes work without plugin-side reimplementation.</p>
+<table>
+<thead>
+<tr>
+<th>Attribute</th>
+<th>Status</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>name</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrString("name")</code> -&gt; <code>MjName</code>. Export: written into generated <code>&lt;flexcomp&gt;</code></td>
+</tr>
+<tr>
+<td>type</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; <code>EMjFlexcompType</code>. grid/box/cylinder/ellipsoid/square/disc/circle/mesh/direct</td>
+</tr>
+<tr>
+<td>dim</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrInt</code>. 1D lines / 2D triangles / 3D tetrahedra</td>
+</tr>
+<tr>
+<td>dof</td>
+<td>SUPPORTED</td>
+<td>Import: string -&gt; <code>EMjFlexcompDof</code>. full/radial/trilinear/quadratic</td>
+</tr>
+<tr>
+<td>count</td>
+<td>SUPPORTED</td>
+<td>Import: 3-int array -&gt; <code>FIntVector</code>. Grid/box/cylinder/ellipsoid types</td>
+</tr>
+<tr>
+<td>spacing</td>
+<td>SUPPORTED</td>
+<td>Import: 3-float array -&gt; <code>FVector</code>. Same types as count</td>
+</tr>
+<tr>
+<td>pos</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ParseVector</code> -&gt; component relative location. Export: <code>UEToMjPosition</code></td>
+</tr>
+<tr>
+<td>scale</td>
+<td>SUPPORTED</td>
+<td>Import: 3-float array + <code>bOverride_Scale</code>. Export: only emitted when overridden</td>
+</tr>
+<tr>
+<td>mass</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code> + <code>bOverride_Mass</code>. Default inherits MuJoCo</td>
+</tr>
+<tr>
+<td>inertiabox</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code> + <code>bOverride_InertiaBox</code></td>
+</tr>
+<tr>
+<td>radius</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrFloat</code> + <code>bOverride_Radius</code></td>
+</tr>
+<tr>
+<td>rgba</td>
+<td>SUPPORTED</td>
+<td>Import: 4-float array + <code>bOverride_Rgba</code></td>
+</tr>
+<tr>
+<td>rigid</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code> -&gt; <code>bRigid</code></td>
+</tr>
+<tr>
+<td>flatskin</td>
+<td>SUPPORTED</td>
+<td>Import: <code>ReadAttrBool</code> -&gt; <code>bFlatSkin</code></td>
+</tr>
+<tr>
+<td>file</td>
+<td>SUPPORTED</td>
+<td>type=mesh. Import: path resolved relative to XML dir; child <code>UStaticMeshComponent</code> created. Export: welded OBJ written to VFS</td>
+</tr>
+<tr>
+<td>point</td>
+<td>SUPPORTED</td>
+<td>type=direct. Import: float array -&gt; <code>PointData</code></td>
+</tr>
+<tr>
+<td>element</td>
+<td>SUPPORTED</td>
+<td>type=direct. Import: int array -&gt; <code>ElementData</code></td>
+</tr>
+<tr>
+<td><code>&lt;contact&gt;</code></td>
+<td>SUPPORTED</td>
+<td>All attrs (contype/conaffinity/condim/priority/margin/gap/selfcollide/internal) via <code>bOverride_X</code></td>
+</tr>
+<tr>
+<td><code>&lt;edge&gt;</code></td>
+<td>SUPPORTED</td>
+<td>stiffness/damping via <code>bOverride_X</code></td>
+</tr>
+<tr>
+<td><code>&lt;elasticity&gt;</code></td>
+<td>SUPPORTED</td>
+<td>young/poisson/damping/thickness/elastic2d via <code>bOverride_X</code></td>
+</tr>
+<tr>
+<td><code>&lt;pin&gt;</code></td>
+<td>SUPPORTED</td>
+<td>id/gridrange attribute arrays</td>
+</tr>
+<tr>
+<td>euler</td>
+<td>SUPPORTED</td>
+<td>Handled by UE component transform (set by parent body transform import)</td>
+</tr>
+<tr>
+<td>pingrid</td>
+<td>MISSING</td>
+<td>Only <code>id</code> and <code>gridrange</code> pin selectors supported</td>
+</tr>
+<tr>
+<td>pinrange</td>
+<td>MISSING</td>
+<td>Only <code>id</code> and <code>gridrange</code> pin selectors supported</td>
+</tr>
+</tbody>
+</table>
+<h3 id="flex-element-compiled-output">Flex element (compiled output)</h3>
+<p>The compiled <code>&lt;flex&gt;</code> element is read at runtime for visualization (vertex positions, element indices). <code>UMjFlexcomp::Bind</code> resolves the flex by name from <code>mjModel.flex_*</code> arrays and caches <code>flex_vertadr</code>, <code>flex_vertnum</code>, and the triangle index list for per-tick updates via <code>mjData.flexvert_xpos</code>.</p>
               
             </div>
           </div><footer>
