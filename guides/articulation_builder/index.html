@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Articulation Builder Guide - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Articulation Builder Guide";
+        var mkdocs_page_input_path = "guides/articulation_builder.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Articulation Builder Guide</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/articulation_builder.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="articulation-builder-guide">Articulation Builder Guide</h1>
+<p>This guide covers how to build and edit MuJoCo articulations in the Unreal Blueprint editor — both imported from MJCF XML and built from scratch.</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>An <code>AMjArticulation</code> Blueprint contains a hierarchy of MuJoCo components that mirror the MJCF XML structure. When placed in a level and simulated, the plugin converts this hierarchy into a MuJoCo spec, compiles it, and runs physics.</p>
+<p>The component hierarchy is organized into folders:</p>
+<div class="highlight"><pre><span></span><code>ArticulationRoot
+├── worldbody (MjWorldBody)
+│   └── body1 (MjBody)
+│       ├── Geom_Box (MjBox)
+│       ├── HingeJoint (MjHingeJoint)
+│       └── body2 (MjBody)
+│           └── ...
+├── DefinitionsRoot
+│   ├── DefaultsRoot
+│   │   └── main (MjDefault)
+│   │       └── robot (MjDefault)
+│   ├── ActuatorsRoot
+│   │   └── MotorActuator (MjMotorActuator)
+│   ├── SensorsRoot
+│   │   └── JointposSensor (MjJointPosSensor)
+│   ├── TendonsRoot
+│   ├── ContactsRoot
+│   ├── EqualitiesRoot
+│   └── KeyframesRoot
+</code></pre></div>
+<hr />
+<h2 id="importing-from-mjcf-xml">Importing from MJCF XML</h2>
+<ol>
+<li>Drag an <code>.xml</code> file into the Content Browser</li>
+<li>The plugin auto-converts meshes and generates the Blueprint</li>
+<li>See <a href="../mujoco_import/">MJCF Import Guide</a> for details</li>
+</ol>
+<hr />
+<h2 id="building-from-scratch">Building from Scratch</h2>
+<h3 id="creating-the-blueprint">Creating the Blueprint</h3>
+<ol>
+<li>Right-click in Content Browser → Blueprint Class → select <code>MjArticulation</code></li>
+<li>Open the Blueprint editor</li>
+</ol>
+<h3 id="adding-bodies">Adding Bodies</h3>
+<ol>
+<li>In the Components panel, click <strong>Add</strong> → search for <code>MjBody</code></li>
+<li>Attach it as a child of <code>worldbody</code></li>
+<li>Set the body's transform (location/rotation)</li>
+<li>Nest bodies to create kinematic chains (e.g. upper arm → forearm → hand)</li>
+</ol>
+<h3 id="adding-geoms-collisionvisual-shapes">Adding Geoms (Collision/Visual Shapes)</h3>
+<ol>
+<li>Select a body → <strong>Add</strong> → choose a geom type:</li>
+<li><code>MjBox</code>, <code>MjSphere</code>, <code>MjCylinder</code> — primitive shapes with built-in visualizers</li>
+<li><code>MjMeshGeom</code> — for custom static mesh assets (auto-sets type to Mesh)</li>
+<li>Geoms attach as children of bodies</li>
+<li>Set size via the UE scale gizmo (primitives) or assign a mesh asset (mesh geoms)</li>
+<li><strong>Material Override</strong>: primitives support an <code>OverrideMaterial</code> property for visual customization</li>
+</ol>
+<h3 id="adding-joints">Adding Joints</h3>
+<ol>
+<li>Select a body → <strong>Add</strong> → choose a joint type:</li>
+<li><code>MjHingeJoint</code> — 1-DOF rotation</li>
+<li><code>MjSlideJoint</code> — 1-DOF translation</li>
+<li><code>MjBallJoint</code> — 3-DOF spherical</li>
+<li><code>MjFreeJoint</code> — 6-DOF (root bodies)</li>
+<li>Joints attach as children of the body they actuate</li>
+<li>Configure axis, limits, stiffness, damping in the detail panel</li>
+</ol>
+<h3 id="adding-actuators">Adding Actuators</h3>
+<ol>
+<li><strong>Add</strong> → search for actuator type (e.g. <code>MjMotorActuator</code>, <code>MjPositionActuator</code>)</li>
+<li>Actuators are <strong>auto-parented</strong> to <code>ActuatorsRoot</code> when added</li>
+<li>Use the <strong>Target</strong> dropdown in the detail panel to select which joint/tendon/site the actuator controls</li>
+</ol>
+<h3 id="adding-sensors">Adding Sensors</h3>
+<ol>
+<li><strong>Add</strong> → search for sensor type (e.g. <code>MjJointPosSensor</code>, <code>MjTouchSensor</code>)</li>
+<li>Sensors are <strong>auto-parented</strong> to <code>SensorsRoot</code></li>
+<li>Use the <strong>Target</strong> dropdown to select what the sensor monitors</li>
+</ol>
+<h3 id="setting-up-default-classes">Setting Up Default Classes</h3>
+<p>Default classes define shared properties (friction, damping, etc.) that multiple components can inherit from.</p>
+<ol>
+<li><strong>Add</strong> → <code>MjDefault</code> — auto-parented to <code>DefaultsRoot</code></li>
+<li>The component's <strong>variable name</strong> in the SCS tree becomes the MuJoCo class name (synced at compile time)</li>
+<li>Add child components under the default to define template values (e.g. add an <code>MjGeom</code> child to set default friction)</li>
+<li><strong>Nest defaults</strong> to create inheritance: drag one default under another in the SCS tree. The parent-child relationship is inferred from the hierarchy.</li>
+<li>On bodies, use the <strong>Child Class</strong> dropdown to assign a default class to all children</li>
+<li>On individual geoms/joints, use the <strong>Default Class</strong> dropdown to reference a specific default</li>
+</ol>
+<hr />
+<h2 id="component-reference-dropdowns">Component Reference Dropdowns</h2>
+<p>Most cross-references between components use dropdown pickers instead of string names:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Dropdown</th>
+<th>Shows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Actuator</td>
+<td>Target</td>
+<td>Joints, Tendons, Sites, or Bodies (filtered by Transmission Type)</td>
+</tr>
+<tr>
+<td>Sensor</td>
+<td>Target</td>
+<td>Bodies, Joints, Geoms, Sites, etc. (filtered by Object Type)</td>
+</tr>
+<tr>
+<td>Sensor</td>
+<td>Reference</td>
+<td>Bodies, Geoms (for relative sensors)</td>
+</tr>
+<tr>
+<td>Contact Pair</td>
+<td>Geom 1/2</td>
+<td>All geom components</td>
+</tr>
+<tr>
+<td>Contact Exclude</td>
+<td>Body 1/2</td>
+<td>All body components</td>
+</tr>
+<tr>
+<td>Equality</td>
+<td>Object 1/2</td>
+<td>Bodies, Joints, or Tendons (filtered by Equality Type)</td>
+</tr>
+<tr>
+<td>Body</td>
+<td>Child Class</td>
+<td>All default class components</td>
+</tr>
+<tr>
+<td>Geom/Joint/etc.</td>
+<td>Default Class</td>
+<td>All default class components</td>
+</tr>
+</tbody>
+</table>
+<p>The dropdowns read and write the underlying string properties used by MuJoCo spec construction.</p>
+<hr />
+<h2 id="auto-parenting">Auto-Parenting</h2>
+<p>When you add certain component types, they are automatically moved to the correct organizational folder:</p>
+<table>
+<thead>
+<tr>
+<th>Component Type</th>
+<th>Auto-Parented To</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sensor</td>
+<td>SensorsRoot</td>
+</tr>
+<tr>
+<td>Actuator</td>
+<td>ActuatorsRoot</td>
+</tr>
+<tr>
+<td>Default</td>
+<td>DefaultsRoot</td>
+</tr>
+<tr>
+<td>Tendon</td>
+<td>TendonsRoot</td>
+</tr>
+<tr>
+<td>Contact Pair/Exclude</td>
+<td>ContactsRoot</td>
+</tr>
+<tr>
+<td>Equality</td>
+<td>EqualitiesRoot</td>
+</tr>
+</tbody>
+</table>
+<p>Components under <code>DefaultsRoot</code> (default templates) are excluded from auto-parenting — they stay where you put them.</p>
+<hr />
+<h2 id="compiling-and-validating">Compiling and Validating</h2>
+<p>Press <strong>Compile</strong> in the Blueprint editor to:
+- Sync default class names from the SCS variable names
+- Sync parent-child default relationships from the SCS hierarchy
+- Run <code>ValidateSpec</code> which creates a temporary MuJoCo spec and checks for errors</p>
+<p>Compilation errors appear in the Output Log (e.g. missing joint references, invalid ranges).</p>
+<hr />
+<h2 id="mujoco-outliner">MuJoCo Outliner</h2>
+<p>Open <strong>Window → MuJoCo Outliner</strong> for a filtered view of the articulation:</p>
+<ul>
+<li><strong>BP selector</strong> — choose which open articulation to inspect</li>
+<li><strong>Type filters</strong> — toggle Bodies, Geoms, Joints, Sensors, Actuators, etc.</li>
+<li><strong>Search</strong> — filter by component name</li>
+<li><strong>Click to select</strong> — clicking an entry selects it in the Blueprint editor's component tree</li>
+<li><strong>Summary bar</strong> — shows component counts</li>
+</ul>
+<hr />
+<h2 id="custom-icons">Custom Icons</h2>
+<p>Each MuJoCo component type has a distinct icon in the component tree:</p>
+<ul>
+<li><strong>Orange</strong> — Bodies (bone shape)</li>
+<li><strong>Green</strong> — Geoms (box, sphere, cylinder, capsule, mesh, triangle wireframe)</li>
+<li><strong>Blue</strong> — Joints (angle arc, arrow, starburst)</li>
+<li><strong>Purple</strong> — Sensors (eye shape)</li>
+<li><strong>Red</strong> — Actuators (gear)</li>
+<li><strong>Grey</strong> — Defaults (document)</li>
+<li><strong>Cyan</strong> — Sites (pin marker)</li>
+<li><strong>Teal</strong> — Tendons (taut line)</li>
+</ul>
+<hr />
+<h2 id="tips">Tips</h2>
+<ul>
+<li><strong>Name your components</strong> — the SCS variable name is used as the MuJoCo element name. Clear names make debugging easier.</li>
+<li><strong>Use defaults for shared properties</strong> — instead of setting friction on every geom, create a default class and reference it.</li>
+<li><strong>Check the Output Log</strong> after compile for validation warnings.</li>
+<li><strong>Defaults are hierarchical</strong> — nest defaults in the SCS tree to create inheritance chains (child inherits from parent).</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
