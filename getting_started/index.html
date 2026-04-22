@@ -246,7 +246,13 @@ uv<span class="w"> </span>sync
 <h3 id="python-zmq">来自 Python (ZMQ)</h3>
 <ol>
 <li><code>cd</code> 进入 <code>urlab_bridge/</code>.</li>
-<li>安装：<code>uv sync</code> (或者 <code>pip install -e .</code>).</li>
+<li>安装：<code>uv sync</code> (或者 <code>pip install -e .</code>)。或者
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zmq<span class="w"> </span>numpy<span class="w"> </span>dearpygui
+<span class="c1"># 安装 RoboJuDo</span>
+<span class="nb">cd</span><span class="w"> </span>RoboJuDo
+pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cpu
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div></li>
 <li>运行策略：<code>python src/run.py --policy unitree_12dof</code></li>
 <li>或者使用图形用户界面：<code>python src/run.py --ui</code></li>
 <li>选择您的铰链（Articulation）和策略（Policy），点击开始（Start Policy）。</li>
@@ -265,7 +271,7 @@ uv<span class="w"> </span>sync
 </code></pre></div>
 <p>所有的功能都是可调用的蓝图<code>BlueprintCallable</code>.</p>
 <h2 id="_10">调式可视化</h2>
-<p>有关完整的 PIE 叠加层（接触力、碰撞线框、关节轴、约束岛、实例/语义分割和肌肉/肌腱管）以及驱动它们的快捷键，请参阅 <a href="./debug_visualization.md">调试可视化指南</a>。</p>
+<p>有关完整的 PIE 叠加层（接触力、碰撞线框、关节轴、约束岛、实例/语义分割和肌肉/肌腱管）以及驱动它们的快捷键，请参阅 <a href="../guides/debug_visualization/">调试可视化指南</a>。</p>
 <p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 了解键盘快捷键。</p>
 <h2 id="_11">后续步骤</h2>
 <ul>
