@@ -15,7 +15,7 @@ jobs:
         shell: bash -l {0}
         run: |
           wget -O pandoc-3.9.0.2-1-amd64.deb https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-amd64.deb
-          dpkg -i pandoc-3.9.0.2-1-amd64.deb
+          sudo dpkg -i pandoc-3.9.0.2-1-amd64.deb
           pandoc --version
 
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
