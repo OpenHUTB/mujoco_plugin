@@ -19,6 +19,14 @@ jobs:
           pandoc --version
           which pandoc
 
+      - name: Set Path
+        run: |
+          echo "/usr/bin" >> $GITHUB_PATH
+      
+      - name: Get Path
+        run: |
+          echo $GITHUB_PATH
+
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
       # 使用的是 /usr/local/lib/python3.13/site-packages
       - name: Build
