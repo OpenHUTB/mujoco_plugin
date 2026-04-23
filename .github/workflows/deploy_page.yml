@@ -17,6 +17,7 @@ jobs:
           wget -O pandoc-3.9.0.2-1-amd64.deb https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-amd64.deb
           sudo dpkg -i pandoc-3.9.0.2-1-amd64.deb
           pandoc --version
+          which pandoc
 
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
       # 使用的是 /usr/local/lib/python3.13/site-packages
