@@ -1,8 +1,7 @@
 name: Deploy
 on:
   push:
-    branches:
-      - main
+
 jobs:
   build:
     name: Deploy docs to GitHub Pages
