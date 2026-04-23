@@ -10,6 +10,13 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
 
+      - name: Setup conda
+        uses: s-weigand/setup-conda@v1
+      - run: conda --version
+      - run: conda install -c conda-forge pandoc
+      - run: which python
+      - run: which pandoc
+
       - name: Install pandoc
         # The `-l` is needed so conda environment activation works correctly
         shell: bash -l {0}
