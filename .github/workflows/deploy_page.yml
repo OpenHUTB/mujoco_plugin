@@ -25,6 +25,8 @@ jobs:
           sudo dpkg -i pandoc-3.9.0.2-1-amd64.deb
           pandoc --version
           which pandoc
+          sudo apt install pandoc
+          which pandoc
 
       - name: Set Path
         run: |
