@@ -10,31 +10,10 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
 
-      - name: Setup conda
-        uses: s-weigand/setup-conda@v1
-      - run: conda --version
-      - run: conda install -c conda-forge pandoc
-      - run: which python
-      - run: which pandoc
-
       - name: Install pandoc
-        # The `-l` is needed so conda environment activation works correctly
-        shell: bash -l {0}
         run: |
-          wget -O pandoc-3.9.0.2-1-amd64.deb https://github.com/jgm/pandoc/releases/download/3.9.0.2/pandoc-3.9.0.2-1-amd64.deb
-          sudo dpkg -i pandoc-3.9.0.2-1-amd64.deb
-          pandoc --version
-          which pandoc
           sudo apt install pandoc
           which pandoc
-
-      - name: Set Path
-        run: |
-          echo "/usr/bin" >> $GITHUB_PATH
-      
-      - name: Get Path
-        run: |
-          echo $GITHUB_PATH
 
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
       # 使用的是 /usr/local/lib/python3.13/site-packages
