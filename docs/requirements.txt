@@ -1,4 +1,4 @@
 python-markdown-math
 imageio
 mkdocs-bibtex
-pandoc
+pypandoc-binary

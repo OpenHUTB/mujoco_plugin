@@ -10,10 +10,6 @@ jobs:
       - name: Checkout 
         uses: actions/checkout@v2
 
-      - name: Install pandoc
-        run: |
-          pip install pypandoc-binary
-
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
       # 使用的是 /usr/local/lib/python3.13/site-packages
       - name: Build
