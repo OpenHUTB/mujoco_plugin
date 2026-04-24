@@ -85,7 +85,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../mjcf_schema_coverage/">MJCF Schema Coverage</a>
+                <li class="toctree-l1"><a class="reference internal" href="../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
                 </li>
               </ul>
               <ul>
@@ -156,13 +156,100 @@
 <p><strong>控制器</strong>：该系统包含基于位置和扭矩的关节控制器，以及更高级的控制器，例如 Walk-These-Ways <sup id="fnref:margolis2022walktheseways"><a class="footnote-ref" href="#fn:margolis2022walktheseways">7</a></sup> 和 VBC <sup id="fnref:liu2024visual"><a class="footnote-ref" href="#fn:liu2024visual">8</a></sup>。无人机使用基于 PID 的控制器，而机械臂则依赖于逆运动学 (IK) 方法，例如 Mink <sup id="fnref:Mink"><a class="footnote-ref" href="#fn:Mink">9</a></sup>。由于控制器在 ROS 生态系统中运行，因此可以轻松集成新的控制策略。</p>
 </li>
 <li>
-<p><strong>规划器</strong>：运动规划采用基于学习和基于优化的规划器，例如 ViNT <sup id="fnref:ViNT"><a class="footnote-ref" href="#fn:ViNT">10</a></sup>、GNM <sup id="fnref:GMM"><a class="footnote-ref" href="#fn:GMM">11</a></sup> 和 NoMAD <sup id="fnref:NoMAD"><a class="footnote-ref" href="#fn:NoMAD">12</a></sup>。该框架基于 ROS 的架构确保了与外部规划器的兼容性。</p>
+<p><strong>规划器</strong>：运动规划采用基于学习和基于优化的规划器，例如 ViNT <sup id="fnref2:ViNT"><a class="footnote-ref" href="#fn:ViNT">10</a></sup>、GNM <sup id="fnref:GMM"><a class="footnote-ref" href="#fn:GMM">11</a></sup> 和 NoMAD <sup id="fnref:NoMAD"><a class="footnote-ref" href="#fn:NoMAD">12</a></sup>。该框架基于 ROS 的架构确保了与外部规划器的兼容性。</p>
 </li>
 <li>
 <p><strong>视觉SLAM</strong>：该系统包含 OrbSLAM2 <sup id="fnref:OrbSLAM2"><a class="footnote-ref" href="#fn:OrbSLAM2">13</a></sup>、OrbSLAM3 <sup id="fnref:OrbSLAM3"><a class="footnote-ref" href="#fn:OrbSLAM3">14</a></sup>和 MASt3R-SLAM <sup id="fnref:MASt3R-SLAM"><a class="footnote-ref" href="#fn:MASt3R-SLAM">15</a></sup>等视觉SLAM技术，可实现实时定位和建图。这些方法直接集成到框架中，从而在模拟环境中实现逼真的感知和建图。</p>
 </li>
 </ol>
-<h2 id="_9">参考文献</h2>
+<h2 id="_9">仿真与真实世界对比</h2>
+<p>为了评估图像编码器的仿真视觉输入与真实世界视觉输入之间的一致性，我们采用了梯度类别激活映射（Class Activation Mapping, Grad CAM）、EigenCAM（特征值类别激活映射）、余弦相似度和 KL 散度。这些方法同时评估了空间注意力和特征分布的相似性。</p>
+<p><strong>Grad-CAM</strong> 计算类别得分 <script type="math/tex"> y^c </script> 相对于特征图激活值的梯度：</p>
+<p>
+<script type="math/tex; mode=display">
+\alpha_k^c = \frac{1}{Z} \sum_i \sum_j 
+\frac{ \partial y^c}{\partial A_{ij}^k}
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+L^c = \text{ReLU} ( \sum_k \alpha_k^c A^k )
+</script>
+</p>
+<p><strong>EigenCAM</strong>通过主成分分析 (Principal Component Analysis, PCA) 生成与类别无关的显著性图。</p>
+<p>
+<script type="math/tex; mode=display">
+C = \frac{1}{Z}
+\sum_{i,j}
+(A_{ij}^k - \mu)
+(A_{ij}^k - \mu)^T,
+</script>
+</p>
+<p>
+<script type="math/tex; mode=display">
+L_\text{EigneCAM} = v_1 A^k
+</script>
+</p>
+<p>其中 <script type="math/tex"> \mu </script> 为平均激活值，<script type="math/tex"> v_1 </script> 为第一主成分。</p>
+<p><strong>余弦相似度</strong>衡量真实嵌入和模拟嵌入之间的特征对齐程度：</p>
+<p>
+<script type="math/tex; mode=display">
+S_\text{cosine}(P, Q) = 
+    \frac
+    {
+        P \cdot Q
+    }
+    {
+        \left|\left| P \right|\right|
+        \left|\left| Q \right|\right|
+    }
+</script>
+其中 P 和 Q 是特征向量。值越高表示相似度越强。</p>
+<p><strong>KL 散度</strong>量化分布差异：
+<script type="math/tex; mode=display">
+D_\text{KL} (P||Q) = 
+    \sum_i P(i) log \frac{P(i)}{Q(i)}
+</script>
+数值越低表示对齐程度越高。</p>
+<p>为了比较基于真实世界数据训练的模型，我们使用了 CLIP <sup id="fnref:CLIP"><a class="footnote-ref" href="#fn:CLIP">16</a></sup> 和 ViNT <sup id="fnref:ViNT"><a class="footnote-ref" href="#fn:ViNT">10</a></sup> 中使用的 EfficientNet-B0 <sup id="fnref:EfficientNet"><a class="footnote-ref" href="#fn:EfficientNet">17</a></sup> 视觉编码器。首先，我们从真实世界中采集一张图像，并在模拟器中重建该图像。然后，我们使用 Grad-CAM 和 Eigen-CAM 处理这两张图像，生成注意力热图，如下图所示。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">真实</th>
+<th style="text-align: center;">仿真</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="移动界面" src="../img/real_image.png" /></td>
+<td style="text-align: center;"><img alt="桌面界面" src="../img/sim_image.png" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">真实图像</td>
+<td style="text-align: center;">仿真图像</td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="移动界面" src="../img/GradCAM_real.png" /></td>
+<td style="text-align: center;"><img alt="桌面界面" src="../img/GradCAM_sim.png" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">真实图像上 CLIP 模型的 GradCAM</td>
+<td style="text-align: center;">仿真图像上 模型的 GradCAM</td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="移动界面" src="../img/EigenCam_real.png" /></td>
+<td style="text-align: center;"><img alt="桌面界面" src="../img/EigenCam_sim.png" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">真实图像上 EficientNet 网络的 GradCAM</td>
+<td style="text-align: center;">仿真图像上 EficientNet 网络的 GradCAM</td>
+</tr>
+</tbody>
+</table>
+<p>真实世界图像（左）和模拟图像（右）的对比，以及它们对应的 Grad-CAM（CLIP）和 EigenCAM（EfficientNet-B0）热图。高亮显示的类别标签为“锥体”。</p>
+<p>在这两种情况下，模型主要关注走廊中央的交通锥以及走廊尽头，这表明真实环境和模拟环境之间保留了最显著的特征。这种一致性表明，无论领域如何，模型都关注相同的高级结构，从而增强了模拟场景在特征表示方面的真实性。注意力模式的相似性也表明，关键对象在不同领域之间仍然可区分，这对于迁移学习和仿真到现实的应用至关重要。</p>
+<p>为了进一步量化相似性，我们计算了真实特征分布和模拟特征分布之间的KL散度（0.4679）和余弦相似度（0.7157）。余弦相似度越高，KL散度越低，表明两者之间的吻合度越高。我们并非旨在用完全相同的资源复制真实场景，而是选择在视觉上尽可能接近真实情况的模拟。尽管模拟中的资源与真实环境中的资源有所不同，但我们的研究结果，结合GradCAM和EigenCAM的对比，表明该模拟在视觉上足以满足我们的评估需求。</p>
+<h2 id="_10">参考文献</h2>
 <div class="footnote">
 <hr />
 <ol>
@@ -194,7 +281,7 @@
 <p>Zakka, K. <a href="https://github.com/kevinzakka/mink">[Mink: Python inverse kinematics based on MuJoCo]{.nocase}</a>. (2026).&#160;<a class="footnote-backref" href="#fnref:Mink" title="Jump back to footnote 9 in the text">&#8617;</a></p>
 </li>
 <li id="fn:ViNT">
-<p>Shah, D. <em>et al.</em> ViNT: A foundation model for visual navigation. (2023).&#160;<a class="footnote-backref" href="#fnref:ViNT" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+<p>Shah, D. <em>et al.</em> ViNT: A foundation model for visual navigation. (2023).&#160;<a class="footnote-backref" href="#fnref:ViNT" title="Jump back to footnote 10 in the text">&#8617;</a><a class="footnote-backref" href="#fnref2:ViNT" title="Jump back to footnote 10 in the text">&#8617;</a></p>
 </li>
 <li id="fn:GMM">
 <p>Shah, D., Sridhar, A., Bhorkar, A., Hirose, N. &amp; Levine, S. GNM: A general navigation model to drive any robot. 7226--7233 (2023).&#160;<a class="footnote-backref" href="#fnref:GMM" title="Jump back to footnote 11 in the text">&#8617;</a></p>
@@ -210,6 +297,12 @@
 </li>
 <li id="fn:MASt3R-SLAM">
 <p>Murai, R., Dexheimer, E. &amp; Davison, A. J. MASt3R-SLAM: Real-time dense SLAM with 3D reconstruction priors. (2025).&#160;<a class="footnote-backref" href="#fnref:MASt3R-SLAM" title="Jump back to footnote 15 in the text">&#8617;</a></p>
+</li>
+<li id="fn:CLIP">
+<p>Radford, A. <em>et al.</em> Learning transferable visual models from natural language supervision. <strong>139</strong>, (2021).&#160;<a class="footnote-backref" href="#fnref:CLIP" title="Jump back to footnote 16 in the text">&#8617;</a></p>
+</li>
+<li id="fn:EfficientNet">
+<p>Tan, M. &amp; Le, Q. V. EfficientNet: Rethinking model scaling for convolutional neural networks. <strong>97</strong>, (2019).&#160;<a class="footnote-backref" href="#fnref:EfficientNet" title="Jump back to footnote 17 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
