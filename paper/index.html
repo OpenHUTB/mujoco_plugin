@@ -155,6 +155,12 @@
 <li>
 <p><strong>控制器</strong>：该系统包含基于位置和扭矩的关节控制器，以及更高级的控制器，例如 Walk-These-Ways <sup id="fnref:margolis2022walktheseways"><a class="footnote-ref" href="#fn:margolis2022walktheseways">7</a></sup> 和 VBC <sup id="fnref:liu2024visual"><a class="footnote-ref" href="#fn:liu2024visual">8</a></sup>。无人机使用基于 PID 的控制器，而机械臂则依赖于逆运动学 (IK) 方法，例如 Mink <sup id="fnref:Mink"><a class="footnote-ref" href="#fn:Mink">9</a></sup>。由于控制器在 ROS 生态系统中运行，因此可以轻松集成新的控制策略。</p>
 </li>
+<li>
+<p><strong>规划器</strong>：运动规划采用基于学习和基于优化的规划器，例如 ViNT <sup id="fnref:ViNT"><a class="footnote-ref" href="#fn:ViNT">10</a></sup>、GNM <sup id="fnref:GMM"><a class="footnote-ref" href="#fn:GMM">11</a></sup> 和 NoMAD <sup id="fnref:NoMAD"><a class="footnote-ref" href="#fn:NoMAD">12</a></sup>。该框架基于 ROS 的架构确保了与外部规划器的兼容性。</p>
+</li>
+<li>
+<p><strong>视觉SLAM</strong>：该系统包含 OrbSLAM2 <sup id="fnref:OrbSLAM2"><a class="footnote-ref" href="#fn:OrbSLAM2">13</a></sup>、OrbSLAM3 <sup id="fnref:OrbSLAM3"><a class="footnote-ref" href="#fn:OrbSLAM3">14</a></sup>和 MASt3R-SLAM <sup id="fnref:MASt3R-SLAM"><a class="footnote-ref" href="#fn:MASt3R-SLAM">15</a></sup>等视觉SLAM技术，可实现实时定位和建图。这些方法直接集成到框架中，从而在模拟环境中实现逼真的感知和建图。</p>
+</li>
 </ol>
 <h2 id="_9">参考文献</h2>
 <div class="footnote">
@@ -186,6 +192,24 @@
 </li>
 <li id="fn:Mink">
 <p>Zakka, K. <a href="https://github.com/kevinzakka/mink">[Mink: Python inverse kinematics based on MuJoCo]{.nocase}</a>. (2026).&#160;<a class="footnote-backref" href="#fnref:Mink" title="Jump back to footnote 9 in the text">&#8617;</a></p>
+</li>
+<li id="fn:ViNT">
+<p>Shah, D. <em>et al.</em> ViNT: A foundation model for visual navigation. (2023).&#160;<a class="footnote-backref" href="#fnref:ViNT" title="Jump back to footnote 10 in the text">&#8617;</a></p>
+</li>
+<li id="fn:GMM">
+<p>Shah, D., Sridhar, A., Bhorkar, A., Hirose, N. &amp; Levine, S. GNM: A general navigation model to drive any robot. 7226--7233 (2023).&#160;<a class="footnote-backref" href="#fnref:GMM" title="Jump back to footnote 11 in the text">&#8617;</a></p>
+</li>
+<li id="fn:NoMAD">
+<p>Ajay, S., Dhruv, S., Catherine, G. &amp; Sergey, L. NoMaD: Goal masked diffusion policies for navigation and exploration. (2024).&#160;<a class="footnote-backref" href="#fnref:NoMAD" title="Jump back to footnote 12 in the text">&#8617;</a></p>
+</li>
+<li id="fn:OrbSLAM2">
+<p>Mur-Artal, R. &amp; Tardos, J. D. ORB-SLAM2: An open-source SLAM system for monocular, stereo, and RGB-d cameras. <strong>33</strong>, 1255--1262 (2017).&#160;<a class="footnote-backref" href="#fnref:OrbSLAM2" title="Jump back to footnote 13 in the text">&#8617;</a></p>
+</li>
+<li id="fn:OrbSLAM3">
+<p>Campos, C., Elvira, R., Rodriguez, J. J. G., Montiel, J. M. M. &amp; Tardos, J. D. ORB-SLAM3: An accurate open-source library for visual, visual--inertial, and multimap SLAM. <strong>37</strong>, 1874--1890 (2021).&#160;<a class="footnote-backref" href="#fnref:OrbSLAM3" title="Jump back to footnote 14 in the text">&#8617;</a></p>
+</li>
+<li id="fn:MASt3R-SLAM">
+<p>Murai, R., Dexheimer, E. &amp; Davison, A. J. MASt3R-SLAM: Real-time dense SLAM with 3D reconstruction priors. (2025).&#160;<a class="footnote-backref" href="#fnref:MASt3R-SLAM" title="Jump back to footnote 15 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
