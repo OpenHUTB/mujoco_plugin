@@ -12,7 +12,7 @@ jobs:
 
       - name: Install pandoc
         run: |
-          sudo apt install pandoc
+          pip install pypandoc-binary
           which pandoc
 
       # CONDA_PYTHON_EXE: /usr/share/miniconda/bin/python
