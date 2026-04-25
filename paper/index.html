@@ -121,6 +121,38 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="_1">虚幻机器人实验室：一款具备先进物理和渲染技术的高保真机器人模拟器</h1>
+<p>从左到右，该模拟框架生成的照片级渲染示例，分别展示了 Unitree Go1 四足机器人、Skydio X2 四旋翼飞行器和 Unitree B1-Z1 四足移动机械臂在正常（上排）和不利（下排）视觉条件下的情况。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">Unitree Go1 四足机器人</th>
+<th style="text-align: center;">Skydio X2 四旋翼飞行器</th>
+<th style="text-align: center;">Unitree B1-Z1 四足移动机械臂</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="" src="../img/Go1.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/X2.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/B1-Z1.png" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">Go1 正常视觉条件</td>
+<td style="text-align: center;">X2 正常视觉条件</td>
+<td style="text-align: center;">Unitree B1-Z1 正常视觉条件</td>
+</tr>
+<tr>
+<td style="text-align: center;"><img alt="" src="../img/Go1_visual.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/X2_visual.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/B1-Z1_visual.png" /></td>
+</tr>
+<tr>
+<td style="text-align: center;">Go1 不利视觉条件</td>
+<td style="text-align: center;">X2 不利视觉条件</td>
+<td style="text-align: center;">Unitree B1-Z1 不利视觉条件</td>
+</tr>
+</tbody>
+</table>
 <h2 id="_2">概述</h2>
 <p>该模拟器（URL）集成了 MuJoCo 和虚幻引擎，提供了一个能够高度模拟真实世界交互的综合仿真环境。只需添加相应的 MuJoCo XML 描述和相关的虚幻引擎资源，即可轻松集成机器人。该系统支持标准机器人配置和传感器，包括相机、惯性测量单元 (IMU) 和力传感器，确保了广泛的兼容性。整个系统如下图所示。该系统由外部组件和内部模拟器组成。系统包含一个模块化的<strong>模拟管理器（SimManager）</strong>，用于管理由<strong>基准测试 (Benchmark)</strong>、<strong>回放 (Replay)</strong> 和<strong>场景生成 (SceneGen)</strong> 模块组成的子模块。它管理所有对虚幻引擎数据的引用，并以虚幻引擎插件的形式开发，可以添加到任何项目中。</p>
 <p><img alt="" src="../img/URL_system_diagram.png" /></p>
@@ -249,6 +281,73 @@ D_\text{KL} (P||Q) =
 <p>真实世界图像（左）和模拟图像（右）的对比，以及它们对应的 Grad-CAM（CLIP）和 EigenCAM（EfficientNet-B0）热图。高亮显示的类别标签为“锥体”。</p>
 <p>在这两种情况下，模型主要关注走廊中央的交通锥以及走廊尽头，这表明真实环境和模拟环境之间保留了最显著的特征。这种一致性表明，无论领域如何，模型都关注相同的高级结构，从而增强了模拟场景在特征表示方面的真实性。注意力模式的相似性也表明，关键对象在不同领域之间仍然可区分，这对于迁移学习和仿真到现实的应用至关重要。</p>
 <p>为了进一步量化相似性，我们计算了真实特征分布和模拟特征分布之间的KL散度（0.4679）和余弦相似度（0.7157）。余弦相似度越高，KL散度越低，表明两者之间的吻合度越高。我们并非旨在用完全相同的资源复制真实场景，而是选择在视觉上尽可能接近真实情况的模拟。尽管模拟中的资源与真实环境中的资源有所不同，但我们的研究结果，结合GradCAM和EigenCAM的对比，表明该模拟在视觉上足以满足我们的评估需求。</p>
+<h2 id="slam">视觉导航和SLAM基准测试</h2>
+<p>我们对标准方法进行了基准测试，以展示模拟器的真实性。我们使用 GNM [30] 和 ViNT [29] 评估了视觉导航（实验 1），并使用 OrbSLAM2 [32]、OrbSLAM3 [33] 和 MASt3R SLAM [34] 评估了视觉 SLAM（实验 2）。每种方法在每种条件下运行 5 次，并对结果取平均值。两个实验均使用配备机载摄像头的 Unitree Go1 四足机器人和 Walk-These-Ways 底层控制器，以实现逼真的部署。</p>
+<p>基准测试在两种不同的环境中进行——仓库和住宅——并设置了三种逆境等级：无、轻微和严重，由人工判断划分。UE 的 Niagara 系统模拟了环境影响（烟雾、雨水、污染、雪），而对于严重逆境，则添加了动态光照和 NPC 移动。首图展示了示例环境，下图展示了不同逆境等级的示例。</p>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">无逆境</th>
+<th style="text-align: center;">小逆境</th>
+<th style="text-align: center;">大逆境</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="" src="../img/adversity_none.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/adversity_minor.png" /></td>
+<td style="text-align: center;"><img alt="" src="../img/adversity_major.png" /></td>
+</tr>
+</tbody>
+</table>
+<p><strong>实验 1：视觉导航：</strong>为了进行视觉导航基准测试，机器人在所有环境和逆境级别下均初始化于相同的起始位置。每种方法都使用预先构建的基于图像的拓扑地图，并在固定时间内到达目标。本实验使用了仓库和住宅环境。由于方法未进行微调，而是依赖于作者原始代码库 [31] 中简化的拓扑地图方法，这可能会限制性能 [37]。</p>
+<p>基于碰撞的成功率（Success Weighted by Collision, SC）。参考[38]，我们采用 SC 指标：</p>
+<!-- TODO：加入测量成功率、总碰撞次数、到达目标所需时间和目标距离 -->
+<p>
+<script type="math/tex; mode=display">
+SC = 
+    \frac{1}{N}
+    \sum_{i=1}^N
+    S_i
+    \frac{1}{1+c_i},
+</script>
+其中，<script type="math/tex"> S_i </script> 表示第 <script type="math/tex"> i </script> 个轮次的成功指标，<script type="math/tex"> c_i </script> 表示碰撞次数，<script type="math/tex"> N </script> 表示总轮次数。<script type="math/tex"> SC </script> 值越高，表示成功运行中的碰撞越少；<script type="math/tex"> SC </script> 值越低，则表示碰撞频繁或严重。除了 <script type="math/tex"> SC </script> 之外，我们还测量成功率、总碰撞次数、到达目标所需时间和目标距离。</p>
+<p>表 I 展示了结果，其中包括考虑碰撞惩罚的加权 <script type="math/tex"> SC </script>。在正常条件下（None），现有方法表现良好，其中 ViNT 通常优于 GNM。在轻微逆境下（Minor），GNM 保持了更高的成功率，但耗时更长，而 ViNT 在成功后完成速度更快。然而，随着环境逆境（例如，障碍物、烟雾、雨水）的增加，两种方法的性能均有所下降，碰撞次数增多，到达目标的时间延长，<script type="math/tex"> SC </script> 值降低。在严重逆境下（Major），两种方法均无法在仓库中成功完成任务，导致 <script type="math/tex"> SC </script> 值为零。这表明，由于训练数据有限，这些模型在极端条件下表现不佳，凸显了在各种高逆境条件下进行训练的必要性，而这些逆境可以在仿真环境中更有效地生成。在仿真环境中创建可控但真实的逆境场景的能力，为提高实际部署中的鲁棒性提供了一条途径。</p>
+<p><strong>实验二：视觉SLAM：</strong>本实验采用回放系统，其中远程操控机器人遵循预先定义的、针对SLAM优化的轨迹。初始运行记录机器人位姿和传感器数据，随后在相同条件下回放，但视觉效果有所不同。之后对每种 SLAM 方法进行评估，并计算性能指标。</p>
+<p><strong>绝对轨迹误差（Absolute Trajectory Error, ATE）</strong>通过计算估计位置 <script type="math/tex"> \hat{p}_i </script> 和真实位置 <script type="math/tex"> p_i </script> 之间的均方根误差 (RMSE) 来衡量估计轨迹的全局精度：</p>
+<p>
+<script type="math/tex; mode=display">
+\text{ATE} = 
+    \sqrt{
+        \frac{1}{n}
+        \sum_{i=1}^{n}
+        (p_i - \hat{p}_i)^2
+    }
+</script>
+</p>
+<p><strong>覆盖率</strong>衡量的是估计轨迹长度与真实轨迹长度的比率：</p>
+<p>
+<script type="math/tex; mode=display">
+\text{Coverage} = 
+    \frac{
+        \sum_{i=1}^{n-1} \left|\left| p_{i+1} - p_i \right|\right|
+    }
+    {
+        \sum_{i=1}^{n-1} \left|\left| \hat{p}_{i+1} - p_i \right|\right|
+    }
+</script>
+</p>
+<p><strong>缩放后的ATE</strong>会根据定位失败情况调整 ATE：
+<script type="math/tex; mode=display">
+\text{Scaled ATE} 
+    = \frac{
+        \text{ATE}
+    }{
+        \text{Coverage}
+    }
+</script>
+</p>
+<p>从表 II 和图 8 可以看出，视觉 SLAM 的性能随着视觉逆境的增加而下降，凸显了其对复杂环境的敏感性。OrbSLAM2 的表现最为糟糕，覆盖范围急剧下降，平均错误率 (ATE) 显著升高，尤其是在仓库环境中。OrbSLAM3 在干净的环境下表现良好，但在逆境条件下性能显著下降，表明其对遮挡、光照变化和动态元素的鲁棒性较差。MASt3R-SLAM 在各种条件下均保持最低的 ATE 和最高的覆盖范围，展现出卓越的抗视觉干扰能力。在严重的视觉逆境下，所有方法的 ATE 均升高，覆盖范围均降低，凸显了在动态或视觉劣化环境中保持可靠的 SLAM 性能所面临的固有挑战。这些基于回放的评估提供了一个可控且可重复的框架，用于评估 SLAM 在不同逆境程度下的鲁棒性，强调了在各种高逆境条件下进行训练和评估的必要性，以提高实际部署的可靠性。</p>
 <h2 id="_10">参考文献</h2>
 <div class="footnote">
 <hr />
