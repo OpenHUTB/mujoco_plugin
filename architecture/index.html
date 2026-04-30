@@ -95,7 +95,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_3">子系统架构</a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#umjphysicsengine">UMjPhysicsEngine</a>
+    <li class="toctree-l3"><a class="reference internal" href="#umjphysicsengine">物理引擎 UMjPhysicsEngine</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#umjdebugvisualizer">UMjDebugVisualizer</a>
     </li>
@@ -281,15 +281,34 @@
 <hr />
 <h2 id="_3">子系统架构</h2>
 <p><code>AAMjManager</code> 将职责委托给四个  <code>UActorComponent</code> 子系统，这些子系统是通过构造函数中的 <code>CreateDefaultSubobject</code> 创建的：</p>
-<div class="highlight"><pre><span></span><code>AAMjManager (轻量级协调器)
-├── UMjPhysicsEngine       — 模拟核心
-├── UMjDebugVisualizer      — 调试渲染
-├── UMjNetworkManager       — ZMQ 发现与相机
-└── UMjInputHandler         — 热键处理
+<div class="highlight"><pre><span></span><code>AAMjManager (每个关卡一个单例协调器)
+  |-- UMjPhysicsEngine      (物理引擎：异步物理循环，mjModel/mjData 生命周期)
+  |-- UMjDebugVisualizer    (调试可视化：接触力、碰撞线框、关节轴)
+  |-- UMjNetworkManager     (ZMQ 发现、相机流)
+  |-- UMjInputHandler       (热键处理)
+  |
+  |-- AMjArticulation (robot / mechanism, possessable Pawn)
+  |     |-- UMjBody -&gt; UMjHingeJoint, UMjGeom, UMjSensor, ...
+  |     |-- UMjActuator (position, velocity, motor, muscle, ...)
+  |     &#39;-- UMjKeyframe, UMjDefault, UMjEquality, UMjTendon
+  |
+  |-- UMjQuickConvertComponent (在任何静态网格(Static Mesh)参与者上)
+  |-- AMjHeightfieldActor (UE 地形 -&gt; MuJoCo 高度场)
+  |-- WBP_MjSimulate (仪表板小部件)
 </code></pre></div>
-<h3 id="umjphysicsengine">UMjPhysicsEngine</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</code></p>
-<p>拥有所有仿真状态：<code>m_spec</code>、<code>m_vfs</code>、<code>m_model</code>、<code>m_data</code> 和 <code>回调互斥量(CallbackMutex)</code>。处理完整的编译流程（<code>预编译(PreCompile)</code>/<code>编译(Compile)</code>/<code>后编译(PostCompile)</code>/<code>应用选项(ApplyOptions)</code>）。运行异步物理循环（<code>RunMujocoAsync</code>）。提供回调注册（<code>RegisterPreStepCallback</code>、<code>RegisterPostStepCallback</code>），以便其他子系统和 ZMQ 组件可以接入步进循环而无需直接耦合。此外，还提供 <code>StepSync</code>、<code>Reset</code> 和<code>快照(Snapshot)</code>/<code>恢复(Restore)</code>功能。</p>
+<p><img alt="" src="../img/intro/architecture.png" /></p>
+<h3 id="umjphysicsengine">物理引擎 UMjPhysicsEngine</h3>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h</a></p>
+<p>拥有所有仿真状态：MuJoCo 规范结构 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L65"><code>m_spec</code></a> 、虚拟文件系统实例<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L68"><code>m_vfs</code></a>、已编译的Mujoco模型<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L71"><code>m_model</code></a>、激活的Mujoco模拟数据<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L74"><code>m_data</code></a> 和 回调互斥量(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L84">CallbackMutex</a>)。</p>
+<p>处理完整的编译流程：</p>
+<ul>
+<li>预编译(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L173">PreCompile</a>) ：扫描场景中的 MuJoCo 组件和铰链，以填充 m_spec)</li>
+<li>编译(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L170">Compile</a>)：将聚合的 mjSpec 编译成 mjModel 并初始化 mjData</li>
+<li>后编译(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L176">PostCompile</a>)：编译后完成设置（执行器映射、PostSetup 调用）</li>
+<li>应用选项(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L179">ApplyOptions</a>)：将 Options 中的设置应用到 m_model-&gt;opt。</li>
+<li>运行<strong>异步物理循环</strong>（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L184">RunMujocoAsync</a>）：启动异步线程以执行 MuJoCo 模拟。</li>
+<li>提供回调注册（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L242">RegisterPreStepCallback</a> 在每次物理计算步骤之前调用、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L245">RegisterPostStepCallback</a> 在每次物理计算步骤后调用 ），以便其他子系统和 ZMQ 组件可以接入步进循环而无需直接耦合。此外，还提供 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L205">StepSync</a> 在调用线程上同步执行模拟步骤、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L202">ResetSimulation</a> 和快照(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L211">Snapshot</a>)/恢复(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L214">Restore</a>)功能。</li>
+</ul>
 <h3 id="umjdebugvisualizer">UMjDebugVisualizer</h3>
 <p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
 <p>拥有 <code>DebugData</code>（来自 <code>MjDebugTypes.h</code> 的 <code>FMuJoCoDebugData</code>）和 <code>DebugMutex</code>。<code>CaptureDebugData</code> 注册为 <code>UMjPhysicsEngine</code> 的后步骤回调函数——它将物理线程上互斥锁下的接触数据复制到该线程。<code>TickComponent</code> 在游戏线程上渲染接触力箭头/点。为每种调试可视化模式提供切换方法。</p>
