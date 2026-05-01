@@ -97,7 +97,7 @@
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#umjphysicsengine">物理引擎 UMjPhysicsEngine</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#umjdebugvisualizer">UMjDebugVisualizer</a>
+    <li class="toctree-l3"><a class="reference internal" href="#umjdebugvisualizer">调试可视化 UMjDebugVisualizer</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#umjnetworkmanager">UMjNetworkManager</a>
     </li>
@@ -309,9 +309,9 @@
 <li>运行<strong>异步物理循环</strong>（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L184">RunMujocoAsync</a>）：启动异步线程以执行 MuJoCo 模拟。</li>
 <li>提供回调注册（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L242">RegisterPreStepCallback</a> 在每次物理计算步骤之前调用、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L245">RegisterPostStepCallback</a> 在每次物理计算步骤后调用 ），以便其他子系统和 ZMQ 组件可以接入步进循环而无需直接耦合。此外，还提供 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L205">StepSync</a> 在调用线程上同步执行模拟步骤、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L202">ResetSimulation</a> 和快照(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L211">Snapshot</a>)/恢复(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L214">Restore</a>)功能。</li>
 </ul>
-<h3 id="umjdebugvisualizer">UMjDebugVisualizer</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</code></p>
-<p>拥有 <code>DebugData</code>（来自 <code>MjDebugTypes.h</code> 的 <code>FMuJoCoDebugData</code>）和 <code>DebugMutex</code>。<code>CaptureDebugData</code> 注册为 <code>UMjPhysicsEngine</code> 的后步骤回调函数——它将物理线程上互斥锁下的接触数据复制到该线程。<code>TickComponent</code> 在游戏线程上渲染接触力箭头/点。为每种调试可视化模式提供切换方法。</p>
+<h3 id="umjdebugvisualizer">调试可视化 UMjDebugVisualizer</h3>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h">Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</a></p>
+<p>拥有线程安全的调试数据 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L132">DebugData</a>（来自 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugTypes.h">MjDebugTypes.h</a> 的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugTypes.h#L9">FMuJoCoDebugData</a> ）和 调试互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L133">DebugMutex</a> 。<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L138">CaptureDebugData</a> 注册为 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a> 的后步骤回调函数——它将物理线程上互斥锁下的接触数据复制到该线程。节拍组件 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L61">TickComponent</a> 在游戏线程上渲染接触力箭头/点。为每种调试可视化模式提供切换方法。</p>
 <h3 id="umjnetworkmanager">UMjNetworkManager</h3>
 <p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></p>
 <p>负责 <code>ZmqComponents</code> 的发现和相机注册/流传输。在 BeginPlay 期间调用 <code>DiscoverZmqComponents()</code> 来收集管理器参与者上的所有 <code>UMjZmqComponent</code> 子组件。</p>
