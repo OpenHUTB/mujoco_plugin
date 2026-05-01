@@ -99,9 +99,9 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#umjdebugvisualizer">调试可视化 UMjDebugVisualizer</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#umjnetworkmanager">UMjNetworkManager</a>
+    <li class="toctree-l3"><a class="reference internal" href="#umjnetworkmanager">网络管理器 UMjNetworkManager</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#umjinputhandler">UMjInputHandler</a>
+    <li class="toctree-l3"><a class="reference internal" href="#umjinputhandler">输入处理器 UMjInputHandler</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#_4">通讯模式</a>
     </li>
@@ -284,8 +284,8 @@
 <div class="highlight"><pre><span></span><code>AAMjManager (每个关卡一个单例协调器)
   |-- UMjPhysicsEngine      (物理引擎：异步物理循环，mjModel/mjData 生命周期)
   |-- UMjDebugVisualizer    (调试可视化：接触力、碰撞线框、关节轴)
-  |-- UMjNetworkManager     (ZMQ 发现、相机流)
-  |-- UMjInputHandler       (热键处理)
+  |-- UMjNetworkManager     (网络管理器：ZMQ 发现、相机流)
+  |-- UMjInputHandler       (输入处理器：热键处理)
   |
   |-- AMjArticulation (robot / mechanism, possessable Pawn)
   |     |-- UMjBody -&gt; UMjHingeJoint, UMjGeom, UMjSensor, ...
@@ -312,55 +312,55 @@
 <h3 id="umjdebugvisualizer">调试可视化 UMjDebugVisualizer</h3>
 <p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h">Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h</a></p>
 <p>拥有线程安全的调试数据 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L132">DebugData</a>（来自 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugTypes.h">MjDebugTypes.h</a> 的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugTypes.h#L9">FMuJoCoDebugData</a> ）和 调试互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L133">DebugMutex</a> 。<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L138">CaptureDebugData</a> 注册为 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a> 的后步骤回调函数——它将物理线程上互斥锁下的接触数据复制到该线程。节拍组件 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L61">TickComponent</a> 在游戏线程上渲染接触力箭头/点。为每种调试可视化模式提供切换方法。</p>
-<h3 id="umjnetworkmanager">UMjNetworkManager</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</code></p>
-<p>负责 <code>ZmqComponents</code> 的发现和相机注册/流传输。在 BeginPlay 期间调用 <code>DiscoverZmqComponents()</code> 来收集管理器参与者上的所有 <code>UMjZmqComponent</code> 子组件。</p>
-<h3 id="umjinputhandler">UMjInputHandler</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</code></p>
-<p>处理 <code>TickComponent</code> 中的热键。向 <code>UMjPhysicsEngine</code>（暂停/重置）、<code>UMjDebugVisualizer</code>（调试切换）和场景参与者（网格可见性、碰撞线框、相机）分发。</p>
+<h3 id="umjnetworkmanager">网络管理器 UMjNetworkManager</h3>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h">Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h</a></p>
+<p>负责零代价消息队列组件 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h#L47">ZmqComponents</a> 的发现和相机注册/流传输。在 BeginPlay 期间调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h#L66">DiscoverZmqComponents()</a> 来收集管理器参与者上的所有 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h#L47">UMjZmqComponent</a> 子组件。</p>
+<h3 id="umjinputhandler">输入处理器 UMjInputHandler</h3>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Input/MjInputHandler.h">Source/URLab/Public/MuJoCo/Input/MjInputHandler.h</a></p>
+<p>处理 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Input/MjInputHandler.h#L47">TickComponent</a> 中的热键。向物理引擎 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a>（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L187">暂停/重置</a>）、调试可视化器 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h">UMjDebugVisualizer</a>（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h#L67">调试切换</a>）和场景参与者（网格可见性、碰撞线框、相机）分发。</p>
 <h3 id="_4">通讯模式</h3>
 <p>子系统通过以下方式通信：</p>
 <ul>
 <li>
-<p><strong>回调：</strong> <code>UMjPhysicsEngine</code> 公开了 <code>RegisterPreStepCallback</code>/<code>RegisterPostStepCallback</code>。其他子系统在 BeginPlay 期间注册 lambda 表达式。</p>
+<p><strong>回调：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a> 公开了 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L242">RegisterPreStepCallback</a> 在每次物理计算步骤之前调用 /<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L245">RegisterPostStepCallback</a> 在每次物理计算步骤后调用。其他子系统在 BeginPlay 期间注册 lambda 表达式。</p>
 </li>
 <li>
-<p><strong><code>GetOwner()</code> 遍历:</strong> 子系统通过 <code>GetOwner()-&gt;FindComponentByClass&lt;T&gt;()</code> 访问兄弟组件（例如，<code>UMjInputHandler</code> 找到 <code>UMjPhysicsEngine</code> 来调用 <code>Reset()</code>）。</p>
+<p>获取所有者 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Net/MjNetworkManager.cpp#L82">GetOwner()</a> 方法的<strong>遍历:</strong> 子系统通过 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L172">GetOwner()-&gt;FindComponentByClass<T>()</a> 访问兄弟组件（例如，<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Input/MjInputHandler.h">UMjInputHandler</a> 找到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a> 来调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L202">Reset()</a> ）。</p>
 </li>
 <li>
-<p><strong>直接访问：</strong> 外部代码可通过 <code>Manager-&gt;PhysicsEngine-&gt;Options</code>、<code>Manager-&gt;DebugVisualizer-&gt;bShowDebug</code> 等直接访问子系统状态。<code>AAMjManager</code> 没有重复属性——它是一个纯粹的协调器。诸如 <code>SetPaused()</code>、<code>StepSync()</code> 和 <code>ResetSimulation()</code> 等蓝图可调用的便捷方法委托给 <code>PhysicsEngine</code>。</p>
+<p><strong>直接访问：</strong> 外部代码可通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L50">Manager-&gt;PhysicsEngine-&gt;Options</a> 、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L71">Manager-&gt;DebugVisualizer-&gt;bShowDebug</a> 等直接访问子系统状态。<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/AMjManager.h">AAMjManager</a> 没有重复属性——它是一个纯粹的协调器。诸如 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L105">SetPaused()</a>、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L240">StepSync()</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L230">ResetSimulation()</a> 等蓝图可调用的便捷方法委托给 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/AMjManager.h#L66">PhysicsEngine</a> 。</p>
 </li>
 </ul>
 <hr />
 <h2 id="_5">模块初始化</h2>
-<p><strong>文件：</strong> <code>Source/URLab/Private/URLab.cpp</code> -- <code>FURLabModule::StartupModule()</code></p>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/URLab.cpp">Source/URLab/Private/URLab.cpp</a> -- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/URLab.cpp#L35">FURLabModule::StartupModule()</a></p>
 <p>DLL 加载顺序（顺序加载，每个 DLL 必须成功加载）：</p>
 <ol>
 <li><code>mujoco.dll</code> (从 <code>third_party/install/MuJoCo/bin/</code>) — 自 MuJoCo 3.7.0 版本起，obj/stl 解码器已编译到此 DLL 中；早期版本中提供的独立 <code>obj_decoder.dll</code> / <code>stl_decoder.dll</code> 不应加载（插件注册冲突）。 </li>
 <li><code>libzmq-v143-mt-4_3_6.dll</code> (从 <code>third_party/install/libzmq/bin/</code>)</li>
 <li><code>lib_coacd.dll</code> (从 <code>third_party/install/CoACD/bin/</code>)</li>
 </ol>
-<p>搜索路径策略：首先是 <code>third_party/install/{SubDir}/bin/</code>（编辑器/开发版本），然后是 <code>FPlatformProcess::GetModulesDirectory()</code>（DLL 与可执行文件放在一起的打包版本）。</p>
-<p>在编辑器构建中，该模块还通过 <code>IAssetTools::RegisterAdvancedAssetCategory()</code> 注册了“MuJoCo”资产类别。</p>
+<p>搜索路径策略：首先是 <code>third_party/install/{SubDir}/bin/</code>（编辑器/开发版本），然后是 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/URLab.cpp#L50">FPlatformProcess::GetModulesDirectory()</a>（DLL 与可执行文件放在一起的打包版本）。</p>
+<p>在编辑器构建中，该模块还通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/URLab.cpp#L88">IAssetTools::RegisterAdvancedAssetCategory()</a> 注册了“MuJoCo”资产类别。</p>
 <hr />
 <h2 id="_6">场景声明周期</h2>
 <h3 id="beginplay">BeginPlay</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</code> -- <code>AAMjManager::BeginPlay()</code></p>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp">Source/URLab/Private/MuJoCo/Core/AMjManager.cpp</a> -- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L87">AAMjManager::BeginPlay()</a></p>
 <ol>
-<li><strong>单例模式强制执行。</strong> 如果 <code>AAMjManager::Instance</code> 已分配给其他参与者，则此实例会记录错误并返回。每个级别仅支持一个 <code>AAMjManager</code>。</li>
-<li><strong>子系统创建。</strong> 四个子系统（<code>UMjPhysicsEngine</code>、<code>UMjDebugVisualizer``UMjNetworkManager</code>、<code>UMjInputHandler</code>）通过构造函数中的 <code>CreateDefaultSubobject</code> 创建。</li>
-<li><strong>自动创建 ZMQ 组件。</strong> 如果管理器参与者上不存在 <code>UMjZmqComponent</code> 子类，则会创建一个 <code>UZmqSensorBroadcaster</code> (tcp://*:5555) 和一个 <code>UZmqControlSubscriber</code> (tcp://127.0.0.1:5556)。 </li>
-<li><strong>ZMQ 发现。</strong> <code>UMjNetworkManager::DiscoverZmqComponents()</code> 收集管理器参与者上的所有 ZMQ 组件。</li>
-<li><strong>自动创建回放管理器。</strong> 如果关卡中不存在  <code>AMjReplayManager</code>，则会生成一个。</li>
-<li><strong><code>Compile()</code></strong> -- 委托给 <code>UMjPhysicsEngine</code> 进行规范构建和 <code>mj_compile()</code>（见下文）。</li>
-<li><strong>回调注册。</strong> <code>UMjDebugVisualizer::CaptureDebugData</code> 注册为 <code>UMjPhysicsEngine</code> 上的步骤后回调。</li>
-<li><strong><code>UpdateCameraStreamingState()</code></strong> -- 应用全局相机广播切换。</li>
-<li><strong><code>RunMujocoAsync()</code></strong> -- 委托给 <code>UMjPhysicsEngine</code> 来启动物理线程。</li>
-<li><strong>自动创建 MjSimulate 小部件。</strong> 加载 <code>/UnrealRoboticsLab/WBP_MjSimulate</code> 蓝图并将其添加到视口（由 <code>bAutoCreateSimulateWidget</code> 控制）。</li>
+<li><strong>单例模式强制执行。</strong> 如果 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L90">AAMjManager::Instance 已分配给其他参与者</a>，则此实例会记录错误并返回。每个关卡仅支持一个 <code>AAMjManager</code>。</li>
+<li><strong>子系统创建。</strong> 四个子系统（<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L49">UMjPhysicsEngine</a>、<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L50">UMjDebugVisualizer</a>、<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L51">UMjNetworkManager</a>、<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L52">UMjInputHandler</a>）通过 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L49">构造函数中的 CreateDefaultSubobject</a> 创建。</li>
+<li><strong>自动创建 ZMQ 组件。</strong> 如果管理器参与者上不存在 <code>UMjZmqComponent</code> 子类，则会创建一个 ZMQ 的传感器广播者<a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L105">UZmqSensorBroadcaster</a> (tcp://*:5555) 和一个 ZMQ 控制器订阅者 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L112">UZmqControlSubscriber</a> (tcp://127.0.0.1:5556)。 </li>
+<li><strong>ZMQ 发现。</strong> <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L74">UMjNetworkManager::DiscoverZmqComponents()</a> 收集管理器参与者上的所有 ZMQ 组件。</li>
+<li><strong>自动创建回放管理器。</strong> 如果关卡中不存在  <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L128">AMjReplayManager</a>，则会生成一个。</li>
+<li><strong>编译</strong> <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L137"><strong>Compile()</strong></a> -- 委托给 <code>UMjPhysicsEngine</code> 进行规范构建和 <code>mj_compile()</code>（见下文）。</li>
+<li><strong>回调注册。</strong> <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L171">UMjDebugVisualizer::CaptureDebugData</a> 注册为 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L163">UMjPhysicsEngine</a> 上的步骤后回调。</li>
+<li><strong>更新相机流状态</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L138"><strong>UpdateCameraStreamingState()</strong></a>。应用全局相机广播切换。</li>
+<li><strong>异步运行 Mujoco 物理模拟</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L175"><strong>RunMujocoAsync()</strong></a> -- 委托给 <code>UMjPhysicsEngine</code> 来启动物理线程。</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L188"><strong>自动创建 MjSimulate 小部件</strong></a>。加载 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L181">/UnrealRoboticsLab/WBP_MjSimulate 蓝图</a>并将其添加到视口（由 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L179">bAutoCreateSimulateWidget</a> 控制）。</li>
 </ol>
 <h3 id="_7">规范构建（预编译）</h3>
-<p><strong>文件：</strong> <code>UMjPhysicsEngine::PreCompile()</code></p>
-<p>1.通过 <code>mj_makeSpec()</code> 创建一个新的 <code>mjSpec</code>（弧度模式：<code>compiler.degree = false</code>）。 </p>
+<p><strong>文件：</strong> <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L156">UMjPhysicsEngine::PreCompile()</a></p>
+<p>1.通过 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L158">mj_makeSpec()</a> 创建一个新的 mujoco 规范 <a href="https://github.com/URLab-Sim/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L158">mjSpec</a>（弧度模式：<code>compiler.degree = false</code>）。 </p>
 <p>2.通过 <code>mj_defaultVFS()</code> 初始化虚拟文件系统(Virtual File System, VFS)。</p>
 <p>3.通过 <code>UGameplayStatics::GetAllActorsOfClass()</code> 发现关卡中的所有参与者。</p>
 <p>4.在发现循环中按顺序处理</p>
