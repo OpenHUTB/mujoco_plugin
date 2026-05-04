@@ -414,40 +414,44 @@
 </li>
 </ul>
 <p>5.<strong>附着。</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L474">mjs_attach(attachmentFrame-&gt;element, childSpec-&gt;element, prefix, "")</a> 通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L469">mjsFrame</a> 将子模型合并到根世界刚体(world body)中。帧的 pos/quat 值由关节参与者的世界变换（转换为 MuJoCo 坐标）设置。附加完成后，<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L512">m_ChildSpec</a> 被设置为 nullptr（所有权转移给根模型）。</p>
+<hr />
 <h3 id="_9">刚体遍历（递归）</h3>
-<p><strong>文件：</strong> <code>Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp</code> -- <code>UMjBody::Setup()</code></p>
-<p><code>UMjBody::Setup()</code> 通过封装器创建一个 <code>mjsBody</code>，然后迭代 <code>GetAttachChildren()</code>：</p>
+<p><strong>文件：</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp">Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp</a> -- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L95">UMjBody::Setup()</a></p>
+<p><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L95">UMjBody::Setup()</a> 通过封装器创建一个 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L111">mjsBody</a>，然后迭代 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L146">GetAttachChildren()</a>：</p>
 <ul>
-<li>子对象 <code>UMjBody</code> -&gt; 递归 <code>Setup()</code></li>
-<li>子对象 <code>UMjFrame</code> -&gt; <code>Frame::Setup()</code></li>
-<li>子对象 <code>UMjGeom</code>, <code>UMjJoint</code>, <code>UMjSensor</code>, <code>UMjSite</code> 等 -&gt; <code>RegisterToSpec()</code></li>
+<li>子对象 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L150">UMjBody</a> -&gt; 递归 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L155">Setup()</a></li>
+<li>子对象 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L159">UMjFrame</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L163">Frame::Setup()</a></li>
+<li>子对象 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L204">UMjGeom</a>, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L208">UMjJoint</a>, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L212">UMjSensor</a>, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L216">UMjActuator</a> 等 -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L194">RegisterToSpec()</a></li>
 </ul>
-<p>网格准备（通过 <code>PrepareMeshForMuJoCo</code> 进行 CoACD 凸分解）在几何体配准期间进行。</p>
+<p>网格准备（通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L183">PrepareMeshForMuJoCo</a> 进行 CoACD 凸分解）在几何体配准期间进行。</p>
+<hr />
 <h3 id="_10">编译</h3>
-<p><strong>文件</strong> <code>UMjPhysicsEngine::Compile()</code></p>
-<p>1.调用 <code>PreCompile()</code>。</p>
-<p>2.<code>mj_compile(m_spec, &amp;m_vfs)</code> 产生 <code>mjModel*</code>。</p>
-<p>3.<strong>失败时：</strong> 通过 <code>mjs_getError(m_spec)</code> 获取错误信息，记录错误日志，并显示编辑器对话框 (<code>FMessageDialog</code>)。返回，不创建数据。</p>
+<p><strong>文件</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</a> -- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L215">UMjPhysicsEngine::Compile()</a></p>
+<p>1.调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L217">PreCompile()</a>。</p>
+<p>2.<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L221">mj_compile(m_spec, &amp;m_vfs)</a> 产生 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L221">mjModel</a>。</p>
+<p>3.<strong>失败时：</strong> 通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L225">mjs_getError(m_spec)</a> 获取错误信息，记录错误日志，并显示编辑器对话框 (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L229">FMessageDialog</a>)。返回，不创建数据。</p>
 <p>4.<strong>成功时：</strong></p>
 <ul>
-<li>如果 <code>bSaveDebugXml</code> 为 true：将 <code>scene_compiled.xml</code> 和 <code>scene_compiled.mjb</code> 保存到 <code>Saved/URLab/</code> 目录，文件路径为相对路径。</li>
-<li>通过 <code>mjData</code> 创建 <code>mj_makeData(m_model)</code>.</li>
-<li>调用 <code>ApplyOptions()</code>（将管理器级别的选项覆盖应用于 <code>m_model-&gt;opt</code>）。</li>
-<li>调用 <code>PostCompile()</code>.</li>
+<li>如果 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L235">bSaveDebugXml</a> 为 true：将 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">scene_compiled.xml</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L241">scene_compiled.mjb</a> 保存到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L273">Saved/URLab/</a> 目录，文件路径为相对路径。</li>
+<li>通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L301">mj_makeData(m_model)</a>  创建 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L301">mjData</a>.</li>
+<li>调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L311">ApplyOptions()</a>（将管理器级别的选项覆盖应用于 <code>m_model-&gt;opt</code>）。</li>
+<li>调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L312">PostCompile()</a>。</li>
 </ul>
+<p>执行一次步进，然后重置，以确保所有衍生量（接触、约束、传感器数据）在用户看到暂停的场景之前都已完全计算和同步。</p>
+<hr />
 <h3 id="_11">后编译 (绑定)</h3>
-<p><strong>文件:</strong> <code>UMjPhysicsEngine::PostCompile()</code></p>
+<p><strong>文件:</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L189">UMjPhysicsEngine::PostCompile()</a></p>
 <ol>
-<li>对每个 <code>UMjQuickConvertComponent</code> 调用 <code>PostSetup(model, data)</code>。</li>
-<li>构建查找时间复杂度为 O(1) 的 <code>m_ArticulationMap</code> (name -&gt; <code>AMjArticulation*</code>) 。</li>
-<li>对每个 <code>AMjArticulation</code> 调用 <code>PostSetup(model, data)</code>。 </li>
-<li>对每个 <code>AMjHeightfieldActor</code> 调用 <code>PostSetup(model, data)</code>。</li>
+<li>对每个 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L197">UMjQuickConvertComponent</a> 调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L200">PostSetup(model, data)</a>。</li>
+<li>构建查找时间复杂度为 O(1) 的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L203">m_ArticulationMap</a> (name -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L206">AMjArticulation*</a>) 。</li>
+<li>对每个 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L209">AMjArticulation</a> 调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L210">PostSetup(model, data)</a>。 </li>
+<li>对每个 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L211">AMjHeightfieldActor</a> 调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L212">PostSetup(model, data)</a>。</li>
 </ol>
-<p><strong>在 <code>AMjArticulation::PostSetup()</code> 函数内部：</strong></p>
-<p>每个组件都会调用 <code>Bind(model, data, prefix)</code>。<code>UMjComponent</code> 组件的 <code>Bind()</code> 方法会调用 <code>BindToView&lt;T&gt;()</code> 函数，该函数会执行以下操作：</p>
+<p><strong>在 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L542">AMjArticulation::PostSetup()</a> 函数内部：</strong></p>
+<p>每个组件都会调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L553">Bind(model, data, prefix)</a>。<code>UMjComponent</code> 组件的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L71">Bind()</a> 方法会调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L100">BindToView<T>()</a> 函数，该函数会执行以下操作：</p>
 <ol>
-<li><strong>路径 1 (基于 ID):</strong> 如果设置了 <code>m_SpecElement</code>，则尝试使用 <code>mjs_getId(m_SpecElement)</code>。验证 ID 是否在模型范围内（防止在 <code>mjs_attach</code> 之后使用过时的 ID）。 </li>
-<li><strong>路径 2 (名称回退):</strong> 构造 <code>{Prefix}{MjName}</code>（如果 MjName 为空，则构造 <code>{Prefix}{GetName()}</code>），并调用 <code>mj_name2id()</code> 函数。</li>
+<li><strong>路径 1 (基于 ID):</strong> 如果设置了 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L112">m_SpecElement</a>，则尝试通过 spec 元素进行基于 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L114">mjs_getId(m_SpecElement)</a> 的 ID 的绑定。验证 ID 是否在模型范围内（注意：mjs_attach 将子 spec 合并到根 spec 后，<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L109">mjs_getId</a> 可能会返回过时或无效的 ID。我们在使用 ID 之前会根据模型边界对其进行验证）。 </li>
+<li><strong>路径 2 (名称回退):</strong> 构造 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L137">{Prefix}{MjName}</a>（如果 MjName 为空，则构造 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L136">{Prefix}{GetName()}</a>），并调用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L138">mj_name2id()</a> 函数。</li>
 </ol>
 <p>此操作会创建视图结构体（<code>BodyView</code>、<code>GeomView</code>、<code>JointView</code>、<code>ActuatorView</code>、<code>SensorView</code>、<code>TendonView</code>、<code>SiteView</code>），这些结构体将原始指针缓存到 <code>mjModel</code>/<code>mjData</code> 数组中。</p>
 <p>PostSetup 还会填充组件名称映射（<code>ActuatorComponentMap</code>、<code>JointComponentMap</code> 等）和 MuJoCo-ID 映射（<code>BodyIdMap</code>、<code>GeomIdMap</code> 等），以实现 O(1) 运行时访问。</p>
