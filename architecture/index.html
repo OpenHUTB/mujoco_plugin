@@ -243,6 +243,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_42">关键文件引用</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_43">参考</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -277,10 +279,10 @@
                 <h1 id="_1">架构</h1>
 <!-- Articulation 铰链；Joint 关节 -->
 <h2 id="_2">概述</h2>
-<p>UnrealRoboticsLab (URLab) 将 MuJoCo 物理引擎集成到虚幻引擎中，作为编辑器插件。<code>AAMjManager</code> 是顶层协调器参与者（Actor），但它将核心职责委托给四个 <code>UActorComponent</code> 子系统：<code>UMjPhysicsEngine</code>（物理模拟）、<code>UMjDebugVisualizer</code>（调试渲染）、<code>UMjNetworkManager</code>（ZMQ 发现）和 <code>UMjInputHandler</code>（热键）。组件系统与 MJCF 元素层级结构相对应——每个 XML 元素类型都映射到一个附加到 <code>AMjArticulation</code> 蓝图的 <code>UMjComponent</code> 子类。物理引擎运行在专用的异步线程中；游戏线程读取结果进行渲染。ZMQ 网络提供外部控制和传感器广播功能。</p>
+<p>UnrealRoboticsLab (URLab) 将 MuJoCo 物理引擎集成到虚幻引擎中，作为编辑器插件。<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/AMjManager.h">AAMjManager</a> 是顶层协调器参与者（Actor），但它将核心职责委托给四个 <a href="https://openhutb.github.io/engine_doc/zh-CN/ProgrammingAndScripting/ProgrammingWithCPP/IntroductionToCPP/index.html">UActorComponent</a> 子系统：<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h">UMjPhysicsEngine</a>（物理引擎）、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjDebugVisualizer.h">UMjDebugVisualizer</a>（调试可视化）、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Net/MjNetworkManager.h">UMjNetworkManager</a>（网络管理器：ZMQ 发现）和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Input/MjInputHandler.h">UMjInputHandler</a>（输入处理器）。组件系统与 MJCF 元素层级结构相对应——每个 XML 元素类型都映射到一个附加到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/MjArticulation.h">AMjArticulation</a> 蓝图的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Components/MjComponent.h">UMjComponent</a> 子类。物理引擎运行在专用的异步线程中；游戏线程读取结果进行渲染。ZMQ 网络提供外部控制和传感器广播功能。</p>
 <hr />
 <h2 id="_3">子系统架构</h2>
-<p><code>AAMjManager</code> 将职责委托给四个  <code>UActorComponent</code> 子系统，这些子系统是通过构造函数中的 <code>CreateDefaultSubobject</code> 创建的：</p>
+<p><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Core/AMjManager.h">AAMjManager</a> 将职责委托给四个  <a href="https://openhutb.github.io/engine_doc/zh-CN/ProgrammingAndScripting/ProgrammingWithCPP/IntroductionToCPP/index.html">UActorComponent</a> 子系统，这些子系统是通过构造函数中的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L49">CreateDefaultSubobject</a> 创建的：</p>
 <div class="highlight"><pre><span></span><code>AAMjManager (每个关卡一个单例协调器)
   |-- UMjPhysicsEngine      (物理引擎：异步物理循环，mjModel/mjData 生命周期)
   |-- UMjDebugVisualizer    (调试可视化：接触力、碰撞线框、关节轴)
@@ -457,54 +459,62 @@
 <p>PostSetup 还会填充组件名称映射（<code>ActuatorComponentMap</code>、<code>JointComponentMap</code> 等）和 MuJoCo-ID 映射（<code>BodyIdMap</code>、<code>GeomIdMap</code> 等），以实现 O(1) 运行时访问。</p>
 <hr />
 <h2 id="_12">物理循环 (异步线程)</h2>
-<p><strong>文件:</strong> <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code> -- <code>UMjPhysicsEngine::RunMujocoAsync()</code></p>
-<p>通过 <code>Async(EAsyncExecution::Thread, ...)</code> 在专用线程上运行。存储在 <code>AsyncPhysicsFuture</code> 中。</p>
-<p>每次迭代（在 <code>UMjPhysicsEngine</code> 持有的 <code>CallbackMutex</code> 锁下）：</p>
-<p>1.<strong>检查 <code>bPendingReset</code></strong> -&gt; <code>mj_resetData()</code> + <code>mj_forward()</code>. 在游戏线程上广播 <code>OnSimulationReset</code>。 </p>
-<p>2.<strong>检查 <code>bPendingRestore</code></strong> -&gt; <code>mj_setState()</code> 使用 <code>PendingStateVector</code> + <code>mj_forward()</code>。</p>
-<p>3.<strong>注册预步回调</strong> (取代直接调用 ZMQ PreStep)。 ZMQ 组件通过 <code>RegisterPreStepCallback()</code> 注册。</p>
-<p>4.对每个关节应用 <strong>ApplyControls</strong>（根据执行器值写入 <code>d-&gt;ctrl</code>）。 </p>
+<p><strong>文件:</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</a> -- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L332">UMjPhysicsEngine::RunMujocoAsync()</a></p>
+<p>通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L343">Async(EAsyncExecution::Thread, ...)</a> 在专用线程上运行。存储在 一个在<strong>将来</strong>某个时刻会得到任务结果的<strong>占位符</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L343">AsyncPhysicsFuture</a> 中。</p>
+<p>每次迭代（在 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a> 持有的 回调互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L354">CallbackMutex</a> 锁下）：</p>
+<p>1.<strong>检查是否重置模拟 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L359">bPendingReset</a></strong> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L361">mj_resetData()</a> + <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L362">mj_forward()</a>，将所有执行器控制值清零，以防止重置后残留过期的命令。在游戏线程上广播 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L379">OnSimulationReset</a>。</p>
+<p>2.<strong>检查是否恢复到某个快照 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L384">bPendingRestore</a></strong> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L389">mj_setState()</a> 使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L389">PendingStateVector</a> + <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L390">mj_forward()</a>。</p>
+<p>3.<strong>注册预步回调</strong> (取代直接调用 ZMQ PreStep)。 ZMQ 组件通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L595">RegisterPreStepCallback()</a> 注册。</p>
+<p>4.对每个关节应用 <strong><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L401">ApplyControls</a></strong>（根据执行器值写入 <code>d-&gt;ctrl</code>）。 </p>
 <p>5.<strong>物理步骤：</strong></p>
 <ul>
 <li>
-<p>如果 <code>bIsPaused</code>：跳过。</p>
+<p>如果 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L404">bIsPaused</a>：跳过。</p>
 </li>
 <li>
-<p>如果已经绑定 <code>CustomStepHandler</code>：调用它而不是 <code>mj_step()</code>（用于回放）。</p>
+<p>如果已经绑定 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L407">CustomStepHandler</a>：调用它而不是 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L409">mj_step()</a>（用于回放）。</p>
 </li>
 <li>
-<p>否则：<code>mj_step(m_model, m_data)</code>。</p>
+<p>否则：<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L409">mj_step(m_model, m_data)</a>。</p>
 </li>
 </ul>
-<p>6.<strong>已注册的步骤后回调函数</strong> （取代直接调用 ZMQ PostStep 和调试捕获函数）。ZMQ 组件和 <code>UMjDebugVisualizer::CaptureDebugData</code> 通过 <code>RegisterPostStepCallback()</code> 进行注册。</p>
-<p>7.<strong><code>OnPostStep</code> 委托</strong> （回放录制在此处捕获状态）。</p>
-<p><strong>时序：</strong> 释放互斥锁后，循环会进行自旋等待（<code>FPlatformProcess::YieldThread()</code>），直到 <code>TargetInterval / SpeedFactor</code> 的时间过去。<code>SimSpeedPercent</code> 控制速度因子。 </p>
+<p>6.<strong>已注册的步骤后回调函数</strong> （取代直接调用 ZMQ PostStep 和调试捕获函数）。ZMQ 组件和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L105">UMjDebugVisualizer::CaptureDebugData</a> 通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L600">RegisterPostStepCallback()</a> 进行注册。</p>
+<p>7.<strong><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L419">OnPostStep</a> 委托</strong> （回放录制在此处捕获状态）。</p>
+<p><strong>时序：</strong> 释放互斥锁后，循环会进行小时间步长精确计时的自旋等待（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L428">FPlatformProcess::YieldThread()</a>），直到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L425">TargetInterval / SpeedFactor</a> 的时间过去。<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L424">SimSpeedPercent</a> 控制速度因子。 </p>
 <hr />
 <h2 id="_13">游戏线程 (节拍信号)</h2>
-<p><strong>文件:</strong> <code>AAMjManager::Tick()</code></p>
+<p><strong>文件:</strong> <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L287">AAMjManager::Tick()</a></p>
 <ol>
-<li><strong>向后兼容的指针同步。</strong> 从 <code>UMjPhysicsEngine</code> 复制 <code>m_model</code>/<code>m_data</code>，以便读取 <code>AAMjManager::m_model</code> 的旧版调用者仍然可以正常工作。</li>
-<li>热键处理和调试绘图分别委托给 <code>UMjInputHandler</code> 和 <code>UMjDebugVisualizer</code>（两者都通过各自的 <code>TickComponent</code> 发送节拍）。 </li>
+<li><strong>向后兼容的指针同步。</strong> 从 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a> 复制 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L217-L224">m_model/m_data</a>，以便读取 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp">AAMjManager::m_model</a> 的旧版调用者仍然可以正常工作。</li>
+<li>热键处理和调试绘图分别委托给 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L52">UMjInputHandler</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L50">UMjDebugVisualizer</a>（两者都通过各自的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L290">TickComponent</a> 发送节拍）。 </li>
 </ol>
-<h3 id="umjinputhandlertickcomponent">UMjInputHandler::TickComponent</h3>
+<h3 id="umjinputhandlertickcomponent"><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L113">UMjInputHandler::TickComponent</a></h3>
 <p>每帧处理热键并分派至相应的子系统：</p>
 <ul>
-<li><code>1</code> -&gt; <code>DebugVisualizer-&gt;ToggleContactForces()</code></li>
-<li><code>2</code> -&gt; 切换视觉网格可见性（场景参与者）</li>
-<li><code>3</code> -&gt; 切换关节碰撞线框（场景参与者）</li>
-<li><code>4</code> -&gt; 切换关节调试轴（场景参与者）</li>
-<li><code>5</code> -&gt; 切换快速转换碰撞线框（场景参与者）</li>
-<li><code>P</code> -&gt; <code>PhysicsEngine-&gt;TogglePause()</code></li>
-<li><code>R</code> -&gt; <code>PhysicsEngine-&gt;Reset()</code></li>
-<li><code>O</code> -&gt; 切换轨道和关键帧相机（场景参与者）</li>
-<li><code>F</code> -&gt; 发射脉冲发射器（场景参与者）</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L136">1</a> -&gt; 切换调试接触的可见性 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L138">DebugVisualizer-&gt;ToggleDebugContacts()</a>：对于人形机器人显示的是脚掌位置的接触力箭头
+   <img alt="" src="../img/key_1.jpg" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L140">2</a> -&gt; 切换视觉网格可见性：显示或隐藏场景参与者
+   <img alt="" src="../img/key_2.gif" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L144">3</a> -&gt; 切换铰链碰撞线框（场景参与者）
+   <img alt="" src="../img/key_3.jpg" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L148">4</a> -&gt; 切换关节调试轴（场景参与者）
+   <img alt="" src="../img/key_4.jpg" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L154">5</a> -&gt; 切换快速转换碰撞线框（场景参与者）
+   <img alt="" src="../img/key_5.gif" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L156">6</a> -&gt; 调试着色器模式
+   <img alt="" src="../img/key_6.jpg" /></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L160">7</a> -&gt; 显示肌腱</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L166">P</a> -&gt; 暂停/继续：<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L170">PhysicsEngine-&gt;TogglePause()</a></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L176">R</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L178">PhysicsEngine-&gt;Reset()</a></li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L183">O</a> -&gt; 切换轨道和关键帧相机（场景参与者）</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp#L213">F</a> -&gt; 发射脉冲发射器（场景参与者）</li>
 </ul>
-<h3 id="umjdebugvisualizertickcomponent">UMjDebugVisualizer::TickComponent</h3>
-<p>如果启用调试模式，则读取 <code>DebugData</code>（可视化器上受 <code>DebugMutex</code> 保护），并通过 <code>ULineBatchComponent</code> / <code>DrawDebugLine</code> 绘制接触力箭头和点。</p>
-<p><strong>变换同步</strong> 在 <code>UMjBody::TickComponent()</code> 中进行：</p>
+<h3 id="umjdebugvisualizertickcomponent"><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L57">UMjDebugVisualizer::TickComponent</a></h3>
+<p>如果启用调试模式，则读取 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L77">DebugData</a>（可视化器上受 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L76">DebugMutex</a> 保护），并通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L97">DrawDebugDirectionalArrow</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L91">DrawDebugPoint</a> 绘制接触力箭头和点。</p>
+<p><strong>变换同步</strong> 在 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L51">UMjBody::TickComponent()</a> 中进行：</p>
 <ul>
-<li>如果 <code>bDrivenByUnreal</code>：将 UE 世界变换写入 MuJoCo 动作捕捉模型（<code>d-&gt;mocap_pos</code>，<code>d-&gt;mocap_quat</code>）。 </li>
-<li>否则：从 <code>BodyView</code> 读取 MuJoCo <code>xpos</code>/<code>xquat</code>，并通过 <code>SetWorldLocationAndRotation()</code> 设置 UE 世界变换。 </li>
+<li>如果 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L57">bDrivenByUnreal</a>：将 UE 世界变换写入 MuJoCo 动作捕捉模型（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L59">d-&gt;mocap_pos</a>，<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L60">d-&gt;mocap_quat</a>）。 </li>
+<li>否则：从 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L64">BodyView</a> 读取 MuJoCo <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L76">xpos</a>/<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L77">xquat</a>，并通过 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Bodies/MjBody.cpp#L89">SetWorldLocationAndRotation()</a> 设置 UE 世界变换。 </li>
 </ul>
 <hr />
 <h2 id="_14">线程安全</h2>
@@ -519,50 +529,50 @@
 </thead>
 <tbody>
 <tr>
-<td><code>CallbackMutex</code> (<code>FCriticalSection</code>)</td>
-<td><code>UMjPhysicsEngine</code></td>
-<td>物理步进期间的 <code>m_model</code>, <code>m_data</code></td>
-<td>物理线程（主锁）, <code>StepSync()</code></td>
+<td>回调互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L354">CallbackMutex</a> (临界区 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L49">FCriticalSection</a>)</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a></td>
+<td>物理步进期间的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L356">m_model</a>, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L356">m_data</a></td>
+<td>物理线程（主锁）, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L464">StepSync()</a></td>
 </tr>
 <tr>
-<td><code>DebugMutex</code> (<code>FCriticalSection</code>)</td>
-<td><code>UMjDebugVisualizer</code></td>
-<td>调试数据<code>DebugData</code>（接触可视化缓冲区）</td>
+<td>调试互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L76">DebugMutex</a> (临界区 FCriticalSection )</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp">UMjDebugVisualizer</a></td>
+<td>调试数据<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp#L77">DebugData</a>（接触可视化缓冲区）</td>
 <td>物理线程写入（通过步骤后回调），游戏线程读取</td>
 </tr>
 <tr>
-<td><code>CameraMutex</code> (<code>FCriticalSection</code>)</td>
-<td><code>UMjNetworkManager</code></td>
-<td><code>ActiveCameras</code> 数组</td>
+<td>相机互斥量 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Net/MjNetworkManager.cpp#L38">CameraMutex</a> (临界区 FCriticalSection)</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Net/MjNetworkManager.cpp">UMjNetworkManager</a></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Net/MjNetworkManager.cpp#L40">ActiveCameras</a> 数组</td>
 <td>在任何线程中注册/取消注册</td>
 </tr>
 <tr>
-<td><code>bPendingReset</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
-<td><code>UMjPhysicsEngine</code></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L359">bPendingReset</a> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L36">std::atomic<bool></a>)</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a></td>
 <td>复位信号</td>
 <td>游戏线程设置，物理线程读取/清除</td>
 </tr>
 <tr>
-<td><code>bPendingRestore</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
-<td><code>UMjPhysicsEngine</code></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L384">bPendingRestore</a> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L36">std::atomic<bool></a>)</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a></td>
 <td>恢复信号</td>
 <td>游戏线程设置，物理线程读取/清除</td>
 </tr>
 <tr>
-<td><code>bIsPaused</code>（非原子操作，但仅从游戏线程写入）</td>
-<td><code>UMjPhysicsEngine</code></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L404">bIsPaused</a>（非原子操作，但仅从游戏线程写入）</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a></td>
 <td>暂停状态</td>
 <td>由物理线程读取</td>
 </tr>
 <tr>
-<td><code>bShouldStopTask</code> (<code>std::atomic&lt;bool&gt;</code>)</td>
-<td><code>UMjPhysicsEngine</code></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L340">bShouldStopTask</a> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L36">std::atomic<bool></a>)</td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp">UMjPhysicsEngine</a></td>
 <td>关闭信号</td>
-<td>游戏线程在 <code>EndPlay</code> 中设置，物理线程进行检查</td>
+<td>游戏线程在 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L213">EndPlay</a> 中设置，物理线程进行检查</td>
 </tr>
 <tr>
-<td><code>UMjActuator::InternalValue</code> / <code>NetworkValue</code></td>
-<td><code>UMjActuator</code></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Actuators/MjActuator.cpp#L41">UMjActuator::InternalValue</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Actuators/MjActuator.cpp#L42">NetworkValue</a></td>
+<td><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Components/Actuators/MjActuator.cpp">UMjActuator</a></td>
 <td>每个执行器控制值</td>
 <td>跨线程的原子读写操作</td>
 </tr>
@@ -1116,6 +1126,10 @@
 </tr>
 </tbody>
 </table>
+<h2 id="_43">参考</h2>
+<ul>
+<li><a href="https://zhuanlan.zhihu.com/p/74084967">UE4 ActorComponent流程分析</a></li>
+</ul>
               
             </div>
           </div><footer>
