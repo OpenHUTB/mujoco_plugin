@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>全身肌肉骨骼模型  - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5168\u8eab\u808c\u8089\u9aa8\u9abc\u6a21\u578b ";
+        var mkdocs_page_input_path = "ms/human_700.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">全身肌肉骨骼模型 </li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/ms/human_700.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ms-human-700">全身肌肉骨骼模型 <a href="https://lnsgroup.cc/research/MS-Human/">MS-Human-700</a></h1>
+<p>MS-Human-700 模型代表了人体全身肌肉骨骼系统，其特点包括：</p>
+<ul>
+<li>90个身体节段</li>
+<li>206个关节</li>
+<li>700个肌腱单元</li>
+<li>解剖学上合理的参数</li>
+<li>MuJoCo 整合</li>
+</ul>
+<p>该模型能够模拟全身动力学以及与各种设备的交互，使其适用于具身智能、机器人和生物力学领域的研究。</p>
+<h2 id="_1">运行</h2>
+<p>1.下载并加载模型
+<div class="highlight"><pre><span></span><code><span class="c1"># 克隆模型仓库</span>
+git<span class="w"> </span>clone<span class="w"> </span>https://github.com/LNSGroup/MS-Human-700.git
+<span class="c1"># 使用mujoco打卡模型</span>
+mujoco/bin/simulate.exe<span class="w">  </span>MS-Human-700/MS-Human-700.xml
+</code></pre></div></p>
+<p><img alt="" src="../../img/ms/human_700_loaded.jpg" /></p>
+<h2 id="dynsyn">DynSyn</h2>
+<p>1.安装
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenHUTB/DynSyn.git
+<span class="nb">cd</span><span class="w"> </span>DynSyn
+
+conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>hutb_3.9<span class="w"> </span><span class="nv">python</span><span class="o">=</span><span class="m">3</span>.9
+conda<span class="w"> </span>activate<span class="w"> </span>hutb_3.9
+pip<span class="w"> </span>install<span class="w"> </span>poetry
+poetry<span class="w"> </span>install
+</code></pre></div></p>
+<p>2.运行
+<div class="highlight"><pre><span></span><code><span class="c1"># 生成 DynSyn 到 log 文件夹下</span>
+python<span class="w"> </span>dynsyn/dynsyn.py<span class="w"> </span>-f<span class="w"> </span>configs/DynSynGen/dynsyn.yaml<span class="w"> </span>-e<span class="w"> </span>myoLegWalk
+<span class="c1"># 训练</span>
+python<span class="w"> </span>dynsyn/sb3_runner/runner.py<span class="w"> </span>-f<span class="w"> </span>configs/DynSyn/myowalk.json
+</code></pre></div></p>
+<h2 id="qflex"><a href="https://lnsgroup.cc/research/Qflex/">Qflex 控制</a></h2>
+<p>Qflex 一种可扩展且高效的在线强化学习（RL）方法<sup id="fnref:wei2026scalable"><a class="footnote-ref" href="#fn:wei2026scalable">1</a></sup>，用于高维动态系统的连续控制。此类系统通常面临诸多挑战，严重阻碍高效学习：</p>
+<ul>
+<li>高维性：状态-动作空间的大小随维度迅速增长，导致显著的“维度灾难”效应；</li>
+<li>过度驱动：在执行器数量远大于自由度的情况下，多个动作序列可能产生无法区分的运动学特征，但内部力和成本却可能不同。</li>
+</ul>
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>--recurse-submodules<span class="w"> </span>https://github.com/LNSGroup/Qflex.git
+<span class="nb">cd</span><span class="w"> </span>Qflex
+conda<span class="w"> </span>activate<span class="w"> </span>hutb_3.12
+<span class="c1"># </span>
+python<span class="w"> </span>scripts/train.py<span class="w">  </span>--alg<span class="w"> </span>qflex<span class="w"> </span>--env<span class="w"> </span>MS700Locomotion-v1<span class="w"> </span>--seed<span class="w"> </span><span class="m">100</span><span class="w"> </span>--total_step<span class="w"> </span><span class="m">50000000</span><span class="w"> </span>--num_vec_envs<span class="w"> </span><span class="m">224</span><span class="w"> </span>--hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--diffusion_hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--record_video
+</code></pre></div>
+<p>报错：<a href="https://github.com/LNSGroup/Qflex/issues/1">No module named 'relax.spinlock'</a></p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:wei2026scalable">
+<p>Wei, Y., Zuo, C. &amp; Sui, Y. <a href="http://arxiv.org/abs/2601.19707">Scalable exploration for high-dimensional continuous control via value-guided flow</a>. in <em>The fourteenth international conference on learning representations</em> (2026).&#160;<a class="footnote-backref" href="#fnref:wei2026scalable" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

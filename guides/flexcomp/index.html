@@ -185,6 +185,10 @@
 <p>可选的物理/视觉属性遵循插件中通用的 <code>bOverride_X</code> 模式——切换以覆盖 MuJoCo 默认值，关闭则继承默认值。类别：接触、边缘、弹性、销钉。</p>
 <h2 id="_4">可视化</h2>
 <p>运行时，<code>UMjFlexcomp::Bind</code> 会创建一个 <code>UDynamicMeshComponent</code>，该组件镜像源静态网格（几何体、UV 和法线均从 LOD 0 复制）。每个游戏节拍，都会从 <code>mjData.flexvert_xpos</code> 读取变形后的顶点位置，通过 welded→raw 重映射表进行映射，并通过 <code>FastNotifyPositionsUpdated</code> 推送。源静态网格会被隐藏；其材质会在动态网格上重用。</p>
+<div class="admonition 笔记">
+<p class="admonition-title">笔记</p>
+<p>UDynamicMeshComponent 是一种类似于 UProceduralMeshComponent 的网格组件，不同之处在于它基于内部的 UDynamicMesh 实例（封装了 FDynamicMesh3）来生成可渲染几何体。它全面支持对渲染缓冲区进行部分更新、自定义颜色、将网格内部分解成多个块以提高渲染更新效率，以及支持附加“后处理器”以动态生成渲染网格。</p>
+</div>
 <p><strong>已知限制——TAA 重影。</strong> 由于 UE 的 <code>FLocalVertexFactory</code> 没有前一帧位置顶点流，也没有公开的 API 提供此功能，因此 CPU 变形的网格会产生零运动矢量。时间抗锯齿 (Temporal Anti-Aliasing, TAA) 会累积过时的前一帧采样，从而在快速变形时产生可见的拖影/重影。解决方法：</p>
 <ul>
 <li>对于弹性较大的场景，请将<strong>Project Settings → Rendering → Anti-Aliasing Method</strong>设置为 <code>FXAA</code>（或在 DefaultEngine.ini 中设置 <code>r.AntiAliasingMethod=1</code>）。 </li>
