@@ -143,6 +143,7 @@ mujoco/bin/simulate.exe<span class="w">  </span>MS-Human-700/MS-Human-700.xml
 </code></pre></div></p>
 <p><img alt="" src="../../img/ms/human_700_loaded.jpg" /></p>
 <h2 id="dynsyn">DynSyn</h2>
+<p>DynSyn：用于过驱动具身系统高效学习与控制的动态协同表示<sup id="fnref:he2024dynsyn"><a class="footnote-ref" href="#fn:he2024dynsyn">1</a></sup>。</p>
 <p>1.安装
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/OpenHUTB/DynSyn.git
 <span class="nb">cd</span><span class="w"> </span>DynSyn
@@ -157,9 +158,14 @@ poetry<span class="w"> </span>install
 python<span class="w"> </span>dynsyn/dynsyn.py<span class="w"> </span>-f<span class="w"> </span>configs/DynSynGen/dynsyn.yaml<span class="w"> </span>-e<span class="w"> </span>myoLegWalk
 <span class="c1"># 训练</span>
 python<span class="w"> </span>dynsyn/sb3_runner/runner.py<span class="w"> </span>-f<span class="w"> </span>configs/DynSyn/myowalk.json
+</code></pre></div>
+<strong>评估</strong>过程中，dynsyn_weight_amp 的值取决于配置文件中是否设置了该参数。因此，在评估过程中，我们可以设置 dynsyn_weight_amp 以使其与训练设置保持一致。如果在训练过程中已经设置了 dynsyn_weight_amp，则在评估过程中无需再次设置。
+<div class="highlight"><pre><span></span><code>&quot;load_kwargs&quot;: {
+    &quot;dynsyn_weight_amp&quot;: 0.1
+}
 </code></pre></div></p>
 <h2 id="qflex"><a href="https://lnsgroup.cc/research/Qflex/">Qflex 控制</a></h2>
-<p>Qflex 一种可扩展且高效的在线强化学习（RL）方法<sup id="fnref:wei2026scalable"><a class="footnote-ref" href="#fn:wei2026scalable">1</a></sup>，用于高维动态系统的连续控制。此类系统通常面临诸多挑战，严重阻碍高效学习：</p>
+<p>Qflex 一种可扩展且高效的在线强化学习（RL）方法<sup id="fnref:wei2026scalable"><a class="footnote-ref" href="#fn:wei2026scalable">2</a></sup>，用于高维动态系统的连续控制。此类系统通常面临诸多挑战，严重阻碍高效学习：</p>
 <ul>
 <li>高维性：状态-动作空间的大小随维度迅速增长，导致显著的“维度灾难”效应；</li>
 <li>过度驱动：在执行器数量远大于自由度的情况下，多个动作序列可能产生无法区分的运动学特征，但内部力和成本却可能不同。</li>
@@ -169,13 +175,23 @@ python<span class="w"> </span>dynsyn/sb3_runner/runner.py<span class="w"> </span
 conda<span class="w"> </span>activate<span class="w"> </span>hutb_3.12
 <span class="c1"># </span>
 python<span class="w"> </span>scripts/train.py<span class="w">  </span>--alg<span class="w"> </span>qflex<span class="w"> </span>--env<span class="w"> </span>MS700Locomotion-v1<span class="w"> </span>--seed<span class="w"> </span><span class="m">100</span><span class="w"> </span>--total_step<span class="w"> </span><span class="m">50000000</span><span class="w"> </span>--num_vec_envs<span class="w"> </span><span class="m">224</span><span class="w"> </span>--hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--diffusion_hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--record_video
+<span class="c1"># 减少 num_vec_envs 用于调试:</span>
+python<span class="w"> </span>scripts/train.py<span class="w"> </span>--alg<span class="w"> </span>qflex<span class="w"> </span>--env<span class="w"> </span>MS700Locomotion-v1<span class="w"> </span>--seed<span class="w"> </span><span class="m">100</span><span class="w"> </span>--total_step<span class="w"> </span><span class="m">50000000</span><span class="w"> </span>--num_vec_envs<span class="w"> </span><span class="m">4</span><span class="w"> </span>--hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--diffusion_hidden_dim<span class="w"> </span><span class="m">1024</span><span class="w"> </span>--record_video
 </code></pre></div>
 <p>报错：<a href="https://github.com/LNSGroup/Qflex/issues/1">No module named 'relax.spinlock'</a></p>
+<p>Windows 下安装<code>relax-0.1.0</code>：
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>Qflex
+<span class="c1"># windows下需要注释掉 https://github.com/LNSGroup/Qflex/blob/a028cfa76525a62bfb90d76c6f1535f697121383/src/futex.c#L3</span>
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+</code></pre></div></p>
 <div class="footnote">
 <hr />
 <ol>
+<li id="fn:he2024dynsyn">
+<p>He, K., Zuo, C., Ma, C. &amp; Sui, Y. DynSyn: Dynamical synergistic representation for efficient learning and control in overactuated embodied systems. <em>arXiv preprint arXiv:2407.11472</em> (2024).&#160;<a class="footnote-backref" href="#fnref:he2024dynsyn" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
 <li id="fn:wei2026scalable">
-<p>Wei, Y., Zuo, C. &amp; Sui, Y. <a href="http://arxiv.org/abs/2601.19707">Scalable exploration for high-dimensional continuous control via value-guided flow</a>. in <em>The fourteenth international conference on learning representations</em> (2026).&#160;<a class="footnote-backref" href="#fnref:wei2026scalable" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+<p>Wei, Y., Zuo, C. &amp; Sui, Y. <a href="http://arxiv.org/abs/2601.19707">Scalable exploration for high-dimensional continuous control via value-guided flow</a>. in <em>The fourteenth international conference on learning representations</em> (2026).&#160;<a class="footnote-backref" href="#fnref:wei2026scalable" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>
