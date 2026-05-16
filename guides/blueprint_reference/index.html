@@ -107,7 +107,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_10">快捷键</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_11">每个关节的控制源</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">每个铰链的控制源</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#mujoco">高级：直接访问 MuJoCo</a>
     </li>
@@ -159,25 +159,25 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="c">使用蓝图和 C++ 进行脚本编写</h1>
-<p>Unreal Robotics Lab 中的每个 MuJoCo 组件都是普通的虚幻引擎组件。关节是 Actor。您可以像操作其他 Actor 或组件一样与它们交互：获取引用、调用函数、绑定事件。除非您需要，否则无需直接操作 MuJoCo。</p>
+<p>Unreal Robotics Lab 中的每个 MuJoCo 组件都是普通的虚幻引擎组件。铰链是参与者（Actor），您可以像操作其他参与者或组件一样与它们交互：获取引用、调用函数、绑定事件。除非需要，否则无需直接操作 MuJoCo。</p>
 <p>有关完整的类 API 列表，请参阅 <a href="../api/index.md">自动生成的 API 参考</a> 。</p>
 <hr />
 <h2 id="_1">获取参考</h2>
-<p><code>AMjArticulation</code> 本质上就是一个动作者。获取引用的方式与通常相同：</p>
-<p><strong>蓝图：</strong> 获取所有类的参与者(Actor)、从命中结果进行类型转换，或存储引用变量。</p>
+<p>Mujoco 铰链参与者（<code>AMjArticulation</code>）本质上就是一个参与者。获取引用的方式与通常相同：</p>
+<p><strong>蓝图：</strong> 获取所有类的参与者、从命中结果进行类型转换，或存储引用变量。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">AAMjManager</span><span class="o">*</span><span class="w"> </span><span class="n">Manager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AAMjManager</span><span class="o">::</span><span class="n">GetManager</span><span class="p">();</span>
 <span class="n">AMjArticulation</span><span class="o">*</span><span class="w"> </span><span class="n">Robot</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetArticulation</span><span class="p">(</span><span class="s">&quot;MyRobot&quot;</span><span class="p">);</span>
 </code></pre></div></p>
-<p>从管理器中，您可以按名称查找关节，或获取所有关节：</p>
-<p><strong>蓝图：</strong> <strong>获取管理器</strong> → <strong>获取关节</strong> (名称) / <strong>获取所有关节</strong></p>
+<p>从管理器中，您可以按名称查找铰链，或获取所有铰链：</p>
+<p><strong>蓝图：</strong> <strong>获取管理器</strong> → <strong>获取铰链</strong> (名称) / <strong>获取所有铰链</strong></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">TArray</span><span class="o">&lt;</span><span class="n">AMjArticulation</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">All</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">GetAllArticulations</span><span class="p">();</span>
 </code></pre></div></p>
 <hr />
 <h2 id="_2">使用组件</h2>
-<p>一旦你创建了一个关节，它的 MuJoCo 组件就只是子组件。你可以按名称或数组访问它们：</p>
-<p><strong>蓝图：</strong> <strong>获取执行器</strong> (名称), <strong>获取关节</strong> (名称), <strong>获取传感器</strong> (名称) — 或者对于数组 <strong>获取执行器</strong>, <strong>获取关节</strong>, <strong>获取传感器</strong>, <strong>获取刚体</strong>。你也可以直接从蓝图中的组件树拖拽组件。</p>
+<p>一旦你创建了一个铰链，它的 MuJoCo 组件就只是子组件。你可以按名称或数组访问它们：</p>
+<p><strong>蓝图：</strong> <strong>获取执行器</strong> (名称), <strong>获取铰链</strong> (名称), <strong>获取传感器</strong> (名称) — 或者对于数组 <strong>获取执行器</strong>, <strong>获取铰链</strong>, <strong>获取传感器</strong>, <strong>获取刚体</strong>。你也可以直接从蓝图中的组件树拖拽组件。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">UMjActuator</span><span class="o">*</span><span class="w"> </span><span class="n">Act</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetActuator</span><span class="p">(</span><span class="s">&quot;shoulder&quot;</span><span class="p">);</span>
 <span class="n">TArray</span><span class="o">&lt;</span><span class="n">UMjJoint</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">Joints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">GetJoints</span><span class="p">();</span>
@@ -206,7 +206,7 @@
 </code></pre></div></p>
 <hr />
 <h2 id="_5">碰撞响应</h2>
-<p><code>AMjArticulation</code> 具有 <strong>碰撞时(On Collision)</strong>事件分发器。触发条件包括：自身几何体<code>SelfGeom</code> (UMjGeom<em>)、其他几何体<code>OtherGeom</code> (UMjGeom</em>) 和接触位置<code>ContactPos</code> (FVector)。</p>
+<p>Mujoco 铰链参与者（<code>AMjArticulation</code>）具有 <strong>碰撞时(On Collision)</strong>事件分发器。触发条件包括：自身几何体<code>SelfGeom</code> (UMjGeom<em>)、其他几何体 <code>OtherGeom</code> (UMjGeom</em>) 和接触位置<code>ContactPos</code> (FVector)。</p>
 <p><strong>蓝图：</strong> 选择关节参考 → <strong>分配碰撞时事件(Assign On Collision)</strong> → 连接到您的逻辑。</p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">OnCollision</span><span class="p">.</span><span class="n">AddDynamic</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">AMyActor</span><span class="o">::</span><span class="n">HandleCollision</span><span class="p">);</span>
@@ -233,7 +233,7 @@
 </tr>
 <tr>
 <td><strong>Reset Simulation</strong></td>
-<td>零位置、速度、时间</td>
+<td>重置模拟：零位置、速度、时间</td>
 </tr>
 <tr>
 <td><strong>Step Sync</strong> (N)</td>
@@ -263,7 +263,7 @@
 <p>保存多个快照，用于 A/B 测试、检查点或撤销。</p>
 <hr />
 <h2 id="api">关键帧 API</h2>
-<p>在 <code>AMjArticulation</code>:</p>
+<p>在 Mujoco 铰链参与者（<code>AMjArticulation</code>）中:</p>
 <table>
 <thead>
 <tr>
@@ -297,18 +297,18 @@
 <p>MjSimulate 小部件提供关键帧下拉菜单和重置/保持/停止按钮，以便进行交互式使用。</p>
 <hr />
 <h2 id="_8">记录和回放</h2>
-<p>在关卡中使用回放管理器<code>AMjReplayManager</code></p>
+<p>在关卡中使用 Mujoco 回放管理器<code>AMjReplayManager</code></p>
 <p><strong>蓝图：</strong> <strong>开始记录(Start Recording)</strong> / <strong>停止记录(Stop Recording)</strong> / <strong>开始回放(Start Replay)</strong> / <strong>停止回放(Stop Replay)</strong> / <strong>将记录内容保存到文件(Save Recording to File)</strong> / <strong>从文件加载记录内容(Load Recording from File)</strong></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartRecording</span><span class="p">();</span>
-<span class="c1">// ... simulation runs ...</span>
+<span class="c1">// ... 运行模拟 ...</span>
 <span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StopRecording</span><span class="p">();</span>
 <span class="n">Replay</span><span class="o">-&gt;</span><span class="n">SaveRecordingToFile</span><span class="p">(</span><span class="s">&quot;C:/data/experiment.dat&quot;</span><span class="p">);</span>
 <span class="n">Replay</span><span class="o">-&gt;</span><span class="n">StartReplay</span><span class="p">();</span>
 </code></pre></div></p>
 <hr />
 <h2 id="_9">切换控制源</h2>
-<p>在仪表盘和外部 ZMQ 控制之间切换：</p>
+<p>在仪表盘（UI）和外部 ZMQ 控制之间切换：</p>
 <p><strong>蓝图：</strong> <strong>获取管理器(Get Manager)</strong> → <strong>设置控制源(Set Control Source)</strong> → <code>UI</code> 或者 <code>ZMQ</code></p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Manager</span><span class="o">-&gt;</span><span class="n">SetControlSource</span><span class="p">(</span><span class="n">EControlSource</span><span class="o">::</span><span class="n">ZMQ</span><span class="p">);</span>
@@ -343,10 +343,10 @@
 </tr>
 </tbody>
 </table>
-<p>有关关键帧控制器、预设和 FMjKeyframePose 结构体的完整详细信息，请参阅 <a href="../controller_framework/">控制器框架</a> 。</p>
+<p>关于关键帧控制器、预设和 FMjKeyframePose 结构体的完整详细信息，请参阅 <a href="../controller_framework/">控制器框架</a> 。</p>
 <hr />
 <h2 id="mjkeyframecameraactor">MjKeyframeCameraActor</h2>
-<p><code>AMjKeyframeCameraActor</code> 是一款影视级相机，它能够平滑地通过一系列路径点（<code>FMjCameraWaypoint</code>：位置、旋转、时间）进行插值。它使用 <code>UCineCameraComponent</code>，并在编辑器中显示路径的样条曲线预览。</p>
+<p>Mujoco 关键帧相机参与者 （<code>AMjKeyframeCameraActor</code>）是一款影视级相机，它能够平滑地通过一系列路径点（<code>FMjCameraWaypoint</code>：位置、旋转、时间）进行插值。它使用 <code>UCineCameraComponent</code>，并在编辑器中显示路径的样条曲线预览。</p>
 <p><strong>主要功能：</strong></p>
 <table>
 <thead>
@@ -381,10 +381,10 @@
 <p><strong>属性：</strong> <code>bAutoPlay</code>, <code>bAutoActivate</code> (设置为玩家视图目标), <code>bLoop</code>, <code>StartDelay</code>, <code>bSmoothInterp</code> (立方体 vs 线性).</p>
 <hr />
 <h2 id="mjimpulselauncher">MjImpulseLauncher</h2>
-<p><code>AMjImpulseLauncher</code> 会对 <code>MjBody</code> 施加基于速度的脉冲。有两种模式：</p>
+<p>Mujoco 脉冲启动器 （<code>AMjImpulseLauncher</code>）会对 Mujoco 刚体（<code>MjBody</code>）施加基于速度的脉冲。有两种模式：</p>
 <ul>
-<li><strong>直接</strong>模式 — 沿 Actor 的前向向量（或 <code>DirectionOverride</code>）发射。 </li>
-<li><strong>目标</strong>模式 — 将 <code>LaunchTarget</code> 设置为某个动作者，它会计算指向该动作者的弹道弧线。<code>ArcHeight</code> 控制抛射高度。</li>
+<li><strong>直接</strong>模式 — 沿参与者的前向向量（或 <code>DirectionOverride</code>）启动。 </li>
+<li><strong>目标</strong>模式 — 将启动目标（<code>LaunchTarget</code>）设置为某个参与者，它会计算指向该动作者的弹道弧线。<code>ArcHeight</code> 控制抛射高度。</li>
 </ul>
 <table>
 <thead>
@@ -407,7 +407,7 @@
 <p><strong>属性：</strong> <code>TargetActor</code>, <code>TargetBodyName</code> （可选，默认为第一个 MjBody）, <code>LaunchSpeed</code> (米/秒), <code>LaunchTarget</code>, <code>ArcHeight</code>, <code>bAutoFire</code>, <code>AutoFireDelay</code>。</p>
 <hr />
 <h2 id="_10">快捷键</h2>
-<p>由 <code>AAMjManager::Tick</code> 处理。在 PIE 期间处于活动状态：</p>
+<p>由节拍信号（<code>AAMjManager::Tick</code>）处理。在编辑器中运行（PIE）期间处于活动状态：</p>
 <table>
 <thead>
 <tr>
@@ -422,7 +422,7 @@
 </tr>
 <tr>
 <td><strong>2</strong></td>
-<td>切换视觉网格</td>
+<td>切换视觉网格的显示/隐藏</td>
 </tr>
 <tr>
 <td><strong>3</strong></td>
@@ -455,9 +455,9 @@
 </tbody>
 </table>
 <hr />
-<h2 id="_11">每个关节的控制源</h2>
-<p>每个 <code>AMjArticulation</code> 都有一个 <code>ControlSource</code> 字段（<code>0</code> = ZMQ，<code>1</code> = UI），该字段会覆盖管理器级别的 <code>EControlSource</code> 设置。这样，您就可以在同一场景中通过控制面板滑块控制部分机器人，同时接收其他机器人的外部 ZMQ 命令。</p>
-<p><strong>蓝图：</strong> 在“详细信息(Details)”中或通过“设置(Set)”节点设置关节参考的<code>ControlSource</code>。 </p>
+<h2 id="_11">每个铰链的控制源</h2>
+<p>每个 Mujoco 铰链参与者（<code>AMjArticulation</code>）都有一个控制源（<code>ControlSource</code>）字段（<code>0</code> = ZMQ，<code>1</code> = UI），该字段会覆盖管理器级别的控制源（<code>EControlSource</code>）设置。这样，您就可以在同一场景中通过控制面板滑块控制部分机器人，同时接收其他机器人的外部 ZMQ 命令。</p>
+<p><strong>蓝图：</strong> 在“详细信息(Details)”中或通过“设置(Set)”节点设置关节参考的控制源（<code>ControlSource</code>）。 </p>
 <p><strong>C++:</strong>
 <div class="highlight"><pre><span></span><code><span class="n">Robot</span><span class="o">-&gt;</span><span class="n">ControlSource</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span><span class="w"> </span><span class="c1">// 该机器人的用户界面控制</span>
 </code></pre></div></p>
