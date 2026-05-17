@@ -47,11 +47,11 @@
               <ul class="current">
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">入门</a>
     <ul class="current">
-    <li class="toctree-l2"><a class="reference internal" href="#_2">先决条件</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">先决条件 </a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_3">安装</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_4">导入你的第一个机器人</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">导入你的第一个机器人 </a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#mjcf-xml">来自 MJCF XML</a>
     </li>
@@ -61,7 +61,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_6">场景设置</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_7">控制机器人</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">控制机器人 </a>
         <ul>
     <li class="toctree-l3"><a class="reference internal" href="#_8">从仪表盘</a>
     </li>
@@ -71,21 +71,21 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_10">调式可视化</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_10">调式可视化 </a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_11">后续步骤</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">后续步骤 </a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_12">故障排除</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_12">故障排除 </a>
         <ul>
-    <li class="toctree-l3"><a class="reference internal" href="#msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD）</a>
+    <li class="toctree-l3"><a class="reference internal" href="#msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD） </a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#ui">UI：“模拟”仪表盘未显示</a>
+    <li class="toctree-l3"><a class="reference internal" href="#ui">UI：“模拟”仪表盘未显示 </a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#ue">旧版UE：内容资源无法加载</a>
+    <li class="toctree-l3"><a class="reference internal" href="#ue">旧版UE：内容资源无法加载 </a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#_13">仿真：机器人处于静态状态</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_13">仿真：机器人处于静态状态 </a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#_14">直接下载已配置好的工程</a>
+    <li class="toctree-l3"><a class="reference internal" href="#_14">直接下载已配置好的工程  </a>
     </li>
         </ul>
     </li>
@@ -169,7 +169,22 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="_1">入门</h1>
-<h2 id="_2">先决条件</h2>
+<ul>
+<li><strong><a href="#prerequisite‌">先决条件</a></strong>  </li>
+<li><strong><a href="#import_first_robot">导入你的第一个机器人</a></strong></li>
+<li><strong><a href="#control_robot">控制机器人</a></strong>  </li>
+<li><strong><a href="#debug_visualization">调式可视化</a></strong></li>
+<li><strong><a href="#next_steps">后续步骤</a></strong>  </li>
+<li><strong><a href="#troubleshooting">故障排除</a></strong>  <ul>
+<li><a href="#stack_overflow">构建错误：MSVC 栈溢出（错误代码：0xC00000FD）</a></li>
+<li><a href="#no_widget">UI：“模拟”仪表盘未显示</a></li>
+<li><a href="#assert_load_failed">旧版UE：内容资源无法加载</a></li>
+<li><a href="#keep_static">仿真：机器人处于静态状态</a></li>
+<li><a href="#download_proj">直接下载已配置好的工程</a></li>
+</ul>
+</li>
+</ul>
+<h2 id="_2">先决条件 <span id="prerequisite‌"></span></h2>
 <ul>
 <li><strong>虚幻引擎 5.7+：</strong> C++插件代码和第三方库应该可以在早期的 UE5 版本上编译，但内置的<code>.uasset</code>文件（UI组件、材质、输入映射）是在5.7版本中序列化的，因此不向下兼容。核心模拟功能在旧版本上仍然可以运行，但仪表盘UI和一些编辑器功能将会缺失。如果确实需要支持旧版本，我们可以考虑提供兼容的资源。</li>
 <li><strong>Windows 10/11：</strong>Linux 还在实验阶段。</li>
@@ -221,7 +236,7 @@ uv<span class="w"> </span>sync
 <p>有关编辑和构建铰链的说明，请参阅 <a href="../guides/articulation_builder/">铰链构建器指南</a> 。</p>
 </li>
 </ol>
-<h2 id="_4">导入你的第一个机器人</h2>
+<h2 id="_4">导入你的第一个机器人 <span id="import_first_robot"></span></h2>
 <h3 id="mjcf-xml">来自 MJCF XML</h3>
 <ol>
 <li>获取机器人 XML（例如，来自 <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> ）。</li>
@@ -248,7 +263,7 @@ uv<span class="w"> </span>sync
 </ol>
 <p><img alt="" src="../img/g1_29dof_rev_1_0.gif" /></p>
 <p>如果点击交互界面的<code>Play</code>后，机器人掉落到地面以下，则导入<code>RoboJuDo\assets\robots\g1\g1_12dof.xml</code>可以解决。</p>
-<h2 id="_7">控制机器人</h2>
+<h2 id="_7">控制机器人 <span id="control_robot"></span></h2>
 <h3 id="_8">从仪表盘</h3>
 <ul>
 <li>使用 MjSimulate 小部件中的执行器滑块来移动关节。</li>
@@ -282,10 +297,10 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <span class="n">TArray</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">&gt;</span><span class="w"> </span><span class="n">Force</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MyArticulation</span><span class="o">-&gt;</span><span class="n">GetSensorReading</span><span class="p">(</span><span class="s">&quot;wrist_force&quot;</span><span class="p">);</span>
 </code></pre></div>
 <p>所有的功能都是可调用的蓝图<code>BlueprintCallable</code>.</p>
-<h2 id="_10">调式可视化</h2>
+<h2 id="_10">调式可视化 <span id="debug_visualization"></span></h2>
 <p>有关完整的 PIE 叠加层（接触力、碰撞线框、关节轴、约束岛、实例/语义分割和肌肉/肌腱管）以及驱动它们的快捷键，请参阅 <a href="../guides/debug_visualization/">调试可视化指南</a>。</p>
 <p>请参阅 <a href="../guides/blueprint_reference/#hotkeys">快捷键</a> 了解键盘快捷键。</p>
-<h2 id="_11">后续步骤</h2>
+<h2 id="_11">后续步骤 <span id="next_steps"></span></h2>
 <ul>
 <li><a href="../features/">特性</a> -- 完整功能参考</li>
 <li><a href="../guides/mujoco_import/">MJCF 导入</a> -- 导入管道详情</li>
@@ -294,8 +309,8 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li><a href="../guides/policy_bridge/">策略桥接</a> -- 强化学习策略部署</li>
 <li><a href="guides/developer_tools.md">开发者工具</a> -- 模式跟踪、 XML 调试、构建/测试技能</li>
 </ul>
-<h2 id="_12">故障排除</h2>
-<h3 id="msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD）</h3>
+<h2 id="_12">故障排除 <span id="stack_overflow"></span></h2>
+<h3 id="msvc-0xc00000fd">构建错误：MSVC 栈溢出（错误代码：0xC00000FD） <span id="troubleshooting"></span></h3>
 <p>如果 <code>build_all.ps1</code> 脚本因错误代码 <code>-1073741571</code> 而失败，这表明您的编译器在处理 MuJoCo 复杂的传感器模板时已耗尽了内部内存。</p>
 <ul>
 <li><strong>解决方法：</strong> 将 Visual Studio 更新至最新版本（<strong>VS 2022 (17.10+)</strong> 或以上版本）或 <strong>VS 2025</strong>（这是 MuJoCo CI 的参考版本）。</li>
@@ -305,14 +320,14 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <p><div class="highlight"><pre><span></span><code>error MSB6006: “CL.exe”已退出，代码为 -1073741571。 [D:\work\donghaiwang\UnrealRoboticsLab\third_party\MuJoCo\src\build\plugin\sensor\sensor.vcxproj]
 </code></pre></div>
    未解决，暂时使用下载的发行版发到<code>UnrealRoboticsLab\third_party\install\MuJoCo</code>目录下</p>
-<h3 id="ui">UI：“模拟”仪表盘未显示</h3>
+<h3 id="ui">UI：“模拟”仪表盘未显示 <span id="no_widget"></span></h3>
 <p>UI 与上下文相关，需要满足特定条件：</p>
 <ul>
 <li>确保关卡中存在 <code>MjManager</code> 参与者。</li>
 <li>在 <code>MjManager</code> 设置中，确认 <code>bAutoCreateSimulateWidget</code> 已启用。 </li>
 <li>确保您已按照安装指南中的 <strong>"显示资产(Show Assets)"</strong> 步骤操作，以使引擎能够访问 UI 小部件。</li>
 </ul>
-<h3 id="ue">旧版UE：内容资源无法加载</h3>
+<h3 id="ue">旧版UE：内容资源无法加载 <span id="assert_load_failed"></span></h3>
 <p>捆绑的 <code>.uasset</code> 文件（UI 组件、材质、输入映射）是用 UE 5.7 保存的，无法在早期版本中加载。C++ 插件代码可以编译，核心仿真也能运行，但仪表盘 UI 和一些编辑器功能会缺失。</p>
 <p>我们强烈建议您升级到 UE 5.7，因为这是我们唯一测试和支持的版本。如果无法升级，并且您同时安装了 UE 5.7 和旧版本，您可以通过复制粘贴的方式重新创建资源：</p>
 <ol>
@@ -323,12 +338,12 @@ pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </s
 <li>保存新资源。现在它与您的引擎版本兼容了。 </li>
 </ol>
 <p>此方法适用于 UMG 控件蓝图、材质图表和输入映射资产。</p>
-<h3 id="_13">仿真：机器人处于静态状态</h3>
+<h3 id="_13">仿真：机器人处于静态状态 <span id="keep_static"></span></h3>
 <ul>
 <li><strong>控制源：</strong>检查 <code>MjManager</code> 或 <code>MjArticulation</code> 的<strong>控制源</strong>是否设置为 <strong>UI</strong>。如果设置为 <strong>ZMQ</strong>，则 UI 滑块将被忽略。</li>
 <li><strong>物理状态：</strong> 确保 <code>MjManager</code> 未暂停，并且机器人组件设置中未将其设置为<code>静态(Static)</code>。 </li>
 </ul>
-<h3 id="_14">直接下载已配置好的工程</h3>
+<h3 id="_14">直接下载已配置好的工程  <span id="download_proj"></span></h3>
 <p>提供已经配置好的<a href="https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb">下载链接</a>中的<code>工程/UErobotics 5.7.7z</code>，解压后直接双击运行<code>UErobotics.uproject</code>即可打开虚幻编辑器的场景。</p>
               
             </div>
