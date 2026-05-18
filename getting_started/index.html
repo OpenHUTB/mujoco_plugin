@@ -258,10 +258,11 @@ uv<span class="w"> </span>sync
 <li>将导入的机器人蓝图放置在关卡中。</li>
 <li>点击场景的播放（Play）。</li>
 <li>MjSimulate 小部件将显示（如果管理器中 <code>bAutoCreateSimulateWidget</code> 已启用）。</li>
-<li>启动图形用户界面：<code>python src/run.py --ui</code>，<code>铰链（Articulations）</code>中选择导入蓝图<code>g1_29dof_rev_1_0_*</code>，<code>策略控制（Policy Control）</code>选择<code>AMO Locomotion (29 DOF) [PHC]</code>，勾选<code>Force Twist</code>，稍微调大一点Vx(m/s)，点击<code>开始策略(Start Policy)</code>；等待出现变成<code>Steps: 1+</code>；</li>
+<li>启动图形用户界面：<code>python src/run.py --ui</code>，<code>铰链（Articulations）</code>中选择导入蓝图<code>g1_29dof_rev_1_0_*</code>，<code>策略控制（Policy Control）</code>选择<code>AMO Locomotion (29 DOF) [PHC]</code>，勾选<code>Force Twist</code>，稍微调大一点Vy(m/s)（比如 0.075 实现倒着走），点击<code>开始策略(Start Policy)</code>；等待出现变成<code>Steps: 1+</code>；</li>
 <li>在弹出的交互界面中点击<code>Play</code>（物理模拟自动开始）。为了持续跟踪人形机器人的控制效果，编辑器场景的右上角的Articulation 中选中<code>g1_29dof_rev_1_0_*</code>，并点击<code>Posess</code>。</li>
 </ol>
 <p><img alt="" src="../img/g1_29dof_rev_1_0.gif" /></p>
+<p>停止并重置，先按<code>Pause</code>，然后再按<code>Reset</code>。</p>
 <p>如果点击交互界面的<code>Play</code>后，机器人掉落到地面以下，则导入<code>RoboJuDo\assets\robots\g1\g1_12dof.xml</code>可以解决。</p>
 <h2 id="_7">控制机器人 <span id="control_robot"></span></h2>
 <h3 id="_8">从仪表盘</h3>
@@ -273,7 +274,7 @@ uv<span class="w"> </span>sync
 <ol>
 <li><code>cd</code> 进入 <code>urlab_bridge/</code>.</li>
 <li>安装：<code>uv sync</code> (或者 <code>pip install -e .</code>)。或者
-   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>zmq<span class="w"> </span>numpy<span class="w"> </span>dearpygui
+   <div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>requirements.txt
 <span class="c1"># 安装 RoboJuDo</span>
 <span class="nb">cd</span><span class="w"> </span>RoboJuDo
 pip<span class="w"> </span>install<span class="w"> </span>torch<span class="w"> </span>--index-url<span class="w"> </span>https://download.pytorch.org/whl/cpu

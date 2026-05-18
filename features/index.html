@@ -167,10 +167,10 @@
                 <h1 id="_1">特性</h1>
 <h2 id="_2">核心架构</h2>
 <ul>
-<li>可用完整的 MuJoCo C API (<code>mjModel*</code>, <code>mjData*</code>) -- 用户可以直接调用任何 MuJoCo 函数。</li>
+<li>可用完整的 MuJoCo C API (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L71">mjModel*</a>, <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L74">mjData*</a>)：用户可以直接调用任何 MuJoCo 函数。</li>
 <li>具有可配置时间步长的异步物理线程</li>
 <li>基于组件的设计与 MJCF 元素层次结构相匹配</li>
-<li><code>MjManager</code> 单例负责协调编译、步进和状态</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L46">MjManager</a> 单例负责协调编译、步进和状态</li>
 </ul>
 <h2 id="mjcf">MJCF 导入</h2>
 <p>支持将 XML 文件拖放到内容浏览器(Content Browser)中。自动生成包含完整组件层级结构、网格转换、材质导入和默认类继承的虚幻引擎蓝图。</p>

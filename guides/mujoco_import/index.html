@@ -56,6 +56,10 @@
                 <li class="toctree-l1 current"><a class="reference internal current" href="#">MJCF 导入</a>
     <ul class="current">
     <li class="toctree-l2"><a class="reference internal" href="#_1">导入</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#mujoco-mjcf">准备 Mujoco MJCF 网格</a>
+    </li>
+        </ul>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_2">创建的内容</a>
     </li>
@@ -145,25 +149,38 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="mjcf">MJCF 导入</h1>
-<p>Unreal Robotics Lab 可以导入标准的 MuJoCo XML (MJCF) 文件，并将完整的模型层级结构重建为 Unreal 组件。您可以从 MuJoCo Menagerie 或您自己的项目中获取 <code>.xml</code> 模型，然后将其直接拖入内容浏览器。</p>
+<p>Unreal Robotics Lab 可以导入标准的 MuJoCo XML (MJCF) 文件，并将完整的模型层级结构重建为 Unreal 组件。您可以从 MuJoCo Menagerie 或您自己的项目中获取 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">.xml</a> 模型，然后将其直接拖入内容浏览器。</p>
 <hr />
 <h2 id="_1">导入</h2>
 <ol>
-<li>将 <code>.xml</code> 文件拖入虚幻 <strong>内容浏览器(Content Browser)</strong> 。</li>
-<li>首次导入时，编辑器会提示安装所需的 Python 包（<code>trimesh</code>、<code>numpy</code>、<code>scipy</code>）。默认情况下，这些包会安装到 UE 自带的 Python 环境中，无需额外配置 Python。您也可以通过对话框选择自定义解释器（conda、venv 等）。所选路径会保存到 <code>Config/LocalUnrealRoboticsLab.ini</code> 文件中（每个机器单独保存，不会提交到源代码控制系统）。</li>
-<li><code>UMujocoImportFactory</code> 使用配置的 Python 运行 <code>Scripts/clean_meshes.py</code>:</li>
+<li>将 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">.xml</a> 文件拖入虚幻<strong>内容浏览器(Content Browser)</strong> 。</li>
+<li>首次导入时，编辑器会提示安装所需的 Python 包（<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MjPythonHelper.cpp#L168">trimesh</a>、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MjPythonHelper.cpp#L168">numpy</a>、<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MjPythonHelper.cpp#L168">scipy</a>）。默认情况下，这些包会安装到 UE 自带的 Python 环境中，无需额外配置 Python。您也可以通过对话框选择自定义解释器（conda、venv 等）。所选路径会保存到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/tree/main/Config">Config/LocalUnrealRoboticsLab.ini</a> 文件中（每个机器单独保存，不会提交到源代码控制系统）。</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MujocoImportFactory.cpp#L38">UMujocoImportFactory</a> 使用配置的 Python 运行清洗网格脚本 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Scripts/clean_meshes.py">Scripts/clean_meshes.py</a>:</li>
 <li>解析 XML 以查找所有引用的网格资产</li>
-<li>检测 GLB stem 冲突（例如，<code>link1.obj</code> 和 <code>link1.stl</code> 两者都产生 <code>link1.glb</code>），并重命名它们。</li>
+<li>检测 GLB stem 冲突（例如，<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Scripts/clean_meshes.py#L27">link1.obj</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Scripts/clean_meshes.py#L27">link1.stl</a> 两者都产生 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Scripts/clean_meshes.py#L27">link1.glb</a>），并重命名它们。</li>
 <li>将网格转换为 GLB 格式（保留 UV，去除嵌入纹理）</li>
-<li>生成带有更新网格参考的<code>_ue.xml</code></li>
+<li>生成带有更新网格参考的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MujocoImportFactory.cpp#L106">_ue.xml</a></li>
 <li>如果用户跳过 Python 设置，则会使用原始 XML（某些网格可能无法正确显示）。</li>
-<li>工厂通过四次解析过程创建 <code>AMjArticulation</code> 蓝图：</li>
+<li>工厂通过四次解析过程创建 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L34">铰链 AMjArticulation</a> 蓝图：</li>
 <li><strong>第一阶段：</strong> 资产（带缩放的网格、带文件路径的纹理、带 RGBA/纹理引用的材质）</li>
-<li><strong>第二阶段：</strong> 默认值（类层次结构作为 <code>UMjDefault</code> 组件）</li>
+<li><strong>第二阶段：</strong> 默认值（类层次结构作为 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Components/MjComponent.h#L33">UMjDefault</a> 组件）</li>
 <li><strong>第三阶段：</strong> Worldbody (递归的刚体(body)/几何(geom)/关节(joint)/位点(site)层次结构)</li>
 <li><strong>第四阶段：</strong> 执行器、传感器、肌腱、equalities、关键帧、接触 对/排除</li>
 <li>将蓝图放置在关卡中，即可进行模拟。</li>
 </ol>
+<h3 id="mujoco-mjcf">准备 Mujoco MJCF 网格</h3>
+<p>脚本 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Scripts/clean_meshes.py">Scripts/clean_meshes.py</a> 准备用于虚幻导入的 MuJoCo MJCF 网格，用于解析 MJCF XML 文件，将所有引用的网格模型（OBJ、STL）转换为 GLB 格式，解决命名冲突（例如，link1.obj 和 link1.stl 均转换为 link1.glb 的情况），并生成一份已更新的 XML 文件，以便直接拖拽导入 Unreal 引擎。</p>
+<p>安装：
+<div class="highlight"><pre><span></span><code><span class="c1"># cd hutb\Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\Scripts</span>
+<span class="c1"># conda create -n nn_3.11 python=3.11 --yes</span>
+<span class="c1"># conda activate nn_3.11</span>
+pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy
+</code></pre></div></p>
+<p>使用：
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>clean_meshes_trimesh.py<span class="w"> </span>&lt;path_to_xml&gt;
+<span class="c1"># 示例</span>
+python<span class="w"> </span>clean_meshes_trimesh.py<span class="w"> </span><span class="s2">&quot;path/to/mujoco_menagerie/franka_emika_panda/panda.xml&quot;</span>
+</code></pre></div></p>
 <hr />
 <h2 id="_2">创建的内容</h2>
 <table>

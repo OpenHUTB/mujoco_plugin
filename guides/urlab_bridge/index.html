@@ -137,25 +137,27 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/dongh
 <span class="c1"># 推荐 uv，安装方法：https://hellowac.github.io/uv-zh-cn/getting-started/installation/#__tabbed_1_2</span>
 <span class="nb">cd</span><span class="w"> </span>URLab_Bridge
 uv<span class="w"> </span>sync<span class="w">                          </span><span class="c1"># 核心依赖 (ZMQ, NumPy, OpenCV, DearPyGui)</span>
-
-<span class="nb">cd</span><span class="w"> </span>
-pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
-
+<span class="c1"># pip install requirements.txt</span>
 <span class="c1"># 运行策略 (可选):</span>
 uv<span class="w"> </span>sync<span class="w"> </span>--extra<span class="w"> </span>policy<span class="w">            </span><span class="c1"># + PyTorch, ONNX 等</span>
-uv<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>./RoboJuDo<span class="w">     </span><span class="c1"># 策略框架 (内置的子模块)：安装模块 robojudo</span>
+
+<span class="nb">cd</span><span class="w"> </span>RoboJuDo
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
+<span class="c1"># uv pip install -e ./RoboJuDo     # 策略框架 (内置的子模块)：安装模块 robojudo</span>
 </code></pre></div>
 <p>仪表盘（关节、传感器、摄像头、执行器控制）无需策略扩展即可正常工作。只有当您需要运行神经网络策略时才需要 RoboJuDo。</p>
 <p>需要 Python 3.11 或更高版本。</p>
 <h2 id="_2">快速开始</h2>
 <div class="highlight"><pre><span></span><code><span class="c1"># 启动仪表盘 (关节/传感器/相机查看器、执行器控制、可选策略运行器)，注意在关卡中必须放置 AMjManager，否则连接不上</span>
-uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--ui
+python<span class="w"> </span>src/run.py<span class="w"> </span>--ui
 
 <span class="c1"># 以无头模式（不打开图形界面）运行特定策略</span>
-uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>unitree_12dof<span class="w"> </span>--prefix<span class="w"> </span>g1
+<span class="c1"># uv run src/run.py --policy unitree_12dof --prefix g1</span>
+python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>unitree_12dof<span class="w"> </span>--prefix<span class="w"> </span>g1
+python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>amo<span class="w"> </span>--prefix<span class="w"> </span>g1
 
 <span class="c1"># 测试 ZMQ 连接</span>
-uv<span class="w"> </span>run<span class="w"> </span>src/run.py<span class="w"> </span>--test<span class="w"> </span>--prefix<span class="w"> </span>g1
+python<span class="w"> </span>src/run.py<span class="w"> </span>--test<span class="w"> </span>--prefix<span class="w"> </span>g1
 </code></pre></div>
 <h2 id="_3">可用策略</h2>
 <table>
