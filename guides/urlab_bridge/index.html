@@ -154,11 +154,46 @@ python<span class="w"> </span>src/run.py<span class="w"> </span>--ui
 <span class="c1"># 以无头模式（不打开图形界面）运行特定策略</span>
 <span class="c1"># uv run src/run.py --policy unitree_12dof --prefix g1</span>
 python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>unitree_12dof<span class="w"> </span>--prefix<span class="w"> </span>g1
-python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>amo<span class="w"> </span>--prefix<span class="w"> </span>g1
+python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span class="w"> </span>amo<span class="w"> </span>--prefix<span class="w"> </span>g1<span class="w"> </span>--twist-source<span class="w"> </span>zmq
 
 <span class="c1"># 测试 ZMQ 连接</span>
 python<span class="w"> </span>src/run.py<span class="w"> </span>--test<span class="w"> </span>--prefix<span class="w"> </span>g1
 </code></pre></div>
+<p>无头模式运行日志：
+<div class="highlight"><pre><span></span><code>(nn_3.11) D:\hutb\Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\URLab_Bridge&gt;python src/run.py --policy amo --prefix g1
+05-18 08:49:31.805 [DEBUG] [robojudo] ========== robojudo-1.5.0 init done ==========
+
+08:49:31 __main__ INFO — Initializing pipeline: amo @ 50Hz → g1 (twist: keyboard)
+05-18 08:49:31.836 [INFO] [robojudo.pipeline.base_pipeline] Using device: cpu
+[Environment] Dynamic import of environment: UnrealEnv
+05-18 08:49:31.837 [INFO] [robojudo.utils.rotation] base set to pos: [0. 0. 0.], quat: [0. 0. 0. 1.]
+08:49:32 urlab_policy.unreal_env INFO — ZMQ state: tcp://127.0.0.1:5555  control: tcp://127.0.0.1:5556
+08:49:32 urlab_policy.unreal_env INFO — Using specified articulation prefix: &#39;g1&#39;
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_hip_pitch_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_hip_roll_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_hip_yaw_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_knee_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_ankle_pitch_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;left_ankle_roll_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_hip_pitch_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_hip_roll_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_hip_yaw_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_knee_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_ankle_pitch_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env WARNING —   Joint &#39;right_ankle_roll_joint&#39; not found in ZMQ stream
+08:49:37 urlab_policy.unreal_env INFO —   Mapped 0/12 joints
+08:49:56 urlab_policy.unreal_env INFO — ZMQ subscription filtered to prefix: &#39;g1&#39;
+08:49:56 urlab_policy.unreal_env INFO — UnrealEnv ready — prefix=&#39;g1&#39;, 12 DOFs, control_dt=0.0200s (50Hz)
+[Registry][robojudo.controller] KeyboardCtrl, total: 1
+[Controller] Dynamic import of controller: KeyboardCtrl
+[Registry][robojudo.policy] AMOPolicy, total: 1
+[Policy] Dynamic import of policy: AMOPolicy
+05-18 08:49:56.327 [DEBUG] [robojudo.policy.base_policy] Loading jit from D:/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/URLab_Bridge/RoboJuDo/assets/models/g1/amo/amo_jit.pt...
+05-18 08:49:56.381 [DEBUG] [robojudo.tools.dof] [DoF] override default_pos with [-0.1, 0.0, 0.0, 0.3, -0.2, 0.0, -0.1, 0.0, 0.0, 0.3, -0.2, 0.0]
+05-18 08:49:56.382 [DEBUG] [robojudo.tools.dof] [DoF] override stiffness with [150, 150, 150, 300, 80, 20, 150, 150, 150, 300, 80, 20]
+05-18 08:49:56.382 [DEBUG] [robojudo.tools.dof] [DoF] override damping with [2, 2, 2, 4, 2, 1, 2, 2, 2, 4, 2, 1]
+05-18 08:49:56.382 [DEBUG] [robojudo.tools.dof] [DoF] override torque_limits with [88, 139, 88, 139, 50, 50, 88, 139, 88, 139, 50, 50]
+</code></pre></div></p>
 <h2 id="_3">可用策略</h2>
 <table>
 <thead>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>迁移到UE4 - Mujoco 插件</title>
+    <title>URLab 编辑器 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u8fc1\u79fb\u5230UE4";
-        var mkdocs_page_input_path = "dev/ue4.md";
+        var mkdocs_page_name = "URLab \u7f16\u8f91\u5668";
+        var mkdocs_page_input_path = "dev/URLabEditor.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -114,9 +114,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">迁移到UE4</li>
+      <li class="breadcrumb-item active">URLab 编辑器</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/ue4.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/URLabEditor.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -124,47 +124,26 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ue4">迁移到UE4</h1>
-<p>1.将xml文件转成 _ue.xml 文件</p>
-<p>2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -&gt; 通过拖拽 Actor 的方式（参考 <a href="https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1">mujoco_plugin</a> ）</p>
-<p>-&gt; Source/URLab/Public/MuJoCo/Core/AMjManager.h 是一个参与者，通过它进行xml文件的加载</p>
-<p>3.在场景中指定位置将蓝图实例化</p>
-<h2 id="_1">问题</h2>
+                <h1 id="urlab">URLab 编辑器</h1>
+<p>编辑器（<a href="https://github.com/OpenHUTB/hutb/tree/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor">URLabEditor</a>）模块提供了将 MuJoCo 的 MJCF XML 定义与虚幻引擎的参与者（Actor）和组件（Component）系统相桥接所需的专用工具。该模块负责处理资源导入流程、网格预处理以及编辑器端的自定义设置，使用户能够在虚幻编辑器环境中管理复杂的机器人资源。</p>
+<p>编辑工具的主要目标是自动将层次化的 XML 机器人描述转换为功能性的 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L34">AMjArticulation</a> 蓝图，该蓝图包含物理就绪的组件和优化的几何体。</p>
+<h2 id="mjcf">系统概述：从MJCF到蓝图</h2>
+<p>下图展示了从原始MJCF文件到虚幻编辑器中生成机器人的高级流程。</p>
+<h3 id="mjcf_1">MJCF 导入管线</h3>
+<p>导入流程是一个多阶段的过程，当将 .xml 文件拖入虚幻内容浏览器时，该流程即开始。UMujocoImportFactory会拦截此操作，并协调多个专用类将 MuJoCo 场景图重建为虚幻参与者。</p>
 <ul>
 <li>
-<p>打包报错：<code>UnrealBuildTool: ERROR: Non-editor build cannot depend on non-redistributable modules.</code></p>
-<p>原因：将一些编辑器相关的内容打包进来了，参考<a href="https://imzlp.com/posts/9050/">链接</a>。</p>
-<p>解决：打开 Build/engine/UE4.sln，右键项目 UnrealBuildTool 进行<code>生成</code>。</p>
-<p>资产打包报错：
-<div class="highlight"><pre><span></span><code>LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IA_TwistMove.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IMC_TwistControl.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Materials/M_MuJoCo_Master.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Demo/example_BP/M_HoverGlow.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjCameraFeedEntry.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjPropertyRow.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjSimulate.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IA_TwistTurn.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Demo/example_BP/BP_RandomActions.uasset is too old
-</code></pre></div>
-解决：在资源浏览器中删除资产。</p>
+<p>XML解析：MujocoXmlParser读取MJCF结构，并将MuJoCo元素（物体、关节、几何体）映射到其对应的UMjComponent子类。</p>
 </li>
 <li>
-<p>error C2039: "byte": is not a member "std" C++14
-原因：mujoco 和 CoACD 使用的是 C++ 17 进行编译，而虚幻工程使用 C++ 14</p>
-<p>解决：将 C++ 17 的一些语法改为 C++ 14
-<div class="highlight"><pre><span></span><code><span class="c1">// Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\third_party\install\MuJoCo\include\mujoco\mjspec.h</span>
-<span class="c1">// using mjByteVec     = std::vector&lt;std:byte&gt;;</span>
-<span class="k">using</span><span class="w"> </span><span class="n">mjByteVec</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;</span><span class="p">;</span>
-
-<span class="c1">// Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\third_party\install\CoACD\include\CoACD\coacd.h</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">set_log_level</span><span class="p">();</span><span class="w"> </span><span class="c1">// void set_log_level(std::string_view level);</span>
-</code></pre></div></p>
+<p>网格处理：由于MuJoCo经常使用可能未针对虚幻引擎优化的STL或OBJ文件，因此MujocoMeshImporter（由UMjPythonHelper支持）负责将其转换为GLB格式，并进行三角网格清理。</p>
 </li>
 <li>
-<p>UnrealBuildTool: ERROR: Could not find definition for module 'GeometryFramework', (referenced via Target -&gt; URLab.Build.cs)</p>
-<p>模块 GeometryFramework 位于 UE5 的<code>Engine/Source/Runtime/GeometryFramework</code></p>
+<p>蓝图生成：UMujocoGenerationAction接收解析后的组件树，并通过编程方式构建一个从AMjArticulation派生的蓝图类。</p>
 </li>
 </ul>
+<p>有关这些类和数据映射逻辑的详细说明，请参阅MJCF导入流程。</p>
+<h2 id="_1"></h2>
               
             </div>
           </div><footer>

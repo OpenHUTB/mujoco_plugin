@@ -177,9 +177,11 @@
 pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy
 </code></pre></div></p>
 <p>使用：
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>clean_meshes_trimesh.py<span class="w"> </span>&lt;path_to_xml&gt;
+<div class="highlight"><pre><span></span><code><span class="c1"># cd hutb\Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\Scripts</span>
+python<span class="w"> </span>clean_meshes.py<span class="w"> </span>&lt;path_to_xml&gt;
 <span class="c1"># 示例</span>
-python<span class="w"> </span>clean_meshes_trimesh.py<span class="w"> </span><span class="s2">&quot;path/to/mujoco_menagerie/franka_emika_panda/panda.xml&quot;</span>
+python<span class="w"> </span>clean_meshes.py<span class="w"> </span>hutb<span class="se">\U</span>nreal<span class="se">\C</span>arlaUE4<span class="se">\P</span>lugins<span class="se">\U</span>nrealRoboticsLab<span class="se">\U</span>RLab_Bridge<span class="se">\R</span>oboJuDo<span class="se">\a</span>ssets<span class="se">\r</span>obots<span class="se">\g</span><span class="m">1</span><span class="se">\g</span>1_29dof_rev_1_0.xml
+<span class="c1"># 会在 xml 所在统一目录下生成 g1_29dof_rev_1_0_ue.xml，用于拖转到虚幻编辑器的 Content Browser</span>
 </code></pre></div></p>
 <hr />
 <h2 id="_2">创建的内容</h2>
@@ -299,25 +301,25 @@ python<span class="w"> </span>clean_meshes_trimesh.py<span class="w"> </span><sp
 <p>导入器会创建以 XML <code>&lt;material&gt;</code> 名称为键的共享 Unreal 材质实例。所有引用相同材质名称的几何体共享同一个实例（例如，所有 <code>material="white"</code> 使用 <code>&lt;material_name&gt;</code> 的几何体都使用 <code>MI_white</code>）。元素引用的纹理 <code>&lt;texture&gt;</code> 会应用到相应的材质实例上。</p>
 <hr />
 <h2 id="_6">网格资产</h2>
-<p>导入程序会查找 XML 文件所在目录下的网格文件。 到的网格文件会被复制到导入目标目录下的 <code>/Meshes/</code> 子文件夹中，以避免纹理名称冲突，然后在编译期间注册到 MuJoCo 的 VFS 中。</p>
+<p>导入程序会查找 XML 文件所在目录下的网格文件。网格文件会被复制到导入目标目录下的 <code>/meshes/</code> 子文件夹中，以避免纹理名称冲突，然后在编译期间注册到 MuJoCo 的 VFS 中。</p>
 <p><strong>格式优先级：</strong> GLB &gt; OBJ。导入器首先尝试导入 GLB 文件（通过 Interchange），然后尝试导入原始 OBJ/STL 文件。如果所有路径都失败，则会创建不带可视网格的几何体，但该几何体仍作为碰撞图元存在。此时会记录一条警告信息，但编译仍然会成功。</p>
 <p><strong>自动网格准备：</strong> <code>clean_meshes.py</code> 脚本会在导入过程中自动运行（参见上文 <a href="#importing">导入</a> 部分）。您也可以手动运行它：</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>Scripts/clean_meshes.py<span class="w"> </span>path/to/robot.xml
 </code></pre></div>
-<p>这将生成一个包含更新后的网格引用的 <code>_ue.xml</code> 文件，您可以将其拖入 Unreal 中，而不是使用原始 XML 文件。</p>
+<p>这将生成一个包含更新后的网格引用的 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Scripts/clean_meshes.py#L256">_ue.xml</a> 文件，您可以将其拖入 Unreal 中，而不是使用原始 XML 文件。</p>
 <p><strong>手动安装软件包：</strong> 如果您不想使用对话框，而是希望自行安装软件包，请使用您首选的 Python 解释器运行以下命令：</p>
-<div class="highlight"><pre><span></span><code>/path/to/your/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
+<p><div class="highlight"><pre><span></span><code>/path/to/your/python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
 </code></pre></div>
-<p>Then make sure the same Python path is set in <code>Config/LocalUnrealRoboticsLab.ini</code> (see below). The plugin will detect the packages on next import and skip the install prompt.</p>
-<p><strong>更改 Python 解释器：</strong> 插件会将您的 Python 路径存储在插件目录下的 <code>Config/LocalUnrealRoboticsLab.ini</code> 文件中。该文件已被 .gitignore 忽略（每台机器单独设置）。要切换解释器，您可以删除该文件（下次导入时对话框将重新出现），或者直接编辑该文件： </p>
+随后，请确保在 <a href="https://github.com/OpenHUTB/hutb/tree/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Config">Config/LocalUnrealRoboticsLab.ini</a> 文件中设置了相同的 Python 路径（详见下文）。插件将在下次导入时自动检测相关包，并跳过安装提示。</p>
+<p><strong>更改 Python 解释器：</strong> 插件会将您的 Python 路径存储在插件目录下的 <a href="https://github.com/OpenHUTB/hutb/tree/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Config">Config/LocalUnrealRoboticsLab.ini</a> 文件中。该文件已被 .gitignore 忽略（每台机器单独设置）。要切换解释器，您可以删除该文件（下次导入时对话框将重新出现），或者直接编辑该文件： </p>
 <div class="highlight"><pre><span></span><code><span class="k">[PythonSettings]</span>
 <span class="na">PythonPath</span><span class="o">=</span><span class="s">C:/Users/you/miniconda3/envs/myenv/python.exe</span>
 </code></pre></div>
 <hr />
 <h2 id="_7">调试导入问题</h2>
-<p>启用 <code>AAMjManager</code> 的 <code>bSaveDebugXml</code> 功能，即可在编译后将 <code>scene_compiled.xml</code> 和 <code>scene_compiled.mjb</code> 保存到 <code>Saved/URLab/</code> 目录。对比原始 MJCF 和编译后的 XML 文件，找出导入/导出不匹配之处（例如缺少元素、属性值错误、默认继承关系损坏）。编译后的 XML 文件也可以加载到原生 MuJoCo 中进行验证。更多信息请参阅 <a href="developer_tools.md">开发者工具</a> 。</p>
+<p>启用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L60">UMjPhysicsEngine</a> 的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L139">bSaveDebugXml</a> 功能，即可在编译后将 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">scene_compiled.xml</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L241">scene_compiled.mjb</a>（MuJoCo Binary） 保存到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L273">Saved/URLab/</a> 目录。对比原始 MJCF 和编译后的 XML 文件，找出导入/导出不匹配之处（例如缺少元素、属性值错误、默认继承关系损坏）。编译后的 XML 文件也可以加载到原生 MuJoCo 中进行验证。更多信息请参阅 <a href="../../dev/URLabEditor/">URLab 编辑器</a>、<a href="developer_tools.md">开发者工具</a> 。</p>
 <h2 id="_8">导入后</h2>
-<p>导入的关节是一个普通的虚幻引擎动作者。您可以重新排列组件、添加传感器或摄像机、覆盖属性，或将其保存为可重用的蓝图。XML 仅在导入期间读取——之后，虚幻引擎组件才是最终的数据源。</p>
+<p>导入的关节是一个普通的虚幻引擎参与者。您可以重新排列组件、添加传感器或摄像机、覆盖属性，或将其保存为可重用的蓝图。XML 仅在导入期间读取——之后，虚幻引擎组件才是最终的数据源。</p>
 <p>有关导入流程内部结构的完整详细信息，请参阅 <a href="../../architecture/#import-pipeline">架构</a> 部分。</p>
               
             </div>
