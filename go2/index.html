@@ -126,7 +126,7 @@
               
                 <h1 id="walk-these-ways-go2">Walk-These-Ways Go2 设置</h1>
 <h2 id="1-mjcf-xml">1. 机器人模型 (MJCF XML)</h2>
-<p>The Go2 robot model comes from MuJoCo Menagerie (not walk-these-ways):</p>
+<p>来自 <a href="https://github.com/google-deepmind/mujoco_menageri">MuJoCo Menagerie</a> 的 Go2 机器人 (不是 walk-these-ways):</p>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/google-deepmind/mujoco_menagerie.git
 <span class="c1"># Import into Unreal: drag mujoco_menagerie/unitree_go2/go2.xml into Content Browser</span>
 </code></pre></div>
@@ -134,7 +134,7 @@
 <p>在该目录下放置这些文件：</p>
 <ul>
 <li><code>body_latest.jit</code> — 主策略网络</li>
-<li><code>adaptation_module_latest.jit</code> — Observation history adaptation module</li>
+<li><code>adaptation_module_latest.jit</code> — 观测历史适应模块</li>
 </ul>
 <div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/Teddy-Liao/walk-these-ways-go2.git
 <span class="nb">cd</span><span class="w"> </span>walk-these-ways-go2
@@ -149,9 +149,9 @@ python<span class="w"> </span>src/run.py<span class="w"> </span>--policy<span cl
 </code></pre></div>
 <h2 id="_1">资源</h2>
 <ul>
-<li>Robot XML: https://github.com/google-deepmind/mujoco_menagerie/tree/main/unitree_go2</li>
-<li>Policy: https://github.com/Teddy-Liao/walk-these-ways-go2</li>
-<li>Original paper: https://github.com/Improbable-AI/walk-these-ways (MIT License)</li>
+<li>机器人 XML: https://github.com/google-deepmind/mujoco_menagerie/tree/main/unitree_go2</li>
+<li>策略: https://github.com/Teddy-Liao/walk-these-ways-go2</li>
+<li>原始论文: https://github.com/Improbable-AI/walk-these-ways (MIT 许可证)</li>
 </ul>
               
             </div>

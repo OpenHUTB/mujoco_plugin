@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>Articulation Builder Guide - Mujoco 插件</title>
+    <title>铰链构建器指南 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Articulation Builder Guide";
+        var mkdocs_page_name = "\u94f0\u94fe\u6784\u5efa\u5668\u6307\u5357";
         var mkdocs_page_input_path = "guides/articulation_builder.md";
         var mkdocs_page_url = null;
       </script>
@@ -114,7 +114,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Articulation Builder Guide</li>
+      <li class="breadcrumb-item active">铰链构建器指南</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/guides/articulation_builder.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -124,12 +124,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="articulation-builder-guide">Articulation Builder Guide</h1>
-<p>This guide covers how to build and edit MuJoCo articulations in the Unreal Blueprint editor — both imported from MJCF XML and built from scratch.</p>
+                <h1 id="_1">铰链构建器指南</h1>
+<p>该指南覆盖了如何在虚幻引擎的蓝图编辑器中构建并编辑 Mujoco 铰链的方法（从 MJCF XML 导入和从头开始构建）。</p>
 <hr />
 <h2 id="overview">Overview</h2>
-<p>An <code>AMjArticulation</code> Blueprint contains a hierarchy of MuJoCo components that mirror the MJCF XML structure. When placed in a level and simulated, the plugin converts this hierarchy into a MuJoCo spec, compiles it, and runs physics.</p>
-<p>The component hierarchy is organized into folders:</p>
+<p><code>AMjArticulation</code> 蓝图包含一个 MuJoCo 组件的层次结构，该层次结构反映了 MJCF XML 结构。当放置在场景中并进行模拟时，该插件会将此层次结构转换为 MuJoCo 规范，进行编译，并运行物理模拟。</p>
+<p>组件层次结构组织在以下文件夹中：</p>
 <div class="highlight"><pre><span></span><code>ArticulationRoot
 ├── worldbody (MjWorldBody)
 │   └── body1 (MjBody)
