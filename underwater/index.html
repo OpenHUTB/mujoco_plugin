@@ -130,7 +130,7 @@
 <hr />
 <h2 id="mujoco">MuJoCo 动力学模拟</h2>
 <p>MuJoCo 承担水下机器人的物理仿真核心，包括流体受力、浮力、碰撞检测和推进器动力学。</p>
-<h3 id="mujoco_1">为什么选择 MuJoCo</h3>
+<h3 id="_2">流体动力学机制</h3>
 <p>MuJoCo 提供两种内置的现象学流体模型，无需求解流场状态（无状态模型），计算开销远低于 CFD，可实时运行：</p>
 <table>
 <thead>
@@ -154,40 +154,17 @@
 </tbody>
 </table>
 <p>椭球模型包含 5 类力：钝体阻力、细长体阻力、角阻力、库塔升力、马格努斯升力，由 <code>fluidcoef</code> 属性的 5 个系数控制。</p>
-<h3 id="_2">重要发现：浮力需手动施加</h3>
+<h3 id="_3">重要发现：浮力需手动施加</h3>
 <p>MuJoCo 的 <code>density</code> 参数<strong>只计算阻力和附加质量，不自动计算浮力</strong>。<br />
 水下仿真必须在每个仿真步手动施加阿基米德浮力：</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 浮力公式：F_buoy = ρ_fluid × g × V_body（方向向上）</span>
 <span class="n">buoyancy_force</span> <span class="o">=</span> <span class="n">fluid_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">body_volume</span>
 <span class="n">data</span><span class="o">.</span><span class="n">xfrc_applied</span><span class="p">[</span><span class="n">body_id</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">buoyancy_force</span>  <span class="c1"># Z 轴向上</span>
 </code></pre></div>
-<p>这是水下仿真与空气仿真（果蝇飞行）的关键区别。</p>
-<h3 id="xml">基础 XML 配置</h3>
-<div class="highlight"><pre><span></span><code><span class="nt">&lt;mujoco&gt;</span>
-<span class="w">  </span><span class="cm">&lt;!-- 设置水的物理参数 --&gt;</span>
-<span class="w">  </span><span class="nt">&lt;option</span><span class="w"> </span><span class="na">gravity=</span><span class="s">&quot;0 0 -9.81&quot;</span>
-<span class="w">          </span><span class="na">density=</span><span class="s">&quot;1000&quot;</span>
-<span class="w">          </span><span class="na">viscosity=</span><span class="s">&quot;0.00089&quot;</span>
-<span class="w">          </span><span class="na">integrator=</span><span class="s">&quot;implicitfast&quot;</span><span class="nt">/&gt;</span>
-
-<span class="w">  </span><span class="nt">&lt;worldbody&gt;</span>
-<span class="w">    </span><span class="nt">&lt;body</span><span class="w"> </span><span class="na">name=</span><span class="s">&quot;rov&quot;</span><span class="w"> </span><span class="na">pos=</span><span class="s">&quot;0 0 -1.0&quot;</span><span class="nt">&gt;</span>
-<span class="w">      </span><span class="nt">&lt;freejoint/&gt;</span>
-<span class="w">      </span><span class="cm">&lt;!-- 用圆柱体替代 ROV 本体 --&gt;</span>
-<span class="w">      </span><span class="nt">&lt;geom</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;cylinder&quot;</span><span class="w"> </span><span class="na">size=</span><span class="s">&quot;0.15 0.30&quot;</span>
-<span class="w">            </span><span class="na">mass=</span><span class="s">&quot;10&quot;</span>
-<span class="w">            </span><span class="na">fluidshape=</span><span class="s">&quot;ellipsoid&quot;</span>
-<span class="w">            </span><span class="na">fluidcoef=</span><span class="s">&quot;0.40 7.79 2.81 3.84 0.27&quot;</span><span class="nt">/&gt;</span>
-<span class="w">    </span><span class="nt">&lt;/body&gt;</span>
-<span class="w">  </span><span class="nt">&lt;/worldbody&gt;</span>
-<span class="nt">&lt;/mujoco&gt;</span>
-</code></pre></div>
-<blockquote>
-<p><strong>积分器说明</strong>：官方文档推荐在存在速度相关力（如流体阻力）时使用 <code>implicitfast</code> 积分器，可显著提高仿真稳定性。</p>
-</blockquote>
+<p>这是水下仿真与空气仿真（如果蝇飞行）的关键区别。</p>
 <hr />
-<h2 id="_3">水下机器人本体模拟</h2>
-<h3 id="_4">模型说明</h3>
+<h2 id="_4">水下机器人本体模拟</h2>
+<h3 id="_5">模型说明</h3>
 <p>当前阶段使用长条形圆柱体替代真实 ROV 模型，参数参照深之蓝 DeepFlex ROV：</p>
 <table>
 <thead>
@@ -220,18 +197,17 @@
 </tbody>
 </table>
 <p>等效密度（235.8 kg/m³）远小于水（1000 kg/m³），符合 ROV 实机在水中的中性浮力设计目标。</p>
-<h3 id="_5">椭球流体系数</h3>
+<h3 id="_6">椭球流体系数</h3>
 <p>5 个流体系数来自 ETH Zurich 对水下游泳机器人的实验标定（arxiv 2602.23283）：</p>
-<div class="highlight"><pre><span></span><code>fluidcoef = [0.40,      钝体阻力
-             7.79,      细长体阻力
-             2.81,      角阻力
-             3.84,      库塔升力
-             0.27       马格努斯升力
-             ]      
+<div class="highlight"><pre><span></span><code>fluidcoef = [0.40,   # 钝体阻力
+             7.79,   # 细长体阻力
+             2.81,   # 角阻力
+             3.84,   # 库塔升力
+             0.27]   # 马格努斯升力
 </code></pre></div>
 <hr />
-<h2 id="_6">与水的交互模拟</h2>
-<h3 id="_7">验证实验</h3>
+<h2 id="_7">与水的交互模拟</h2>
+<h3 id="_8">验证实验</h3>
 <p>使用三组对比实验验证 MuJoCo 流体模型的有效性，仿真时长 5 秒：</p>
 <table>
 <thead>
@@ -263,7 +239,9 @@
 </tr>
 </tbody>
 </table>
-<h3 id="_8">物理公式验证</h3>
+<p><strong>仿真数据量化曲线：</strong></p>
+<p><img alt="水下动力学多场景量化对比曲线" src="../img/underwater_test_results.png" /></p>
+<h3 id="_9">物理公式验证</h3>
 <p><strong>场景1（无流体）理论值：</strong></p>
 <p>
 <script type="math/tex; mode=display">\Delta z = -\frac{1}{2} g t^2 = -\frac{1}{2} \times 9.81 \times 25 = -122.6 \text{ m}</script>
@@ -274,39 +252,34 @@
 <script type="math/tex; mode=display">a_{net} = \frac{F_{buoy} - mg}{m} = \frac{1000 \times 9.81 \times 0.0424 - 10 \times 9.81}{10} = 31.8 \text{ m/s}^2 \uparrow</script>
 </p>
 <p>水阻力随速度平方增长，仿真中上浮速度快速受阻，末速 0.74 m/s 符合物理阻尼规律。</p>
-<h3 id="_9">验证结论</h3>
+<h3 id="_10">验证结论</h3>
 <ol>
 <li>✓ MuJoCo 内置椭球流体模型可用于水下动力学仿真</li>
 <li>✓ 浮力须通过 <code>xfrc_applied</code> 手动施加，每步更新</li>
 <li>✓ 圆柱体在水中行为符合物理预期</li>
 <li>✓ 仿真运行速度远超实时，支持后续强化学习训练</li>
 </ol>
-<h3 id="_10">示例代码</h3>
-<p>完整示例代码见：<a href="https://github.com/OpenHUTB/mujoco_plugin/docs/underwater/underwater_demo.py">underwater_demo.py</a></p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">mujoco</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="n">WATER_DENSITY</span>   <span class="o">=</span> <span class="mf">1000.0</span>    <span class="c1"># kg/m³</span>
-<span class="n">WATER_VISCOSITY</span> <span class="o">=</span> <span class="mf">0.00089</span>   <span class="c1"># Pa·s</span>
-<span class="n">GRAVITY</span>         <span class="o">=</span> <span class="mf">9.81</span>
-
-<span class="c1"># 加载模型</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjModel</span><span class="o">.</span><span class="n">from_xml_path</span><span class="p">(</span><span class="s2">&quot;rov.xml&quot;</span><span class="p">)</span>
-<span class="n">data</span>  <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">MjData</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
-<span class="n">body_id</span> <span class="o">=</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_name2id</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">mujoco</span><span class="o">.</span><span class="n">mjtObj</span><span class="o">.</span><span class="n">mjOBJ_BODY</span><span class="p">,</span> <span class="s2">&quot;rov&quot;</span><span class="p">)</span>
-
-<span class="c1"># 预计算浮力</span>
-<span class="n">body_volume</span>    <span class="o">=</span> <span class="mf">0.0424</span>          <span class="c1"># m³（圆柱体体积）</span>
-<span class="n">buoyancy_force</span> <span class="o">=</span> <span class="n">WATER_DENSITY</span> <span class="o">*</span> <span class="n">GRAVITY</span> <span class="o">*</span> <span class="n">body_volume</span>  <span class="c1"># 415.8 N</span>
-
-<span class="c1"># 仿真循环</span>
-<span class="k">while</span> <span class="n">data</span><span class="o">.</span><span class="n">time</span> <span class="o">&lt;</span> <span class="mf">10.0</span><span class="p">:</span>
-    <span class="c1"># 每步施加浮力</span>
-    <span class="n">data</span><span class="o">.</span><span class="n">xfrc_applied</span><span class="p">[</span><span class="n">body_id</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">buoyancy_force</span>
-    <span class="n">mujoco</span><span class="o">.</span><span class="n">mj_step</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
-</code></pre></div>
 <hr />
-<h2 id="_11">参考</h2>
+<h2 id="_11">运行与配置</h2>
+<p>本模块采用代码与数据解耦的设计，核心结构如下：</p>
+<div class="highlight"><pre><span></span><code>mujoco_plugin/
+├── config.json                     # 全局参数配置文件
+├── rov_base.xml                    # MuJoCo MJCF 模型文件
+├── docs/
+│   └── img/
+│       └── underwater_test_results.png   # 自动生成的量化曲线图
+└── src/
+    └── underwater/
+        └── underwater_sim.py       # 仿真主程序
+</code></pre></div>
+<p><strong>调整参数</strong>：编辑 <code>config.json</code>，修改水体密度、ROV 质量或测试场景，无需改动 Python 源码。</p>
+<p><strong>运行仿真</strong>：在项目根目录下执行：</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mujoco<span class="w"> </span>matplotlib<span class="w"> </span>numpy
+python<span class="w"> </span>src/underwater/underwater_sim.py
+</code></pre></div>
+<p>运行结束后自动生成量化折线图，并可选择启动 MuJoCo 交互式 3D 查看器。</p>
+<hr />
+<h2 id="_12">参考</h2>
 <ul>
 <li><a href="https://docs.mujoco.cn/en/stable/computation/fluid.html">MuJoCo 流体受力官方文档</a></li>
 <li><a href="https://arxiv.org/html/2602.23283v1">Simple Models, Real Swimming: Digital Twins for Tendon-Driven Underwater Robots</a>（ETH Zurich, 2025）</li>
