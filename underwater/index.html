@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../img/favicon.ico" />
-    <title>水下机器人 - Mujoco 插件</title>
+    <title>其他机器人 - Mujoco 插件</title>
     <link rel="stylesheet" href="../css/theme.css" />
     <link rel="stylesheet" href="../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba";
+        var mkdocs_page_name = "\u5176\u4ed6\u673a\u5668\u4eba";
         var mkdocs_page_input_path = "underwater/README.md";
         var mkdocs_page_url = null;
       </script>
@@ -54,6 +54,10 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../dev/URLabEditor/">URLab 编辑器</a>
                 </li>
               </ul>
               <ul>
@@ -100,6 +104,52 @@
                 <li class="toctree-l1"><a class="reference internal" href="../introduction/">引擎插件开发入门</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">其他机器人</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#ue">UE 高保真渲染</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#mujoco">MuJoCo 动力学模拟</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">流体动力学机制</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_3">重要发现：浮力需手动施加</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_4">水下机器人本体模拟</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_5">模型说明</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_6">椭球流体系数</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_7">与水的交互模拟</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#_8">验证实验</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_9">物理公式验证</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_10">验证结论</a>
+    </li>
+        </ul>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_11">运行与配置</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_12">参考</a>
+    </li>
+    </ul>
+                </li>
+              </ul>
       </div>
     </div>
     </nav>
@@ -114,7 +164,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href=".." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人</li>
+      <li class="breadcrumb-item active">其他机器人</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/README.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -289,6 +339,9 @@ python<span class="w"> </span>src/underwater/underwater_sim.py
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../humanoid/g1/" class="btn btn-neutral float-left" title="人形机器人"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+    </div>
 
   <hr/>
 
@@ -313,6 +366,8 @@ python<span class="w"> </span>src/underwater/underwater_sim.py
           <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
         </span>
     
+    
+      <span><a href="../humanoid/g1/" style="color: #fcfcfc">&laquo; 前一页</a></span>
     
     
   </span>

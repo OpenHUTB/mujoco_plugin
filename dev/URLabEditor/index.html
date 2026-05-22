@@ -56,6 +56,24 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
                 </li>
               </ul>
+              <ul class="current">
+                <li class="toctree-l1 current"><a class="reference internal current" href="#">URLab 编辑器</a>
+    <ul class="current">
+    <li class="toctree-l2"><a class="reference internal" href="#mjcf">系统概述：从MJCF到蓝图</a>
+        <ul>
+    <li class="toctree-l3"><a class="reference internal" href="#mjcf_1">MJCF 导入管线</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#python">编辑器自定义设置与Python助手</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_1">关键编辑工具与脚本</a>
+    </li>
+    <li class="toctree-l3"><a class="reference internal" href="#_2">报错解决方案</a>
+    </li>
+        </ul>
+    </li>
+    </ul>
+                </li>
+              </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
                 </li>
@@ -98,6 +116,18 @@
               </ul>
               <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -153,16 +183,26 @@
     F --&gt; H
     G --&gt; I</code></pre>
 <h3 id="mjcf_1">MJCF 导入管线</h3>
-<p>导入流程是一个多阶段的过程，当将 .xml 文件拖入虚幻内容浏览器时，该流程即开始。<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp#L38">UMujocoImportFactory</a> 会拦截此操作，并协调多个专用类将 MuJoCo 场景图重建为虚幻引擎的参与者。</p>
+<p>导入流程是一个多阶段的过程，当将 .xml 文件拖入虚幻内容浏览器时，该流程即开始。<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp#L51">UMujocoImportFactory</a> 会拦截此操作，并协调多个专用类将 MuJoCo 场景图重建为虚幻引擎的参与者。</p>
 <ul>
 <li>
-<p>XML 解析：<a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp">MujocoXmlParser</a> 读取 MJCF 结构，并将 MuJoCo 元素（物体、关节、几何体）映射到其对应的UMjComponent子类。</p>
+<p>1.<strong>XML 解析</strong>：<a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp">MujocoXmlParser</a> 读取 MJCF 结构，并将 MuJoCo 元素（物体、关节、几何体）映射到其对应的UMjComponent子类。 尝试运行 clean_meshed.py 来准备网格。</p>
+<p>1.1.确保引擎的 Python 是否准备好（包括检查 Python 和<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MjPythonHelper.cpp#L228">依赖的包</a>）。位于 hutb\Build\engine\Engine\Binaries\ThirdParty\Python3\Win64\Python.exe 。</p>
+<p>1.2.运行网格准备：<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp#L100">python clean_mesh.py g1_29dof_rev_1_0.xml</a></p>
+<p>1.3.将导入用的原始 XML 文件路径写入新建蓝图的类默认对象（Class Default Object, CDO），以便该路径随蓝图资产持久保存并能在编辑器/运行时访问。</p>
 </li>
 <li>
-<p>网格处理：由于 MuJoCo 经常使用可能未针对虚幻引擎优化的 <strong>STL</strong>（立体光刻、Stereolithography：描述三角面片组成的 3D 模型表面）或 OBJ 文件，因此 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp">MujocoMeshImporter</a> （由 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MjPythonHelper.cpp">UMjPythonHelper</a> 支持）负责将其转换为 <strong>GLB</strong> 格式，并进行三角网格清理。</p>
+<p>2.<strong>网格处理</strong>（使用已准备好的 XML <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp#L141">生成</a> <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L80">蓝图</a> 组件）：由于 MuJoCo 经常使用可能未针对虚幻引擎优化的 STL（立体光刻、Stereolithography：描述三角面片组成的 3D 模型表面）或 OBJ 文件，因此 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp">MujocoMeshImporter</a> （由 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MjPythonHelper.cpp">UMjPythonHelper</a> 支持）负责将其转换为 GLB 格式，并进行三角网格清理。</p>
 </li>
 <li>
-<p>蓝图生成：<a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp">UMujocoGenerationAction</a> 接收解析后的组件树，并通过编程方式构建一个从 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L34">AMjArticulation</a> 派生的蓝图类。</p>
+<p>3.<strong>蓝图生成</strong>：<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L98">编译</a>来保存修改，并确保组件是有效的。  <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp">UMujocoGenerationAction</a> 接收解析后的组件树，并通过编程方式构建一个从 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L34">AMjArticulation</a> 派生的蓝图类。</p>
+<p>导入的资产位于项目的：Content/MuJoCoImports/g1_29dof_rev_1_0_ue_ue_Assets 目录下。</p>
+<p>3.0. <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L133">预扫描</a>：收集默认网格比例，以便资源解析能够继承这些比例。</p>
+<p>3.1 传递：已处理的资产。<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L149">导入纹理</a> 中的 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp#L343">导入单个纹理</a> 失败，<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp#L365">FFileHelper::LoadFileToArray</a> 失败。放在纹理资产变量 TextureAsserts（值 D:\hutb\Unreal\CarlaUE4\Content\Humanoid\robots\g1/<strong>groundplane</strong> 为空） 中。</p>
+<p>核心为<strong>递归解析资产</strong>：
+    如果这是一个容器，请在直接子项中查找编译器标签，以便为所有同级项设置目录覆盖。
+    递归处理顶级容器（不包括上面处理过的标签，如 include/asset）。</p>
+<p>3.2. 动态创建组织节点。首先解析编译器设置（角度、eulerseq），以便将其传播到 \<default>-block 导入中——默认类中的关节范围取决于编译器级别的<code>angle</code>设置。然后分别解析：默认、接触对和排除、等式约束、关键帧、结构遍历（worldbody <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L208">递归导入节点（ImportNodeRecursive）</a> 报错）；解析\<option>并存储在articulation CDO中，以便AAMjManager在运行时应用它们。</p>
 </li>
 </ul>
 <p>有关这些类和数据映射逻辑的详细介绍，请参阅 <strong><a href="../../guides/mujoco_import/">MJCF导入管线</a></strong> 。</p>
@@ -218,9 +258,32 @@
     F_CM --&gt; F_CV
     F_CV --&gt; PH
     PH --&gt; MI</code></pre>
+<h3 id="_2">报错解决方案</h3>
+<ul>
+<li>
+<p>运行到 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L96">GenerateForBlueprintXml()</a> 虚幻编辑器提示：导入"meshes/*.glb"失败。未知扩展名"glb"。</p>
+<p>解决：启用 glTF 插件（注意是小写 l 不是大写的 I）。备注：安装 <a href="https://github.com/rdeioris/glTFRuntime/releases/download/20220823/glTFRuntime_20220823_426.zip">glTF</a> 插件解决不了。</p>
+</li>
+<li>
+<p>调试模式报错：<a href="https://github.com/OpenHUTB/engine/blob/hutb/Engine/Source/Runtime/Slate/Private/Framework/Application/SlateApplication.cpp#L1875">FPlatformMisc::IsDebuggerPresent()</a>在无人值守脚本模式下运行时，一个模态窗口试图接管控制。该窗口已被取消。</p>
+<p>解决：在 VS 中点击<code>开始执行（不调试）</code>。</p>
+</li>
+<li>
+<p>在编辑器中拖入生成的蓝图并运行报错：
+    <div class="highlight"><pre><span></span><code>MuJoCo compile failed:
+
+Error: mesh &#39;g1_29dof_rev_1_4_pelvis_contour_link&#39; not found in geom 1
+Element name &#39;g1_29dof_rev_1_4_Geom_Mesh1&#39;, id 1
+</code></pre></div></p>
+</li>
+</ul>
               
             </div>
           </div><footer>
+    <div class="rst-footer-buttons" role="navigation" aria-label="Footer Navigation">
+        <a href="../../guides/mujoco_import/" class="btn btn-neutral float-left" title="MJCF 导入"><span class="icon icon-circle-arrow-left"></span> 前一页</a>
+        <a href="../../guides/geometry_authoring/" class="btn btn-neutral float-right" title="几何体与碰撞">后一页 <span class="icon icon-circle-arrow-right"></span></a>
+    </div>
 
   <hr/>
 
@@ -246,6 +309,10 @@
         </span>
     
     
+      <span><a href="../../guides/mujoco_import/" style="color: #fcfcfc">&laquo; 前一页</a></span>
+    
+    
+      <span><a href="../../guides/geometry_authoring/" style="color: #fcfcfc">后一页 &raquo;</a></span>
     
   </span>
 </div>

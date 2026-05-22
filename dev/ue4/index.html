@@ -57,6 +57,10 @@
                 </li>
               </ul>
               <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
                 <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
                 </li>
               </ul>
@@ -100,6 +104,18 @@
                 <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
                 </li>
               </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
+                </li>
+              </ul>
       </div>
     </div>
     </nav>
@@ -129,8 +145,22 @@
 <p>2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -&gt; 通过拖拽 Actor 的方式（参考 <a href="https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1">mujoco_plugin</a> ）</p>
 <p>-&gt; Source/URLab/Public/MuJoCo/Core/AMjManager.h 是一个参与者，通过它进行xml文件的加载</p>
 <p>3.在场景中指定位置将蓝图实例化</p>
+<p>hutb 引擎中默认使用的是 Python 3.7.7，位于 <a href="https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64">Engine/Binaries/ThirdParty/Python3/Win64</a> 、UE 5.7 中默认使用的是 Python 3.11.8。</p>
 <h2 id="_1">问题</h2>
 <ul>
+<li>
+<p>虚幻中验证pip报错：
+<div class="highlight"><pre><span></span><code>FPlatformProcess::ExecProcess(*PythonPath, TEXT(&quot;-m pip --version&quot;), &amp;PipCheck, &amp;PipOut, &amp;PipErr);
+
+  File &quot;D:\hutb\Build\engine\Engine\Binaries\ThirdParty\Python3\Win64\lib\site-packages\pip\_internal\vcs\subversion.py&quot;, line 180, in __init__
+    use_interactive = sys.stdin.isatty()
+AttributeError: &#39;NoneType&#39; object has no attribute &#39;isatty&#39;
+</code></pre></div>
+<strong>手动执行包的安装</strong>：
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
+</code></pre></div>
+就可以生成_ue.xml文件和meshes/*glb文件。</p>
+</li>
 <li>
 <p>打包报错：<code>UnrealBuildTool: ERROR: Non-editor build cannot depend on non-redistributable modules.</code></p>
 <p>原因：将一些编辑器相关的内容打包进来了，参考<a href="https://imzlp.com/posts/9050/">链接</a>。</p>
