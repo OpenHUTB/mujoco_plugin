@@ -139,6 +139,8 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#_9">物理公式验证</a>
     </li>
+    <li class="toctree-l3"><a class="reference internal" href="#6-dof">复杂受力与流体各向异性验证 (6-DOF 测试)</a>
+    </li>
     <li class="toctree-l3"><a class="reference internal" href="#_10">验证结论</a>
     </li>
         </ul>
@@ -302,12 +304,24 @@
 <script type="math/tex; mode=display">a_{net} = \frac{F_{buoy} - mg}{m} = \frac{1000 \times 9.81 \times 0.0424 - 10 \times 9.81}{10} = 31.8 \text{ m/s}^2 \uparrow</script>
 </p>
 <p>水阻力随速度平方增长，仿真中上浮速度快速受阻，末速 0.74 m/s 符合物理阻尼规律。</p>
+<h3 id="6-dof">复杂受力与流体各向异性验证 (6-DOF 测试)</h3>
+<p>为验证流体模型在真实三维空间中的各向异性阻力特征，系统进行了 6-DOF 脉冲阶跃推力测试。在仿真初始阶段 ($0.1\text{ s}$) 施加巨大脉冲外力/扭矩，随后撤销外力，观测刚体在纯流体阻尼下的速度衰减过程。</p>
+<p>基于圆柱体几何对称性与流体摩擦机理，测试矩阵进行了如下力学裁剪：
+* <strong>横向平移 ($F_x$)</strong>：代表最大迎水截面（长方形），激活极大的细长体阻力和钝体压阻。（$F_y$ 因对称性等效，故省略）。
+* <strong>纵向平移 ($F_z$)</strong>：代表最小迎水截面（圆形），仅激活较小的轴向钝体阻力。
+* <strong>横向翻滚 ($T_y$)</strong>：代表大面积非线性钝体拨水旋转，激活极强的角阻尼。（$T_x$ 因对称性等效省略；$T_z$ 绕中心轴自转仅产生微弱的皮肤摩擦阻力，为突出视觉反差予以忽略）。</p>
+<p><strong>速度与角速度衰减对比曲线：</strong></p>
+<p><img alt="各向异性流体阻力测试" src="../img/anisotropic_drag_test.png" /></p>
+<p><strong>数据分析：</strong>
+* $F_x$（横向运动）的衰减斜率远大于 $F_z$（纵向运动），准确反映了迎流面积激增导致的阻力突变。
+* $T_y$（横向翻滚）在撤销外力后瞬间受阻至零，证明了 MuJoCo 椭球模型中角阻力（Angular Resistance）计算的高效性与准确性。</p>
 <h3 id="_10">验证结论</h3>
 <ol>
-<li>✓ MuJoCo 内置椭球流体模型可用于水下动力学仿真</li>
-<li>✓ 浮力须通过 <code>xfrc_applied</code> 手动施加，每步更新</li>
-<li>✓ 圆柱体在水中行为符合物理预期</li>
-<li>✓ 仿真运行速度远超实时，支持后续强化学习训练</li>
+<li>MuJoCo 内置椭球流体模型可用于水下动力学仿真</li>
+<li>浮力须通过 <code>xfrc_applied</code> 手动施加，每步更新</li>
+<li>圆柱体在水中行为符合物理预期</li>
+<li>仿真运行速度远超实时，支持后续强化学习训练</li>
+<li>流体模型能够精准反映几何外形与受力角度带来的各向异性阻力差异</li>
 </ol>
 <hr />
 <h2 id="_11">运行与配置</h2>
@@ -317,7 +331,8 @@
 ├── rov_base.xml                    # MuJoCo MJCF 模型文件
 ├── docs/
 │   └── img/
-│       └── underwater_test_results.png   # 自动生成的量化曲线图
+│       ├── underwater_test_results.png   # 沉浮状态量化曲线图
+│       └── anisotropic_drag_test.png     # 6-DOF 各向异性阻力测试曲线
 └── src/
     └── underwater/
         └── underwater_sim.py       # 仿真主程序
