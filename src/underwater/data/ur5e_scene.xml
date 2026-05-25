@@ -1,0 +1,29 @@
+<mujoco model="ur5e_robotiq_scene">
+    <option timestep="0.001" gravity="0 0 -9.81"/>
+
+    <contact>
+        <exclude body1="gripper_right_driver" body2="target_box"/>
+        <exclude body1="gripper_left_driver" body2="target_box"/>
+        <exclude body1="gripper_right_coupler" body2="target_box"/>
+        <exclude body1="gripper_left_coupler" body2="target_box"/>
+        <exclude body1="gripper_right_spring_link" body2="target_box"/>
+        <exclude body1="gripper_left_spring_link" body2="target_box"/>
+        <exclude body1="gripper_right_follower" body2="target_box"/>
+        <exclude body1="gripper_left_follower" body2="target_box"/>
+        <exclude body1="gripper_base" body2="target_box"/>
+        <exclude body1="gripper_base_mount" body2="target_box"/>
+    </contact>
+
+    <worldbody>
+        <light pos="0 0 5" dir="0 0 -1" directional="true"/>
+        <geom type="plane" size="2 2 0.1" rgba="0.2 0.3 0.3 1"
+              solref="0.02 1" solimp="0.9 0.95 0.001"/>
+        <body name="target_box" pos="0.6 0 0.03">
+            <freejoint/>
+            <geom type="box" size="0.02 0.02 0.02" mass="0.1" rgba="0.2 0.6 1 1"
+                  condim="4" friction="1.0 0.005 0.0001" solref="0.02 1" solimp="0.9 0.95 0.001"/>
+        </body>
+    </worldbody>
+
+    <include file="ur5e_with_gripper.xml"/>
+</mujoco>

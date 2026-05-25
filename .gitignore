@@ -72,3 +72,7 @@ Plugins/*/Intermediate/*
 
 # Cache files for the editor to use
 DerivedDataCache/*
+
+# MuJoCo 运行时生成文件，不纳入版本控制
+assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml
+assets/mujoco_menagerie/universal_robots_ur5e/industrial_scene.xml
