@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>迁移到UE4 - Mujoco 插件</title>
+    <title>自动化测试 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u8fc1\u79fb\u5230UE4";
-        var mkdocs_page_input_path = "dev/ue4.md";
+        var mkdocs_page_name = "\u81ea\u52a8\u5316\u6d4b\u8bd5";
+        var mkdocs_page_input_path = "dev/testing.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">迁移到UE4</li>
+      <li class="breadcrumb-item active">自动化测试</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/ue4.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/testing.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,66 +140,23 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ue4">迁移到UE4</h1>
-<p>1.将xml文件转成 _ue.xml 文件</p>
-<p>2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -&gt; 通过拖拽 Actor 的方式（参考 <a href="https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1">mujoco_plugin</a> ）</p>
-<p>-&gt; Source/URLab/Public/MuJoCo/Core/AMjManager.h 是一个参与者，通过它进行xml文件的加载</p>
-<p>3.在场景中指定位置将蓝图实例化</p>
-<p>hutb 引擎中默认使用的是 Python 3.7.7，位于 <a href="https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64">Engine/Binaries/ThirdParty/Python3/Win64</a> 、UE 5.7 中默认使用的是 Python 3.11.8。</p>
-<h2 id="_1">问题</h2>
-<ul>
-<li>
-<p>虚幻中验证pip报错：
-<div class="highlight"><pre><span></span><code>FPlatformProcess::ExecProcess(*PythonPath, TEXT(&quot;-m pip --version&quot;), &amp;PipCheck, &amp;PipOut, &amp;PipErr);
-
-  File &quot;D:\hutb\Build\engine\Engine\Binaries\ThirdParty\Python3\Win64\lib\site-packages\pip\_internal\vcs\subversion.py&quot;, line 180, in __init__
-    use_interactive = sys.stdin.isatty()
-AttributeError: &#39;NoneType&#39; object has no attribute &#39;isatty&#39;
+                <h1 id="_1">自动化测试</h1>
+<h2 id="1">1. 开启测试相关的插件</h2>
+<p>在项目/插件 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/UnrealRoboticsLab.uplugin">.uproject</a> 中添加：</p>
+<div class="highlight"><pre><span></span><code>    &quot;Plugins&quot;: [
+        {
+            &quot;Name&quot;: &quot;FunctionalTestingEditor&quot;,
+            &quot;Enabled&quot;: true
+        }
+    ]
 </code></pre></div>
-<strong>手动执行包的安装</strong>：
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
-</code></pre></div>
-就可以生成_ue.xml文件和meshes/*glb文件。</p>
-</li>
-<li>
-<p>打包报错：<code>UnrealBuildTool: ERROR: Non-editor build cannot depend on non-redistributable modules.</code></p>
-<p>原因：将一些编辑器相关的内容打包进来了，参考<a href="https://imzlp.com/posts/9050/">链接</a>。</p>
-<p>解决：打开 Build/engine/UE4.sln，右键项目 UnrealBuildTool 进行<code>生成</code>。</p>
-<p>资产打包报错：
-<div class="highlight"><pre><span></span><code>LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IA_TwistMove.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IMC_TwistControl.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Materials/M_MuJoCo_Master.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Demo/example_BP/M_HoverGlow.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjCameraFeedEntry.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjPropertyRow.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/UI/WBP_MjSimulate.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Input/IA_TwistTurn.uasset is too old
-LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Demo/example_BP/BP_RandomActions.uasset is too old
-</code></pre></div>
-解决：在资源浏览器中删除资产。</p>
-</li>
-<li>
-<p>error C2039: "byte": is not a member "std" C++14
-原因：mujoco 和 CoACD 使用的是 C++ 17 进行编译，而虚幻工程使用 C++ 14</p>
-<p>解决：将 C++ 17 的一些语法改为 C++ 14
-<div class="highlight"><pre><span></span><code><span class="c1">// Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\third_party\install\MuJoCo\include\mujoco\mjspec.h</span>
-<span class="c1">// using mjByteVec     = std::vector&lt;std:byte&gt;;</span>
-<span class="k">using</span><span class="w"> </span><span class="n">mjByteVec</span><span class="w">     </span><span class="o">=</span><span class="w"> </span><span class="n">std</span><span class="o">::</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="o">&gt;</span><span class="p">;</span>
-
-<span class="c1">// Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\third_party\install\CoACD\include\CoACD\coacd.h</span>
-<span class="kt">void</span><span class="w"> </span><span class="nf">set_log_level</span><span class="p">();</span><span class="w"> </span><span class="c1">// void set_log_level(std::string_view level);</span>
-</code></pre></div></p>
-</li>
-<li>
-<p>UnrealBuildTool: ERROR: Could not find definition for module 'GeometryFramework', (referenced via Target -&gt; URLab.Build.cs)</p>
-<p>模块 GeometryFramework 位于 UE5 的<code>Engine/Source/Runtime/GeometryFramework</code></p>
-</li>
-<li>
-<p>调试模式运行虚幻编辑器后，拖入 xml 模型在 <a href="https://github.com/OpenHUTB/engine/blob/ab78e8bbd557471bdc132ba0e17abdd02d6920c0/Engine/Source/Runtime/Slate/Private/Framework/Application/SlateApplication.cpp#L1877">UE_DEBUG_BREAK()</a> 处断点停止，且无法继续</p>
-<p>输出：在无人值守脚本模式下运行时，一个模态窗口试图获取控制权。该窗口已被取消。</p>
-<p>原因：在“无人值守脚本（unattended）”模式下阻止弹出普通模态窗口（除非它是标记为慢任务的模态窗口 bSlowTaskWindow=true）</p>
-</li>
-</ul>
+<p>或者通过虚幻编辑器打开这个插件：
+单击编辑器菜单中设置-&gt;插件按钮，从弹出的插件界面中选择“Testing”分类中的 Functional Testing Editor（和 Runtime Tests）。</p>
+<p>在编辑器的<code>窗口(Window)</code>菜单中，单击<code>测试自动化</code>按钮，弹出测试的会话前端：</p>
+<p><img alt="" src="../../img/dev/launch_testing.jpg" /></p>
+<p>选择 URLab 的 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/Tests/MjXmlUtilsTests.cpp">XmlUtils</a> 进行测试：</p>
+<p><img alt="" src="../../img/dev/run_testing.jpg" /></p>
+<p>最后弹出测试的过程和结果。</p>
               
             </div>
           </div><footer>
