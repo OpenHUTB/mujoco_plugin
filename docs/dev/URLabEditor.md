@@ -61,7 +61,7 @@ flowchart TD
         如果这是一个容器，请在直接子项中查找编译器标签，以便为所有同级项设置目录覆盖。
         递归处理顶级容器（不包括上面处理过的标签，如 include/asset）。
 
-    3.2. 动态创建组织节点。首先解析编译器设置（角度、eulerseq），以便将其传播到 \<default>-block 导入中——默认类中的关节范围取决于编译器级别的`angle`设置。然后分别解析：默认、接触对和排除、等式约束、关键帧、结构遍历（worldbody [递归导入节点（ImportNodeRecursive）](https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L208) 报错）；解析\<option>并存储在articulation CDO中，以便AAMjManager在运行时应用它们。
+    3.2. 动态创建组织节点。首先解析编译器设置（角度、eulerseq），以便将其传播到 \<default>-block 导入中——默认类中的关节范围取决于编译器级别的`angle`设置。然后分别解析：默认、接触对和排除项、等式约束、关键帧、结构遍历（worldbody [递归导入节点（ImportNodeRecursive）](https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L208) 报错）；解析\<option>并存储在articulation CDO中，以便AAMjManager在运行时应用它们。
 
 
 有关这些类和数据映射逻辑的详细介绍，请参阅 **[MJCF导入管线](../guides/mujoco_import.md)** 。
@@ -131,3 +131,4 @@ flowchart LR
     Error: mesh 'g1_29dof_rev_1_4_pelvis_contour_link' not found in geom 1
     Element name 'g1_29dof_rev_1_4_Geom_Mesh1', id 1
     ```
+    原因：[mujoco 模型编译的结果为空](https://github.com/OpenHUTB/hutb/blob/5d0243d461c4e492c856b73bbc870592d6b1b96b/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L219)。

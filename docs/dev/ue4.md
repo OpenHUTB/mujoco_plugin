@@ -67,4 +67,10 @@ python -m pip install trimesh numpy scipy
 
     模块 GeometryFramework 位于 UE5 的`Engine/Source/Runtime/GeometryFramework`
 
+* 调试模式运行虚幻编辑器后，拖入 xml 模型在 [UE_DEBUG_BREAK()](https://github.com/OpenHUTB/engine/blob/ab78e8bbd557471bdc132ba0e17abdd02d6920c0/Engine/Source/Runtime/Slate/Private/Framework/Application/SlateApplication.cpp#L1877) 处断点停止，且无法继续
+
+    输出：在无人值守脚本模式下运行时，一个模态窗口试图获取控制权。该窗口已被取消。
+
+    原因：在“无人值守脚本（unattended）”模式下阻止弹出普通模态窗口（除非它是标记为慢任务的模态窗口 bSlowTaskWindow=true）
+
 

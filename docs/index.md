@@ -49,6 +49,7 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 | [URLab 桥接](guides/policy_bridge.md) | Python 中间件、强化学习策略、远程控制 |
 | [架构](architecture.md) | 子系统设计、线程模型、编译流程 |
 | [UE4 实现](./dev/ue4.md) | 迁移到 UE4，[适配 hutb 模拟器](https://github.com/OpenHUTB/hutb) |
+| [自动化测试](./dev/testing.md) | 各种插件功能的测试 |
 
 ---
 
