@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>Mujoco introduction - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Mujoco introduction";
+        var mkdocs_page_input_path = "underwater/mujoco_introduction.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../">其他机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Mujoco introduction</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/mujoco_introduction.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h2 id="mujoco">MuJoCo 动力学模拟</h2>
+<p>MuJoCo 承担水下机器人的物理仿真核心，包括流体受力、浮力、碰撞检测和推进器动力学。</p>
+<h3 id="_1">流体动力学机制</h3>
+<p>MuJoCo 提供两种内置的现象学流体模型，无需求解流场状态（无状态模型），计算开销远低于 CFD，可实时运行：</p>
+<table>
+<thead>
+<tr>
+<th>模型</th>
+<th>激活方式</th>
+<th>适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>惯性模型</td>
+<td>设置 <code>density</code> 和 <code>viscosity</code></td>
+<td>快速验证，简单形状</td>
+</tr>
+<tr>
+<td>椭球模型</td>
+<td>设置 <code>fluidshape="ellipsoid"</code></td>
+<td>精细阻力，复杂姿态</td>
+</tr>
+</tbody>
+</table>
+<p>椭球模型包含 5 类力：钝体阻力、细长体阻力、角阻力、库塔升力、马格努斯升力，由 <code>fluidcoef</code> 属性的 5 个系数控制。</p>
+<h3 id="_2">重要发现：浮力需手动施加</h3>
+<p>MuJoCo 的 <code>density</code> 参数<strong>只计算阻力和附加质量，不自动计算浮力</strong>。<br />
+水下仿真必须在每个仿真步手动施加阿基米德浮力：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 浮力公式：F_buoy = ρ_fluid × g × V_body（方向向上）</span>
+<span class="n">buoyancy_force</span> <span class="o">=</span> <span class="n">fluid_density</span> <span class="o">*</span> <span class="n">gravity</span> <span class="o">*</span> <span class="n">body_volume</span>
+<span class="n">data</span><span class="o">.</span><span class="n">xfrc_applied</span><span class="p">[</span><span class="n">body_id</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span> <span class="o">=</span> <span class="n">buoyancy_force</span>  <span class="c1"># Z 轴向上</span>
+</code></pre></div>
+<p>这是水下仿真与空气仿真（如果蝇飞行）的关键区别。</p>
+<hr />
+<h2 id="_3">水下机器人本体模拟</h2>
+<h3 id="_4">模型说明</h3>
+<p>当前阶段使用长条形圆柱体替代真实 ROV 模型，参数参照深之蓝 DeepFlex ROV：</p>
+<table>
+<thead>
+<tr>
+<th>参数</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>圆柱半径</td>
+<td>0.15 m</td>
+</tr>
+<tr>
+<td>圆柱长度</td>
+<td>0.60 m</td>
+</tr>
+<tr>
+<td>质量</td>
+<td>10 kg</td>
+</tr>
+<tr>
+<td>体积</td>
+<td>0.0424 m³</td>
+</tr>
+<tr>
+<td>等效密度</td>
+<td>235.8 kg/m³</td>
+</tr>
+</tbody>
+</table>
+<p>等效密度（235.8 kg/m³）远小于水（1000 kg/m³），符合 ROV 实机在水中的中性浮力设计目标。</p>
+<h3 id="_5">椭球流体系数</h3>
+<p>5 个流体系数来自 ETH Zurich 对水下游泳机器人的实验标定（arxiv 2602.23283）：</p>
+<div class="highlight"><pre><span></span><code>fluidcoef = [0.40,   # 钝体阻力
+             7.79,   # 细长体阻力
+             2.81,   # 角阻力
+             3.84,   # 库塔升力
+             0.27]   # 马格努斯升力
+</code></pre></div>
+<hr />
+<h2 id="_6">与水的交互模拟</h2>
+<h3 id="_7">验证实验</h3>
+<p>使用三组对比实验验证 MuJoCo 流体模型的有效性，仿真时长 5 秒：</p>
+<table>
+<thead>
+<tr>
+<th>场景</th>
+<th>位移</th>
+<th>末速度</th>
+<th>物理预期</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>无流体（真空）</td>
+<td>-117.8 m</td>
+<td>-48.07 m/s</td>
+<td>自由落体</td>
+</tr>
+<tr>
+<td>水中（仅阻力）</td>
+<td>-2.0 m</td>
+<td>-0.41 m/s</td>
+<td>阻尼下沉</td>
+</tr>
+<tr>
+<td>水中（阻力+浮力）</td>
+<td><strong>+3.6 m</strong></td>
+<td>+0.74 m/s</td>
+<td><strong>上浮</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>仿真数据量化曲线：</strong></p>
+<p><img alt="水下动力学多场景量化对比曲线" src="../../img/underwater_test_results.png" /></p>
+<h3 id="_8">物理公式验证</h3>
+<p><strong>场景1（无流体）理论值：</strong></p>
+<p>
+<script type="math/tex; mode=display">\Delta z = - \frac{1}{2} g t^2 = -122.625 \ \mathrm{m}</script>
+</p>
+<p>仿真值 -118.8 m，误差 3.9%，由隐式积分器数值阻尼引起，在允许范围内。</p>
+<p><strong>场景3（浮力）净加速度：</strong></p>
+<p>
+<script type="math/tex; mode=display">a_{net} = \frac{F_{buoy} - mg}{m} = 31.8 \ \mathrm{m/s^2}</script>
+</p>
+<p>水阻力随速度平方增长，仿真中上浮速度快速受阻，末速 0.74 m/s 符合物理阻尼规律。</p>
+<hr />
+<h3 id="6-dof">复杂受力与流体各向异性验证 (6-DOF 测试)</h3>
+<p>为验证流体模型在真实三维空间中的各向异性阻力特征，系统进行了 6-DOF 脉冲阶跃推力测试。在仿真初始阶段 (0.1 s) 施加巨大脉冲外力/扭矩，随后撤销外力，观测刚体在纯流体阻尼下的速度衰减过程。</p>
+<p>基于圆柱体几何对称性与流体摩擦机理，测试矩阵进行了如下力学裁剪：</p>
+<ul>
+<li><strong>横向平移 (Fx)</strong>：代表最大迎水截面（长方形），激活极大的细长体阻力和钝体压阻。（Fy 因对称性等效，故省略）。</li>
+<li><strong>纵向平移 (Fz)</strong>：代表最小迎水截面（圆形），仅激活较小的轴向钝体阻力。</li>
+<li><strong>横向翻滚 (Ty)</strong>：代表大面积非线性钝体拨水旋转，激活极强的角阻尼。（Tx 因对称性等效省略；Tz 绕中心轴自转仅产生微弱的皮肤摩擦阻力，为突出视觉反差予以忽略）。</li>
+</ul>
+<p><strong>速度与角速度衰减对比曲线：</strong></p>
+<p><img alt="各向异性流体阻力测试" src="../../img/anisotropic_drag_test.png" /></p>
+<p><strong>数据分析：</strong></p>
+<ul>
+<li><strong>Fx（横向运动）</strong> 的衰减斜率远大于 <strong>Fz（纵向运动）</strong>，准确反映了迎流面积激增导致的阻力突变。</li>
+<li><strong>Ty（横向翻滚）</strong> 在撤销外力后瞬间受阻至零，证明了 MuJoCo 椭球模型中角阻力（Angular Resistance）计算的高效性与准确性。</li>
+</ul>
+<h3 id="_9">验证结论</h3>
+<ol>
+<li>MuJoCo 内置椭球流体模型可用于水下动力学仿真</li>
+<li>浮力须通过 <code>xfrc_applied</code> 手动施加，每步更新</li>
+<li>圆柱体在水中行为符合物理预期</li>
+<li>仿真运行速度远超实时，支持后续强化学习训练</li>
+<li>流体模型能够精准反映几何外形与受力角度带来的各向异性阻力差异</li>
+</ol>
+<hr />
+<h2 id="_10">运行与配置</h2>
+<p>本模块采用代码与数据解耦的设计，核心结构如下：</p>
+<div class="highlight"><pre><span></span><code>mujoco_plugin/
+├── config.json                     # 全局参数配置文件
+├── rov_base.xml                    # MuJoCo MJCF 模型文件
+├── docs/
+│   └── img/
+│       ├── underwater_test_results.png   # 沉浮状态量化曲线图
+│       └── anisotropic_drag_test.png     # 6-DOF 各向异性阻力测试曲线
+└── src/
+    └── underwater/
+        └── underwater_sim.py       # 仿真主程序
+</code></pre></div>
+<p><strong>调整参数</strong>：编辑 <code>config.json</code>，修改水体密度、ROV 质量或测试场景，无需改动 Python 源码。</p>
+<p><strong>运行仿真</strong>：在项目根目录下执行：</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mujoco<span class="w"> </span>matplotlib<span class="w"> </span>numpy
+python<span class="w"> </span>src/underwater/underwater_sim.py
+</code></pre></div>
+<p>运行结束后自动生成量化折线图，并可选择启动 MuJoCo 交互式 3D 查看器。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
