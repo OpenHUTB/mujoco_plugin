@@ -28,4 +28,9 @@
 最后弹出测试的过程和结果。
 
 
+## 参考
+
+* [自动化系统用户指南](https://openhutb.github.io/engine_doc/zh-CN/TestingAndOptimization/Automation/UserGuide/index.html)
+
+
 

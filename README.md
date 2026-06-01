@@ -51,7 +51,7 @@
 
 ### 移植到 HUTB 模拟器
 
-参考[迁移细节](./docs/transfer_hutb.md)
+参考[迁移细节](./docs/dev/ue4.md)
 
 
 ## 参考
