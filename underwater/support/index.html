@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>水下机器人 MuJoCo 仿真模块 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba MuJoCo \u4eff\u771f\u6a21\u5757";
+        var mkdocs_page_input_path = "underwater/support.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../">其他机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">水下机器人 MuJoCo 仿真模块</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/support.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mujoco">水下机器人 MuJoCo 仿真模块</h1>
+<p>本文档面向<strong>新 clone 仓库的人</strong>，目标是按下面步骤操作后，能够直接跑通水下仿真、看到图表，并在需要时打开 MuJoCo Viewer。</p>
+<hr />
+<h2 id="_1">最小运行路径</h2>
+<h3 id="1">1）准备依赖</h3>
+<p>在纯 Windows 环境下，先安装 Python 依赖：</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>mujoco<span class="w"> </span>matplotlib<span class="w"> </span>numpy
+</code></pre></div>
+<h3 id="2-menagerie">2）确认 Menagerie 模型已自带</h3>
+<p>本仓库已经自带 <code>assets/mujoco_menagerie/</code>，新 clone 后请直接确认下面两个目录存在：</p>
+<div class="highlight"><pre><span></span><code>assets/mujoco_menagerie/universal_robots_ur5e/
+assets/mujoco_menagerie/robotiq_2f85/
+</code></pre></div>
+<p>只要这两个目录存在，并且里面有对应的 mesh 文件，就可以继续往下跑。</p>
+<h3 id="3">3）运行唯一推荐入口</h3>
+<p>进入仓库后，直接运行：</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/underwater/underwater_sim.py
+</code></pre></div>
+<p>这个脚本是<strong>唯一推荐入口</strong>。它会按顺序执行：</p>
+<ol>
+<li>三组基础流体场景对比</li>
+<li>6-DOF 各向异性阻力测试</li>
+<li>PID 深度悬浮控制测试</li>
+<li>是否启动 MuJoCo Viewer 的交互验证</li>
+</ol>
+<h3 id="4-viewer">4）选择是否打开 Viewer</h3>
+<p>脚本跑完后台测试后，会提示：</p>
+<div class="highlight"><pre><span></span><code>所有后台物理测试完毕。是否启动交互式 Viewer 进行视觉验证？(y/n):
+</code></pre></div>
+<ul>
+<li>输入 <code>y</code>：打开 Viewer</li>
+<li>输入 <code>n</code>：结束运行</li>
+</ul>
+<hr />
+<h2 id="_2">项目结构</h2>
+<div class="highlight"><pre><span></span><code>mujoco_plugin/
+├── src/
+│   └── underwater/
+│       ├── underwater_sim.py
+│       ├── depth_controller.py
+│       ├── plot_results.py
+│       ├── build_underwater_rov.py
+│       ├── ur5e_industrial_grasp.py
+│       ├── arm_grasp_sandbox.py
+│       └── data/
+│           ├── config.json
+│           ├── rov_base.xml
+│           ├── underwater_rov_with_arm.xml
+│           └── ur5e_scene.xml
+├── assets/
+│   └── mujoco_menagerie/
+│       ├── universal_robots_ur5e/
+│       └── robotiq_2f85/
+└── docs/
+    ├── img/
+    └── underwater/
+        └── README.md
+</code></pre></div>
+<hr />
+<h2 id="_3">架构图</h2>
+<div class="highlight"><pre><span></span><code>config.json
+   │
+   ├──────────────► underwater_sim.py
+   │                    │
+   │                    ├──────────────► depth_controller.py
+   │                    │
+   │                    ├──────────────► plot_results.py
+   │                    │
+   │                    └──────────────► 运行三组物理验证 + PID 悬浮 + Viewer
+   │
+   └──────────────► build_underwater_rov.py
+                        │
+                        └──────────────► underwater_rov_with_arm.xml
+</code></pre></div>
+<p>补充说明：</p>
+<ul>
+<li><code>config.json</code> 提供密度、粘度、重力、仿真步长、ROV 尺寸和测试场景参数。</li>
+<li><code>build_underwater_rov.py</code> 负责把 ROV 底座与 UR5e + 夹爪拼成完整模型。</li>
+<li><code>underwater_sim.py</code> 是主控脚本，负责加载模型、跑测试、触发绘图、打开 Viewer。</li>
+<li><code>depth_controller.py</code> 提供 PID 深度控制器。</li>
+<li><code>plot_results.py</code> 负责把结果保存成图片。</li>
+</ul>
+<hr />
+<h2 id="_4">各脚本职责</h2>
+<h3 id="underwater_simpy"><code>underwater_sim.py</code></h3>
+<p><strong>输入</strong>
+- <code>data/config.json</code>
+- <code>data/underwater_rov_with_arm.xml</code></p>
+<p><strong>处理</strong>
+- 读取配置
+- 动态注入流体参数和物理参数
+- 执行三组基础场景测试
+- 执行 6-DOF 各向异性阻力测试
+- 执行 PID 悬浮控制测试
+- 询问是否打开 Viewer</p>
+<p><strong>输出</strong>
+- <code>docs/img/underwater_test_results.png</code>
+- <code>docs/img/anisotropic_drag_test.png</code>
+- <code>docs/img/depth_control_result.png</code>
+- MuJoCo Viewer 窗口</p>
+<hr />
+<h3 id="depth_controllerpy"><code>depth_controller.py</code></h3>
+<p><strong>输入</strong>
+- 目标深度
+- 当前深度
+- 时间步长 <code>dt</code></p>
+<p><strong>处理</strong>
+- 计算 PID 误差
+- 做积分限幅，避免积分发散
+- 做推力限幅，避免输出过大</p>
+<p><strong>输出</strong>
+- Z 轴推力值</p>
+<hr />
+<h3 id="plot_resultspy"><code>plot_results.py</code></h3>
+<p><strong>输入</strong>
+- 仿真记录的时间序列、深度、速度等数据</p>
+<p><strong>处理</strong>
+- 使用 Matplotlib 绘制结果图
+- 保存成 PNG</p>
+<p><strong>输出</strong>
+- 三张结果图，自动保存到 <code>docs/img/</code></p>
+<hr />
+<h3 id="build_underwater_rovpy"><code>build_underwater_rov.py</code></h3>
+<p><strong>输入</strong>
+- <code>data/rov_base.xml</code>
+- <code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml</code></p>
+<p><strong>处理</strong>
+- 解析 XML 树
+- 把 UR5e 机械臂挂到 ROV 上
+- 把 mesh 路径改成绝对路径
+- 合并 asset / actuator / sensor / contact 等标签
+- 增加碰撞排除对
+- 输出完整装配体</p>
+<p><strong>输出</strong>
+- <code>data/underwater_rov_with_arm.xml</code></p>
+<hr />
+<h3 id="ur5e_industrial_grasppy"><code>ur5e_industrial_grasp.py</code></h3>
+<p><strong>输入</strong>
+- <code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e.xml</code>
+- <code>assets/mujoco_menagerie/robotiq_2f85/2f85.xml</code>
+- <code>data/ur5e_scene.xml</code></p>
+<p><strong>处理</strong>
+- 给夹爪元素统一加前缀，避免命名冲突
+- 在 UR5e 末端挂载夹爪
+- 合并场景和资源
+- 启动 Viewer</p>
+<p><strong>输出</strong>
+- <code>ur5e_with_gripper.xml</code>
+- <code>industrial_scene.xml</code>
+- MuJoCo Viewer 窗口</p>
+<hr />
+<h3 id="arm_grasp_sandboxpy"><code>arm_grasp_sandbox.py</code></h3>
+<p><strong>输入</strong>
+- 无外部文件依赖，模型直接写在脚本里</p>
+<p><strong>处理</strong>
+- 从内嵌 MJCF 字符串编译模型
+- 用平滑轨迹驱动机械臂完成抓取演示</p>
+<p><strong>输出</strong>
+- MuJoCo Viewer 窗口</p>
+<hr />
+<h2 id="_5">物理验证内容</h2>
+<p>这个模块保留了三类核心物理验证。</p>
+<h3 id="1_1">1）基础流体场景对比</h3>
+<p>对比三种场景：</p>
+<ul>
+<li>无流体环境：纯重力下沉</li>
+<li>水中环境：只看流体阻力</li>
+<li>水中环境：流体阻力 + 手动浮力补偿</li>
+</ul>
+<p>这部分会生成 <code>underwater_test_results.png</code>。</p>
+<h3 id="26-dof">2）6-DOF 各向异性阻力验证</h3>
+<p>通过脉冲阶跃力测试不同方向上的阻力差异，用来观察：</p>
+<ul>
+<li>纵向平移</li>
+<li>横向平移</li>
+<li>横向翻滚</li>
+</ul>
+<p>这部分会生成 <code>anisotropic_drag_test.png</code>。</p>
+<h3 id="3pid">3）PID 深度悬浮验证</h3>
+<p>通过深度控制器做闭环悬浮测试，观察目标深度与实际深度的跟踪效果。</p>
+<p>这部分会生成 <code>depth_control_result.png</code>。</p>
+<hr />
+<h2 id="_6">为什么浮力要手动加</h2>
+<p>MuJoCo 的流体参数主要负责阻力和相关流体效应，浮力这里采用手动注入方式实现。<br />
+所以仿真里会在每一步通过 <code>xfrc_applied</code> 施加向上的浮力，这也是这个模块里最关键的一点。</p>
+<hr />
+<h2 id="_7">常见问题</h2>
+<h3 id="1-menagerie">1）找不到 Menagerie 模型</h3>
+<p>先确认下面两个目录是否存在：</p>
+<div class="highlight"><pre><span></span><code>assets/mujoco_menagerie/universal_robots_ur5e/
+assets/mujoco_menagerie/robotiq_2f85/
+</code></pre></div>
+<p>如果目录缺失或里面没有 mesh 文件，就先把仓库自带资源补齐，再运行主脚本。</p>
+<h3 id="2underwater_rov_with_armxml">2）<code>underwater_rov_with_arm.xml</code> 没生成</h3>
+<p>这通常说明模型资源没准备完整，或者模型拼接流程中某个 XML 文件缺失。<br />
+先确认 Menagerie 目录存在，再重新运行：</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/underwater/underwater_sim.py
+</code></pre></div>
+<h3 id="3viewer">3）Viewer 打不开</h3>
+<p>Viewer 是可选步骤，不影响前面的物理测试和图片生成。<br />
+先确认前面三张图是否已经保存到 <code>docs/img/</code>，再决定是否重试 Viewer。</p>
+<h3 id="4">4）图表没保存</h3>
+<p>先检查：</p>
+<ul>
+<li><code>docs/img/</code> 目录是否存在</li>
+<li>当前用户是否对仓库目录有写权限</li>
+<li>脚本是否正常执行结束</li>
+</ul>
+<p>如果后台测试中途报错，图表也不会生成。</p>
+<hr />
+<h2 id="_8">输出产物</h2>
+<p>运行完成后，<code>docs/img/</code> 下会生成：</p>
+<ul>
+<li><code>underwater_test_results.png</code></li>
+<li><code>anisotropic_drag_test.png</code></li>
+<li><code>depth_control_result.png</code></li>
+</ul>
+<hr />
+<h2 id="_9">参考</h2>
+<ul>
+<li>MuJoCo 流体受力官方文档</li>
+<li>水下机器人动力学相关资料</li>
+<li>MuJoCo Menagerie 官方模型资源</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
