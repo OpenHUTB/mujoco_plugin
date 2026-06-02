@@ -76,3 +76,9 @@ DerivedDataCache/*
 # MuJoCo 运行时生成文件，不纳入版本控制
 assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml
 assets/mujoco_menagerie/universal_robots_ur5e/industrial_scene.xml
+
+# Python 仿真与控制模块缓存过滤
+__pycache__/
+*.pyc
+*.pyo
+*.pyd

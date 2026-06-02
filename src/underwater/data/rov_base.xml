@@ -5,10 +5,10 @@
     <body name="rov" pos="0 0 -1.0">
       <freejoint/>
       <geom name="rov_body"
-            type="cylinder"
-            size="0.15 0.30"
-            mass="10.0"
-            rgba="0.8 0.4 0.1 1"
+            type="box"
+            size="0.4 0.3 0.2"
+            mass="150.0"
+            rgba="0.2 0.4 0.8 1"
             fluidshape="ellipsoid"/>
     </body>
   </worldbody>
