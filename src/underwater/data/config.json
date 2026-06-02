@@ -6,10 +6,9 @@
   "duration_seconds": 5.0,
   "rov_body": {
     "geom_name": "rov_body",
-    "mass": 10.0,
-    "radius": 0.15,
-    "half_length": 0.30,
-    "fluid_coef": [0.40, 7.79, 2.81, 3.84, 0.27]
+    "half_size": [0.4, 0.3, 0.2],
+    "mass": 150.0,
+    "fluid_coef": [0.5, 0.5, 0.5, 0.5, 0.5] 
   },
   "test_scenarios": {
     "scenario_1": {
