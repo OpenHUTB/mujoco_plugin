@@ -114,11 +114,11 @@ config.json
 
 ### `underwater_sim.py`
 
-**输入**
+#### 输入
 - `data/config.json`
 - `data/underwater_rov_with_arm.xml`
 
-**处理**
+#### 处理
 - 读取配置
 - 动态注入流体参数和物理参数
 - 执行三组基础场景测试
@@ -126,52 +126,46 @@ config.json
 - 执行 PID 悬浮控制测试
 - 询问是否打开 Viewer
 
-**输出**
+#### 输出
 - `docs/img/underwater_test_results.png`
 - `docs/img/anisotropic_drag_test.png`
 - `docs/img/depth_control_result.png`
 - MuJoCo Viewer 窗口
 
----
-
 ### `depth_controller.py`
 
-**输入**
+#### 输入
 - 目标深度
 - 当前深度
 - 时间步长 `dt`
 
-**处理**
+#### 处理
 - 计算 PID 误差
 - 做积分限幅，避免积分发散
 - 做推力限幅，避免输出过大
 
-**输出**
+#### 输出
 - Z 轴推力值
-
----
 
 ### `plot_results.py`
 
-**输入**
+#### 输入
 - 仿真记录的时间序列、深度、速度等数据
 
-**处理**
+#### 处理
 - 使用 Matplotlib 绘制结果图
 - 保存成 PNG
 
-**输出**
+#### 输出
 - 三张结果图，自动保存到 `docs/img/`
-
----
 
 ### `build_underwater_rov.py`
 
-**输入**
+#### 输入
 - `data/rov_base.xml`
 - `assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml`
 
-**处理**
+#### 处理
 - 解析 XML 树
 - 把 UR5e 机械臂挂到 ROV 上
 - 把 mesh 路径改成绝对路径
@@ -179,41 +173,37 @@ config.json
 - 增加碰撞排除对
 - 输出完整装配体
 
-**输出**
+#### 输出
 - `data/underwater_rov_with_arm.xml`
-
----
 
 ### `ur5e_industrial_grasp.py`
 
-**输入**
+#### 输入
 - `assets/mujoco_menagerie/universal_robots_ur5e/ur5e.xml`
 - `assets/mujoco_menagerie/robotiq_2f85/2f85.xml`
 - `data/ur5e_scene.xml`
 
-**处理**
+#### 处理
 - 给夹爪元素统一加前缀，避免命名冲突
 - 在 UR5e 末端挂载夹爪
 - 合并场景和资源
 - 启动 Viewer
 
-**输出**
+#### 输出
 - `ur5e_with_gripper.xml`
 - `industrial_scene.xml`
 - MuJoCo Viewer 窗口
 
----
-
 ### `arm_grasp_sandbox.py`
 
-**输入**
+#### 输入
 - 无外部文件依赖，模型直接写在脚本里
 
-**处理**
+#### 处理
 - 从内嵌 MJCF 字符串编译模型
 - 用平滑轨迹驱动机械臂完成抓取演示
 
-**输出**
+#### 输出
 - MuJoCo Viewer 窗口
 
 ---
@@ -308,6 +298,6 @@ Viewer 是可选步骤，不影响前面的物理测试和图片生成。
 
 ## 参考
 
-- MuJoCo 流体受力官方文档
-- 水下机器人动力学相关资料
-- MuJoCo Menagerie 官方模型资源
+- [MuJoCo 流体受力官方文档](https://mujoco.readthedocs.io/en/stable/computation/fluid.html)
+- [MuJoCo Menagerie 官方模型资源](https://github.com/google-deepmind/mujoco_menagerie)
+- [UNav-Sim 水下机器人仿真相关资料](https://github.com/open-airlab/UNav-Sim)

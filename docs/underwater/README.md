@@ -18,6 +18,7 @@
 
 ## 参考
 
+- [本章节仿真复现指南](./support.md)
 - [MuJoCo 流体受力官方文档](https://docs.mujoco.cn/en/stable/computation/fluid.html)
 - [Simple Models, Real Swimming: Digital Twins for Tendon-Driven Underwater Robots](https://arxiv.org/html/2602.23283v1)（ETH Zurich, 2025）
 - [UNav-Sim 水下仿真参考](https://github.com/open-airlab/UNav-Sim)
