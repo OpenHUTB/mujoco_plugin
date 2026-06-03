@@ -225,82 +225,113 @@ assets/mujoco_menagerie/robotiq_2f85/
 <hr />
 <h2 id="_4">各脚本职责</h2>
 <h3 id="underwater_simpy"><code>underwater_sim.py</code></h3>
-<p><strong>输入</strong>
-- <code>data/config.json</code>
-- <code>data/underwater_rov_with_arm.xml</code></p>
-<p><strong>处理</strong>
-- 读取配置
-- 动态注入流体参数和物理参数
-- 执行三组基础场景测试
-- 执行 6-DOF 各向异性阻力测试
-- 执行 PID 悬浮控制测试
-- 询问是否打开 Viewer</p>
-<p><strong>输出</strong>
-- <code>docs/img/underwater_test_results.png</code>
-- <code>docs/img/anisotropic_drag_test.png</code>
-- <code>docs/img/depth_control_result.png</code>
-- MuJoCo Viewer 窗口</p>
-<hr />
+<h4 id="_5">输入</h4>
+<ul>
+<li><code>data/config.json</code></li>
+<li><code>data/underwater_rov_with_arm.xml</code></li>
+</ul>
+<h4 id="_6">处理</h4>
+<ul>
+<li>读取配置</li>
+<li>动态注入流体参数和物理参数</li>
+<li>执行三组基础场景测试</li>
+<li>执行 6-DOF 各向异性阻力测试</li>
+<li>执行 PID 悬浮控制测试</li>
+<li>询问是否打开 Viewer</li>
+</ul>
+<h4 id="_7">输出</h4>
+<ul>
+<li><code>docs/img/underwater_test_results.png</code></li>
+<li><code>docs/img/anisotropic_drag_test.png</code></li>
+<li><code>docs/img/depth_control_result.png</code></li>
+<li>MuJoCo Viewer 窗口</li>
+</ul>
 <h3 id="depth_controllerpy"><code>depth_controller.py</code></h3>
-<p><strong>输入</strong>
-- 目标深度
-- 当前深度
-- 时间步长 <code>dt</code></p>
-<p><strong>处理</strong>
-- 计算 PID 误差
-- 做积分限幅，避免积分发散
-- 做推力限幅，避免输出过大</p>
-<p><strong>输出</strong>
-- Z 轴推力值</p>
-<hr />
+<h4 id="_8">输入</h4>
+<ul>
+<li>目标深度</li>
+<li>当前深度</li>
+<li>时间步长 <code>dt</code></li>
+</ul>
+<h4 id="_9">处理</h4>
+<ul>
+<li>计算 PID 误差</li>
+<li>做积分限幅，避免积分发散</li>
+<li>做推力限幅，避免输出过大</li>
+</ul>
+<h4 id="_10">输出</h4>
+<ul>
+<li>Z 轴推力值</li>
+</ul>
 <h3 id="plot_resultspy"><code>plot_results.py</code></h3>
-<p><strong>输入</strong>
-- 仿真记录的时间序列、深度、速度等数据</p>
-<p><strong>处理</strong>
-- 使用 Matplotlib 绘制结果图
-- 保存成 PNG</p>
-<p><strong>输出</strong>
-- 三张结果图，自动保存到 <code>docs/img/</code></p>
-<hr />
+<h4 id="_11">输入</h4>
+<ul>
+<li>仿真记录的时间序列、深度、速度等数据</li>
+</ul>
+<h4 id="_12">处理</h4>
+<ul>
+<li>使用 Matplotlib 绘制结果图</li>
+<li>保存成 PNG</li>
+</ul>
+<h4 id="_13">输出</h4>
+<ul>
+<li>三张结果图，自动保存到 <code>docs/img/</code></li>
+</ul>
 <h3 id="build_underwater_rovpy"><code>build_underwater_rov.py</code></h3>
-<p><strong>输入</strong>
-- <code>data/rov_base.xml</code>
-- <code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml</code></p>
-<p><strong>处理</strong>
-- 解析 XML 树
-- 把 UR5e 机械臂挂到 ROV 上
-- 把 mesh 路径改成绝对路径
-- 合并 asset / actuator / sensor / contact 等标签
-- 增加碰撞排除对
-- 输出完整装配体</p>
-<p><strong>输出</strong>
-- <code>data/underwater_rov_with_arm.xml</code></p>
-<hr />
+<h4 id="_14">输入</h4>
+<ul>
+<li><code>data/rov_base.xml</code></li>
+<li><code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml</code></li>
+</ul>
+<h4 id="_15">处理</h4>
+<ul>
+<li>解析 XML 树</li>
+<li>把 UR5e 机械臂挂到 ROV 上</li>
+<li>把 mesh 路径改成绝对路径</li>
+<li>合并 asset / actuator / sensor / contact 等标签</li>
+<li>增加碰撞排除对</li>
+<li>输出完整装配体</li>
+</ul>
+<h4 id="_16">输出</h4>
+<ul>
+<li><code>data/underwater_rov_with_arm.xml</code></li>
+</ul>
 <h3 id="ur5e_industrial_grasppy"><code>ur5e_industrial_grasp.py</code></h3>
-<p><strong>输入</strong>
-- <code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e.xml</code>
-- <code>assets/mujoco_menagerie/robotiq_2f85/2f85.xml</code>
-- <code>data/ur5e_scene.xml</code></p>
-<p><strong>处理</strong>
-- 给夹爪元素统一加前缀，避免命名冲突
-- 在 UR5e 末端挂载夹爪
-- 合并场景和资源
-- 启动 Viewer</p>
-<p><strong>输出</strong>
-- <code>ur5e_with_gripper.xml</code>
-- <code>industrial_scene.xml</code>
-- MuJoCo Viewer 窗口</p>
-<hr />
+<h4 id="_17">输入</h4>
+<ul>
+<li><code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e.xml</code></li>
+<li><code>assets/mujoco_menagerie/robotiq_2f85/2f85.xml</code></li>
+<li><code>data/ur5e_scene.xml</code></li>
+</ul>
+<h4 id="_18">处理</h4>
+<ul>
+<li>给夹爪元素统一加前缀，避免命名冲突</li>
+<li>在 UR5e 末端挂载夹爪</li>
+<li>合并场景和资源</li>
+<li>启动 Viewer</li>
+</ul>
+<h4 id="_19">输出</h4>
+<ul>
+<li><code>ur5e_with_gripper.xml</code></li>
+<li><code>industrial_scene.xml</code></li>
+<li>MuJoCo Viewer 窗口</li>
+</ul>
 <h3 id="arm_grasp_sandboxpy"><code>arm_grasp_sandbox.py</code></h3>
-<p><strong>输入</strong>
-- 无外部文件依赖，模型直接写在脚本里</p>
-<p><strong>处理</strong>
-- 从内嵌 MJCF 字符串编译模型
-- 用平滑轨迹驱动机械臂完成抓取演示</p>
-<p><strong>输出</strong>
-- MuJoCo Viewer 窗口</p>
+<h4 id="_20">输入</h4>
+<ul>
+<li>无外部文件依赖，模型直接写在脚本里</li>
+</ul>
+<h4 id="_21">处理</h4>
+<ul>
+<li>从内嵌 MJCF 字符串编译模型</li>
+<li>用平滑轨迹驱动机械臂完成抓取演示</li>
+</ul>
+<h4 id="_22">输出</h4>
+<ul>
+<li>MuJoCo Viewer 窗口</li>
+</ul>
 <hr />
-<h2 id="_5">物理验证内容</h2>
+<h2 id="_23">物理验证内容</h2>
 <p>这个模块保留了三类核心物理验证。</p>
 <h3 id="1_1">1）基础流体场景对比</h3>
 <p>对比三种场景：</p>
@@ -322,11 +353,11 @@ assets/mujoco_menagerie/robotiq_2f85/
 <p>通过深度控制器做闭环悬浮测试，观察目标深度与实际深度的跟踪效果。</p>
 <p>这部分会生成 <code>depth_control_result.png</code>。</p>
 <hr />
-<h2 id="_6">为什么浮力要手动加</h2>
+<h2 id="_24">为什么浮力要手动加</h2>
 <p>MuJoCo 的流体参数主要负责阻力和相关流体效应，浮力这里采用手动注入方式实现。<br />
 所以仿真里会在每一步通过 <code>xfrc_applied</code> 施加向上的浮力，这也是这个模块里最关键的一点。</p>
 <hr />
-<h2 id="_7">常见问题</h2>
+<h2 id="_25">常见问题</h2>
 <h3 id="1-menagerie">1）找不到 Menagerie 模型</h3>
 <p>先确认下面两个目录是否存在：</p>
 <div class="highlight"><pre><span></span><code>assets/mujoco_menagerie/universal_robots_ur5e/
@@ -350,7 +381,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 </ul>
 <p>如果后台测试中途报错，图表也不会生成。</p>
 <hr />
-<h2 id="_8">输出产物</h2>
+<h2 id="_26">输出产物</h2>
 <p>运行完成后，<code>docs/img/</code> 下会生成：</p>
 <ul>
 <li><code>underwater_test_results.png</code></li>
@@ -358,11 +389,11 @@ assets/mujoco_menagerie/robotiq_2f85/
 <li><code>depth_control_result.png</code></li>
 </ul>
 <hr />
-<h2 id="_9">参考</h2>
+<h2 id="_27">参考</h2>
 <ul>
-<li>MuJoCo 流体受力官方文档</li>
-<li>水下机器人动力学相关资料</li>
-<li>MuJoCo Menagerie 官方模型资源</li>
+<li><a href="https://mujoco.readthedocs.io/en/stable/computation/fluid.html">MuJoCo 流体受力官方文档</a></li>
+<li><a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie 官方模型资源</a></li>
+<li><a href="https://github.com/open-airlab/UNav-Sim">UNav-Sim 水下机器人仿真相关资料</a></li>
 </ul>
               
             </div>
