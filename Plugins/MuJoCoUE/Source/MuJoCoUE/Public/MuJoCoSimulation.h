@@ -1,4 +1,4 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #pragma once
 
@@ -10,6 +10,7 @@
 #include "ProceduralMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Runtime/Engine/Classes/Components/StaticMeshComponent.h"
+#include "Components/ArrowComponent.h"
 // #include "Components/InstancedStaticMeshComponent.h"
 #include "MuJoCoSimulation.generated.h"
 
@@ -101,6 +102,76 @@ struct ModelInfo
 };
 
 /**
+ * @struct FMjOceanCurrentLayer
+ * @brief 单一深度层洋流参数
+ *
+ * @property float DepthM - 深度 (m, 负值表示水下深度)
+ * @property float SpeedMS - 流速大小 (m/s)
+ * @property float HorizAngleRad - 水平角度 (rad)，0 = +X 方向
+ * @property float VertAngleRad - 垂直角度 (rad)，0 = 水平，+ = 向下
+ */
+USTRUCT(BlueprintType)
+struct FMjOceanCurrentLayer
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean")
+    float DepthM = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean")
+    float SpeedMS = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean")
+    float HorizAngleRad = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean")
+    float VertAngleRad = 0.0f;
+};
+
+/**
+ * @struct FMjOceanCurrentConfig
+ * @brief 洋流配置参数
+ *
+ * 三层级联模型：Gauss-Markov + Stratified + Turbulent
+ * 与 Python ocean_current.py 的 config.json 结构对应
+ */
+USTRUCT(BlueprintType)
+struct FMjOceanCurrentConfig
+{
+    GENERATED_USTRUCT_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|Enable")
+    bool bEnabled = false;
+
+    // Gauss-Markov 参数
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|GaussMarkov")
+    float GM_MeanSpeed = 0.5f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|GaussMarkov")
+    float GM_MeanHorizAngle = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|GaussMarkov")
+    float GM_MeanVertAngle = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|GaussMarkov")
+    float GM_Mu = 0.0f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|GaussMarkov")
+    float GM_NoiseAmp = 0.1f;
+
+    // 分层洋流参数
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|Stratified")
+    TArray<FMjOceanCurrentLayer> StratifiedLayers;
+
+    // 湍流参数
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|Turbulent")
+    float TurbulentIntensity = 0.15f;
+
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ocean|Turbulent")
+    float TurbulentIntegralScale = 1.0f;
+};
+
+/**
  * @brief 与引擎中的 MuJoCo 物理模拟交互的 Actor 类。
  *
  * 该类提供在虚幻引擎中加载、模拟和可视化 MuJoCo 物理模型的功能。
@@ -108,6 +179,11 @@ struct ModelInfo
  *
  * 该模拟可通过蓝图函数进行控制，实现物理模拟的启动、暂停、重置和单步执行。
  * 它还能将 MuJoCo 的物体和几何体映射到引擎组件。
+ *
+ * 新增洋流功能：
+ * - 三层级联洋流模型（Gauss-Markov + Stratified + Turbulent）
+ * - 洋流拖曳力自动注入 xfrc_applied
+ * - 洋流速度可实时可视化
  *
  * @note 需要将 MuJoCo 物理库正确集成到项目中。
  */
@@ -174,6 +250,78 @@ protected:
 	ModelInfo _info;  // 当前引擎中的身体和几何的模型信息
 	ModelInfo _infoStart;
 	bool bSimulationRunning = false;
+
+	// ── 洋流模块（Phase 6）────────────────────────────
+
+	/** @brief 洋流配置 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo|Ocean")
+	FMjOceanCurrentConfig OceanCurrentConfig;
+
+	/** @brief 当前洋流速度向量 [vx, vy, vz] (m/s) */
+	FVector OceanCurrentVelocity;
+
+	/** @brief Gauss-Markov 当前状态（内部） */
+	float OceanGM_Speed;
+	float OceanGM_HorizAngle;
+	float OceanGM_VertAngle;
+
+	/** @brief 湍流上次位置（用于空间相关性） */
+	FVector OceanTurbLastPos;
+	bool OceanTurbHasLastPos;
+
+	/** @brief LCG 随机数状态（用于可复现性） */
+	uint32 OceanRNGState;
+
+	/** @brief 洋流阻力系数 (kg/s) */
+	float OceanDragCoeff;
+
+	/** @brief 洋流受影响的 body ID */
+	int OceanCurrentBodyId;
+
+	/** @brief 洋流可视化开关 */
+	bool bOceanVisualizationEnabled;
+	bool bStratifiedProfileShown;
+	bool bOceanHeatmapShown;
+
+	/** @brief 洋流箭头可视化组件 */
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo|Ocean")
+	UArrowComponent* OceanArrowComponent;
+
+	/** @brief 洋流速度日志频率（秒） */
+	float OceanLogInterval;
+	float OceanLastLogTime;
+
+public:
+	// ── 洋流公共接口 ─────────────────────────────────
+
+	/** @brief 在 mj_step 之前调用，将洋流力注入 xfrc_applied */
+	void ApplyOceanCurrent();
+
+	/** @brief 重置所有洋流状态（仿真重置时调用） */
+	void ResetOceanCurrent();
+
+	/** @brief 获取当前位置的洋流速度（用于可视化） */
+	FVector GetOceanCurrentVelocityAt(float x, float y, float z, float dt);
+
+	/** @brief 设置洋流影响的 body 名称 */
+	UFUNCTION(BlueprintCallable, Category = "MuJoCo|Ocean")
+	void SetOceanCurrentBodyName(const FString& BodyName);
+
+	/** @brief 切换洋流可视化（显示/隐藏箭头） */
+	UFUNCTION(BlueprintCallable, Category = "MuJoCo|Ocean")
+	void ToggleOceanVisualization();
+
+	/** @brief 显示洋流分层剖面 */
+	UFUNCTION(BlueprintCallable, Category = "MuJoCo|Ocean")
+	void ShowStratifiedProfile();
+
+	/** @brief 切换洋流热力图叠加 */
+	UFUNCTION(BlueprintCallable, Category = "MuJoCo|Ocean")
+	void ToggleOceanHeatmap();
+
+	/** @brief 打印当前洋流状态到日志 */
+	UFUNCTION(BlueprintCallable, Category = "MuJoCo|Ocean")
+	void LogOceanStatus();
 
 public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo")

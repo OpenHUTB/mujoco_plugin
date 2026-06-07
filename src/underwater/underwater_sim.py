@@ -14,6 +14,7 @@ from pathlib import Path
 # 导入解耦的控制器和可视化模块
 from depth_controller import PIDDepthController
 from plot_results import plot_basic_scenarios, plot_anisotropic_drag, plot_depth_tracking
+from ocean_current import OceanCurrentCascade, apply_current_drag
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_CONFIG = _HERE / "data" / "config.json"
@@ -36,6 +37,12 @@ class UnderwaterSimulation:
 
         # 实例化外置的 PID 控制器
         self.depth_controller = PIDDepthController(kp=1500.0, ki=10.0, kd=800.0)
+
+        # 实例化洋流模型
+        self.ocean_current = None
+        oc_cfg = self.config.get("ocean_current", {})
+        if oc_cfg.get("enabled", False):
+            self.ocean_current = OceanCurrentCascade(oc_cfg)
 
     def load_and_setup_model(self, density, viscosity):
         """动态加载 XML 并注入配置文件中的流体力学参数"""
@@ -97,10 +104,20 @@ class UnderwaterSimulation:
 
         log_t, log_z, log_vz = [], [], []
         steps = int(self.config["duration_seconds"] / model.opt.timestep)
+        dt = model.opt.timestep
+        # 洋流阻力系数 (kg/s)，可按需从 config 读取
+        drag_coeff = self.config.get("ocean_drag_coeff", 10.0)
 
         for i in range(steps):
+            # 1. 浮力
             if apply_buoyancy and density > 0:
                 data.xfrc_applied[body_id, 2] = buoyancy_force
+
+            # 2. 洋流拖曳力 (叠加在浮力之后)
+            if self.ocean_current:
+                robot_x, robot_y, robot_z = data.sensor("pos").data[:3]
+                v_current = self.ocean_current.get_velocity(robot_x, robot_y, robot_z, dt)
+                apply_current_drag(data, body_id, v_current, drag_coeff)
 
             mujoco.mj_step(model, data)
 
@@ -144,6 +161,8 @@ class UnderwaterSimulation:
 
             log_t, log_v = [], []
             steps = int(3.0 / model.opt.timestep)
+            dt = model.opt.timestep
+            drag_coeff = self.config.get("ocean_drag_coeff", 10.0)
 
             for i in range(steps):
                 data.xfrc_applied[body_id, 2] = buoyancy_force
@@ -153,6 +172,12 @@ class UnderwaterSimulation:
                 else:
                     data.xfrc_applied[body_id][:2] = 0.0
                     data.xfrc_applied[body_id][3:] = 0.0
+
+                # 洋流拖曳力
+                if self.ocean_current:
+                    robot_x, robot_y, robot_z = data.sensor("pos").data[:3]
+                    v_current = self.ocean_current.get_velocity(robot_x, robot_y, robot_z, dt)
+                    apply_current_drag(data, body_id, v_current, drag_coeff)
 
                 mujoco.mj_step(model, data)
 
@@ -181,6 +206,7 @@ class UnderwaterSimulation:
         buoyancy_force = model.opt.density * self.g * self.volume
         dt = model.opt.timestep
         steps = int(duration / dt)
+        drag_coeff = self.config.get("ocean_drag_coeff", 10.0)
 
         log_t, log_z = [], []
 
@@ -190,8 +216,17 @@ class UnderwaterSimulation:
             # 1. 叠加环境浮力
             data.xfrc_applied[body_id, 2] = buoyancy_force
             
-            # 2. 叠加 PID 闭环控制力
-            thrust_z = self.depth_controller.compute(target_depth, current_z, dt)
+            # 2. 洋流拖曳力 + 洋流前馈补偿
+            v_current_z = 0.0
+            if self.ocean_current:
+                robot_x, robot_y, robot_z = data.sensor("pos").data[:3]
+                v_current = self.ocean_current.get_velocity(robot_x, robot_y, robot_z, dt)
+                apply_current_drag(data, body_id, v_current, drag_coeff)
+                v_current_z = v_current[2]  # Z 分量用于前馈
+                
+            # 3. PID 闭环控制力（带洋流前馈补偿）
+            thrust_z = self.depth_controller.compute(
+                target_depth, current_z, dt, current_velocity=v_current_z)
             data.xfrc_applied[body_id, 2] += thrust_z
 
             mujoco.mj_step(model, data)
@@ -221,9 +256,14 @@ class UnderwaterSimulation:
         
         body_id_passive = mujoco.mj_name2id(model_passive, mujoco.mjtObj.mjOBJ_BODY, "rov")
         buoyancy_force = self.config["fluid_density"] * self.g * self.volume
+        drag_coeff = self.config.get("ocean_drag_coeff", 10.0)
 
         def passive_buoyancy_callback(m, d):
             d.xfrc_applied[body_id_passive, 2] = buoyancy_force
+            if self.ocean_current:
+                vx, vy, vz = d.sensor("pos").data[:3]
+                v_cur = self.ocean_current.get_velocity(vx, vy, vz, m.opt.timestep)
+                apply_current_drag(d, body_id_passive, v_cur, drag_coeff)
 
         mujoco.set_mjcb_control(passive_buoyancy_callback)
         mujoco.viewer.launch(model_passive, data_passive)
@@ -254,7 +294,16 @@ class UnderwaterSimulation:
         def active_control_callback(m, d):
             d.xfrc_applied[body_id_active, 2] = buoyancy_force
             current_z = d.qpos[qpos_addr_active + 2]
-            thrust_z = self.depth_controller.compute(target_depth, current_z, m.opt.timestep)
+            
+            v_current_z = 0.0
+            if self.ocean_current:
+                vx, vy, vz = d.sensor("pos").data[:3]
+                v_cur = self.ocean_current.get_velocity(vx, vy, vz, m.opt.timestep)
+                apply_current_drag(d, body_id_active, v_cur, drag_coeff)
+                v_current_z = v_cur[2]
+            
+            thrust_z = self.depth_controller.compute(
+                target_depth, current_z, m.opt.timestep, current_velocity=v_current_z)
             d.xfrc_applied[body_id_active, 2] += thrust_z
 
         mujoco.set_mjcb_control(active_control_callback)
@@ -301,5 +350,62 @@ if __name__ == "__main__":
     # 触发外部渲染
     plot_depth_tracking(hover_t, hover_z, target_z, save_dir)
 
-    # ----- 4. 最后拉起 Viewer 进行直观视觉验证 -----
+    # ----- 4. 洋流干扰测试 -----
+    if sim.ocean_current:
+        print("\n" + "=" * 60)
+        print("  正在执行：第四阶段目标 - 洋流干扰场景测试")
+        print("=" * 60)
+        
+        # 4a. 洋流中的 PID 深度保持（与无洋流对比）
+        print("\n▶ 洋流 + PID 深度保持测试")
+        hover_t_oc, hover_z_oc = sim.run_hover_test(
+            target_depth=-1.0, duration=20.0)
+        plot_depth_tracking(hover_t_oc, hover_z_oc, -1.0, save_dir)
+        
+        # 4b. 洋流漂移测试（无控制，记录洋流速度）
+        print("\n▶ 洋流漂移测试（无控制）")
+        oc = sim.ocean_current
+        oc.reset()
+        drift_t, drift_z, drift_vz = sim.run_scenario(
+            sim.config["fluid_density"],
+            sim.config["fluid_viscosity"],
+            apply_buoyancy=True
+        )
+        
+        # 记录洋流速度曲线
+        from plot_results import plot_ocean_current
+        if oc:
+            # 重新运行一次，收集洋流速度数据
+            from ocean_current import OceanCurrentCascade, apply_current_drag
+            import mujoco as _mujoco
+            model = sim.load_and_setup_model(sim.config["fluid_density"], sim.config["fluid_viscosity"])
+            data = _mujoco.MjData(model)
+            sim.init_robot_pose(model, data)
+            body_id = _mujoco.mj_name2id(model, _mujoco.mjtObj.mjOBJ_BODY, "rov")
+            buoyancy_force = sim.config["fluid_density"] * sim.g * sim.volume
+            
+            log_oc_t, log_oc_v = [], []
+            steps = int(20.0 / model.opt.timestep)
+            for i in range(steps):
+                robot_x, robot_y, robot_z = data.sensor("pos").data[:3]
+                v_cur = oc.get_velocity(robot_x, robot_y, robot_z, model.opt.timestep)
+                log_oc_t.append(data.time)
+                log_oc_v.append(np.linalg.norm(v_cur))
+                
+                data.xfrc_applied[body_id, 2] = buoyancy_force
+                apply_current_drag(data, body_id, v_cur, 10.0)
+                _mujoco.mj_step(model, data)
+                
+                if i % 10 == 0:
+                    pass  # 已在上面记录
+            
+            plot_ocean_current(np.array(log_oc_t), np.array(log_oc_v), save_dir)
+            
+            # 打印洋流统计
+            v_arr = np.array(log_oc_v)
+            print(f"\n[洋流统计] 平均速度: {v_arr.mean():.4f} m/s, "
+                  f"最大速度: {v_arr.max():.4f} m/s, "
+                  f"最小速度: {v_arr.min():.4f} m/s")
+    
+    # ----- 5. 最后拉起 Viewer 进行直观视觉验证 -----
     sim.start_interactive_viewer()
