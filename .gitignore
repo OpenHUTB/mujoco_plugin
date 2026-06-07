@@ -82,3 +82,6 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+src/underwater/data/meshes/
+
+src/underwater/data/underwater_rov_with_arm.xml

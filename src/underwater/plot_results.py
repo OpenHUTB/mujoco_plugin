@@ -77,3 +77,59 @@ def plot_anisotropic_drag(drag_results, save_dir):
     plt.savefig(graph_path, dpi=300)
     print(f"\n[可视化] 6-DOF 各向异性阻力测试图表已保存至: {os.path.abspath(graph_path)}")
     plt.close()
+
+
+def plot_ocean_current(time_data, speed_data, save_dir):
+    """
+    4. 绘制洋流速度变化图 (洋流模型验证)
+    
+    显示洋流速度幅值随时间的变化，用于验证 Gauss-Markov 过程的统计特性。
+    """
+    plt.figure("洋流速度时间序列", figsize=(12, 5))
+    
+    plt.plot(time_data, speed_data, label="洋流速度幅值 (Current Speed)",
+             linewidth=2, color='teal')
+    plt.title("洋流速度时间序列 (Gauss-Markov 过程)", fontsize=14)
+    plt.xlabel("时间 (Time / s)", fontsize=12)
+    plt.ylabel("速度 (Speed / m/s)", fontsize=12)
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.legend(fontsize=11)
+    plt.tight_layout()
+
+    os.makedirs(save_dir, exist_ok=True)
+    graph_path = os.path.join(save_dir, "ocean_current_speed.png")
+    plt.savefig(graph_path, dpi=300)
+    print(f"\n[可视化] 洋流速度曲线已保存至: {os.path.abspath(graph_path)}")
+    plt.close()
+
+
+def plot_depth_comparison(no_oc_t, no_oc_z, with_oc_t, with_oc_z, target_z, save_dir):
+    """
+    5. 绘制洋流对 PID 悬浮的影响对比图
+    
+    对比无洋流和有洋流两种情况下的深度跟踪曲线。
+    """
+    plt.figure("PID 悬浮：无洋流 vs 有洋流", figsize=(12, 6))
+    
+    if len(no_oc_t) > 0:
+        plt.plot(no_oc_t, no_oc_z, label="无洋流 (No Current)",
+                 linewidth=2.5, alpha=0.8)
+    if len(with_oc_t) > 0:
+        plt.plot(with_oc_t, with_oc_z, label="有洋流 (With Current)",
+                 linewidth=2.5, alpha=0.8)
+    
+    plt.axhline(y=target_z, color='red', linestyle='--', linewidth=2,
+                label=f"目标深度 (Target: {target_z}m)")
+    
+    plt.title("洋流对 PID 深度悬浮控制的影响", fontsize=14)
+    plt.xlabel("时间 (Time / s)", fontsize=12)
+    plt.ylabel("深度 (Depth / m)", fontsize=12)
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.legend(fontsize=11)
+    plt.tight_layout()
+
+    os.makedirs(save_dir, exist_ok=True)
+    graph_path = os.path.join(save_dir, "depth_comparison_oc.png")
+    plt.savefig(graph_path, dpi=300)
+    print(f"\n[可视化] 深度对比图已保存至: {os.path.abspath(graph_path)}")
+    plt.close()

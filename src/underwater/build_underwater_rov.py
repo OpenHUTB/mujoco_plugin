@@ -36,24 +36,47 @@ def build_underwater_assembly():
     ur5e_base.set("quat", "0 0 1 0")
     rov_body.append(ur5e_base)
 
-    # 3. 核心修复：绝对路径映射，彻底杜绝网格丢失
+    # 3. 核心修复：相对路径映射，确保跨平台兼容
+    # 相对路径基于 XML 文件所在位置 (src/underwater/data/)
+    # 最终模型目录结构: src/underwater/data/meshes/{ur5e|robotiq}/...
+    data_dir_abs = data_dir.resolve()
     ur5e_mesh_dir = ur5e_dir / "assets"
     robotiq_mesh_dir = robotiq_dir / "assets"
-
+    
+    # 从 Menagerie 复制 mesh 到 data/meshes/ 目录（一次性操作）
+    meshes_output_dir = data_dir / "meshes"
+    ur5e_output_dir = meshes_output_dir / "ur5e"
+    robotiq_output_dir = meshes_output_dir / "robotiq"
+    ur5e_output_dir.mkdir(parents=True, exist_ok=True)
+    robotiq_output_dir.mkdir(parents=True, exist_ok=True)
+    
+    import shutil
+    
+    # 复制 UR5e meshes
+    if ur5e_mesh_dir.exists():
+        for src_mesh in ur5e_mesh_dir.glob("*.obj"):
+            dst = ur5e_output_dir / src_mesh.name
+            if not dst.exists():
+                shutil.copy2(src_mesh, dst)
+    
+    # 复制 Robotiq meshes
+    if robotiq_mesh_dir.exists():
+        for src_mesh in robotiq_mesh_dir.glob("*.stl"):
+            dst = robotiq_output_dir / src_mesh.name
+            if not dst.exists():
+                shutil.copy2(src_mesh, dst)
+    
+    # 使用相对路径 (meshes/ur5e/xxx.obj, meshes/robotiq/xxx.stl)
     for mesh in ur5e_root.iter("mesh"):
         file_attr = mesh.get("file")
         if file_attr:
-            # 判断是 Robotiq 夹爪模型还是 UR5e 模型
-            if "robotiq" in file_attr.lower():
-                # 无视之前的杂乱相对路径，直接提取文件名，从夹爪真实资源库寻址
-                filename = Path(file_attr).name
-                abs_path = robotiq_mesh_dir / filename
+            filename = Path(file_attr).name
+            # 判断是 Robotiq 还是 UR5e
+            if "robotiq" in file_attr.lower() or filename.startswith("base_") and "gripper" in str(robotiq_mesh_dir):
+                rel_path = f"meshes/robotiq/{filename}"
             else:
-                # 否则从 UR5e 资源库寻址
-                abs_path = ur5e_mesh_dir / file_attr
-            
-            # 覆写为跨平台的绝对路径，采用 as_posix() 确保 MuJoCo 兼容
-            mesh.set("file", abs_path.as_posix())
+                rel_path = f"meshes/ur5e/{filename}"
+            mesh.set("file", rel_path)
 
     # 4. 全局流体力学属性覆盖
     for geom in ur5e_root.iter("geom"):

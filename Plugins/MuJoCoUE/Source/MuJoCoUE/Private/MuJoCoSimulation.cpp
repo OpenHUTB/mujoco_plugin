@@ -1,10 +1,12 @@
-﻿// Fill out your copyright notice in the Description page of Project Settings.
+// Fill out your copyright notice in the Description page of Project Settings.
 
 #include "MuJoCoSimulation.h"
 
 #include "mujoco/mujoco.h"
 #include <vector>
 #include <string>
+#include <cstring>
+#include <cmath>
 
 #include "KismetProceduralMeshLibrary.h"
 #include "ProceduralMeshConversion.h"
@@ -254,6 +256,33 @@ AMuJoCoSimulation::AMuJoCoSimulation()
 	bSimulationRunning = false;
 	XmlSourcePath = TEXT("mujoco/pendulum.xml");
 
+	// ── 洋流模块初始化（Phase 6-7）──────────────────
+	OceanGM_Speed = OceanCurrentConfig.GM_MeanSpeed;
+	OceanGM_HorizAngle = OceanCurrentConfig.GM_MeanHorizAngle;
+	OceanGM_VertAngle = OceanCurrentConfig.GM_MeanVertAngle;
+	OceanTurbLastPos = FVector(0, 0, -1);
+	OceanTurbHasLastPos = false;
+	OceanRNGState = 42;  // LCG 随机种子
+	OceanDragCoeff = 10.0f;
+	OceanCurrentBodyId = -1;  // -1 = 未设置，将在 ApplyOceanCurrent 中自动查找
+	OceanCurrentVelocity = FVector(0, 0, 0);
+
+	// 洋流可视化初始化（Phase 7）
+	bOceanVisualizationEnabled = false;
+	bStratifiedProfileShown = false;
+	bOceanHeatmapShown = false;
+	OceanLogInterval = 5.0f;  // 每 5 秒输出一次洋流状态
+	OceanLastLogTime = 0.0f;
+
+	// 创建洋流箭头可视化组件
+	OceanArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("OceanCurrentArrow"));
+	if (OceanArrowComponent)
+	{
+		OceanArrowComponent->SetupAttachment(RootComponent);
+		OceanArrowComponent->bHiddenInGame = true;  // 默认隐藏
+		OceanArrowComponent->ArrowColor = FColor(0, 255, 255);  // 青色表示洋流
+	}
+
 	// 使用一个圆柱体作为模型的替代，否则拖进去看不到
 	UStaticMeshComponent* Cylinder = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VisualRepresentation"));
 	Cylinder->SetupAttachment(RootComponent);
@@ -346,6 +375,287 @@ void AMuJoCoSimulation::UpdateSimulationView(const ModelInfo &Info)
 	}
 }
 
+// ════════════════════════════════════════════════════════════
+// 洋流模块实现 (Phase 6)
+// ════════════════════════════════════════════════════════════
+
+FVector AMuJoCoSimulation::GetOceanCurrentVelocityAt(float x, float y, float z, float dt)
+{
+	// ── Layer 1: Gauss-Markov 过程 ──────────────────
+	// V? + μ·V = ω,  ω ~ N(0, σ2)
+	// 离散化：V_{t+dt} = V_t + μ·(V_mean - V_t)·dt + σ·√dt·N(0,1)
+
+	// LCG 随机数生成器 (Linear Congruential Generator)
+	auto LCG = [this]() -> float {
+		OceanRNGState = OceanRNGState * 1664525u + 1013904223u;
+		return ((int32)OceanRNGState >> 1) / (float)0x7FFFFFFF * 2.0f - 1.0f;  // [-1, 1]
+	};
+
+	float noiseS = OceanCurrentConfig.GM_NoiseAmp * sqrtf(dt) * LCG();
+	OceanGM_Speed += OceanCurrentConfig.GM_Mu * (OceanCurrentConfig.GM_MeanSpeed - OceanGM_Speed) * dt + noiseS;
+	OceanGM_Speed = FMath::Max(0.0f, OceanGM_Speed);  // 速度非负
+
+	float noiseH = OceanCurrentConfig.GM_NoiseAmp * sqrtf(dt) * LCG();
+	OceanGM_HorizAngle += (OceanCurrentConfig.GM_Mu * (OceanCurrentConfig.GM_MeanHorizAngle - OceanGM_HorizAngle) + noiseH) * dt;
+
+	float noiseV = OceanCurrentConfig.GM_NoiseAmp * sqrtf(dt) * LCG();
+	OceanGM_VertAngle += (OceanCurrentConfig.GM_Mu * (OceanCurrentConfig.GM_MeanVertAngle - OceanGM_VertAngle) + noiseV) * dt;
+
+	// NED 坐标系 → MuJoCo Z 向上
+	float cosV = cosf(OceanGM_VertAngle);
+	FVector vGM(
+		OceanGM_Speed * cosV * cosf(OceanGM_HorizAngle),
+		OceanGM_Speed * cosV * sinf(OceanGM_HorizAngle),
+		-OceanGM_Speed * sinf(OceanGM_VertAngle)
+	);
+
+	// ── Layer 2: 分层洋流 (Stratified) ──────────────
+	FVector vStrat(0, 0, 0);
+	if (OceanCurrentConfig.StratifiedLayers.Num() >= 2)
+	{
+		// 深度 = -z (z 向上)
+		float depth = -z;
+		const auto& layers = OceanCurrentConfig.StratifiedLayers;
+
+		// 边界处理：浅于最浅层
+		if (depth <= layers[0].DepthM)
+		{
+			float cosV2 = cosf(layers[0].VertAngleRad);
+			vStrat = FVector(
+				layers[0].SpeedMS * cosV2 * cosf(layers[0].HorizAngleRad),
+				layers[0].SpeedMS * cosV2 * sinf(layers[0].HorizAngleRad),
+				-layers[0].SpeedMS * sinf(layers[0].VertAngleRad)
+			);
+		}
+		else if (depth >= layers.Last().DepthM)  // 深于最深层
+		{
+			float cosV2 = cosf(layers.Last().VertAngleRad);
+			vStrat = FVector(
+				layers.Last().SpeedMS * cosV2 * cosf(layers.Last().HorizAngleRad),
+				layers.Last().SpeedMS * cosV2 * sinf(layers.Last().HorizAngleRad),
+				-layers.Last().SpeedMS * sinf(layers.Last().VertAngleRad)
+			);
+		}
+		else
+		{
+			// 在两层之间线性插值
+			for (int i = 0; i < layers.Num() - 1; ++i)
+			{
+				if (layers[i].DepthM <= depth && depth <= layers[i + 1].DepthM)
+				{
+					float t = (depth - layers[i].DepthM) /
+							  (layers[i + 1].DepthM - layers[i].DepthM);
+
+					float cosV1 = cosf(layers[i].VertAngleRad);
+					FVector v1(
+						layers[i].SpeedMS * cosV1 * cosf(layers[i].HorizAngleRad),
+						layers[i].SpeedMS * cosV1 * sinf(layers[i].HorizAngleRad),
+						-layers[i].SpeedMS * sinf(layers[i].VertAngleRad)
+					);
+
+					float cosV2 = cosf(layers[i + 1].VertAngleRad);
+					FVector v2(
+						layers[i + 1].SpeedMS * cosV2 * cosf(layers[i + 1].HorizAngleRad),
+						layers[i + 1].SpeedMS * cosV2 * sinf(layers[i + 1].HorizAngleRad),
+						-layers[i + 1].SpeedMS * sinf(layers[i + 1].VertAngleRad)
+					);
+
+					vStrat = v1 * (1.0f - t) + v2 * t;
+					break;
+				}
+			}
+		}
+	}
+
+	// ── Layer 3: 湍流扰动 (Turbulent) ───────────────
+	FVector vTurb(0, 0, 0);
+	FVector pos(x, y, z);
+
+	if (OceanTurbHasLastPos)
+	{
+		float dist = (pos - OceanTurbLastPos).Size();
+		float correlation = FMath::Exp(-dist / FMath::Max(OceanCurrentConfig.TurbulentIntegralScale, 0.01f));
+		float noiseStrength = OceanCurrentConfig.TurbulentIntensity * sqrtf(1.0f - correlation * correlation);
+
+		vTurb = FVector(
+			noiseStrength * LCG() * 0.5f,
+			noiseStrength * LCG() * 0.5f,
+			noiseStrength * LCG() * 0.5f
+		);
+	}
+	else
+	{
+		vTurb = FVector(
+			OceanCurrentConfig.TurbulentIntensity * LCG() * 0.5f,
+			OceanCurrentConfig.TurbulentIntensity * LCG() * 0.5f,
+			OceanCurrentConfig.TurbulentIntensity * LCG() * 0.5f
+		);
+		OceanTurbHasLastPos = true;
+	}
+
+	OceanTurbLastPos = pos;
+
+	// 总洋流速度 = 三层叠加
+	return vGM + vStrat + vTurb;
+}
+
+void AMuJoCoSimulation::ApplyOceanCurrent()
+{
+	if (!OceanCurrentConfig.bEnabled || !mData || !mModel)
+		return;
+
+	// ── 查找 ROV body ───────────────────────────────
+	int bodyId = OceanCurrentBodyId;
+	if (bodyId < 0)
+	{
+		// 自动查找包含 "rov" 的 body
+		for (int i = 0; i < mModel->nbody; ++i)
+		{
+			const char* name = mModel->names + mModel->name_bodyadr[i];
+			if (strstr(name, "rov") != nullptr)
+			{
+				bodyId = i;
+				OceanCurrentBodyId = i;
+				break;
+			}
+		}
+		if (bodyId < 0)
+		{
+			// 如果没找到，使用第一个自由 body
+			for (int i = 0; i < mModel->nbody; ++i)
+			{
+				if (mModel->body_jntadr[i] >= 0)
+				{
+					bodyId = i;
+					OceanCurrentBodyId = i;
+					break;
+				}
+			}
+		}
+	}
+
+	if (bodyId < 0 || bodyId >= mModel->nbody)
+		return;
+
+	// ── 获取机器人位置 ──────────────────────────────
+	float robotX = mData->xpos[3 * bodyId + 0];
+	float robotY = mData->xpos[3 * bodyId + 1];
+	float robotZ = mData->xpos[3 * bodyId + 2];
+
+	// ── 计算洋流速度 ────────────────────────────────
+	float dt = mModel->opt.timestep;
+	OceanCurrentVelocity = GetOceanCurrentVelocityAt(robotX, robotY, robotZ, dt);
+
+	// ── 施加洋流拖曳力到 xfrc_applied ───────────────
+	// F_drag = -drag_coeff * V_current
+	// MuJoCo xfrc_applied: [Fx, Fy, Fz, Tx, Ty, Tz]
+	mData->xfrc_applied[bodyId * 6 + 0] = -OceanDragCoeff * OceanCurrentVelocity.X;
+	mData->xfrc_applied[bodyId * 6 + 1] = -OceanDragCoeff * OceanCurrentVelocity.Y;
+	mData->xfrc_applied[bodyId * 6 + 2] = -OceanDragCoeff * OceanCurrentVelocity.Z;
+}
+
+void AMuJoCoSimulation::ResetOceanCurrent()
+{
+	// 重置 Gauss-Markov 状态为均值
+	OceanGM_Speed = OceanCurrentConfig.GM_MeanSpeed;
+	OceanGM_HorizAngle = OceanCurrentConfig.GM_MeanHorizAngle;
+	OceanGM_VertAngle = OceanCurrentConfig.GM_MeanVertAngle;
+
+	// 重置湍流状态
+	OceanTurbLastPos = FVector(0, 0, -1);
+	OceanTurbHasLastPos = false;
+
+	// 重置随机数种子（确保可复现性）
+	OceanRNGState = 42;
+
+	OceanCurrentVelocity = FVector(0, 0, 0);
+	OceanCurrentBodyId = -1;  // 下次运行重新查找
+}
+
+void AMuJoCoSimulation::SetOceanCurrentBodyName(const FString& BodyName)
+{
+	if (!mModel || BodyName.IsEmpty())
+		return;
+
+	int id = mj_name2id(mModel, mjOBJ_BODY, TCHAR_TO_ANSI(*BodyName));
+	if (id >= 0)
+	{
+		OceanCurrentBodyId = id;
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] Set current body to: %s (ID=%d)"), *BodyName, id);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] Body not found: %s, will auto-detect"), *BodyName);
+		OceanCurrentBodyId = -1;
+	}
+}
+
+// ════════════════════════════════════════════════════════════
+// 洋流可视化模块 (Phase 7)
+// ════════════════════════════════════════════════════════════
+
+void AMuJoCoSimulation::ToggleOceanVisualization()
+{
+	bOceanVisualizationEnabled = !bOceanVisualizationEnabled;
+	UE_LOG(LogTemp, Warning, TEXT("[Ocean] Visualization %s"), bOceanVisualizationEnabled ? TEXT("ON") : TEXT("OFF"));
+}
+
+void AMuJoCoSimulation::ShowStratifiedProfile()
+{
+	bStratifiedProfileShown = !bStratifiedProfileShown;
+	if (bStratifiedProfileShown)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] Showing stratified profile: %d layers"), OceanCurrentConfig.StratifiedLayers.Num());
+		for (int i = 0; i < OceanCurrentConfig.StratifiedLayers.Num(); ++i)
+		{
+			const auto& layer = OceanCurrentConfig.StratifiedLayers[i];
+			UE_LOG(LogTemp, Warning, TEXT("  Layer %d: depth=%.1fm speed=%.2f m/s angle=%.2f rad"),
+					i, layer.DepthM, layer.SpeedMS, layer.HorizAngleRad);
+		}
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] Hiding stratified profile"));
+	}
+}
+
+void AMuJoCoSimulation::ToggleOceanHeatmap()
+{
+	bOceanHeatmapShown = !bOceanHeatmapShown;
+	UE_LOG(LogTemp, Warning, TEXT("[Ocean] Heatmap %s"), bOceanHeatmapShown ? TEXT("ON") : TEXT("OFF"));
+}
+
+void AMuJoCoSimulation::LogOceanStatus()
+{
+	if (!mData || !mModel)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] No model loaded"));
+		return;
+	}
+
+	// 获取机器人位置
+	FVector robotPos;
+	if (OceanCurrentBodyId >= 0 && OceanCurrentBodyId < mModel->nbody)
+	{
+		robotPos = FVector(mData->xpos[3 * OceanCurrentBodyId + 0],
+						   mData->xpos[3 * OceanCurrentBodyId + 1],
+						   mData->xpos[3 * OceanCurrentBodyId + 2]);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("[Ocean] Body ID invalid"));
+		return;
+	}
+
+	float speed = OceanCurrentVelocity.Size();
+	UE_LOG(LogTemp, Warning, TEXT("[Ocean Status] Position: (%.3f, %.3f, %.3f)"),
+			robotPos.X, robotPos.Y, robotPos.Z);
+	UE_LOG(LogTemp, Warning, TEXT("[Ocean Status] Current: (%.4f, %.4f, %.4f) | speed=%.4f m/s"),
+			OceanCurrentVelocity.X, OceanCurrentVelocity.Y, OceanCurrentVelocity.Z, speed);
+	UE_LOG(LogTemp, Warning, TEXT("[Ocean Status] GM Speed=%.4f HorizAngle=%.4f VertAngle=%.4f"),
+			OceanGM_Speed, OceanGM_HorizAngle, OceanGM_VertAngle);
+}
+
 void AMuJoCoSimulation::SimulateMuJoCo(float DeltaTime)
 {
 	if (mData == nullptr || mModel == nullptr)
@@ -355,7 +665,14 @@ void AMuJoCoSimulation::SimulateMuJoCo(float DeltaTime)
 	}
 	double startTime = mData->time;
 	while (mData->time - startTime < DeltaTime)  // 当前步的仿真时间
+	{
+		// 洋流模块：在 mj_step 之前注入洋流拖曳力 (Phase 6)
+		if (OceanCurrentConfig.bEnabled)
+		{
+			ApplyOceanCurrent();
+		}
 		mj_step(mModel, mData);  // 推进仿真，使用控制回调来获取外部力和控制（运行时更新mModel和mData中的数据）
+	}
 
 	ModelInfo info;
 	if (!_info.bodies.size())
@@ -397,6 +714,20 @@ void AMuJoCoSimulation::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 	if (bSimulationRunning)
 		SimulateMuJoCo(DeltaTime);
+
+	// ── 洋流可视化快捷键 (Phase 7) ──────────────────
+	// 注意：实际游戏中需要通过 Input 系统绑定按键
+	// 这里提供日志接口，可通过蓝图或控制台命令调用
+	if (OceanCurrentConfig.bEnabled && mData && mModel)
+	{
+		// 洋流速度日志（定期输出）
+		OceanLastLogTime += DeltaTime;
+		if (OceanLastLogTime >= OceanLogInterval && bOceanVisualizationEnabled)
+		{
+			LogOceanStatus();
+			OceanLastLogTime = 0;
+		}
+	}
 }
 
 
@@ -426,6 +757,10 @@ void AMuJoCoSimulation::ResetSimulation()
 	if (mData)
 		mj_deleteData(mData);
 	mData = mj_makeData(mModel);
+
+	// 洋流模块：重置洋流状态 (Phase 6)
+	ResetOceanCurrent();
+
 	ExtractCurrentState(_info);
 	UpdateSimulationView(_info);
 }

@@ -8,26 +8,47 @@
     "geom_name": "rov_body",
     "half_size": [0.4, 0.3, 0.2],
     "mass": 150.0,
-    "fluid_coef": [0.5, 0.5, 0.5, 0.5, 0.5] 
+    "fluid_coef": [0.40, 7.79, 2.81, 3.84, 0.27]
   },
   "test_scenarios": {
     "scenario_1": {
       "density": 0.0,
       "viscosity": 0.0,
       "apply_buoyancy": false,
-      "label": "1. 无流体环境（纯重力下沉）"
+      "label": "1. 无流体环境(纯重力下沉)"
     },
     "scenario_2": {
       "density": 1000.0,
       "viscosity": 0.00089,
       "apply_buoyancy": false,
-      "label": "2. 水中环境（仅计算阻力，无浮力）"
+      "label": "2. 水中环境(仅计算阻力,无浮力)"
     },
     "scenario_3": {
       "density": 1000.0,
       "viscosity": 0.00089,
       "apply_buoyancy": true,
-      "label": "3. 水中环境（阻力 + 手动浮力补偿）"
+      "label": "3. 水中环境(阻力 + 手动浮力补偿)"
+    }
+  },
+
+  "ocean_current": {
+    "enabled": true,
+    "model_type": "cascade",
+    "gauss_markov": {
+      "mean_speed": 0.5,
+      "mean_horizontal_angle": 0.0,
+      "mean_vertical_angle": 0.0,
+      "mu": 0.0,
+      "noise_amp": 0.1
+    },
+    "stratified_layers": [
+      {"depth_m": 0,   "speed_ms": 0.0,  "horizontal_angle_rad": 0.0,  "vertical_angle_rad": 0.0},
+      {"depth_m": -10, "speed_ms": 0.5,  "horizontal_angle_rad": 0.3,  "vertical_angle_rad": 0.0},
+      {"depth_m": -50, "speed_ms": 1.0,  "horizontal_angle_rad": 0.5,  "vertical_angle_rad": 0.1}
+    ],
+    "turbulent": {
+      "intensity": 0.15,
+      "integral_scale_m": 1.0
     }
   }
 }
