@@ -113,6 +113,8 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#qflex">Qflex 控制</a>
     </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">高保正运动跟踪结果:</a>
+    </li>
     </ul>
                 </li>
               </ul>
@@ -158,6 +160,12 @@
 <li>MuJoCo 整合</li>
 </ul>
 <p>该模型能够模拟全身动力学以及与各种设备的交互，使其适用于具身智能、机器人和生物力学领域的研究。</p>
+<p>渲染效果：</p>
+<div align="center">
+  <img src="../img/ms/ms_human_render_front.png" width="49%">
+  <img src="../img/ms/render_gif.gif" width="49%">
+</div>
+<p><br><br></p>
 <h2 id="_1">运行</h2>
 <p>1.下载并加载模型
 <div class="highlight"><pre><span></span><code><span class="c1"># 克隆模型仓库</span>
@@ -166,6 +174,13 @@ git<span class="w"> </span>clone<span class="w"> </span>https://github.com/LNSGr
 mujoco/bin/simulate.exe<span class="w">  </span>MS-Human-700/MS-Human-700.xml
 </code></pre></div></p>
 <p><img alt="" src="../../img/ms/human_700_loaded.jpg" /></p>
+<p><a href="https://lnsgroup.cc/research/DynSyn">DynSyn</a> 控制结果:</p>
+<div align="center">
+  <img src="../img/ms/loco_full_gif.gif" width="32%">
+  <img src="../img/ms/loco_legs_gif.gif" width="32%">
+  <img src="../img/ms/mani_gif.gif" width="32%">
+</div>
+<p><br><br></p>
 <h2 id="dynsyn">DynSyn</h2>
 <p>DynSyn：用于过驱动具身系统高效学习与控制的动态协同表示<sup id="fnref:he2024dynsyn"><a class="footnote-ref" href="#fn:he2024dynsyn">1</a></sup>。</p>
 <p>1.安装
@@ -208,6 +223,40 @@ python<span class="w"> </span>scripts/train.py<span class="w"> </span>--alg<span
 <span class="c1"># windows下需要注释掉 https://github.com/LNSGroup/Qflex/blob/a028cfa76525a62bfb90d76c6f1535f697121383/src/futex.c#L3</span>
 pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span>.
 </code></pre></div></p>
+<p><a href="https://lnsgroup.cc/research/Qflex"><strong>QFlex</strong></a> 控制结果:</p>
+<div align="center">
+  <img src="../img/ms/run_gif.gif" width="49%">
+  <img src="../img/ms/dance_gif.gif" width="49%">
+</div>
+<p><br><br></p>
+<h2 id="_2"><strong>高保正运动跟踪</strong>结果:</h2>
+<p>利用 MuJoCo Warp 进行大规模并行 <strong>GPU</strong> 仿真，可以快速高效地训练控制策略，从而在各种动态轨迹上实现高精度运动跟踪。</p>
+<p>以下演示展示了 MS-Human 模型的这些跟踪功能：
+*   <strong>重叠</strong>: 模型和参考轨迹直接渲染，以直观地展示跟踪精度。
+*   <strong>分离</strong>: 模型和参考轨迹以一定的偏移量渲染，以突出运动细节。</p>
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/0350ff08-2ab3-4019-a4be-bef6fbc276ad" alt="running_overlap" width="100%"><br>
+      跑步：重叠
+    </td>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/16084e8c-41f5-45a3-96b7-b69307c78e0c" alt="running_separate" width="100%"><br>
+      跑步：分离
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/9aea44e9-3277-4d81-a096-6865e2dcc5e4" alt="walking_ovelap" width="100%"><br>
+      走路：重叠
+    </td>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/9c32033c-0ca6-4b0c-a6fd-f61f66481ee9" alt="walking_separate" width="100%"><br>
+      走路：分离
+    </td>
+  </tr>
+</table>
+
 <div class="footnote">
 <hr />
 <ol>
