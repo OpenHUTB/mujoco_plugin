@@ -10,7 +10,20 @@ MS-Human-700 模型代表了人体全身肌肉骨骼系统，其特点包括：
 
 该模型能够模拟全身动力学以及与各种设备的交互，使其适用于具身智能、机器人和生物力学领域的研究。
 
+
+渲染效果：
+
+<div align="center">
+  <img src="../img/ms/ms_human_render_front.png" width="49%">
+  <img src="../img/ms/render_gif.gif" width="49%">
+</div>
+<br><br>
+
+
+
 ## 运行
+
+
 
 1.下载并加载模型
 ```shell
@@ -21,6 +34,16 @@ mujoco/bin/simulate.exe  MS-Human-700/MS-Human-700.xml
 ```
 
 ![](../img/ms/human_700_loaded.jpg)
+
+[DynSyn](https://lnsgroup.cc/research/DynSyn) 控制结果:
+
+<div align="center">
+  <img src="../img/ms/loco_full_gif.gif" width="32%">
+  <img src="../img/ms/loco_legs_gif.gif" width="32%">
+  <img src="../img/ms/mani_gif.gif" width="32%">
+</div>
+<br><br>
+
 
 
 ## DynSyn
@@ -80,5 +103,47 @@ cd Qflex
 # windows下需要注释掉 https://github.com/LNSGroup/Qflex/blob/a028cfa76525a62bfb90d76c6f1535f697121383/src/futex.c#L3
 pip install -e .
 ```
+
+[**QFlex**](https://lnsgroup.cc/research/Qflex) 控制结果:
+
+<div align="center">
+  <img src="../img/ms/run_gif.gif" width="49%">
+  <img src="../img/ms/dance_gif.gif" width="49%">
+</div>
+<br><br>
+
+
+
+## **高保正运动跟踪**结果: 
+
+利用 MuJoCo Warp 进行大规模并行 **GPU** 仿真，可以快速高效地训练控制策略，从而在各种动态轨迹上实现高精度运动跟踪。
+
+
+以下演示展示了 MS-Human 模型的这些跟踪功能：
+*   **重叠**: 模型和参考轨迹直接渲染，以直观地展示跟踪精度。
+*   **分离**: 模型和参考轨迹以一定的偏移量渲染，以突出运动细节。
+
+<table>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/0350ff08-2ab3-4019-a4be-bef6fbc276ad" alt="running_overlap" width="100%"><br>
+      跑步：重叠
+    </td>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/16084e8c-41f5-45a3-96b7-b69307c78e0c" alt="running_separate" width="100%"><br>
+      跑步：分离
+    </td>
+  </tr>
+  <tr>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/9aea44e9-3277-4d81-a096-6865e2dcc5e4" alt="walking_ovelap" width="100%"><br>
+      走路：重叠
+    </td>
+    <td align="center" width="25%">
+      <img src="https://github.com/user-attachments/assets/9c32033c-0ca6-4b0c-a6fd-f61f66481ee9" alt="walking_separate" width="100%"><br>
+      走路：分离
+    </td>
+  </tr>
+</table>
 
 
