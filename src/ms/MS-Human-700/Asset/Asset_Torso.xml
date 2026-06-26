@@ -1,0 +1,55 @@
+<mujoco>
+  <asset>
+    <mesh name="lumbar5" content_type="model/stl" file="Geometry/lumbar5.stl" />
+    <mesh name="lumbar4" content_type="model/stl" file="Geometry/lumbar4.stl" />
+    <mesh name="lumbar3" content_type="model/stl" file="Geometry/lumbar3.stl" />
+    <mesh name="lumbar2" content_type="model/stl" file="Geometry/lumbar2.stl" />
+    <mesh name="lumbar1" content_type="model/stl" file="Geometry/lumbar1.stl" />
+    <mesh name="thoracic12" content_type="model/stl" file="Geometry/thoracic12.stl" />
+    <mesh name="thoracic11" content_type="model/stl" file="Geometry/thoracic11.stl" />
+    <mesh name="thoracic10" content_type="model/stl" file="Geometry/thoracic10.stl" />
+    <mesh name="thoracic9" content_type="model/stl" file="Geometry/thoracic9.stl" />
+    <mesh name="thoracic8" content_type="model/stl" file="Geometry/thoracic8.stl" />
+    <mesh name="thoracic7" content_type="model/stl" file="Geometry/thoracic7.stl" />
+    <mesh name="thoracic6" content_type="model/stl" file="Geometry/thoracic6.stl" />
+    <mesh name="thoracic5" content_type="model/stl" file="Geometry/thoracic5.stl" />
+    <mesh name="thoracic4" content_type="model/stl" file="Geometry/thoracic4.stl" />
+    <mesh name="thoracic3" content_type="model/stl" file="Geometry/thoracic3.stl" />
+    <mesh name="thoracic2" content_type="model/stl" file="Geometry/thoracic2.stl" />
+    <mesh name="thoracic1" content_type="model/stl" file="Geometry/thoracic1.stl" />
+    <mesh name="rotatedcerv7" content_type="model/stl" file="Geometry/rotatedcerv7.stl" />
+    <mesh name="cerv6" content_type="model/stl" file="Geometry/cerv6.stl" />
+    <mesh name="cerv5" content_type="model/stl" file="Geometry/cerv5.stl" />
+    <mesh name="cerv4" content_type="model/stl" file="Geometry/cerv4.stl" />
+    <mesh name="cerv3" content_type="model/stl" file="Geometry/cerv3.stl" />
+    <mesh name="cerv2" content_type="model/stl" file="Geometry/cerv2.stl" />
+    <mesh name="cerv1" content_type="model/stl" file="Geometry/cerv1.stl" />
+    <mesh name="jaw" content_type="model/stl" file="Geometry/jaw.stl" scale="0.95 0.95 0.95" />
+    <mesh name="skull" content_type="model/stl" file="Geometry/skull.stl" scale="0.95 0.95 0.95" />
+    <mesh name="Rib1R" content_type="model/obj" file="Geometry/Rib1R.obj" />
+    <mesh name="Sternum" content_type="model/obj" file="Geometry/Sternum.obj" />
+    <mesh name="Rib1L" content_type="model/obj" file="Geometry/Rib1L.obj" />
+    <mesh name="Rib2R" content_type="model/obj" file="Geometry/Rib2R.obj" />
+    <mesh name="Rib2L" content_type="model/obj" file="Geometry/Rib2L.obj" />
+    <mesh name="Rib3R" content_type="model/obj" file="Geometry/Rib3R.obj" />
+    <mesh name="Rib3L" content_type="model/obj" file="Geometry/Rib3L.obj" />
+    <mesh name="Rib4R" content_type="model/obj" file="Geometry/Rib4R.obj" />
+    <mesh name="Rib4L" content_type="model/obj" file="Geometry/Rib4L.obj" />
+    <mesh name="Rib5R" content_type="model/obj" file="Geometry/Rib5R.obj" />
+    <mesh name="Rib5L" content_type="model/obj" file="Geometry/Rib5L.obj" />
+    <mesh name="Rib6R" content_type="model/obj" file="Geometry/Rib6R.obj" />
+    <mesh name="Rib6L" content_type="model/obj" file="Geometry/Rib6L.obj" />
+    <mesh name="Rib7R" content_type="model/obj" file="Geometry/Rib7R.obj" />
+    <mesh name="Rib7L" content_type="model/obj" file="Geometry/Rib7L.obj" />
+    <mesh name="Rib8R" content_type="model/obj" file="Geometry/Rib8R.obj" />
+    <mesh name="Rib8L" content_type="model/obj" file="Geometry/Rib8L.obj" />
+    <mesh name="Rib9R" content_type="model/obj" file="Geometry/Rib9R.obj" />
+    <mesh name="Rib9L" content_type="model/obj" file="Geometry/Rib9L.obj" />
+    <mesh name="Rib10R" content_type="model/obj" file="Geometry/Rib10R.obj" />
+    <mesh name="Rib10L" content_type="model/obj" file="Geometry/Rib10L.obj" />
+    <mesh name="Rib11R" content_type="model/obj" file="Geometry/Rib11R.obj" />
+    <mesh name="Rib11L" content_type="model/obj" file="Geometry/Rib11L.obj" />
+    <mesh name="Rib12R" content_type="model/obj" file="Geometry/Rib12R.obj" />
+    <mesh name="Rib12L" content_type="model/obj" file="Geometry/Rib12L.obj" />
+  </asset>
+</mujoco> 

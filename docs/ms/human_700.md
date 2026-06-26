@@ -1,16 +1,49 @@
 # 全身肌肉骨骼模型 [MS-Human-700](https://lnsgroup.cc/research/MS-Human/)
 
-MS-Human-700 模型代表了人体全身肌肉骨骼系统，其特点包括：
+[MS-Human-700.xml](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/ms/MS-Human-700/MS-Human-700.xml) 模型代表了人体全身肌肉骨骼系统，其特点包括：
 
 * 90个身体节段
-* 206个关节
+* 206个关节（为保证控制稳定性，数值限制为 85）
 * 700个肌腱单元
 * 解剖学上合理的参数
 * MuJoCo 整合
 
 该模型能够模拟全身动力学以及与各种设备的交互，使其适用于具身智能、机器人和生物力学领域的研究。
 
+
+渲染效果：
+
+
+| 前视角 | 环绕视角 |
+|:---:|:---:|
+| ![](../img/ms/ms_human_render_front.png) | ![](../img/ms/render_gif.gif) |
+
+
+### 腿运动模型
+
+**文件：** [MS-Human-700-Locomotion.xml](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/ms/MS-Human-700/MS-Human-700-Locomotion.xml)
+
+该模型着重研究下肢动力学，将腿部单独用于运动研究，同时简化了上肢和躯干。
+
+* **身体节段：** 80
+* **关节：** 36
+* **肌肉：** 100
+
+### 单手操作模型
+
+**文件：** [MS-Human-700-Manipulation.xml](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/ms/MS-Human-700/MS-Human-700-Manipulation.xml)
+
+重点训练右臂和右手细节，专为操作任务而设计。
+
+* **身体节段：** 127
+* **关节：** 42
+* **肌肉：** 81
+
+
+
 ## 运行
+
+
 
 1.下载并加载模型
 ```shell
@@ -21,6 +54,14 @@ mujoco/bin/simulate.exe  MS-Human-700/MS-Human-700.xml
 ```
 
 ![](../img/ms/human_700_loaded.jpg)
+
+[DynSyn](https://lnsgroup.cc/research/DynSyn) 控制结果:
+
+
+| 控制全身的移动 | 控制腿的移动 | 抓取 |
+|:---:|:---:|:---:|
+| ![](../img/ms/loco_full_gif.gif) | ![](../img/ms/loco_legs_gif.gif) | ![](../img/ms/mani_gif.gif) |
+
 
 
 ## DynSyn
@@ -80,5 +121,36 @@ cd Qflex
 # windows下需要注释掉 https://github.com/LNSGroup/Qflex/blob/a028cfa76525a62bfb90d76c6f1535f697121383/src/futex.c#L3
 pip install -e .
 ```
+
+[**QFlex**](https://lnsgroup.cc/research/Qflex) 控制结果:
+
+| 跑步 | 跳舞 |
+|:---:|:---:|
+| ![](../img/ms/run_gif.gif) | ![](../img/ms/dance_gif.gif) |
+
+
+
+
+
+## 高保真运动跟踪结果: 
+
+利用 MuJoCo Warp 进行大规模并行 **GPU** 仿真，可以快速高效地训练控制策略，从而在各种动态轨迹上实现高精度运动跟踪。
+
+
+以下演示展示了 MS-Human 模型的这些跟踪功能：
+
+*   **重叠**: 模型和参考轨迹直接渲染，以直观地展示跟踪精度。
+*   **分离**: 模型和参考轨迹以一定的偏移量渲染，以突出运动细节。
+
+
+| 跑步：重叠 | 跑步：分离 |
+|:---:|:---:|
+| ![](../img/ms/running_overlap.gif) | ![](../img/ms/running_separate.gif) |
+| **走路：重叠** | **走路：分离** |
+| ![](../img/ms/walking_ovelap.gif) | ![](../img/ms/walking_separate.gif) |
+
+
+
+
 
 
