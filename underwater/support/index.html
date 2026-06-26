@@ -160,7 +160,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 </code></pre></div>
 <p>这个脚本是<strong>唯一推荐入口</strong>。它会按顺序执行：</p>
 <ol>
-<li>三组基础流体场景对比</li>
+<li>四组基础流体场景对比（含洋流）</li>
 <li>6-DOF 各向异性阻力测试</li>
 <li>PID 深度悬浮控制测试</li>
 <li>是否启动 MuJoCo Viewer 的交互验证</li>
@@ -208,7 +208,7 @@ assets/mujoco_menagerie/robotiq_2f85/
    │                    │
    │                    ├──────────────► plot_results.py
    │                    │
-   │                    └──────────────► 运行三组物理验证 + PID 悬浮 + Viewer
+   │                    └──────────────► 运行四类物理验证 + PID 悬浮 + Viewer
    │
    └──────────────► build_underwater_rov.py
                         │
@@ -234,7 +234,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 <ul>
 <li>读取配置</li>
 <li>动态注入流体参数和物理参数</li>
-<li>执行三组基础场景测试</li>
+<li>执行四组基础场景测试（含洋流）</li>
 <li>执行 6-DOF 各向异性阻力测试</li>
 <li>执行 PID 悬浮控制测试</li>
 <li>询问是否打开 Viewer</li>
@@ -332,7 +332,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 </ul>
 <hr />
 <h2 id="_23">物理验证内容</h2>
-<p>这个模块保留了三类核心物理验证。</p>
+<p>这个模块保留了四类核心物理验证。</p>
 <h3 id="1_1">1）基础流体场景对比</h3>
 <p>对比三种场景：</p>
 <ul>
@@ -352,6 +352,13 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h3 id="3pid">3）PID 深度悬浮验证</h3>
 <p>通过深度控制器做闭环悬浮测试，观察目标深度与实际深度的跟踪效果。</p>
 <p>这部分会生成 <code>depth_control_result.png</code>。</p>
+<h3 id="4">4）洋流干扰场景测试</h3>
+<p>在洋流环境中测试 PID 深度保持和无控制漂移情况：</p>
+<ul>
+<li><strong>洋流+PID 深度保持</strong> — 洋流存在时 PID 控制器的深度跟踪能力</li>
+<li><strong>洋流漂移</strong> — 无控制时洋流对机器人的拖曳漂移效果</li>
+</ul>
+<p>这部分会生成额外的 <code>ocean_current_speed.png</code>（洋流速度曲线图）。</p>
 <hr />
 <h2 id="_24">为什么浮力要手动加</h2>
 <p>MuJoCo 的流体参数主要负责阻力和相关流体效应，浮力这里采用手动注入方式实现。<br />
@@ -372,7 +379,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h3 id="3viewer">3）Viewer 打不开</h3>
 <p>Viewer 是可选步骤，不影响前面的物理测试和图片生成。<br />
 先确认前面三张图是否已经保存到 <code>docs/img/</code>，再决定是否重试 Viewer。</p>
-<h3 id="4">4）图表没保存</h3>
+<h3 id="4_1">4）图表没保存</h3>
 <p>先检查：</p>
 <ul>
 <li><code>docs/img/</code> 目录是否存在</li>
@@ -384,9 +391,10 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h2 id="_26">输出产物</h2>
 <p>运行完成后，<code>docs/img/</code> 下会生成：</p>
 <ul>
-<li><code>underwater_test_results.png</code></li>
-<li><code>anisotropic_drag_test.png</code></li>
-<li><code>depth_control_result.png</code></li>
+<li><code>underwater_test_results.png</code> — 基础流体场景对比</li>
+<li><code>anisotropic_drag_test.png</code> — 6-DOF 各向异性阻力</li>
+<li><code>depth_control_result.png</code> — PID 深度悬浮控制</li>
+<li><code>ocean_current_speed.png</code> — 洋流速度曲线（洋流模块启用时）</li>
 </ul>
 <hr />
 <h2 id="_27">参考</h2>
