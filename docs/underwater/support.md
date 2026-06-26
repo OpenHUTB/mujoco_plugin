@@ -35,7 +35,7 @@ python src/underwater/underwater_sim.py
 
 这个脚本是**唯一推荐入口**。它会按顺序执行：
 
-1. 三组基础流体场景对比
+1. 四组基础流体场景对比（含洋流）
 2. 6-DOF 各向异性阻力测试
 3. PID 深度悬浮控制测试
 4. 是否启动 MuJoCo Viewer 的交互验证
@@ -93,7 +93,7 @@ config.json
    │                    │
    │                    ├──────────────► plot_results.py
    │                    │
-   │                    └──────────────► 运行三组物理验证 + PID 悬浮 + Viewer
+   │                    └──────────────► 运行四类物理验证 + PID 悬浮 + Viewer
    │
    └──────────────► build_underwater_rov.py
                         │
@@ -121,7 +121,7 @@ config.json
 #### 处理
 - 读取配置
 - 动态注入流体参数和物理参数
-- 执行三组基础场景测试
+- 执行四组基础场景测试（含洋流）
 - 执行 6-DOF 各向异性阻力测试
 - 执行 PID 悬浮控制测试
 - 询问是否打开 Viewer
@@ -210,7 +210,7 @@ config.json
 
 ## 物理验证内容
 
-这个模块保留了三类核心物理验证。
+这个模块保留了四类核心物理验证。
 
 ### 1）基础流体场景对比
 
@@ -237,6 +237,15 @@ config.json
 通过深度控制器做闭环悬浮测试，观察目标深度与实际深度的跟踪效果。
 
 这部分会生成 `depth_control_result.png`。
+
+### 4）洋流干扰场景测试
+
+在洋流环境中测试 PID 深度保持和无控制漂移情况：
+
+- **洋流+PID 深度保持** — 洋流存在时 PID 控制器的深度跟踪能力
+- **洋流漂移** — 无控制时洋流对机器人的拖曳漂移效果
+
+这部分会生成额外的 `ocean_current_speed.png`（洋流速度曲线图）。
 
 ---
 
@@ -290,9 +299,10 @@ Viewer 是可选步骤，不影响前面的物理测试和图片生成。
 
 运行完成后，`docs/img/` 下会生成：
 
-- `underwater_test_results.png`
-- `anisotropic_drag_test.png`
-- `depth_control_result.png`
+- `underwater_test_results.png` — 基础流体场景对比
+- `anisotropic_drag_test.png` — 6-DOF 各向异性阻力
+- `depth_control_result.png` — PID 深度悬浮控制
+- `ocean_current_speed.png` — 洋流速度曲线（洋流模块启用时）
 
 ---
 
