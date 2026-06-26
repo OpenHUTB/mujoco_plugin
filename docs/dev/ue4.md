@@ -13,6 +13,11 @@ hutb 引擎中默认使用的是 Python 3.7.7，位于 [Engine/Binaries/ThirdPar
 
 ## 问题
 
+
+* 将 g1_29dof_rev_1_0.xml 拖拽到内容浏览器时并没有导入 meshes/*.glb
+    解决：安装插件[glTFForUE4](https://github.com/code4game/glTFForUE4/tags)
+
+
 * 虚幻中验证pip报错：
 ```text
 FPlatformProcess::ExecProcess(*PythonPath, TEXT("-m pip --version"), &PipCheck, &PipOut, &PipErr);

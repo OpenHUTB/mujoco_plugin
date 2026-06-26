@@ -1,0 +1,21 @@
+<mujoco>
+  <asset>
+    <mesh name="sacrum" content_type="model/stl" file="Geometry/sacrum.stl" />
+    <mesh name="r_pelvis" content_type="model/stl" file="Geometry/r_pelvis.stl" />
+    <mesh name="l_pelvis" content_type="model/stl" file="Geometry/l_pelvis.stl" />
+    <mesh name="r_femur" content_type="model/stl" file="Geometry/r_femur.stl" />
+    <mesh name="r_tibia" content_type="model/stl" file="Geometry/r_tibia.stl" />
+    <mesh name="r_fibula" content_type="model/stl" file="Geometry/r_fibula.stl" />
+    <mesh name="r_talus" content_type="model/stl" file="Geometry/r_talus.stl" />
+    <mesh name="r_foot" content_type="model/stl" file="Geometry/r_foot.stl" />
+    <mesh name="r_bofoot" content_type="model/stl" file="Geometry/r_bofoot.stl" />
+    <mesh name="r_patella" content_type="model/stl" file="Geometry/r_patella.stl" />
+    <mesh name="l_femur" content_type="model/stl" file="Geometry/l_femur.stl" />
+    <mesh name="l_tibia" content_type="model/stl" file="Geometry/l_tibia.stl" />
+    <mesh name="l_fibula" content_type="model/stl" file="Geometry/l_fibula.stl" />
+    <mesh name="l_talus" content_type="model/stl" file="Geometry/l_talus.stl" />
+    <mesh name="l_foot" content_type="model/stl" file="Geometry/l_foot.stl" />
+    <mesh name="l_bofoot" content_type="model/stl" file="Geometry/l_bofoot.stl" />
+    <mesh name="l_patella" content_type="model/stl" file="Geometry/l_patella.stl" />
+  </asset>
+</mujoco> 
