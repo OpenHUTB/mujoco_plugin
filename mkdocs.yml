@@ -67,6 +67,7 @@ nav:
 - 入门: 'getting_started.md'
 - 特性: 'features.md'
 - MJCF 导入: 'guides/mujoco_import.md'
+- URLab 编辑器: 'dev/URLabEditor.md'
 - 几何体与碰撞: 'guides/geometry_authoring.md'
 - 控制器框架: 'guides/controller_framework.md'
 - 调试可视化: 'guides/debug_visualization.md'
@@ -78,6 +79,9 @@ nav:
 - MJCF 模式覆盖率: mjcf_schema_coverage.md
 - 架构: 'architecture.md'
 - 引擎插件开发入门: 'introduction.md'
+- 肌肉骨骼人: 'ms/human_700.md'
+- 人形机器人: 'humanoid/g1.md'
+- 其他机器人: 'underwater/README.md'
 - mimir-UW: 'MIMIR-UW2.md'
 
 
