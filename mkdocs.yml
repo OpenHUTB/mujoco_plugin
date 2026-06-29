@@ -78,6 +78,7 @@ nav:
 - MJCF 模式覆盖率: mjcf_schema_coverage.md
 - 架构: 'architecture.md'
 - 引擎插件开发入门: 'introduction.md'
+- mimir-UW: 'MIMIR-UW2.md'
 
 
 # - mdx_math 用于行内公式显示

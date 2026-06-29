@@ -1,11 +1,13 @@
----
+mimir-UW：一个用于水下导航与检测的多功能合成数据集---
+
 title: MIMIR-UW：一个用于SLAM、深度估计和物体分割的多功能水下合成数据集
 authors: 奥拉娅·阿尔瓦雷斯-图农、赫曼斯·坎纳、卢伊扎·里贝罗·马内特、胡伊·玄·范、乔纳斯·勒费弗尔·塞杰森、尤里·布罗德斯基、埃尔达尔·卡亚坎
 ---
 
 奥拉娅·阿尔瓦雷斯-图农、赫曼斯·坎纳、卢伊扎·里贝罗·马内特、胡伊·玄·范、乔纳斯·勒费弗尔·塞杰森、尤里·布罗德斯基以及埃尔达尔·卡亚坎
 
-**摘要**——本文提出了MIMIR-UW，这是一个多功能水下合成数据集，适用于SLAM、深度估计和物体分割任务，旨在弥合理论与水下环境应用之间的差距。MIMIR-UW整合了三种相机传感器、惯性测量数据以及机器人姿态、图像深度和物体分割的地面真实数据。该水下机器人被部署在管道探测场景中，携带人造光源以产生不均匀光照，并包含自然光反射和后向散射效应等真实场景特征。数据集提供了四种环境共十一条轨迹，具有不同的光照条件或动态元素难度等级。本文提出了两项数据集评估指标，便于将MIMIR-UW与其他数据集进行比较。研究在MIMIR-UW上部署并测试了当前最先进的SLAM、分割和深度估计方法。此外，通过在真实管道检测场景中应用基于MIMIR-UW训练的分割和深度估计模型，验证了该数据集在模拟-真实场景迁移方面的潜力。据作者所知，这是首个针对如此多种方法的水下数据集。该数据集可在线公开获取：https://github.com/remaro-network/mimir-UW/
+## 摘要
+本文提出了MIMIR-UW，这是一个多功能水下合成数据集，适用于SLAM、深度估计和物体分割任务，旨在弥合理论与水下环境应用之间的差距。MIMIR-UW整合了三种相机传感器、惯性测量数据以及机器人姿态、图像深度和物体分割的地面真实数据。该水下机器人被部署在管道探测场景中，携带人造光源以产生不均匀光照，并包含自然光反射和后向散射效应等真实场景特征。数据集提供了四种环境共十一条轨迹，具有不同的光照条件或动态元素难度等级。本文提出了两项数据集评估指标，便于将MIMIR-UW与其他数据集进行比较。研究在MIMIR-UW上部署并测试了当前最先进的SLAM、分割和深度估计方法。此外，通过在真实管道检测场景中应用基于MIMIR-UW训练的分割和深度估计模型，验证了该数据集在模拟-真实场景迁移方面的潜力。据作者所知，这是首个针对如此多种方法的水下数据集。该数据集可在线公开获取：https://github.com/remaro-network/mimir-UW/
 
 ---
 
@@ -285,4 +287,44 @@ Monodepth2采用U-net架构[35]进行多尺度深度估计，该网络以单张R
 
 [18] M. Prats, J. Perez, J. J. Fernandez, and P. J. Sanz, "一款用于水下干预任务模拟与监督的开源工具," in *2012年IEEE/RSJ智能机器人与系统国际会议*, IEEE, 2012年, pp. 2577-2582。
 
-[19] "Project
+[19]“ProjectDave。”https://github.com/Field-Robotics-Lab/dave/wiki.，2023。
+
+[20]E.Potokar、S.Ashford、M.Kaess和J.Mangelson，“HoloOcean：一款水下机器人模拟器”，收录于IEEE国际机器人与自动化会议
+（ICRA）论文集，美国宾夕法尼亚州费城，2022年5月。
+
+[21]S.Shah、D.Dey、C.Lovett和A.Kapoor，《Airsim：自动驾驶车辆的高保真视觉与物理仿真》，载于《现场与服务机器人》，Spring-er出版社，2018年，第621–635页。
+
+[22] M. Jian、Q. Qi、H. Yu、J. Dong、C. Cui、X. Nie、H. Zhang、Y. Yin和 K.-M. Lam，《扩展的海洋水下环境数据库及基线评估》，应用软
+计算 ，第80卷，第425–437页，2019年。
+
+[23] K. Panetta、L. Kezebou、V. Oludare 和 S. Agaian，《全面的水下物体跟踪基准数据集及基于GAN的水下图像增强》，IEEE海洋工程杂志 ，2021年。
+
+[24] C. Richter、A. Bry 和 N. Roy，《密集室内环境中攻击性四旋翼飞
+的高保真视觉与物理仿真》，载于《现场与服务机器人》，Springer出版社，2018年，第621–635页。
+
+[25] K. G. Larkin，《关于香农信息的思考：寻找图像的自然信息熵》，arXiv预印本 arXiv:1609.01117，2016年。
+
+[26] C. Griwodz、S. Gasparini、L. Calvet、P. Gurdjos、F. Castan、B.Maujean、G. D. Lillo 和 Y. Lanthony，「Alicevision Meshroom：一个
+开源的3D重建流程」，收录于第十二届ACM多媒体系统会议论文集 -MMSys ‘21，ACM Press，2021年。
+
+[27] C. 卡姆波斯、R. 埃尔维拉、J. J. G. 罗德罗 ıguez 、J. M. 蒙蒂埃尔和J. D. 塔德o´s，“Orb-slam3：一个用于视觉、视觉-惯性及多地图
+SLAM的精确开源库”，《IEEE机器人学汇刊》，第37卷，第6期，第1874–1890页，2021年。
+
+[28] J. Engel、V. Koltun 和 D. Cremers，《直接稀疏里程计》，IEEE 图形分析与机器智能汇刊，第 40 卷，第 3 期，第 611–625 页，2017 年。
+
+[29] M. Grupp，《evo：用于评估里程计和SLAM的Python软件包》。https://github.com/MichaelGrupp/evo，2017年。
+
+[30] L.-C. Chen、G. Papandreou、F. Schroff 和 H. Adam，《重新思考用于语义图像分割的孔径卷积》，arXiv 预印本 arXiv:1706.05587，2017。
+
+[31] J. Long、E. Shelhamer 和 T. Darrell，《用于语义分割的全卷积网络》，载于IEEE计算机视觉与模式识别会议论文集 ，2015年，第3431–3440页。
+
+[32] M. Everingham、L. Van Gool、C. K. I. Williams、J. Winn 和 A.Zisserman，《帕斯卡视觉对象类别（VOC）挑战赛》，《国际计算机视觉杂志》，第88卷，第2期，第303–338页，2010年6月。
+
+[33] C. Godard、O. Aodha、M. Firman 和 G. Brostow，「对自监督单目深度估计方法的深入研究」，收录于IEEE/ CVF 国际计算机视觉会议论文集 ，2019年第11卷。
+
+[34] F. Wimbauer、N. Yang、L. von Stumberg、N. Zeller 和 D. Cremers，“Monorec：基于单台移动相机在动态环境中进行半监督密集重建”，收录于IEEE计算机视觉与模式识别会议（CVPR），2021年。
+
+[35] O. Ronneberger、P. Fischer 和 T. Brox，《U-net：用于生物医学图像分割的卷积网络》，载于《医学图像计算与计算机辅助干预国际会
+议》，Springer出版社，2015年，第234–241页。
+
+[36] D. Eigen、C. Puhrsch 和 R. Fergus，《基于多尺度深度网络的单张图像深度图预测》，《神经信息处理系统进展》，第27卷，2014年。
