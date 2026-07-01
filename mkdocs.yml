@@ -82,7 +82,6 @@ nav:
 - 肌肉骨骼人: 'ms/human_700.md'
 - 人形机器人: 'humanoid/g1.md'
 - 其他机器人: 'underwater/README.md'
-- mimir-UW: 'MIMIR-UW2.md'
 
 
 # - mdx_math 用于行内公式显示

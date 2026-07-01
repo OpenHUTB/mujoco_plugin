@@ -133,6 +133,9 @@ python src/underwater/underwater_sim.py
 运行结束后自动生成量化折线图，并可选择启动 MuJoCo 交互式 3D 查看器。
 
 ---
+## 相关文档
+
+- [MIMIR-UW 数据集文档](../MIMIR-UW2.md)
 
 ## 参考
 
