@@ -11,11 +11,29 @@
 hutb 引擎中默认使用的是 Python 3.7.7，位于 [Engine/Binaries/ThirdParty/Python3/Win64](https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64) 、UE 5.7 中默认使用的是 Python 3.11.8。
 
 
+## 执行过程分析
+
+* 验证 Python
+
+* 解析 xml 
+
+    UMujocoGenerationAction::ParseAssetsRecursive
+
+
+
 ## 问题
+
+* 打开生成的蓝图没有显示对应的网格
+
+    表现：在蓝图编辑器中双击worldbody中生成的GeomMesh（UE5生成的是AUTONAME_Geom），没有显示对应的网格。
+
+    打开蓝图和拖入场景中运行都只有两个圆柱体。
+    
+    生成的蓝图在UE5中有267个蓝图组件（Blueprint Components），而在UE4中只有208个（可能是删除了Content中的部分资产导致的）。
 
 
 * 将 g1_29dof_rev_1_0.xml 拖拽到内容浏览器时并没有导入 meshes/*.glb
-    解决：安装插件[glTFForUE4](https://github.com/code4game/glTFForUE4/tags)
+    解决：安装插件[glTFForUE4](https://github.com/code4game/glTFForUE4/tags)后成功发现导入的资产。注意：使用自带的插件不能导入资产。
 
 
 * 虚幻中验证pip报错：
@@ -77,5 +95,10 @@ python -m pip install trimesh numpy scipy
     输出：在无人值守脚本模式下运行时，一个模态窗口试图获取控制权。该窗口已被取消。
 
     原因：在“无人值守脚本（unattended）”模式下阻止弹出普通模态窗口（除非它是标记为慢任务的模态窗口 bSlowTaskWindow=true）
+
+
+## 参考
+
+* [Mujoco 的 Unity 插件](https://mujoco.readthedocs.io/en/stable/unity.html)
 
 
