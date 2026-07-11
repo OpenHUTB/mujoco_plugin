@@ -1,14 +1,19 @@
-# 迁移到UE4
+# 迁移到 UE4
 
-1.将xml文件转成 _ue.xml 文件
+1.将xml文件转成 _ue.xml 文件。hutb 引擎中默认使用的是 Python 3.7.7，位于 [Engine/Binaries/ThirdParty/Python3/Win64](https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64) （UE 5.7 中默认使用的是 Python 3.11.8）。
 
-2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -> 通过拖拽 Actor 的方式（参考 [mujoco_plugin](https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1) ）
+2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -> 通过拖拽 Actor 的方式（参考 [mujoco_plugin](https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1) ），其中 [Source/URLab/Public/MuJoCo/Core/AMjManager.h](https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/AMjManager.h) 是一个参与者，通过它进行xml文件的加载
 
--> Source/URLab/Public/MuJoCo/Core/AMjManager.h 是一个参与者，通过它进行xml文件的加载
+![](../img/humanoid/imported_g1.png)
 
-3.在场景中指定位置将蓝图实例化
+3.打开导入的蓝图：
 
-hutb 引擎中默认使用的是 Python 3.7.7，位于 [Engine/Binaries/ThirdParty/Python3/Win64](https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64) 、UE 5.7 中默认使用的是 Python 3.11.8。
+![](../img/humanoid/g1_blueprint.png)
+
+4.在场景中指定位置将蓝图实例化效果：
+
+![](../img/humanoid/hutb_demo.png)
+
 
 
 ## 执行过程分析
@@ -29,8 +34,30 @@ hutb 引擎中默认使用的是 Python 3.7.7，位于 [Engine/Binaries/ThirdPar
 
     打开蓝图和拖入场景中运行都只有两个圆柱体。
     
-    生成的蓝图在UE5中有267个蓝图组件（Blueprint Components），而在UE4中只有208个（可能是删除了Content中的部分资产导致的）。
+    生成的蓝图在UE5中有267个蓝图组件（Blueprint Components），而在UE4中只有208个。
 
+    报错日志分析：
+    59 个 导入网格 [ImportSingleMesh()](https://github.com/OpenHUTB/hutb/blob/2ed4eb9d5a9b25b3f5df498267f288124eb16a52/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp#L113) 报错，最后一个网格为 `right_rubber_hand`，第 2 个为`pelvis_contour_link`：
+
+    每个导入网格的报错信息依次为：
+    ```text
+    Failed to read file '' error.
+    ...
+    Failed to import mesh 'pelvis_contour_link' with MikkTSpace, attempting fallback
+    ...
+    Failed to read file '' error.
+    ...
+    Failed to import mesh 'pelvis_contour_link' - all import methods failed
+    ```
+
+    其中，MikkTSpace 是一种由 Mikkel S. Olsson 定义的切线空间（tangent space）生成算法，用于为每个顶点生成一致的切线（tangent）和副切线（bitangent）。
+    切线空间用于法线贴图（normal mapping）：它决定如何把切线空间的法线变换到模型世界/切线坐标，从而影响光照和 PBR 表现。
+
+    [ImportAssetTasks](https://github.com/OpenHUTB/engine/blob/ab78e8bbd557471bdc132ba0e17abdd02d6920c0/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp#L1144) 执行成功：将 .glb 文件导入到 hutb\Unreal\CarlaUE4\Content\MuJoCoImports\g1_29dof_rev_1_0_ue_Assets\Meshes\*uasset
+
+    修改参考：[UE5 的 AssetTools.cpp](https://github.com/EpicGames/UnrealEngine/commit/9e1786b97b3e986a4034cf5d3aeeeeb0cd028fb4) 。通过网页的`git blame`查找某一行的所有修改记录（打开编辑器的警告也不见了）。
+
+---
 
 * 将 g1_29dof_rev_1_0.xml 拖拽到内容浏览器时并没有导入 meshes/*.glb
     解决：安装插件[glTFForUE4](https://github.com/code4game/glTFForUE4/tags)后成功发现导入的资产。注意：使用自带的插件不能导入资产。
