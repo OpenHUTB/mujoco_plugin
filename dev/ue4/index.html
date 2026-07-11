@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>迁移到 UE4 - Mujoco 插件</title>
+    <title>适配  - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u8fc1\u79fb\u5230 UE4";
+        var mkdocs_page_name = "\u9002\u914d ";
         var mkdocs_page_input_path = "dev/ue4.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">迁移到 UE4</li>
+      <li class="breadcrumb-item active">适配 </li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/ue4.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -140,25 +140,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="ue4">迁移到 UE4</h1>
-<p>1.将xml文件转成 _ue.xml 文件。hutb 引擎中默认使用的是 Python 3.7.7，位于 <a href="https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64">Engine/Binaries/ThirdParty/Python3/Win64</a> （UE 5.7 中默认使用的是 Python 3.11.8）。</p>
-<p>2.通过内容浏览器导入虚幻编辑器，并生成蓝图 -&gt; 通过拖拽 Actor 的方式（参考 <a href="https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1">mujoco_plugin</a> ），其中 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/AMjManager.h">Source/URLab/Public/MuJoCo/Core/AMjManager.h</a> 是一个参与者，通过它进行xml文件的加载</p>
+                <h1 id="hutb">适配 <a href="https://github.com/OpenHUTB/hutb">hutb 模拟器</a></h1>
+<p>1.通过将 mujoco 的 xml 文件拖拽到虚幻编辑器的“内容浏览器”，将 xml 转成 _ue.xml 文件。hutb 引擎中默认使用的是 <a href="https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64">Engine/Binaries/ThirdParty/Python3/Win64</a> 中的 Python 3.7.7（UE 5.7 中默认使用的是 Python 3.11.8）。解析 xml由 <a href="https://github.com/OpenHUTB/hutb/tree/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp#L1014">UMujocoGenerationAction::ParseAssetsRecursive</a> 负责。其中 Mujoco 管理器 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/AMjManager.h">Source/URLab/Public/MuJoCo/Core/AMjManager.h</a> 是一个参与者，通过它进行xml文件的加载。</p>
+<p>2.上一步执行完成会在“内容浏览器”中生成蓝图，然后将生成的蓝图拖拽到场景的合适位置（参考 <a href="https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1">mujoco_plugin</a> ），</p>
 <p><img alt="" src="../../img/humanoid/imported_g1.png" /></p>
-<p>3.打开导入的蓝图：</p>
+<p>3.打开导入的蓝图进行查看（可选，如果模型未显示全，则第1步的导入有问题）：</p>
 <p><img alt="" src="../../img/humanoid/g1_blueprint.png" /></p>
-<p>4.在场景中指定位置将蓝图实例化效果：</p>
+<p>4.运行模拟，在场景中指定位置查看蓝图实例化效果：</p>
 <p><img alt="" src="../../img/humanoid/hutb_demo.png" /></p>
-<h2 id="_1">执行过程分析</h2>
-<ul>
-<li>
-<p>验证 Python</p>
-</li>
-<li>
-<p>解析 xml </p>
-<p>UMujocoGenerationAction::ParseAssetsRecursive</p>
-</li>
-</ul>
-<h2 id="_2">问题</h2>
+<h2 id="_1">问题</h2>
 <ul>
 <li>
 <p>打开生成的蓝图没有显示对应的网格</p>
@@ -179,27 +169,29 @@ Failed to import mesh &#39;pelvis_contour_link&#39; - all import methods failed
 <p>其中，MikkTSpace 是一种由 Mikkel S. Olsson 定义的切线空间（tangent space）生成算法，用于为每个顶点生成一致的切线（tangent）和副切线（bitangent）。
 切线空间用于法线贴图（normal mapping）：它决定如何把切线空间的法线变换到模型世界/切线坐标，从而影响光照和 PBR 表现。</p>
 <p><a href="https://github.com/OpenHUTB/engine/blob/ab78e8bbd557471bdc132ba0e17abdd02d6920c0/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp#L1144">ImportAssetTasks</a> 执行成功：将 .glb 文件导入到 hutb\Unreal\CarlaUE4\Content\MuJoCoImports\g1_29dof_rev_1_0_ue_Assets\Meshes*uasset</p>
-<p>修改参考：<a href="https://github.com/EpicGames/UnrealEngine/commit/9e1786b97b3e986a4034cf5d3aeeeeb0cd028fb4">UE5 的 AssetTools.cpp</a> 。通过网页的<code>git blame</code>查找某一行的所有修改记录（打开编辑器的警告也不见了）。</p>
+<p>修改参考：<a href="https://github.com/EpicGames/UnrealEngine/commit/9e1786b97b3e986a4034cf5d3aeeeeb0cd028fb4">UE5 的 AssetTools.cpp</a> 。</p>
+<p>定位方法：通过网页的<code>git blame</code>查找某一行的所有修改记录（打开编辑器的警告也不见了）。</p>
 </li>
 </ul>
 <hr />
 <ul>
 <li>
-<p>将 g1_29dof_rev_1_0.xml 拖拽到内容浏览器时并没有导入 meshes/*.glb
-    解决：安装插件<a href="https://github.com/code4game/glTFForUE4/tags">glTFForUE4</a>后成功发现导入的资产。注意：使用自带的插件不能导入资产。</p>
+<p>将 g1_29dof_rev_1_0.xml 拖拽到内容浏览器时并没有在当前目录下生成 meshes/*.glb</p>
+<p>解决：安装插件<a href="https://github.com/code4game/glTFForUE4/tags">glTFForUE4</a>后成功发现导入的资产。</p>
+<p>注意：使用自带的插件不能导入资产。</p>
 </li>
 <li>
 <p>虚幻中验证pip报错：
-<div class="highlight"><pre><span></span><code>FPlatformProcess::ExecProcess(*PythonPath, TEXT(&quot;-m pip --version&quot;), &amp;PipCheck, &amp;PipOut, &amp;PipErr);
+    <div class="highlight"><pre><span></span><code>FPlatformProcess::ExecProcess(*PythonPath, TEXT(&quot;-m pip --version&quot;), &amp;PipCheck, &amp;PipOut, &amp;PipErr);
 
-  File &quot;D:\hutb\Build\engine\Engine\Binaries\ThirdParty\Python3\Win64\lib\site-packages\pip\_internal\vcs\subversion.py&quot;, line 180, in __init__
+File &quot;D:\hutb\Build\engine\Engine\Binaries\ThirdParty\Python3\Win64\lib\site-packages\pip\_internal\vcs\subversion.py&quot;, line 180, in __init__
     use_interactive = sys.stdin.isatty()
 AttributeError: &#39;NoneType&#39; object has no attribute &#39;isatty&#39;
 </code></pre></div>
-<strong>手动执行包的安装</strong>：
-<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
+    解决：手动执行包的安装
+    <div class="highlight"><pre><span></span><code>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>trimesh<span class="w"> </span>numpy<span class="w"> </span>scipy
 </code></pre></div>
-就可以生成_ue.xml文件和meshes/*glb文件。</p>
+    就可以生成_ue.xml文件和meshes/*glb文件。</p>
 </li>
 <li>
 <p>打包报错：<code>UnrealBuildTool: ERROR: Non-editor build cannot depend on non-redistributable modules.</code></p>
@@ -238,9 +230,10 @@ LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRo
 <p>调试模式运行虚幻编辑器后，拖入 xml 模型在 <a href="https://github.com/OpenHUTB/engine/blob/ab78e8bbd557471bdc132ba0e17abdd02d6920c0/Engine/Source/Runtime/Slate/Private/Framework/Application/SlateApplication.cpp#L1877">UE_DEBUG_BREAK()</a> 处断点停止，且无法继续</p>
 <p>输出：在无人值守脚本模式下运行时，一个模态窗口试图获取控制权。该窗口已被取消。</p>
 <p>原因：在“无人值守脚本（unattended）”模式下阻止弹出普通模态窗口（除非它是标记为慢任务的模态窗口 bSlowTaskWindow=true）</p>
+<p>解决：<a href="https://github.com/OpenHUTB/engine/commit/e2560a2afb03f554d3bd1de3643f9bfb84e228c1">暂时注释掉这句代码</a>。</p>
 </li>
 </ul>
-<h2 id="_3">参考</h2>
+<h2 id="_2">参考</h2>
 <ul>
 <li><a href="https://mujoco.readthedocs.io/en/stable/unity.html">Mujoco 的 Unity 插件</a></li>
 </ul>
