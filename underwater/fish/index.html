@@ -171,7 +171,7 @@ python<span class="w"> </span>opt_sysid.py<span class="w"> </span>--optType<span
 python<span class="w"> </span>test_freq.py
 python<span class="w"> </span>train_rl.py
 </code></pre></div>
-<p>MuJoCo 用于生成肌腱驱动鱼形机器人场景的 XML 文件可以在 Geometry 中找到。</p>
+<p>MuJoCo 用于生成肌腱驱动鱼形机器人场景的 XML 文件可以在 Geometry 中找到（或者运行<a href="https://github.com/donghaiwang/fishsim/blob/main/generate_fish.py">generate_fish.py</a>）。</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">Geometry.auto_tendonFish</span> <span class="kn">import</span> <span class="n">generate_xml</span><span class="p">,</span> <span class="n">SYSTEMPARAMETERS</span>
 
 <span class="n">SYSTEMPARAMETERS</span><span class="p">[</span><span class="s2">&quot;fluidCoef&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">7.79</span><span class="p">,</span> <span class="mf">2.81</span><span class="p">,</span> <span class="mf">3.84</span><span class="p">,</span> <span class="mf">0.27</span><span class="p">]</span>
