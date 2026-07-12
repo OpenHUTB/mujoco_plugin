@@ -26,7 +26,7 @@ python train_rl.py
 ```
 
 
-MuJoCo 用于生成肌腱驱动鱼形机器人场景的 XML 文件可以在 Geometry 中找到。
+MuJoCo 用于生成肌腱驱动鱼形机器人场景的 XML 文件可以在 Geometry 中找到（或者运行[generate_fish.py](https://github.com/donghaiwang/fishsim/blob/main/generate_fish.py)）。
 
 ```python
 from Geometry.auto_tendonFish import generate_xml, SYSTEMPARAMETERS

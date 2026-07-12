@@ -11,7 +11,7 @@
 
 * [MuJoCo 水下动力学模拟入门](./mujoco_introduction.md)
 
-* [Mujoco 机器鱼模拟](./fish.md)
+* [Mujoco 鱼形机器人模拟](./fish.md)
 
 
 ## Chrono 多物理场
