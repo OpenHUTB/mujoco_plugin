@@ -121,9 +121,7 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#chrono">Chrono 多物理场</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_2">相关文档</a>
-    </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_3">参考</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_2">参考</a>
     </li>
     </ul>
                 </li>
@@ -154,22 +152,26 @@
               
                 <h1 id="_1">水下机器人</h1>
 <h2 id="ue">UE 高保真渲染</h2>
-<p>水下机器人仿真的渲染层基于 UE5 构建，负责提供逼真的水下视觉效果，包括水体折射、光照衰减、能见度分级等。渲染层与动力学层解耦，UE5 负责画面，MuJoCo 负责物理计算。</p>
+<p>水下机器人仿真的渲染层基于 <a href="https://github.com/OpenHUTB/engine">UE</a> 构建，负责提供逼真的水下视觉效果，包括水体折射、光照衰减、能见度分级等。渲染层与动力学层解耦，UE 负责画面，MuJoCo 负责物理计算。</p>
+<ul>
+<li><a href="../MIMIR-UW2/">MIMIR-UW 数据集文档</a></li>
+</ul>
 <hr />
 <h2 id="mujoco">MuJoCo 动力学模拟</h2>
 <ul>
-<li><a href="mujoco_introduction/">MuJoCo 水下动力学模拟入门</a></li>
+<li>
+<p><a href="mujoco_introduction/">MuJoCo 水下动力学模拟入门</a></p>
+</li>
+<li>
+<p><a href="fish/">Mujoco 机器鱼模拟</a></p>
+</li>
 </ul>
 <h2 id="chrono">Chrono 多物理场</h2>
 <ul>
 <li>多物理场模拟涉水的<a href="https://openhutb.github.io/chrono_doc/effect/">效果</a></li>
 </ul>
 <hr />
-<h2 id="_2">相关文档</h2>
-<ul>
-<li><a href="../MIMIR-UW2/">MIMIR-UW 数据集文档</a></li>
-</ul>
-<h2 id="_3">参考</h2>
+<h2 id="_2">参考</h2>
 <ul>
 <li><a href="support/">本章节仿真复现指南</a></li>
 <li><a href="https://docs.mujoco.cn/en/stable/computation/fluid.html">MuJoCo 流体受力官方文档</a></li>
