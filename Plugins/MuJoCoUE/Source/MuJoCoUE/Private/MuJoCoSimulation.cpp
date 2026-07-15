@@ -126,94 +126,165 @@ ModelInfo ExtractModelInfo(const mjModel *m)
 	return modelInfo;
 }
 
-// 将提取的模型信息转换为Unreal Engine中的实际场景组件，建立完整的层级化场景图，
-// 实现物理模型到可视化场景的映射
+// 生成网格组件
+// 优先级顺序：手动配置的静态网格 > 基础几何体（球体、立方体等） > MuJoCo 网格几何体
 void AMuJoCoSimulation::GenerateMeshes(ModelInfo &modelInfo)
 {
-	// 清空现有映射表
 	BodyMap.Empty();
 	GeomMap1.Empty();
+	GeomMap2.Empty();
 
-	// 生成刚体(body)组件
+	// ── 生成刚体(body)组件 ────────────────────────────
 	int BodyId = 0;
 	for (const BodyInfo &bodyInfo : modelInfo.bodies)
 	{
-		// 场景组件(USceneComponent<-UActorComponent<-UObject)是所有具有空间变换（位置、旋转、缩放）的组件基类
-		// 它为 组件的三维空间定位与层级管理 提供支持，是 场景树系统的核心
 		USceneComponent *sceneComponent = NewObject<USceneComponent>(this, FName(*(FString(bodyInfo.name.c_str()) + *FString::Printf(TEXT("_Body%d"), BodyId))));
-
-		BodyMap.Add(BodyId++, sceneComponent);  // 将 场景组件 添加到 刚体映射表 中
-		sceneComponent->RegisterComponent();    // 将 场景组件 注册到引擎
+		BodyMap.Add(BodyId++, sceneComponent);
+		sceneComponent->RegisterComponent();
 		sceneComponent->SetRelativeLocation(FVector(bodyInfo.pos[0] * 100, bodyInfo.pos[1] * 100, bodyInfo.pos[2] * 100));
-		sceneComponent->SetRelativeRotation(bodyInfo.quat2);  // 使用转换后的四元数
-		if (bodyInfo.parent_id == 0)  // MuJoCo中0表示世界根：场景组件附着在根组件下
-		{
-			// 把场景组件提升为RootComponent，否则创建出来的场景组件永远在(0,0,0)点，即使Actor点位置动态改变场景组件绝对位置也不随Actor改变
+		sceneComponent->SetRelativeRotation(bodyInfo.quat2);
+		if (bodyInfo.parent_id == 0)
 			sceneComponent->AttachToComponent(GetRootComponent(), FAttachmentTransformRules::KeepRelativeTransform);
-			// sceneComponent->SetupAttachment(RootComponent);
-			// sceneComponent->SetHiddenInGame(false, true);
-		}
-		else  // 子刚体(body)的处理来进行层级维护
+		else
 		{
-			USceneComponent *parentComponent = BodyMap[bodyInfo.parent_id];  // 通过刚体映射表快速查找父类
-			sceneComponent->AttachToComponent(parentComponent, FAttachmentTransformRules::KeepRelativeTransform);  // 将当前的 场景组件 附着在父组件下
+			USceneComponent *parentComponent = BodyMap[bodyInfo.parent_id];
+			sceneComponent->AttachToComponent(parentComponent, FAttachmentTransformRules::KeepRelativeTransform);
 		}
 	}
 
-	// 生成几何体(geom)网格组件
+	// ── 生成几何体(geom)网格组件 ──────────────────────
 	int GeomId = 0;
 	for (GeomInfo &geomInfo : modelInfo.geoms)
 	{
-		// 创建新的网格组件
-		UStaticMeshComponent *staticMeshComponent = NewObject<UStaticMeshComponent>(this);//, FName(*(FString(geomInfo.name.c_str()) + *FString::Printf(TEXT("_Geom%d"), BodyId))));
-		staticMeshComponent->RegisterComponent();
-		geomInfo.posAdjust[2] = geomInfo.size[2] * -50;  // Z 轴偏移调整
-		staticMeshComponent->SetRelativeLocation(FVector(geomInfo.pos[0] * 100, geomInfo.pos[1] * 100, geomInfo.pos[2] * 100)); //+geomInfo.posAdjust[2]
-		staticMeshComponent->SetRelativeRotation(geomInfo.quat2);
-		staticMeshComponent->AttachToComponent(this->BodyMap[geomInfo.body_id], FAttachmentTransformRules::KeepRelativeTransform);
-		;
-		// 获得该几何体的网格
-		// MeshAssets映射表：预配置的几何体类型到 StaticMesh 的映射
-		auto *mesh = MeshAssets.Find(geomInfo.type) ? MeshAssets[geomInfo.type] : nullptr;
-		// 如果 type = mesh 生成程序化网格
-		if (!mesh)
+		// 判断是否为基础几何体类型（可以动态生成）
+		bool bIsBasicGeom = (geomInfo.type == mjGEOM_PLANE   ||
+		                     geomInfo.type == mjGEOM_SPHERE   ||
+		                     geomInfo.type == mjGEOM_CYLINDER ||
+		                     geomInfo.type == mjGEOM_BOX      ||
+		                     geomInfo.type == mjGEOM_CAPSULE  ||
+		                     geomInfo.type == mjGEOM_ELLIPSOID);
+
+		// 检查 MeshAssets 是否有手动配置的静态网格（手动配置优先级最高）
+		auto *manualMesh = MeshAssets.Find(geomInfo.type) ? MeshAssets[geomInfo.type] : nullptr;
+
+		if (manualMesh)
 		{
-			// 特殊网格处理（mjGEOM_MESH）
-			if (geomInfo.type == mjGEOM_MESH && mModel->geom_dataid[GeomId] != -1)  // 如果几何类型是mujoco中的网格，并且引擎中当前GeomId的geom数据没有
+			// ── 手动配置的静态网格（优先级最高）──────────
+			UStaticMeshComponent *staticMeshComponent = NewObject<UStaticMeshComponent>(this);
+			staticMeshComponent->RegisterComponent();
+			staticMeshComponent->SetRelativeLocation(FVector(geomInfo.pos[0] * 100, geomInfo.pos[1] * 100, geomInfo.pos[2] * 100));
+			staticMeshComponent->SetRelativeRotation(geomInfo.quat2);
+			staticMeshComponent->AttachToComponent(this->BodyMap[geomInfo.body_id], FAttachmentTransformRules::KeepRelativeTransform);
+			staticMeshComponent->SetStaticMesh(manualMesh);
+			SetMeshColor(staticMeshComponent, geomInfo.color);
+			staticMeshComponent->SetSimulatePhysics(false);
+			staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			staticMeshComponent->SetWorldScale3D(FVector(geomInfo.size[0], geomInfo.size[1], geomInfo.size[2]) * VisualScaleMultiplier);
+			this->GeomMap1.Add(GeomId, staticMeshComponent);
+		}
+		else if (bIsBasicGeom)
+		{
+			// ── 基础几何体：ProceduralMesh 动态生成 ──────
+			// 注意：size 数据已在 ExtractModelInfo 中做过换算
+			// cylinder: size[0]=diameter, size[2]=height
+			// sphere:   size[0]=diameter
+			// box:      size[0/1/2]=full dimensions
+			// plane:    size[0]=half_x, size[1]=half_y（未换算）
+			// capsule:  size[0]=diameter, size[2]=half_total_height
+			UProceduralMeshComponent *procMesh = NewObject<UProceduralMeshComponent>(this);
+			procMesh->RegisterComponent();
+			procMesh->SetRelativeLocation(FVector(geomInfo.pos[0] * 100, geomInfo.pos[1] * 100, geomInfo.pos[2] * 100));
+			procMesh->SetRelativeRotation(geomInfo.quat2);
+			procMesh->AttachToComponent(this->BodyMap[geomInfo.body_id], FAttachmentTransformRules::KeepRelativeTransform);
+			procMesh->SetSimulatePhysics(false);
+			procMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+
+			// 将 VisualScaleMultiplier 乘入生成参数，不影响物理数据
+			float S = VisualScaleMultiplier;
+
+			switch (geomInfo.type)
+			{
+			case mjGEOM_PLANE:
+				// size[0/1] = half extents（米），直接转 cm
+				CreateProceduralPlane(procMesh,
+					geomInfo.size[0] * 100.0f * S,
+					geomInfo.size[1] * 100.0f * S);
+				break;
+
+			case mjGEOM_SPHERE:
+			case mjGEOM_ELLIPSOID:
+				// size[0] = diameter（米），radius = size[0]/2 * 100 cm
+				CreateProceduralSphere(procMesh, geomInfo.size[0] * 50.0f * S);
+				break;
+
+			case mjGEOM_CYLINDER:
+				// size[0] = diameter（米），size[2] = height（米）
+				CreateProceduralCylinder(procMesh,
+					geomInfo.size[0] * 50.0f * S,   // radius cm
+					geomInfo.size[2] * 50.0f * S);  // half_height cm
+				break;
+
+			case mjGEOM_BOX:
+				// size[0/1/2] = full dimensions（米）
+				CreateProceduralBox(procMesh,
+					geomInfo.size[0] * 50.0f * S,
+					geomInfo.size[1] * 50.0f * S,
+					geomInfo.size[2] * 50.0f * S);
+				break;
+
+			case mjGEOM_CAPSULE:
+				// size[0] = diameter（米），size[2] = half_total_height（米）
+				// half_cyl_height = half_total_height - radius
+				CreateProceduralCapsule(procMesh,
+					geomInfo.size[0] * 50.0f * S,                              // radius cm
+					(geomInfo.size[2] - geomInfo.size[0] * 0.5f) * 100.0f * S); // half_cyl_height cm
+				break;
+
+			default:
+				break;
+			}
+			// 赋值材质
+			if (ProceduralMeshMaterial)
+				procMesh->SetMaterial(0, ProceduralMeshMaterial);
+			// 设置颜色
+			this->GeomMap2.Add(GeomId, procMesh);
+		}
+		else
+		{
+			// ── mjGEOM_MESH 或其他：走原有 StaticMesh 路径 ─
+			UStaticMeshComponent *staticMeshComponent = NewObject<UStaticMeshComponent>(this);
+			staticMeshComponent->RegisterComponent();
+			staticMeshComponent->SetRelativeLocation(FVector(geomInfo.pos[0] * 100, geomInfo.pos[1] * 100, geomInfo.pos[2] * 100));
+			staticMeshComponent->SetRelativeRotation(geomInfo.quat2);
+			staticMeshComponent->AttachToComponent(this->BodyMap[geomInfo.body_id], FAttachmentTransformRules::KeepRelativeTransform);
+
+			if (geomInfo.type == mjGEOM_MESH && mModel->geom_dataid[GeomId] != -1)
 			{
 				int meshId = mModel->geom_dataid[GeomId];
 				if (meshId >= 0 && meshId < ProceduralMeshes.Num())
 				{
-					UProceduralMeshComponent *procMesh = ProceduralMeshes[meshId];
-
-					const FMeshDescription description = BuildMeshDescription(procMesh);
+					UProceduralMeshComponent *procMeshRef = ProceduralMeshes[meshId];
+					const FMeshDescription description = BuildMeshDescription(procMeshRef);
 					TArray<const FMeshDescription *> descs;
 					descs.Add(&description);
-
 					UStaticMesh *NewStaticMesh = NewObject<UStaticMesh>(staticMeshComponent);
-					NewStaticMesh->AddMaterial(procMesh->GetMaterial(0));
+					NewStaticMesh->AddMaterial(procMeshRef->GetMaterial(0));
 					NewStaticMesh->BuildFromMeshDescriptions(descs);
 					staticMeshComponent->SetStaticMesh(NewStaticMesh);
-					mesh = NewStaticMesh;
-					if (mesh)
-					{
-						geomInfo.size[0] = 1;
-						geomInfo.size[1] = 1;
-						geomInfo.size[2] = 1;
-					}
 				}
 			}
-			if (!mesh)
-				mesh = defaultMesh;
+
+			if (!staticMeshComponent->GetStaticMesh() && defaultMesh)
+				staticMeshComponent->SetStaticMesh(defaultMesh);
+
+			SetMeshColor(staticMeshComponent, geomInfo.color);
+			staticMeshComponent->SetSimulatePhysics(false);
+			staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+			staticMeshComponent->SetWorldScale3D(FVector(geomInfo.size[0], geomInfo.size[1], geomInfo.size[2]) * VisualScaleMultiplier);
+			this->GeomMap1.Add(GeomId, staticMeshComponent);
 		}
 
-		staticMeshComponent->SetStaticMesh(mesh);  // 设置网格
-		SetMeshColor(staticMeshComponent, geomInfo.color);  // 设置颜色
-		staticMeshComponent->SetSimulatePhysics(false);  // 禁用物理模拟
-		staticMeshComponent->SetCollisionEnabled(ECollisionEnabled::NoCollision);  // 禁用碰撞
-		staticMeshComponent->SetWorldScale3D(FVector(geomInfo.size[0], geomInfo.size[1], geomInfo.size[2]));  // 缩放设置
-
-		this->GeomMap1.Add(GeomId++, staticMeshComponent);
+		GeomId++;
 	}
 }
 
@@ -246,33 +317,9 @@ AMuJoCoSimulation::AMuJoCoSimulation()
 	// 设置此 Actor 每帧调用 Tick() 函数。
 	// 如果不需要此功能，可以将其关闭以提高性能。
 	PrimaryActorTick.bCanEverTick = true;
-	PrimaryActorTick.bCanEverTick = true;
-	if (HasAnyFlags(RF_ClassDefaultObject))
-	{
-		return;
-	}
-	mData = nullptr;
-	mModel = nullptr;
-	bSimulationRunning = false;
-	XmlSourcePath = TEXT("mujoco/pendulum.xml");
 
-	// ── 洋流模块初始化（Phase 6-7）──────────────────
-	OceanGM_Speed = OceanCurrentConfig.GM_MeanSpeed;
-	OceanGM_HorizAngle = OceanCurrentConfig.GM_MeanHorizAngle;
-	OceanGM_VertAngle = OceanCurrentConfig.GM_MeanVertAngle;
-	OceanTurbLastPos = FVector(0, 0, -1);
-	OceanTurbHasLastPos = false;
-	OceanRNGState = 42;  // LCG 随机种子
-	OceanDragCoeff = 10.0f;
-	OceanCurrentBodyId = -1;  // -1 = 未设置，将在 ApplyOceanCurrent 中自动查找
-	OceanCurrentVelocity = FVector(0, 0, 0);
-
-	// 洋流可视化初始化（Phase 7）
-	bOceanVisualizationEnabled = false;
-	bStratifiedProfileShown = false;
-	bOceanHeatmapShown = false;
-	OceanLogInterval = 5.0f;  // 每 5 秒输出一次洋流状态
-	OceanLastLogTime = 0.0f;
+	// CreateDefaultSubobject 必须在 RF_ClassDefaultObject 检查之前调用
+	// 否则 PIE 实例的 GetComponents 无法枚举到这些组件
 
 	// 创建洋流箭头可视化组件
 	OceanArrowComponent = CreateDefaultSubobject<UArrowComponent>(TEXT("OceanCurrentArrow"));
@@ -295,26 +342,67 @@ AMuJoCoSimulation::AMuJoCoSimulation()
 	}
 
 	// 使用对象查找器在类的构造函数中自动加载网格
-	// 这只是静态网格体，要实际使用它，后面需要将其分配给 StaticMeshComponent
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> StaticMesh(TEXT("StaticMesh'/Game/Carla/Static/SM_Plane.SM_Plane'"));
 	defaultMesh = StaticMesh.Object;
+
+	// CDO 检查：CDO 只需要注册组件，不需要初始化运行时状态
+	if (HasAnyFlags(RF_ClassDefaultObject))
+	{
+		return;
+	}
+
+	// 以下是非 CDO 实例的运行时初始化
+	mData = nullptr;
+	mModel = nullptr;
+	bSimulationRunning = false;
+	XmlSourcePath = TEXT("mujoco/pendulum.xml");
+
+	// 洋流模块初始化
+	OceanGM_Speed = OceanCurrentConfig.GM_MeanSpeed;
+	OceanGM_HorizAngle = OceanCurrentConfig.GM_MeanHorizAngle;
+	OceanGM_VertAngle = OceanCurrentConfig.GM_MeanVertAngle;
+	OceanTurbLastPos = FVector(0, 0, -1);
+	OceanTurbHasLastPos = false;
+	OceanRNGState = 42;  // LCG 随机种子
+	OceanDragCoeff = 10.0f;
+	OceanCurrentBodyId = -1;  // -1 = 未设置，将在 ApplyOceanCurrent 中自动查找
+	OceanCurrentVelocity = FVector(0, 0, 0);
+
+	// 洋流可视化初始化
+	bOceanVisualizationEnabled = false;
+	bStratifiedProfileShown = false;
+	bOceanHeatmapShown = false;
+	OceanLogInterval = 5.0f;  // 每 5 秒输出一次洋流状态
+	OceanLastLogTime = 0.0f;
 }
 
 // 开始仿真
 void AMuJoCoSimulation::BeginPlay()
 {
-	Super::BeginPlay();
-	mData = nullptr;
-	mModel = nullptr;
-	LoadModel(XmlSourcePath);  // 解析 mujoco 的 xml 模型
-	if (mModel)
-	{
-		_info = ExtractModelInfo(mModel);  // 处理基本几何体（球体、立方体等）
-		ConvertMuJoCoModelToProceduralMeshes(mModel, this); // 处理复杂网格几何体：将MuJoCo模型中的网格数据转换为Engine的程序化网格组件
-		GenerateMeshes(_info);  // 将提取的模型信息转换为引擎中的实际场景组件
-	}
-	StartSimulation();
-	UE_LOG(LogTemp, Warning, TEXT("Mujoco begin play."));
+    Super::BeginPlay();
+    mData = nullptr;
+    mModel = nullptr;
+    LoadModel(XmlSourcePath);
+    if (mModel)
+    {
+        _info = ExtractModelInfo(mModel);
+        ConvertMuJoCoModelToProceduralMeshes(mModel, this);
+        GenerateMeshes(_info);
+
+        // 隐藏构造函数里的占位圆柱体，避免遮挡真实几何体
+        TArray<UStaticMeshComponent*> StaticComps;
+        GetComponents<UStaticMeshComponent>(StaticComps);
+        for (auto* Comp : StaticComps)
+        {
+            if (Comp->GetFName() == FName(TEXT("VisualRepresentation")))
+            {
+                Comp->SetVisibility(false, true);
+                break;
+            }
+        }
+    }
+    StartSimulation();
+    UE_LOG(LogTemp, Warning, TEXT("Mujoco begin play."));
 }
 
 void AMuJoCoSimulation::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -329,56 +417,60 @@ void AMuJoCoSimulation::EndPlay(const EEndPlayReason::Type EndPlayReason)
 	Super::EndPlay(EndPlayReason);
 }
 
-
+// 更新视觉表示以匹配当前仿真状态
 void AMuJoCoSimulation::UpdateSimulationView(const ModelInfo &Info)
 {
 	FVector BaseLocation = BodyMap[0]->GetComponentLocation();
-	FQuat BaseRotation = BodyMap[0]->GetComponentRotation().Quaternion(); // GetActorRotation().Quaternion();
+	FQuat BaseRotation = BodyMap[0]->GetComponentRotation().Quaternion();
 
+	// ── 更新刚体位置 ──────────────────────────────────
 	int BodyId = 0;
 	for (const BodyInfo &bodyInfo : Info.bodies)
 	{
 		USceneComponent *sceneComponent = BodyMap[BodyId];
-		if (!sceneComponent)
-			continue;
-		FVector WorldLoc = CalculateWorldPosition(BaseLocation, BaseRotation, FVector(bodyInfo.pos[0] * 100, bodyInfo.pos[1] * 100, bodyInfo.pos[2] * 100));
+		if (!sceneComponent) { BodyId++; continue; }
+		FVector WorldLoc = CalculateWorldPosition(BaseLocation, BaseRotation,
+			FVector(bodyInfo.pos[0] * 100, bodyInfo.pos[1] * 100, bodyInfo.pos[2] * 100));
 		sceneComponent->SetWorldLocation(WorldLoc);
-		FQuat worldRot = CalculateWorldRotation(BaseRotation, bodyInfo.quat2);
-		sceneComponent->SetWorldRotation(bodyInfo.quat2 /*worldRot*/);
-
-		//	sceneComponent->SetRelativeLocation(FVector(bodyInfo.pos[0]*100, bodyInfo.pos[1]*100, bodyInfo.pos[2]*100));
-		//		sceneComponent->SetRelativeRotation(bodyInfo.quat2);
-
-		//	UE_LOG(LogTemp, Warning, TEXT("Body %d [%hs][%f]: %f %f %f"), BodyId,bodyInfo.name.c_str(), mData->time,bodyInfo.pos[0], bodyInfo.pos[1], bodyInfo.pos[2]);
-		//	UE_LOG(LogTemp, Warning, TEXT("Body %d [%hs][%f]: %f %f %f %f"), BodyId,bodyInfo.name.c_str(), mData->time,bodyInfo.quat[1], bodyInfo.quat[2], bodyInfo.quat[3], bodyInfo.quat[0]);
+		sceneComponent->SetWorldRotation(bodyInfo.quat2);
 		BodyId++;
 	}
 
+	// ── 更新几何体位置（GeomMap1: StaticMesh，GeomMap2: ProceduralMesh）──
 	int GeomId = 0;
 	for (const GeomInfo &geomInfo : Info.geoms)
 	{
-		UStaticMeshComponent *staticMeshComponent = GeomMap1[GeomId];
-		if (!staticMeshComponent)
-			continue;
+		// geom_xpos 已经是 MuJoCo 全局世界坐标，直接转换单位即可
+		FVector WorldLoc(
+			geomInfo.pos[0] * 100,
+			geomInfo.pos[1] * 100,
+			geomInfo.pos[2] * 100);
 
-		//	staticMeshComponent->SetRelativeLocation(FVector(geomInfo.pos[0]*100, geomInfo.pos[1]*100, geomInfo.pos[2]*100));
-		//	staticMeshComponent->SetRelativeRotation(geomInfo.quat2);
+		// StaticMesh 路径
+		if (UStaticMeshComponent **comp = GeomMap1.Find(GeomId))
+		{
+			if (*comp)
+			{
+				(*comp)->SetWorldLocation(WorldLoc);
+				(*comp)->SetWorldRotation(geomInfo.quat2);
+			}
+		}
 
-		FVector WorldLoc = CalculateWorldPosition(BaseLocation, BaseRotation, FVector(geomInfo.pos[0] * 100, geomInfo.pos[1] * 100, geomInfo.pos[2] * 100));
-		staticMeshComponent->SetWorldLocation(WorldLoc);
-		FQuat worldRot = CalculateWorldRotation(BaseRotation, geomInfo.quat2);
-		//	staticMeshComponent->SetWorldRotation(geomInfo.quat2/*worldRot*/);
+		// ProceduralMesh 路径
+		if (UProceduralMeshComponent **comp = GeomMap2.Find(GeomId))
+		{
+			if (*comp)
+			{
+				(*comp)->SetWorldLocation(WorldLoc);
+				(*comp)->SetWorldRotation(geomInfo.quat2);
+			}
+		}
 
-		// UE_LOG(LogTemp, Warning, TEXT("Geom %d[%hs][%f]: %f %f %f"), GeomId,geomInfo.name.c_str() ,mData->time,geomInfo.pos[0], geomInfo.pos[1], geomInfo.pos[2]);
-		// UE_LOG(LogTemp, Warning, TEXT("Geom %d[%hs][%f]: %f %f %f %f"), GeomId,geomInfo.name.c_str() ,mData->time,geomInfo.quat[1], geomInfo.quat[2], geomInfo.quat[3], geomInfo.quat[0]);
 		GeomId++;
 	}
 }
 
-// ════════════════════════════════════════════════════════════
-// 洋流模块实现 (Phase 6)
-// ════════════════════════════════════════════════════════════
-
+// ── 洋流模块实现 ──────────────────────────────────
 FVector AMuJoCoSimulation::GetOceanCurrentVelocityAt(float x, float y, float z, float dt)
 {
 	// ── Layer 1: Gauss-Markov 过程 ──────────────────
@@ -531,6 +623,10 @@ void AMuJoCoSimulation::ApplyOceanCurrent()
 					break;
 				}
 			}
+			if (bodyId >= 0)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("[Ocean] Auto fallback to body ID=%d"), bodyId);
+			}
 		}
 	}
 
@@ -590,14 +686,28 @@ void AMuJoCoSimulation::SetOceanCurrentBodyName(const FString& BodyName)
 	}
 }
 
-// ════════════════════════════════════════════════════════════
-// 洋流可视化模块 (Phase 7)
-// ════════════════════════════════════════════════════════════
-
+// ── 洋流可视化模块 ────────────────────────────────
 void AMuJoCoSimulation::ToggleOceanVisualization()
 {
-	bOceanVisualizationEnabled = !bOceanVisualizationEnabled;
-	UE_LOG(LogTemp, Warning, TEXT("[Ocean] Visualization %s"), bOceanVisualizationEnabled ? TEXT("ON") : TEXT("OFF"));
+    bOceanVisualizationEnabled = !bOceanVisualizationEnabled;
+
+    // 用组件名查找，确保在 PIE 实例里也能找到正确组件
+    TArray<UArrowComponent*> ArrowComps;
+    GetComponents<UArrowComponent>(ArrowComps);
+    for (auto* Comp : ArrowComps)
+	{
+		if (Comp->GetFName().ToString().Contains(TEXT("OceanCurrentArrow")))
+		{
+			Comp->SetHiddenInGame(!bOceanVisualizationEnabled);
+			Comp->SetVisibility(bOceanVisualizationEnabled);
+			Comp->ArrowSize = 5.0f;
+			Comp->ArrowLength = 200.0f;
+			break;
+		}
+	}
+
+    UE_LOG(LogTemp, Warning, TEXT("[Ocean] Visualization %s"),
+        bOceanVisualizationEnabled ? TEXT("ON") : TEXT("OFF"));
 }
 
 void AMuJoCoSimulation::ShowStratifiedProfile()
@@ -633,7 +743,7 @@ void AMuJoCoSimulation::LogOceanStatus()
 		return;
 	}
 
-	// 获取机器人位置
+	// ── 获取机器人位置 ────────────────────────────────
 	FVector robotPos;
 	if (OceanCurrentBodyId >= 0 && OceanCurrentBodyId < mModel->nbody)
 	{
@@ -715,7 +825,7 @@ void AMuJoCoSimulation::Tick(float DeltaTime)
 	if (bSimulationRunning)
 		SimulateMuJoCo(DeltaTime);
 
-	// ── 洋流可视化快捷键 (Phase 7) ──────────────────
+	// 洋流可视化快捷键 
 	// 注意：实际游戏中需要通过 Input 系统绑定按键
 	// 这里提供日志接口，可通过蓝图或控制台命令调用
 	if (OceanCurrentConfig.bEnabled && mData && mModel)
@@ -726,6 +836,10 @@ void AMuJoCoSimulation::Tick(float DeltaTime)
 		{
 			LogOceanStatus();
 			OceanLastLogTime = 0;
+		}
+		if (bOceanVisualizationEnabled && OceanArrowComponent && OceanCurrentVelocity.SizeSquared() > 0)
+		{
+			OceanArrowComponent->SetWorldRotation(OceanCurrentVelocity.Rotation());
 		}
 	}
 }
@@ -758,7 +872,7 @@ void AMuJoCoSimulation::ResetSimulation()
 		mj_deleteData(mData);
 	mData = mj_makeData(mModel);
 
-	// 洋流模块：重置洋流状态 (Phase 6)
+	// 洋流模块：重置洋流状态
 	ResetOceanCurrent();
 
 	ExtractCurrentState(_info);
@@ -793,19 +907,34 @@ void AMuJoCoSimulation::LogInfo()
 		BodyId++;
 	}
 
-	// 记录几何体信息
+    // ── 记录几何体信息 ────────────────────────────────
 	int GeomId = 0;
 	for (const auto &geomInfo : _info.geoms)
 	{
-		if (UStaticMeshComponent *geomComponent = GeomMap1[GeomId])
+		// GeomMap1 存静态网格，GeomMap2 存动态网格，需要分别检查
+		if (UStaticMeshComponent **compPtr = GeomMap1.Find(GeomId))
 		{
-			FVector worldLoc = geomComponent->GetComponentLocation();
-			FRotator worldRot = geomComponent->GetComponentRotation();
-			UE_LOG(LogTemp, Warning, TEXT("Geom[%d] %hs - WorldLocation: (%f, %f, %f), WorldRotation: (%f, %f, %f)"),
-				   GeomId,
-				   geomInfo.name.c_str(),
-				   worldLoc.X, worldLoc.Y, worldLoc.Z,
-				   worldRot.Pitch, worldRot.Yaw, worldRot.Roll);
+			if (UStaticMeshComponent *geomComponent = *compPtr)
+			{
+				FVector worldLoc = geomComponent->GetComponentLocation();
+				FRotator worldRot = geomComponent->GetComponentRotation();
+				UE_LOG(LogTemp, Warning, TEXT("Geom[%d] %hs - WorldLocation: (%f, %f, %f), WorldRotation: (%f, %f, %f)"),
+					   GeomId, geomInfo.name.c_str(),
+					   worldLoc.X, worldLoc.Y, worldLoc.Z,
+					   worldRot.Pitch, worldRot.Yaw, worldRot.Roll);
+			}
+		}
+		else if (UProceduralMeshComponent **compPtr2 = GeomMap2.Find(GeomId))
+		{
+			if (UProceduralMeshComponent *geomComponent = *compPtr2)
+			{
+				FVector worldLoc = geomComponent->GetComponentLocation();
+				FRotator worldRot = geomComponent->GetComponentRotation();
+				UE_LOG(LogTemp, Warning, TEXT("Geom[%d] %hs - WorldLocation: (%f, %f, %f), WorldRotation: (%f, %f, %f)"),
+					   GeomId, geomInfo.name.c_str(),
+					   worldLoc.X, worldLoc.Y, worldLoc.Z,
+					   worldRot.Pitch, worldRot.Yaw, worldRot.Roll);
+			}
 		}
 		GeomId++;
 	}
@@ -933,4 +1062,255 @@ void AMuJoCoSimulation::SetMeshColor(UStaticMeshComponent *StaticMeshComponent, 
 	DynamicMaterial->SetVectorParameterValue(FName("BaseColor"), Color);
 
 	StaticMeshComponent->SetMaterial(0, DynamicMaterial);
+}
+
+// 动态几何体生成实现
+void AMuJoCoSimulation::CreateProceduralPlane(UProceduralMeshComponent* MeshComp, float HalfXCm, float HalfYCm)
+{
+	TArray<FVector> Vertices = {
+		FVector(-HalfXCm, -HalfYCm, 0),
+		FVector( HalfXCm, -HalfYCm, 0),
+		FVector( HalfXCm,  HalfYCm, 0),
+		FVector(-HalfXCm,  HalfYCm, 0)
+	};
+	TArray<int32> Triangles = {0, 1, 2, 0, 2, 3};
+	TArray<FVector> Normals = {
+		FVector(0,0,1), FVector(0,0,1), FVector(0,0,1), FVector(0,0,1)
+	};
+	TArray<FVector2D> UVs = {
+		FVector2D(0,0), FVector2D(1,0), FVector2D(1,1), FVector2D(0,1)
+	};
+	TArray<FProcMeshTangent> Tangents;
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UVs, Normals, Tangents);
+	MeshComp->CreateMeshSection(0, Vertices, Triangles, Normals, UVs, TArray<FColor>(), Tangents, false);
+}
+
+void AMuJoCoSimulation::CreateProceduralSphere(UProceduralMeshComponent* MeshComp, float RadiusCm, int32 Segments)
+{
+	TArray<FVector> Vertices;
+	TArray<int32> Triangles;
+	TArray<FVector> Normals;
+	TArray<FVector2D> UVs;
+	TArray<FProcMeshTangent> Tangents;
+
+	int32 Rings = FMath::Max(Segments / 2, 4);
+
+	for (int32 i = 0; i <= Rings; i++)
+	{
+		float phi = PI * i / Rings;
+		float sinPhi = FMath::Sin(phi);
+		float cosPhi = FMath::Cos(phi);
+
+		for (int32 j = 0; j <= Segments; j++)
+		{
+			float theta = 2.0f * PI * j / Segments;
+			FVector Normal(sinPhi * FMath::Cos(theta), sinPhi * FMath::Sin(theta), cosPhi);
+			Vertices.Add(Normal * RadiusCm);
+			Normals.Add(Normal.GetSafeNormal());
+			UVs.Add(FVector2D((float)j / Segments, (float)i / Rings));
+		}
+	}
+
+	for (int32 i = 0; i < Rings; i++)
+	{
+		for (int32 j = 0; j < Segments; j++)
+		{
+			int32 a = i * (Segments + 1) + j;
+			int32 b = a + 1;
+			int32 c = (i + 1) * (Segments + 1) + j;
+			int32 d = c + 1;
+			Triangles.Add(a); Triangles.Add(c); Triangles.Add(b);
+			Triangles.Add(b); Triangles.Add(c); Triangles.Add(d);
+		}
+	}
+
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UVs, Normals, Tangents);
+	MeshComp->CreateMeshSection(0, Vertices, Triangles, Normals, UVs, TArray<FColor>(), Tangents, false);
+}
+
+void AMuJoCoSimulation::CreateProceduralCylinder(UProceduralMeshComponent* MeshComp, float RadiusCm, float HalfHeightCm, int32 Segments)
+{
+	TArray<FVector> Vertices;
+	TArray<int32> Triangles;
+	TArray<FVector> Normals;
+	TArray<FVector2D> UVs;
+	TArray<FProcMeshTangent> Tangents;
+
+	// ── 侧面 ──────────────────────────────────────────
+	for (int32 i = 0; i <= Segments; i++)
+	{
+		float theta = 2.0f * PI * i / Segments;
+		float cosT = FMath::Cos(theta);
+		float sinT = FMath::Sin(theta);
+
+		// 底圈
+		Vertices.Add(FVector(RadiusCm * cosT, RadiusCm * sinT, -HalfHeightCm));
+		Normals.Add(FVector(cosT, sinT, 0));
+		UVs.Add(FVector2D((float)i / Segments, 0));
+
+		// 顶圈
+		Vertices.Add(FVector(RadiusCm * cosT, RadiusCm * sinT, HalfHeightCm));
+		Normals.Add(FVector(cosT, sinT, 0));
+		UVs.Add(FVector2D((float)i / Segments, 1));
+	}
+
+	for (int32 i = 0; i < Segments; i++)
+	{
+		int32 base = i * 2;
+		Triangles.Add(base);     Triangles.Add(base + 2); Triangles.Add(base + 1);
+		Triangles.Add(base + 1); Triangles.Add(base + 2); Triangles.Add(base + 3);
+	}
+
+	// ── 底面 cap ──────────────────────────────────────
+	int32 bottomCenter = Vertices.Num();
+	Vertices.Add(FVector(0, 0, -HalfHeightCm));
+	Normals.Add(FVector(0, 0, -1));
+	UVs.Add(FVector2D(0.5f, 0.5f));
+
+	for (int32 i = 0; i <= Segments; i++)
+	{
+		float theta = 2.0f * PI * i / Segments;
+		Vertices.Add(FVector(RadiusCm * FMath::Cos(theta), RadiusCm * FMath::Sin(theta), -HalfHeightCm));
+		Normals.Add(FVector(0, 0, -1));
+		UVs.Add(FVector2D(0.5f + 0.5f * FMath::Cos(theta), 0.5f + 0.5f * FMath::Sin(theta)));
+	}
+
+	for (int32 i = 0; i < Segments; i++)
+	{
+		Triangles.Add(bottomCenter);
+		Triangles.Add(bottomCenter + i + 2);
+		Triangles.Add(bottomCenter + i + 1);
+	}
+
+	// ── 顶面 cap ──────────────────────────────────────
+	int32 topCenter = Vertices.Num();
+	Vertices.Add(FVector(0, 0, HalfHeightCm));
+	Normals.Add(FVector(0, 0, 1));
+	UVs.Add(FVector2D(0.5f, 0.5f));
+
+	for (int32 i = 0; i <= Segments; i++)
+	{
+		float theta = 2.0f * PI * i / Segments;
+		Vertices.Add(FVector(RadiusCm * FMath::Cos(theta), RadiusCm * FMath::Sin(theta), HalfHeightCm));
+		Normals.Add(FVector(0, 0, 1));
+		UVs.Add(FVector2D(0.5f + 0.5f * FMath::Cos(theta), 0.5f + 0.5f * FMath::Sin(theta)));
+	}
+
+	for (int32 i = 0; i < Segments; i++)
+	{
+		Triangles.Add(topCenter);
+		Triangles.Add(topCenter + i + 1);
+		Triangles.Add(topCenter + i + 2);
+	}
+
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UVs, Normals, Tangents);
+	MeshComp->CreateMeshSection(0, Vertices, Triangles, Normals, UVs, TArray<FColor>(), Tangents, false);
+}
+
+void AMuJoCoSimulation::CreateProceduralBox(UProceduralMeshComponent* MeshComp, float HalfXCm, float HalfYCm, float HalfZCm)
+{
+	TArray<FVector> Vertices;
+	TArray<int32> Triangles;
+	TArray<FVector> Normals;
+	TArray<FVector2D> UVs;
+	TArray<FProcMeshTangent> Tangents;
+
+	// 每个面 4 个顶点，共 6 个面
+	struct Face { FVector n; FVector v[4]; };
+	TArray<Face> Faces = {
+		// +X
+		{FVector(1,0,0), {FVector(HalfXCm,-HalfYCm,-HalfZCm), FVector(HalfXCm,HalfYCm,-HalfZCm), FVector(HalfXCm,HalfYCm,HalfZCm), FVector(HalfXCm,-HalfYCm,HalfZCm)}},
+		// -X
+		{FVector(-1,0,0), {FVector(-HalfXCm,HalfYCm,-HalfZCm), FVector(-HalfXCm,-HalfYCm,-HalfZCm), FVector(-HalfXCm,-HalfYCm,HalfZCm), FVector(-HalfXCm,HalfYCm,HalfZCm)}},
+		// +Y
+		{FVector(0,1,0), {FVector(HalfXCm,HalfYCm,-HalfZCm), FVector(-HalfXCm,HalfYCm,-HalfZCm), FVector(-HalfXCm,HalfYCm,HalfZCm), FVector(HalfXCm,HalfYCm,HalfZCm)}},
+		// -Y
+		{FVector(0,-1,0), {FVector(-HalfXCm,-HalfYCm,-HalfZCm), FVector(HalfXCm,-HalfYCm,-HalfZCm), FVector(HalfXCm,-HalfYCm,HalfZCm), FVector(-HalfXCm,-HalfYCm,HalfZCm)}},
+		// +Z
+		{FVector(0,0,1), {FVector(-HalfXCm,-HalfYCm,HalfZCm), FVector(HalfXCm,-HalfYCm,HalfZCm), FVector(HalfXCm,HalfYCm,HalfZCm), FVector(-HalfXCm,HalfYCm,HalfZCm)}},
+		// -Z
+		{FVector(0,0,-1), {FVector(-HalfXCm,HalfYCm,-HalfZCm), FVector(HalfXCm,HalfYCm,-HalfZCm), FVector(HalfXCm,-HalfYCm,-HalfZCm), FVector(-HalfXCm,-HalfYCm,-HalfZCm)}}
+	};
+
+	static const TArray<FVector2D> FaceUVs = {FVector2D(0,0),FVector2D(1,0),FVector2D(1,1),FVector2D(0,1)};
+
+	for (int32 f = 0; f < Faces.Num(); f++)
+	{
+		int32 base = f * 4;
+		for (int32 v = 0; v < 4; v++)
+		{
+			Vertices.Add(Faces[f].v[v]);
+			Normals.Add(Faces[f].n);
+			UVs.Add(FaceUVs[v]);
+		}
+		Triangles.Add(base);     Triangles.Add(base+1); Triangles.Add(base+2);
+		Triangles.Add(base);     Triangles.Add(base+2); Triangles.Add(base+3);
+	}
+
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UVs, Normals, Tangents);
+	MeshComp->CreateMeshSection(0, Vertices, Triangles, Normals, UVs, TArray<FColor>(), Tangents, false);
+}
+
+void AMuJoCoSimulation::CreateProceduralCapsule(UProceduralMeshComponent* MeshComp, float RadiusCm, float HalfCylHeightCm, int32 Segments)
+{
+	TArray<FVector> Vertices;
+	TArray<int32> Triangles;
+	TArray<FVector> Normals;
+	TArray<FVector2D> UVs;
+	TArray<FProcMeshTangent> Tangents;
+
+	int32 CapRings = FMath::Max(Segments / 4, 2);
+
+	// 生成顶点行的 lambda：r=圆圈半径，z=高度，法线=(cosT*nx, sinT*ny, nz)
+	auto AddRing = [&](float r, float z, float nx, float nz, float vCoord)
+	{
+		for (int32 j = 0; j <= Segments; j++)
+		{
+			float theta = 2.0f * PI * j / Segments;
+			float cosT = FMath::Cos(theta);
+			float sinT = FMath::Sin(theta);
+			Vertices.Add(FVector(r * cosT, r * sinT, z));
+			Normals.Add(FVector(nx * cosT, nx * sinT, nz).GetSafeNormal());
+			UVs.Add(FVector2D((float)j / Segments, vCoord));
+		}
+	};
+
+	// ── 顶半球（phi: 0 → PI/2）──────────────────────
+	for (int32 i = 0; i <= CapRings; i++)
+	{
+		float phi = (PI * 0.5f) * i / CapRings;
+		float sinPhi = FMath::Sin(phi);
+		float cosPhi = FMath::Cos(phi);
+		AddRing(RadiusCm * sinPhi, HalfCylHeightCm + RadiusCm * cosPhi, sinPhi, cosPhi, 0.25f * i / CapRings);
+	}
+
+	// ── 底圆柱边（z=-H，与顶圆柱边 z=+H 之间形成柱面）──
+	AddRing(RadiusCm, -HalfCylHeightCm, 1.0f, 0.0f, 0.5f);
+
+	// ── 底半球（phi: PI/2 → PI）──────────────────────
+	for (int32 i = 1; i <= CapRings; i++)
+	{
+		float phi = (PI * 0.5f) + (PI * 0.5f) * i / CapRings;
+		float sinPhi = FMath::Sin(phi);
+		float cosPhi = FMath::Cos(phi);
+		AddRing(RadiusCm * sinPhi, -HalfCylHeightCm + RadiusCm * cosPhi, sinPhi, cosPhi, 0.5f + 0.5f * i / CapRings);
+	}
+
+	// 总行数：(CapRings+1) + 1 + CapRings = 2*CapRings+2
+	int32 numRows = 2 * CapRings + 2;
+	for (int32 i = 0; i < numRows - 1; i++)
+	{
+		for (int32 j = 0; j < Segments; j++)
+		{
+			int32 a = i * (Segments + 1) + j;
+			int32 b = a + 1;
+			int32 c = (i + 1) * (Segments + 1) + j;
+			int32 d = c + 1;
+			Triangles.Add(a); Triangles.Add(c); Triangles.Add(b);
+			Triangles.Add(b); Triangles.Add(c); Triangles.Add(d);
+		}
+	}
+
+	UKismetProceduralMeshLibrary::CalculateTangentsForMesh(Vertices, Triangles, UVs, Normals, Tangents);
+	MeshComp->CreateMeshSection(0, Vertices, Triangles, Normals, UVs, TArray<FColor>(), Tangents, false);
 }
