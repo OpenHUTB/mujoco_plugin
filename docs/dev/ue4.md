@@ -1,5 +1,10 @@
 # 适配 [hutb 模拟器](https://github.com/OpenHUTB/hutb)
 
+!!! 注意
+    如果不需要编辑模型，可以直接进入 [网盘](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb) 进行下载`software/hutb/hutb_v2.10.0.zip`，解压后即可运行。
+
+下面是适配 hutb 模拟器的运行过程：
+
 1.通过将 mujoco 的 xml 文件拖拽到虚幻编辑器的“内容浏览器”，将 xml 转成 _ue.xml 文件。hutb 引擎中默认使用的是 [Engine/Binaries/ThirdParty/Python3/Win64](https://github.com/OpenHUTB/engine/tree/hutb/Engine/Binaries/ThirdParty/Python3/Win64) 中的 Python 3.7.7（UE 5.7 中默认使用的是 Python 3.11.8）。解析 xml由 [UMujocoGenerationAction::ParseAssetsRecursive](https://github.com/OpenHUTB/hutb/tree/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp#L1014) 负责。其中 Mujoco 管理器 [Source/URLab/Public/MuJoCo/Core/AMjManager.h](https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/AMjManager.h) 是一个参与者，通过它进行xml文件的加载。
 
 2.上一步执行完成会在“内容浏览器”中生成蓝图，然后将生成的蓝图拖拽到场景的合适位置（参考 [mujoco_plugin](https://github.com/OpenHUTB/hutb/commit/2cc693c1248f3f65d71a5d95c23231f9dfa928a1) ），
