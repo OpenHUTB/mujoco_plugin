@@ -344,6 +344,14 @@ public:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo")
 	UStaticMesh *defaultMesh;
 
+	// 仅用于可视化调试的缩放系数，不影响物理仿真数据，默认1.0即原始MuJoCo尺寸
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo|Debug")
+	float VisualScaleMultiplier = 1.0f;
+
+	// 动态几何体使用的材质，留空则使用引擎默认材质
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "MuJoCo|Debug")
+	UMaterialInterface* ProceduralMeshMaterial = nullptr;
+
 protected:
 	// 当游戏开始或该参与者生成时调用
 	virtual void BeginPlay() override;
@@ -415,6 +423,22 @@ protected:
 	 **/
 
 	void LogInfo();
+
+	// ── 动态几何体生成（基础类型）────────────────────
+	/** @brief 动态生成平面网格 */
+	void CreateProceduralPlane(UProceduralMeshComponent* MeshComp, float HalfXCm, float HalfYCm);
+
+	/** @brief 动态生成球体网格 */
+	void CreateProceduralSphere(UProceduralMeshComponent* MeshComp, float RadiusCm, int32 Segments = 16);
+
+	/** @brief 动态生成圆柱体网格（轴向为 Z 轴） */
+	void CreateProceduralCylinder(UProceduralMeshComponent* MeshComp, float RadiusCm, float HalfHeightCm, int32 Segments = 16);
+
+	/** @brief 动态生成长方体网格 */
+	void CreateProceduralBox(UProceduralMeshComponent* MeshComp, float HalfXCm, float HalfYCm, float HalfZCm);
+
+	/** @brief 动态生成胶囊体网格（轴向为 Z 轴） */
+	void CreateProceduralCapsule(UProceduralMeshComponent* MeshComp, float RadiusCm, float HalfCylHeightCm, int32 Segments = 16);
 
 public:
 	// 每一帧都调用
