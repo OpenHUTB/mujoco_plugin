@@ -137,7 +137,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../../underwater/README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -226,15 +226,15 @@ python<span class="w"> </span>clean_meshes.py<span class="w"> </span>hutb<span c
 </tr>
 <tr>
 <td><code>&lt;site&gt;</code></td>
-<td><code>UMjSite</code></td>
+<td>位点 <code>UMjSite</code></td>
 </tr>
 <tr>
 <td><code>&lt;actuator&gt;</code></td>
-<td><code>UMjMotorActuator</code>, <code>UMjPositionActuator</code>, etc.</td>
+<td><code>UMjMotorActuator</code>, <code>UMjPositionActuator</code>,’ 等</td>
 </tr>
 <tr>
 <td><code>&lt;sensor&gt;</code></td>
-<td><code>UMjTouchSensor</code>, <code>UMjGyro</code>, 等 (30 多种类型)</td>
+<td><code>UMjTouchSensor</code>, <code>UMjGyro</code> 等 (30 多种类型)</td>
 </tr>
 <tr>
 <td><code>&lt;tendon&gt;</code></td>
@@ -305,11 +305,11 @@ python<span class="w"> </span>clean_meshes.py<span class="w"> </span>hutb<span c
 </thead>
 <tbody>
 <tr>
-<td>胶囊(Capsule) / 圆柱(Cylinder)</td>
+<td>胶囊体（Capsule）/ 圆柱体（Cylinder）</td>
 <td><code>size[1]</code> = 沿线段长度的一半</td>
 </tr>
 <tr>
-<td>方框(Box) / 椭圆球(Ellipsoid)</td>
+<td>盒子（Box） / 椭圆球（Ellipsoid）</td>
 <td><code>size[2]</code> = 沿线段长度的一半</td>
 </tr>
 </tbody>
@@ -322,7 +322,7 @@ python<span class="w"> </span>clean_meshes.py<span class="w"> </span>hutb<span c
 <h2 id="_6">网格资产</h2>
 <p>导入程序会查找 XML 文件所在目录下的网格文件。网格文件会被复制到导入目标目录下的 <code>/meshes/</code> 子文件夹中，以避免纹理名称冲突，然后在编译期间注册到 MuJoCo 的 VFS 中。</p>
 <p><strong>格式优先级：</strong> GLB &gt; OBJ。导入器首先尝试导入 GLB 文件（通过 Interchange），然后尝试导入原始 OBJ/STL 文件。如果所有路径都失败，则会创建不带可视网格的几何体，但该几何体仍作为碰撞图元存在。此时会记录一条警告信息，但编译仍然会成功。</p>
-<p><strong>自动网格准备：</strong> <code>clean_meshes.py</code> 脚本会在导入过程中自动运行（参见上文 <a href="#importing">导入</a> 部分）。您也可以手动运行它：</p>
+<p><strong>自动网格准备：</strong> <code>clean_meshes.py</code> 脚本会在导入过程中自动运行（参见上文<a href="#importing">导入</a>部分）。您也可以手动运行它：</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>Scripts/clean_meshes.py<span class="w"> </span>path/to/robot.xml
 </code></pre></div>
 <p>这将生成一个包含更新后的网格引用的 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Scripts/clean_meshes.py#L256">_ue.xml</a> 文件，您可以将其拖入 Unreal 中，而不是使用原始 XML 文件。</p>

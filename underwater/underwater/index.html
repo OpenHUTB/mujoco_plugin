@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>自动化测试 - Mujoco 插件</title>
+    <title>水下机器人 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u81ea\u52a8\u5316\u6d4b\u8bd5";
-        var mkdocs_page_input_path = "dev/testing.md";
+        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba";
+        var mkdocs_page_input_path = "underwater/underwater.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -57,7 +57,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../URLabEditor/">URLab 编辑器</a>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
                 </li>
               </ul>
               <ul>
@@ -113,7 +113,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="" href="../../underwater/README.md">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">自动化测试</li>
+      <li class="breadcrumb-item active">水下机器人</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/testing.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/underwater.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,26 +140,35 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">自动化测试</h1>
-<h2 id="1">1. 开启测试相关的插件</h2>
-<p>在项目/插件 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/UnrealRoboticsLab.uplugin">.uproject</a> 中添加：</p>
-<div class="highlight"><pre><span></span><code>    &quot;Plugins&quot;: [
-        {
-            &quot;Name&quot;: &quot;FunctionalTestingEditor&quot;,
-            &quot;Enabled&quot;: true
-        }
-    ]
-</code></pre></div>
-<p>或者通过虚幻编辑器打开这个插件：
-单击编辑器菜单中设置-&gt;插件按钮，从弹出的插件界面中选择“Testing”分类中的 Functional Testing Editor（和 Runtime Tests）。</p>
-<p>在编辑器的<code>窗口(Window)</code>菜单中，单击<code>测试自动化</code>按钮，弹出测试的会话前端：</p>
-<p><img alt="" src="../../img/dev/launch_testing.jpg" /></p>
-<p>选择 URLab 的 <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/Tests/MjXmlUtilsTests.cpp">XmlUtils</a> 进行测试：</p>
-<p><img alt="" src="../../img/dev/run_testing.jpg" /></p>
-<p>最后弹出测试的过程和结果。</p>
+                <h1 id="_1">水下机器人</h1>
+<h2 id="ue">UE 高保真渲染</h2>
+<p>水下机器人仿真的渲染层基于 <a href="https://github.com/OpenHUTB/engine">UE</a> 构建，负责提供逼真的水下视觉效果，包括水体折射、光照衰减、能见度分级等。渲染层与动力学层解耦，UE 负责画面，MuJoCo 负责物理计算。</p>
+<ul>
+<li><a href="../../MIMIR-UW2/">MIMIR-UW 数据集文档</a></li>
+<li><a href="../HoloOcean/">HoloOcean</a></li>
+</ul>
+<hr />
+<h2 id="mujoco">MuJoCo 动力学模拟</h2>
+<ul>
+<li>
+<p><a href="../mujoco_introduction/">MuJoCo 水下动力学模拟入门</a></p>
+</li>
+<li>
+<p><a href="../fish/">Mujoco 鱼形机器人模拟</a></p>
+</li>
+</ul>
+<h2 id="chrono">Chrono 多物理场</h2>
+<ul>
+<li>多物理场模拟涉水的<a href="https://openhutb.github.io/chrono_doc/effect/">效果</a></li>
+</ul>
+<hr />
 <h2 id="_2">参考</h2>
 <ul>
-<li><a href="https://openhutb.github.io/engine_doc/zh-CN/TestingAndOptimization/Automation/UserGuide/index.html">自动化系统用户指南</a></li>
+<li><a href="../support/">本章节仿真复现指南</a></li>
+<li><a href="https://docs.mujoco.cn/en/stable/computation/fluid.html">MuJoCo 流体受力官方文档</a></li>
+<li><a href="https://arxiv.org/html/2602.23283v1">Simple Models, Real Swimming: Digital Twins for Tendon-Driven Underwater Robots</a>（ETH Zurich, 2025）</li>
+<li><a href="https://github.com/open-airlab/UNav-Sim">UNav-Sim 水下仿真参考</a></li>
+<li><a href="https://github.com/OpenHUTB/locomotion/tree/master/flybody">OpenHUTB/locomotion flybody</a>（果蝇飞行流体模型）</li>
 </ul>
               
             </div>

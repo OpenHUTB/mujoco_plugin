@@ -133,7 +133,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../../underwater/README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -184,9 +184,9 @@
 <td>半径（通过 X 轴缩放）</td>
 </tr>
 <tr>
-<td>圆柱(Cylinder)</td>
+<td>圆柱体(Cylinder)</td>
 <td><code>UMjCylinder</code></td>
-<td>半径（X轴缩放）+半高（Z轴缩放）</td>
+<td>半径（X 轴缩放）+半高（Z 轴缩放）</td>
 </tr>
 <tr>
 <td>胶囊(Capsule)</td>
@@ -208,13 +208,13 @@
 <p>使用标准的虚幻引擎变换 gizmo 来调整形状大小——该插件读取组件缩放并将其映射到 MuJoCo 尺寸参数。</p>
 <hr />
 <h2 id="_3">基本元素</h2>
-<p>快速、精确的碰撞分析。将 <code>UMjBox</code>、<code>UMjSphere</code> 或 <code>UMjCylinder</code> 添加为 <code>UMjBody</code> 的子对象。在一个实体上堆叠多个对象，可实现复合形状。</p>
+<p>快速、精确的碰撞分析。将盒子<code>UMjBox</code>、球体<code>UMjSphere</code> 或圆柱体<code>UMjCylinder</code> 添加为 <code>UMjBody</code> 的子对象。在一个实体上堆叠多个对象，可实现复合形状。</p>
 <h2 id="_4">网格几何体</h2>
-<p>对于凸网格，请将“类型”设置为“网格” <code>Type = Mesh</code>，并指定一个“静态网格(Static Mesh)”。MuJoCo 会在内部计算凸包。</p>
+<p>对于凸网格，请将“类型”设置为“网格”（<code>Type = Mesh</code>），并指定一个“静态网格(Static Mesh)”。MuJoCo 会在内部计算凸包。</p>
 <p>对于<strong>凹</strong>网格，请使用 CoACD 分解——单击几何体上的“分解网格(Decompose Mesh)”，或在“快速转换(Quick Convert)”组件上设置“需要复杂网格(<code>ComplexMeshRequired</code>)”。</p>
 <hr />
 <h2 id="_5">快速转换</h2>
-<p><code>UMjQuickConvertComponent</code> 可应用于任何静态网格体动作者 — 一键式物理实体。</p>
+<p><code>UMjQuickConvertComponent</code> 可应用于任何静态网格体参与者（一键式物理实体）。</p>
 <table>
 <thead>
 <tr>
@@ -242,7 +242,7 @@
 </tbody>
 </table>
 <h2 id="_6">高度场地形</h2>
-<p><code>AMjHeightfieldActor</code> 将虚幻引擎的地形几何体转换为 MuJoCo 高度场，用于地形接触。启用 <code>bTraceComplex</code> 可实现地形的精确网格级采样。使用 <code>TraceWhitelist</code> 可过滤要采样的动作者（例如，仅采样地形，不采样植被）。</p>
+<p>高度场参与者 <code>AMjHeightfieldActor</code> 将虚幻引擎的地形几何体转换为 MuJoCo 高度场，用于地形接触。启用 <code>bTraceComplex</code> 可实现地形的精确网格级采样。使用 <code>TraceWhitelist</code> 可过滤要采样的参与者（例如，仅采样地形，不采样植被）。</p>
 <hr />
 <h2 id="_7">几何属性</h2>
 <table>
@@ -254,15 +254,15 @@
 </thead>
 <tbody>
 <tr>
-<td><code>Friction</code></td>
+<td>摩擦<code>Friction</code></td>
 <td>滑动系数、扭转系数、滚动系数</td>
 </tr>
 <tr>
-<td><code>Density</code></td>
+<td>密度<code>Density</code></td>
 <td>质量由密度乘以体积推断得出</td>
 </tr>
 <tr>
-<td><code>Margin</code></td>
+<td>范围<code>Margin</code></td>
 <td>接触检测范围</td>
 </tr>
 <tr>

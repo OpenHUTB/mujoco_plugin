@@ -241,13 +241,13 @@
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#zmq_1">ZMQ 连接失败</a>
     </li>
-    <li class="toctree-l3"><a class="reference internal" href="#python">Python网格预处理失败</a>
+    <li class="toctree-l3"><a class="reference internal" href="#python">Python 网格预处理失败</a>
     </li>
     <li class="toctree-l3"><a class="reference internal" href="#validatespec">ValidateSpec 失败</a>
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#xml">调试XML（诊断）</a>
+    <li class="toctree-l2"><a class="reference internal" href="#xml">调试 XML（诊断）</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_42">关键文件引用</a>
     </li>
@@ -269,7 +269,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../underwater/">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../underwater/README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -1039,18 +1039,18 @@
 <p><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MujocoMeshImporter.cpp#L40">ImportSingleMesh()</a> 尝试了多种路径：首先通过 Interchange 导入 GLB 格式，然后通过 FBX factory 导入原始 OBJ/STL 格式，最后是 FBX 回退路径。如果所有尝试都失败，则会创建几何体组件，但该组件没有可视网格——它仍然作为碰撞图元存在于规范中。系统会记录一条警告。由于 MuJoCo 不需要可视网格，因此编译仍然会成功。</p>
 <h3 id="zmq_1">ZMQ 连接失败</h3>
 <p>ZMQ使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Net/ZmqSensorBroadcaster.cpp#L105">bind()</a> 而非 connect() ——它在端口上进行监听。如果端口已被占用（例如，之前的 PIE 会话未清理），ZMQ 会记录错误，但模拟仍会运行。外部客户端无法连接。没有重试逻辑——用户必须重启 PIE。</p>
-<h3 id="python">Python网格预处理失败</h3>
+<h3 id="python">Python 网格预处理失败</h3>
 <p>自动清理网格流程的每一步都有备用方案：</p>
 <ul>
-<li>未找到Python → 使用原始XML</li>
+<li>未找到 Python → 使用原始 XML</li>
 <li>未安装 trimesh → 尝试使用 pip 安装，如果失败 → 使用原始 XML</li>
-<li>脚本错误 → 使用原始XML</li>
+<li>脚本错误 → 使用原始 XML</li>
 <li>导入总是会继续进行；网格预处理则是尽力而为</li>
 </ul>
 <h3 id="validatespec">ValidateSpec 失败</h3>
 <p>显示一个包含 MuJoCo 错误的对话框。该对话框不会阻止蓝图保存，仅提供信息性提示。用户可以修复问题并重新编译。</p>
 <hr />
-<h2 id="xml">调试XML（诊断）</h2>
+<h2 id="xml">调试 XML（诊断）</h2>
 <p>当 AAMjManager 上 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L235">bSaveDebugXml = true</a> 时，编译成功后，系统会保存：</p>
 <ul>
 <li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">Saved/URLab/scene_compiled.xml</a> — 以 XML 格式保存的完整 MuJoCo 规范</li>

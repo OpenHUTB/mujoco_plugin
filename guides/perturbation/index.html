@@ -125,7 +125,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../../underwater/README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -218,7 +218,7 @@
 <ul>
 <li><strong>选择状态在拖动过程中保持不变。</strong> 按住 Ctrl 键单击不会重新选择；只有双击才会移动选区。这避免了在旋转和平移序列中因误触而重新选择。</li>
 <li><strong>光标捕获变通方案。</strong> UE 的鼠标左键和鼠标右键捕获会在拖动过程中冻结 <code>GetMousePosition</code> / <code>GetInputMouseDelta</code> 函数。为了获得真实的移动效果，我们注册了一个 Slate <code>IInputProcessor</code>（<code>FMjMouseDeltaProcessor</code>），它会在 Slate 的捕获层将原始 <code>FPointerEvent</code> 增量值清零<em>之前</em>累积这些增量值。然后，平移操作会根据点击位置加上累积的像素值重建虚拟光标屏幕位置，并以此进行反投影。</li>
-<li><strong>释放时无力泄漏。</strong> 预处理回调函数会在每个运行步骤中将 <code>d-&gt;xfrc_applied</code> 清零，以符合模拟的约定——否则，最后一个力会一直作用在之前受扰动的物体上，导致物体无限漂移。 </li>
+<li><strong>释放时无力泄漏。</strong> 预处理回调函数会在每个运行步骤中将 <code>d-&gt;xfrc_applied</code> 清零，以符合模拟的约定——否则，最后一个力会一直作用在之前受扰动的物体上，导致物体无限漂移。</li>
 <li><strong>旋转限制。</strong> 参考四元数相对于物体当前 I 坐标系的范围限制在 ±90° 以内（与 <code>simulate.cc::mjv_movePerturb</code> 相同）。如果没有此限制，当参考值偏离实际值过远时，弹簧可能会卡住或剧烈抖动。 </li>
 </ul>
 <hr />

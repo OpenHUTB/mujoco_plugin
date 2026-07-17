@@ -131,7 +131,7 @@
                 </li>
               </ul>
               <ul>
-                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">其他机器人</a>
+                <li class="toctree-l1"><a class="" href="../../underwater/README.md">其他机器人</a>
                 </li>
               </ul>
       </div>
@@ -171,7 +171,7 @@
 <p>当持有时：</p>
 <ul>
 <li>
-<p>添加增强型输入映射上下文(Input mapping context, IMC) (<code>IMC_TwistControl</code>)</p>
+<p>添加增强型<strong>输入映射上下文</strong>（Input mapping context, IMC） (<code>IMC_TwistControl</code>)</p>
 </li>
 <li>
 <p>弹簧臂 + 摄像头连接到根 MjBody 以实现跟随摄像头功能</p>
@@ -274,9 +274,9 @@
 <li><strong>臂长</strong>: 后方 300 个单位，上方 100 个单位</li>
 <li>已标记 <code>PossessCamera</code> 以便在发布时进行清理</li>
 </ul>
-<p>摄像机跟随实际物理物体的位置，而不是静态的动作者根位置。</p>
+<p>摄像机跟随实际物理物体的位置，而不是静态的参与者者根位置。</p>
 <h2 id="_4">连接到策略</h2>
-<p>Python 策略桥接器通过 <code>UnrealTwistCtrl</code> 控制器类读取 Twist 命令：</p>
+<p>Python 策略桥接器通过<strong>扭矩控制类</strong><code>UnrealTwistCtrl</code> 读取 Twist 命令：</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 在 policy_gui.py 中，Twist 控制器伪装成 JoystickCtrl。</span>
 <span class="c1"># 因此，Unitree 策略的 _get_commands() 函数可以找到坐标轴数据。</span>
 <span class="n">ctrl_list</span> <span class="o">=</span> <span class="p">[</span><span class="n">UnrealTwistCtrlCfg</span><span class="p">()]</span>
