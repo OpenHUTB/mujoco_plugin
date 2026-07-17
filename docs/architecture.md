@@ -705,8 +705,8 @@ MuJoCo使用**右手**坐标系，Z 轴朝上，单位为米。而虚幻引擎�
 
 当用户在编辑器中编译 [AMjArticulation](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp) 蓝图时，[ValidateSpec()](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L1361) 会自动运行（通过 [OnBlueprintCompiled](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L1296) 挂钩）。这会创建一个临时的 mjSpec，对其运行完整的 Setup() 流程，并尝试执行 [mj_compile()](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L1379) 。如果编译失败，会弹出一个对话框显示MuJoCo错误消息。这样可以在编辑时捕捉到 spec 错误（如缺少关节、范围无效等），而不是在运行时才发现。
 
-### MjSimulate 控件
 
+### MjSimulate 控件
 
 在 BeginPlay 时从 [WBP_MjSimulate](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/AMjManager.cpp#L181) 蓝图资源自动创建。提供：
 
@@ -772,13 +772,13 @@ MuJoCo使用**右手**坐标系，Z 轴朝上，单位为米。而虚幻引擎�
 
 ZMQ使用 [bind()](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Net/ZmqSensorBroadcaster.cpp#L105) 而非 connect() ——它在端口上进行监听。如果端口已被占用（例如，之前的 PIE 会话未清理），ZMQ 会记录错误，但模拟仍会运行。外部客户端无法连接。没有重试逻辑——用户必须重启 PIE。
 
-### Python网格预处理失败
+### Python 网格预处理失败
 
 自动清理网格流程的每一步都有备用方案：
 
-- 未找到Python → 使用原始XML
+- 未找到 Python → 使用原始 XML
 - 未安装 trimesh → 尝试使用 pip 安装，如果失败 → 使用原始 XML
-- 脚本错误 → 使用原始XML
+- 脚本错误 → 使用原始 XML
 - 导入总是会继续进行；网格预处理则是尽力而为
 
 ### ValidateSpec 失败
@@ -788,7 +788,7 @@ ZMQ使用 [bind()](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Sourc
 
 ---
 
-## 调试XML（诊断）
+## 调试 XML（诊断）
 
 当 AAMjManager 上 [bSaveDebugXml = true](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L235) 时，编译成功后，系统会保存：
 

@@ -56,9 +56,9 @@ python clean_meshes.py hutb\Unreal\CarlaUE4\Plugins\UnrealRoboticsLab\URLab_Brid
 | `<body>` | `UMjBody` (保留递归层次结构) |
 | `<joint>` | `UMjHingeJoint`, `UMjSlideJoint`, `UMjBallJoint`, `UMjFreeJoint` |
 | `<geom>` | `UMjGeom` / 原始子类 |
-| `<site>` | `UMjSite` |
-| `<actuator>` | `UMjMotorActuator`, `UMjPositionActuator`, etc. |
-| `<sensor>` | `UMjTouchSensor`, `UMjGyro`, 等 (30 多种类型) |
+| `<site>` | 位点 `UMjSite` |
+| `<actuator>` | `UMjMotorActuator`, `UMjPositionActuator`,’ 等 |
+| `<sensor>` | `UMjTouchSensor`, `UMjGyro` 等 (30 多种类型) |
 | `<tendon>` | `UMjTendon` |
 | `<equality>` | `UMjEquality` |
 | `<keyframe>` | `UMjKeyframe` |
@@ -100,8 +100,8 @@ MuJoCo XML 中的 `<default>` 块定义了子元素通过类名继承的共享�
 
 | 几何类型 | 尺寸映射 |
 |-----------|-------------|
-| 胶囊(Capsule) / 圆柱(Cylinder) | `size[1]` = 沿线段长度的一半 |
-| 方框(Box) / 椭圆球(Ellipsoid) | `size[2]` = 沿线段长度的一半 |
+| 胶囊体（Capsule）/ 圆柱体（Cylinder） | `size[1]` = 沿线段长度的一半 |
+| 盒子（Box） / 椭圆球（Ellipsoid） | `size[2]` = 沿线段长度的一半 |
 
 导入后，组件存储的是已解析的变换，`fromto` 而不是已解析的变换。
 
@@ -119,7 +119,7 @@ MuJoCo XML 中的 `<default>` 块定义了子元素通过类名继承的共享�
 
 **格式优先级：** GLB > OBJ。导入器首先尝试导入 GLB 文件（通过 Interchange），然后尝试导入原始 OBJ/STL 文件。如果所有路径都失败，则会创建不带可视网格的几何体，但该几何体仍作为碰撞图元存在。此时会记录一条警告信息，但编译仍然会成功。
 
-**自动网格准备：** `clean_meshes.py` 脚本会在导入过程中自动运行（参见上文 [导入](#importing) 部分）。您也可以手动运行它：
+**自动网格准备：** `clean_meshes.py` 脚本会在导入过程中自动运行（参见上文[导入](#importing)部分）。您也可以手动运行它：
 
 ```bash
 python Scripts/clean_meshes.py path/to/robot.xml

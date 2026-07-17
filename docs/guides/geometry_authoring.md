@@ -10,7 +10,7 @@
 |------|-----------|-----------|
 | 盒子(Box) | `UMjBox` | 半延伸（通过 XYZ 缩放） |
 | 球体(Sphere) | `UMjSphere` | 半径（通过 X 轴缩放） |
-| 圆柱(Cylinder) | `UMjCylinder` | 半径（X轴缩放）+半高（Z轴缩放） |
+| 圆柱体(Cylinder) | `UMjCylinder` | 半径（X 轴缩放）+半高（Z 轴缩放） |
 | 胶囊(Capsule) | `UMjGeom` (type=Capsule) | 半径 + 半高 |
 | 网格(Mesh) | `UMjGeom` (type=Mesh) | 静态网格资产 |
 | 高度场(Heightfield) | `AMjHeightfieldActor` | 虚幻景观数据 |
@@ -21,11 +21,12 @@
 
 ## 基本元素
 
-快速、精确的碰撞分析。将 `UMjBox`、`UMjSphere` 或 `UMjCylinder` 添加为 `UMjBody` 的子对象。在一个实体上堆叠多个对象，可实现复合形状。
+快速、精确的碰撞分析。将盒子`UMjBox`、球体`UMjSphere` 或圆柱体`UMjCylinder` 添加为 `UMjBody` 的子对象。在一个实体上堆叠多个对象，可实现复合形状。
+
 
 ## 网格几何体
 
-对于凸网格，请将“类型”设置为“网格” `Type = Mesh`，并指定一个“静态网格(Static Mesh)”。MuJoCo 会在内部计算凸包。
+对于凸网格，请将“类型”设置为“网格”（`Type = Mesh`），并指定一个“静态网格(Static Mesh)”。MuJoCo 会在内部计算凸包。
 
 
 对于**凹**网格，请使用 CoACD 分解——单击几何体上的“分解网格(Decompose Mesh)”，或在“快速转换(Quick Convert)”组件上设置“需要复杂网格(`ComplexMeshRequired`)”。
@@ -34,7 +35,7 @@
 
 ## 快速转换
 
-`UMjQuickConvertComponent` 可应用于任何静态网格体动作者 — 一键式物理实体。
+`UMjQuickConvertComponent` 可应用于任何静态网格体参与者（一键式物理实体）。
 
 | 属性 | 效果 |
 |----------|--------|
@@ -45,7 +46,7 @@
 
 ## 高度场地形
 
-`AMjHeightfieldActor` 将虚幻引擎的地形几何体转换为 MuJoCo 高度场，用于地形接触。启用 `bTraceComplex` 可实现地形的精确网格级采样。使用 `TraceWhitelist` 可过滤要采样的动作者（例如，仅采样地形，不采样植被）。
+高度场参与者 `AMjHeightfieldActor` 将虚幻引擎的地形几何体转换为 MuJoCo 高度场，用于地形接触。启用 `bTraceComplex` 可实现地形的精确网格级采样。使用 `TraceWhitelist` 可过滤要采样的参与者（例如，仅采样地形，不采样植被）。
 
 ---
 
@@ -53,9 +54,9 @@
 
 | 属性 | 描述 |
 |----------|-------------|
-| `Friction` | 滑动系数、扭转系数、滚动系数 |
-| `Density` | 质量由密度乘以体积推断得出 |
-| `Margin` | 接触检测范围 |
+| 摩擦`Friction` | 滑动系数、扭转系数、滚动系数 |
+| 密度`Density` | 质量由密度乘以体积推断得出 |
+| 范围`Margin` | 接触检测范围 |
 | `Solref` / `Solimp` | 求解器刚度/阻尼/阻抗 |
 
 ---

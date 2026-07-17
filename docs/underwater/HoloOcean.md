@@ -1,12 +1,14 @@
 # 水下机器人 HoloOcean
 
-文档请查看[UE4.27归档版](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/index.html) ，文档的源码位于[27_archival_develop目录](https://github.com/byu-holoocean/holoocean-docs/tree/main/UE4.27_archival_develop)。
+全息海洋（Hologram, LoloOcean）其前身为“全息甲板(Hogodeck)”。
+
+详细文档请参看 [HoloOceam](./index.md)（参考文档请查看[UE4.27归档版](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/index.html) ，文档的源码位于[27_archival_develop目录](https://github.com/byu-holoocean/holoocean-docs/tree/main/UE4.27_archival_develop)）。
 
 ## 运行
 
-Windows: https://robots.et.byu.edu/holo/Ocean/v1.0.0/Windows.zip
+[Windows v1.0.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v1.0.0/Windows.zip)
 
-Installing Ocean ver. 0.1.0 from https://robots.et.byu.edu/holo/Ocean/v0.1.0/Linux.zip
+[Linux v0.1.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v0.1.0/Linux.zip)
 
 
 ## 编译

@@ -48,7 +48,7 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 | [ZMQ 网络与 ROS 2](guides/zmq_networking.md) | ZMQ 传输、主题、摄像头流媒体 |
 | [URLab 桥接](guides/policy_bridge.md) | Python 中间件、强化学习策略、远程控制 |
 | [架构](architecture.md) | 子系统设计、线程模型、编译流程 |
-| [UE4 实现](./dev/ue4.md) | 迁移到 UE4，[适配 hutb 模拟器](https://github.com/OpenHUTB/hutb) |
+| [适配 hutb](./dev/ue4.md) | 迁移到 UE4，[适配 hutb 模拟器](https://github.com/OpenHUTB/hutb) |
 | [自动化测试](./dev/testing.md) | 各种插件功能的测试 |
 
 ---
@@ -71,7 +71,7 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 | 指南 | 涵盖的内容 |
 |-------|---------------|
 | [机器狗](./go2.md) | 仿生四足机器人 Go2 |
-| [水下机器人](./underwater/README.md) | 高保真的水下机器人插件 |
+| [水下机器人](./underwater/underwater.md) | 高保真的水下机器人插件 |
 
 ---
 
@@ -96,8 +96,8 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 | 库 | 许可证 | 角色 |
 |---------|---------|------|
 | [MuJoCo](https://github.com/google-deepmind/mujoco) | Apache 2.0 | 物理模拟引擎 |
-| [CoACD](https://github.com/SarahWeiii/CoACD) | MIT | 凸近似分解(Convex approximate decomposition, CoACD) |
-| [libzmq](https://zeromq.org) | MPL 2.0 | 高性能消息传递，即零开销消息队列（Zero cost Message Queue, ZMQ），是一个无代理、点对点的高性能异步消息传递库 |
+| [CoACD](https://github.com/SarahWeiii/CoACD) | MIT | 凸近似分解（Convex approximate decomposition, CoACD）|
+| [libzmq](https://zeromq.org) | MPL 2.0 | 高性能消息传递，即**零开销消息队列**（Zero cost Message Queue, ZMQ），是一个无代理、点对点的高性能异步消息传递库 |
 
 ## 引用
 

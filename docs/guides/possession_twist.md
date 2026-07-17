@@ -16,7 +16,7 @@ PC->UnPossess();
 
 当持有时：
 
-- 添加增强型输入映射上下文(Input mapping context, IMC) (`IMC_TwistControl`)
+- 添加增强型**输入映射上下文**（Input mapping context, IMC） (`IMC_TwistControl`)
 
 - 弹簧臂 + 摄像头连接到根 MjBody 以实现跟随摄像头功能
 
@@ -67,12 +67,12 @@ PC->UnPossess();
 - **臂长**: 后方 300 个单位，上方 100 个单位
 - 已标记 `PossessCamera` 以便在发布时进行清理
 
-摄像机跟随实际物理物体的位置，而不是静态的动作者根位置。
+摄像机跟随实际物理物体的位置，而不是静态的参与者者根位置。
 
 
 ## 连接到策略
 
-Python 策略桥接器通过 `UnrealTwistCtrl` 控制器类读取 Twist 命令：
+Python 策略桥接器通过**扭矩控制类**`UnrealTwistCtrl` 读取 Twist 命令：
 
 ```python
 # 在 policy_gui.py 中，Twist 控制器伪装成 JoystickCtrl。
