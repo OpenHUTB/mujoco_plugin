@@ -7,6 +7,7 @@ HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰
 * __[使用 HoloOcean](./usage/usage.md)__  
 
 * __[环境搭建](./HoloOcean.md)__  
+* __[使用 HoloOcean 的列表](./used_by.md)__  
 
 
 ## 功能
