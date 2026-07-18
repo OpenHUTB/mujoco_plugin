@@ -81,7 +81,7 @@ nav:
 - 引擎插件开发入门: 'introduction.md'
 - 肌肉骨骼人: 'ms/human_700.md'
 - 人形机器人: 'humanoid/g1.md'
-- 其他机器人: 'underwater/README.md'
+- 水下机器人: 'underwater/index.md'
 
 
 # - mdx_math 用于行内公式显示
