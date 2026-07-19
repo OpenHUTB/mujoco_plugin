@@ -72,7 +72,7 @@
 以下是一些配置示例。如果您手动控制机器人，则可能希望它以实时速度运行，因此需要将 `frames_per_sec` 设置为 true。使用高性能 GPU 时，模拟运行速度可能远超实时速度，否则将难以控制。如果你运行的是无头/自主模式，你可能希望模拟运行得尽可能快，因此良好的帧率（`frames_per_sec`）应该是 false。
 
 
-## 配置八叉树
+## 配置八叉树 <span id="configure_octree"></span>
 
 使用声呐传感器并初始化世界时，系统会创建一个八叉树或从缓存加载一个八叉树。可以使用 `env_min`、`env_max`、`octree_min` 和 `octree_max` 设置这些参数。八叉树缓存在 worlds 文件夹下的 `LinuxNoEditor/Holodeck/Octrees` 文件夹中。请参阅[软件包安装位置](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/installation.html#package-locations)。
 
