@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>使用 HoloOcean - Mujoco 插件</title>
+    <title>安装 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u4f7f\u7528 HoloOcean";
-        var mkdocs_page_input_path = "underwater/usage/usage.md";
+        var mkdocs_page_name = "\u5b89\u88c5";
+        var mkdocs_page_input_path = "underwater/usage/installation.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">使用 HoloOcean</li>
+      <li class="breadcrumb-item active">安装</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/usage.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/installation.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,25 +140,82 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">使用 HoloOcean</h1>
+                <h1 id="_1">安装</h1>
+<p>HoloOcean 的安装分为两部分：首先安装 Python 客户端库（<code>holoocean</code>），随后由该库下载“世界”包（world packages）。Python 部分非常小巧，而“世界”包（即“二进制文件”）的体积则可能达到数 GB。</p>
+<h2 id="_2">要求</h2>
 <ul>
-<li><strong><a href="../scenarios/">场景</a></strong><ul>
-<li><strong><a href="../scenarios/#what_is_a_scenario">什么是场景</a></strong></li>
-<li><strong><a href="../scenarios/#scenario_file_format">场景文件格式</a></strong></li>
-</ul>
+<li>
+<p>
+<script type="math/tex">\geq</script> Python 3.7</p>
 </li>
-<li><strong><a href="../hotkeys/">视窗快捷键</a></strong><ul>
-<li><strong><a href="../hotkeys/#hotkeys">快捷键</a></strong></li>
-</ul>
+<li>
+<p>数 GB 存储空间</p>
 </li>
-<li><strong><a href="../lcm/">发布传感器数据</a></strong></li>
-<li><strong><a href="../units_and_coordinates/">HoloOcean 中的单位和坐标</a></strong><ul>
-<li><strong><a href="../units_and_coordinates/#coordinate_system">坐标系</a></strong></li>
-<li><strong><a href="../units_and_coordinates/#rotations">旋转</a></strong></li>
-</ul>
+<li>
+<p>pip3</p>
 </li>
-<li><strong><a href="../performance/">提升 HoloOcean 性能</a></strong></li>
+<li>
+<p>64 位 Linux 或 Windows</p>
+</li>
+<li>
+<p>建议配备性能良好的 GPU</p>
+</li>
+<li>
+<p>Linux 环境：OpenGL 3+、gcc（至少需安装 build-essential 软件包）</p>
+</li>
+<li>
+<p>对于 Linux 上的 build-essential 软件包，您可以运行以下控制台命令：</p>
+</li>
 </ul>
+<div class="highlight"><pre><span></span><code>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>build-essential
+</code></pre></div>
+<h2 id="_3">稳定安装</h2>
+<p>根据 Unreal Engine 的最终用户许可协议（EULA），我们无法再通过 PyPI 提供 HoloOcean（PyPi 不能包含引擎工具，但可以包含引擎二进制）。不过，HoloOcean 的安装依然相当简单，只是需要多几个步骤。</p>
+<p>首先，请按照此处的步骤将您的 GitHub 账户<a href="https://www.unrealengine.com/en-US/ue-on-github">与 Unreal 关联</a>。注意：账户页面可能已更新，目前的关联选项标签为“Apps and Accounts”（应用与账户）。此过程需要您接受其 EULA。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>Epic Games 正在调整其 GitHub 组织结构。如果您是在 6 月 10 日之后关联的账户，且处于其镜像组织（mirror organization）中，则相应的链接应为 <a href="github.com/byu-holoocean-mirror/HoloOcean">byu-holoocean-mirror/HoloOcean</a>，对应的 git clone 命令为
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:byu-holoocean-mirror/HoloOcean.git<span class="w"> </span>holoocean
+</code></pre></div></p>
+</div>
+<p>如果您遇到任何其他问题，请告知我们。</p>
+<p>接下来，请下载或克隆 <a href="https://github.com/byu-holoocean/HoloOcean">byu-holoocean/HoloOcean</a>。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果遇到“Page Not Found”（页面未找到）错误，这是因为您尚未将 GitHub 账户与 Epic Games 账户关联。请参考上一段内容，完成账户关联。</p>
+</div>
+<p>我们建议按照示例代码中的做法，使用小写名称来克隆仓库，具体如下：
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:byu-holoocean/HoloOcean.git<span class="w"> </span>holoocean
+</code></pre></div>
+在克隆的仓库中，执行以下操作：
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>holoocean/client
+pip<span class="w"> </span>install<span class="w"> </span>.
+</code></pre></div></p>
+<p>接下来，若要安装 oceans 软件包的最新版本，请通过输入以下内容打开 Python shell 并按回车键。
+<div class="highlight"><pre><span></span><code>python
+</code></pre></div></p>
+<p>然后在该 Python shell 中运行 Python 命令。
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+<span class="n">holoocean</span><span class="o">.</span><span class="n">install</span><span class="p">(</span><span class="s2">&quot;Ocean&quot;</span><span class="p">)</span>
+</code></pre></div>
+或者作为一条单独的控制台命令，
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="sb">`</span>import<span class="w"> </span>holoocean<span class="p">;</span><span class="w"> </span>holoocean.install<span class="o">(</span><span class="s2">&quot;Ocean&quot;</span><span class="o">)</span><span class="sb">`</span>
+</code></pre></div></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>Windows 系统上 <code>pywin32</code> 包存在一个偶尔发生的 bug。如果您看到“ImportError: DLL load failed while importing win32event: The specified module could not be found.”的错误信息，可以通过运行 <code>pip install pywin32==225</code> 命令来修复。</p>
+</div>
+<h2 id="beta">Beta 版安装</h2>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果您之前已安装过 holoocean，之后才切换到 develop 分支或其他分支，则需要先运行 <code>holoocean.remove("Ocean")</code> 卸载该二进制文件，然后再继续操作。否则可能会导致无法预知的行为。</p>
+</div>
+<p>要安装 develop 分支，只需运行
+<div class="highlight"><pre><span></span><code>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/byu-holoocean/HoloOcean.
+<span class="nb">cd</span><span class="w"> </span>holoocean/client
+git<span class="w"> </span>checkout<span class="w"> </span>develop
+pip<span class="w"> </span>install<span class="w"> </span>.
+</code></pre></div></p>
               
             </div>
           </div><footer>

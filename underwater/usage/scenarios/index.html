@@ -205,7 +205,7 @@
 <p><code>ticks_per_sec</code> 参数用于设置模拟每秒的节拍数。该值必须高于所用传感器的采样率（以 Hz 为单位）。默认值为 30。</p>
 <p><code>frames_per_sec</code> 参数是环境可以运行的最大帧率 (FPS)。如果设置为 <em>true</em>，则帧率将与 <code>ticks_per_sec</code> 相同。如果设置为 <em>false</em>，则帧率不受限制，环境将以尽可能快的速度运行。如果设置为一个数值，则该数值将作为帧率上限。</p>
 <p>以下是一些配置示例。如果您手动控制机器人，则可能希望它以实时速度运行，因此需要将 <code>frames_per_sec</code> 设置为 true。使用高性能 GPU 时，模拟运行速度可能远超实时速度，否则将难以控制。如果你运行的是无头/自主模式，你可能希望模拟运行得尽可能快，因此良好的帧率（<code>frames_per_sec</code>）应该是 false。</p>
-<h2 id="_5">配置八叉树</h2>
+<h2 id="_5">配置八叉树 <span id="configure_octree"></span></h2>
 <p>使用声呐传感器并初始化世界时，系统会创建一个八叉树或从缓存加载一个八叉树。可以使用 <code>env_min</code>、<code>env_max</code>、<code>octree_min</code> 和 <code>octree_max</code> 设置这些参数。八叉树缓存在 worlds 文件夹下的 <code>LinuxNoEditor/Holodeck/Octrees</code> 文件夹中。请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/installation.html#package-locations">软件包安装位置</a>。</p>
 <p><code>env​​_min</code>/<code>env_max</code> 用于设置环境的上限/下限。它们应该在<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/package-structure.html#id2">软件包结构</a>中设置，但此处设置的值会覆盖该设置。</p>
 <p><code>octree_min</code>/<code>octree_max</code> 用于设置八叉树的最小/中间尺寸。<code>octree_min</code> 可以低至 0.01（1 厘米），然后八叉树的尺寸将翻倍，直到达到 <code>octree_max</code>。</p>
