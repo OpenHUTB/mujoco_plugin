@@ -1,6 +1,6 @@
 # 场景
 
-什么是场景（Scenario）？
+## 什么是场景（Scenario）？<span id="what_is_a_scenario"></span>
 
 场景用于告知 HoloOcean 需要加载哪个世界、在世界中放置哪些代理（agent），以及这些代理需要配备哪些传感器。
 
@@ -24,7 +24,7 @@
 当您调用 `holoocean.make()` 创建环境时，您需要传入一个场景名称，例如 `holoocean.make("Pier-Hovering")`。这会告诉 HoloOcean 要加载哪个世界以及在哪里放置代理。
 
 
-## 场景文件格式
+## 场景文件格式 <span id="scenario_file_format"></span>
 
 场景 `.json` 文件以包的形式分发（参见[包内容](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/package-structure.html#package-contents)），且必须命名为 `{WorldName}-{ScenarioName}.json`。默认情况下，它们存储在 `worlds/{PackageName}` 目录下，但也支持直接从 Python 字典加载。
 
@@ -80,7 +80,7 @@
 
 `octree_min`/`octree_max` 用于设置八叉树的最小/中间尺寸。`octree_min` 可以低至 0.01（1 厘米），然后八叉树的尺寸将翻倍，直到达到 `octree_max`。
 
-## 代理对象
+### 代理对象
 
 ```json
 {
@@ -121,7 +121,7 @@
 
 控制方案以整数形式表示。有关有效值以及每种方案的工作原理说明，请参阅各代理的文档页面。
 
-## 传感器对象
+### 传感器对象
 
 ```json
 {
@@ -201,7 +201,7 @@ channel 参数指定要将传感器数据发布到哪个通道。
 }
 ```
 
-## 配置块
+### 配置块
 
 配置`configuration`块的内容与传感器密切相关。该配置块会原封不动地传递给传感器，由传感器进行解析。
 
