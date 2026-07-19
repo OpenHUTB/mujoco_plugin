@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>使用 HoloOcean - Mujoco 插件</title>
+    <title>视窗快捷键 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u4f7f\u7528 HoloOcean";
-        var mkdocs_page_input_path = "underwater/usage/usage.md";
+        var mkdocs_page_name = "\u89c6\u7a97\u5feb\u6377\u952e";
+        var mkdocs_page_input_path = "underwater/usage/hotkeys.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">使用 HoloOcean</li>
+      <li class="breadcrumb-item active">视窗快捷键</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/usage.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/hotkeys.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,14 +140,69 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">使用 HoloOcean</h1>
+                <h1 id="_1">视窗快捷键</h1>
+<p>当视口窗口打开，并且环境正在被刷新（通过调用 <code>tick()</code> 或 <code>step()</code> 函数）时，您可以使用一些快捷键。</p>
+<h2 id="_2">快捷键</h2>
+<p>AgentFollower（即视口中显示的摄像机）可以通过以下方式进行操控：</p>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>动作</th>
+<th>描述</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>c</code></td>
+<td>切换相机模式</td>
+<td>切换摄像机视角，从追逐摄像机切换到透视摄像机，透视摄像机显示代理的摄像机传感器所看到的画面。</td>
+</tr>
+<tr>
+<td><code>v</code></td>
+<td>切换观察者模式</td>
+<td>切换观察者模式，让您可以自由环顾世界各地。</td>
+</tr>
+<tr>
+<td><code>w</code> <code>a</code> <code>s</code> <code>d</code></td>
+<td>移动相机</td>
+<td>在观察者/自由视角模式下移动视窗摄像机。</td>
+</tr>
+<tr>
+<td><code>q</code> <code>ctrl</code></td>
+<td>下降</td>
+<td>观察者/自由视角模式</td>
+</tr>
+<tr>
+<td><code>e</code> <code>space</code></td>
+<td>上升</td>
+<td>观察者/自由视角模式</td>
+</tr>
+<tr>
+<td><code>shift</code></td>
+<td>Turbo</td>
+<td>在观察者/自由视角模式下移动速度更快。</td>
+</tr>
+<tr>
+<td><code>tab</code></td>
+<td>轮换代理</td>
+<td>当不在观察者/自由视角模式下时，会循环切换世界中的各个参与者。</td>
+</tr>
+<tr>
+<td><code>h</code></td>
+<td>切换 HUD</td>
+<td>HUD 会显示视口当前跟随的代理的名称和位置；如果视口已分离（旁观模式），则会显示摄像机的位置。请注意，这会干扰 ViewportCapture 传感器。</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">打开控制台</h2>
+<p>按下 <code>~</code> 键将打开虚幻引擎 4 的开发者控制台，其中包含一些实用命令。有关完整的命令列表，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/WorkingWithMedia/Ansel/Reference/ConsoleVariables/index.html">虚幻引擎文档</a>。</p>
+<h3 id="_4">实用命令</h3>
 <ul>
-<li><strong><a href="../scenarios/">场景</a></strong><ul>
-<li><strong><a href="../scenarios/#what_is_a_scenario">什么是场景</a></strong></li>
-<li><strong><a href="../scenarios/#scenario_file_format">场景文件格式</a></strong></li>
-</ul>
+<li>
+<p><code>stat fps</code></p>
+<p>在屏幕上打印每秒帧数。</p>
 </li>
-<li><strong><a href="../hotkeys/">视窗快捷键</a></strong></li>
 </ul>
               
             </div>
