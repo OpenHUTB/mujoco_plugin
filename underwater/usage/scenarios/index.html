@@ -171,6 +171,169 @@
 <p>当您调用 <code>holoocean.make()</code> 创建环境时，您需要传入一个场景名称，例如 <code>holoocean.make("Pier-Hovering")</code>。这会告诉 HoloOcean 要加载哪个世界以及在哪里放置代理。</p>
 <h2 id="_2">场景文件格式</h2>
 <p>场景 <code>.json</code> 文件以包的形式分发（参见<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/package-structure.html#package-contents">包内容</a>），且必须命名为 <code>{WorldName}-{ScenarioName}.json</code>。默认情况下，它们存储在 <code>worlds/{PackageName}</code> 目录下，但也支持直接从 Python 字典加载。</p>
+<h3 id="_3">场景文件</h3>
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Scenario Name}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;world&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{world it is associated with}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;lcm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Optional, where to publish lcm to}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;ticks_per_sec&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;frames_per_sec&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;env_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="mi">-10</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;env_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;octree_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.1</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;octree_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;agents&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="s2">&quot;array of agent objects&quot;</span>
+<span class="w">   </span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;weather&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;hour&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&#39;sunny&#39; or &#39;cloudy&#39; or &#39;rain&#39;&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;fog_density&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;day_cycle_length&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">86400</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="nt">&quot;window_width&quot;</span><span class="p">:</span><span class="w">  </span><span class="mi">1280</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;window_height&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">720</span>
+<span class="p">}</span>
+</code></pre></div>
+<code>window_width/height</code> 控制创建环境时打开的窗口的大小。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>agents 数组中的第一个代理是“主代理”。</p>
+</div>
+<h2 id="_4">帧率</h2>
+<p>您可以配置两个参数来控制帧率的变化：每秒节拍数<code>ticks_per_sec</code> 和 每秒帧数<code>frames_per_sec</code>。</p>
+<p><code>ticks_per_sec</code> 参数用于设置模拟每秒的节拍数。该值必须高于所用传感器的采样率（以 Hz 为单位）。默认值为 30。</p>
+<p><code>frames_per_sec</code> 参数是环境可以运行的最大帧率 (FPS)。如果设置为 <em>true</em>，则帧率将与 <code>ticks_per_sec</code> 相同。如果设置为 <em>false</em>，则帧率不受限制，环境将以尽可能快的速度运行。如果设置为一个数值，则该数值将作为帧率上限。</p>
+<p>以下是一些配置示例。如果您手动控制机器人，则可能希望它以实时速度运行，因此需要将 <code>frames_per_sec</code> 设置为 true。使用高性能 GPU 时，模拟运行速度可能远超实时速度，否则将难以控制。如果你运行的是无头/自主模式，你可能希望模拟运行得尽可能快，因此良好的帧率（<code>frames_per_sec</code>）应该是 false。</p>
+<h2 id="_5">配置八叉树</h2>
+<p>使用声呐传感器并初始化世界时，系统会创建一个八叉树或从缓存加载一个八叉树。可以使用 <code>env_min</code>、<code>env_max</code>、<code>octree_min</code> 和 <code>octree_max</code> 设置这些参数。八叉树缓存在 worlds 文件夹下的 <code>LinuxNoEditor/Holodeck/Octrees</code> 文件夹中。请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/installation.html#package-locations">软件包安装位置</a>。</p>
+<p><code>env​​_min</code>/<code>env_max</code> 用于设置环境的上限/下限。它们应该在<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/package-structure.html#id2">软件包结构</a>中设置，但此处设置的值会覆盖该设置。</p>
+<p><code>octree_min</code>/<code>octree_max</code> 用于设置八叉树的最小/中间尺寸。<code>octree_min</code> 可以低至 0.01（1 厘米），然后八叉树的尺寸将翻倍，直到达到 <code>octree_max</code>。</p>
+<h2 id="_6">代理对象</h2>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;agent_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uav0&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;agent_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{agent types}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;sensors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="s2">&quot;array of sensor objects&quot;</span>
+<span class="w">   </span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;control_scheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{control scheme type}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;location_randomization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;rotation_randomization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>HoloOcean 坐标系采用右手坐标，单位为米。请参阅坐标系。</p>
+</div>
+<h3 id="_7">位置随机化</h3>
+<p><code>location_randomization</code> 和 <code>rotation_randomization</code> 为可选参数。如果提供，智能体的起始位置和/或旋转角度将根据所提供的随机化值（取自均匀分布的正负值）随机变化。</p>
+<p>位置值以米为单位，格式为 <code>[dx, dy, dz]</code>；旋转角度为 <code>[roll, pitch, yaw]</code>，绕 XYZ 固定轴旋转，即 <script type="math/tex">R_z</script>
+<script type="math/tex">R_y</script>
+<script type="math/tex">R_x</script>。</p>
+<h3 id="_8">代理类型</h3>
+<p>以下是有效的代理类型<code>agent_type</code> s：</p>
+<table>
+<thead>
+<tr>
+<th>代理类型</th>
+<th>agent_type 中的字符串</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HoveringAUV</a></td>
+<td><code>HoveringAUV</code></td>
+</tr>
+<tr>
+<td><a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/torpedo-auv-agent.html#torpedo-auv-agent">TorpedoAUV</a></td>
+<td><code>TorpedoAUV</code></td>
+</tr>
+<tr>
+<td><a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/turtle-agent.html#turtle-agent">TurtleAgent</a></td>
+<td><code>TurtleAgent</code></td>
+</tr>
+<tr>
+<td><a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/uav-agent.html#uav-agent">UavAgent</a></td>
+<td><code>UAV</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="_9">控制方案</h3>
+<p>控制方案以整数形式表示。有关有效值以及每种方案的工作原理说明，请参阅各代理的文档页面。</p>
+<h2 id="_10">传感器对象</h2>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;sensor_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FrontCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;socket name or \&quot;\&quot;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;Hz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;lcm_channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;channel_name&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>传感器有几种安装方式。</p>
+<p><strong>1.提供套接字名称</strong></p>
+<p>这将把传感器安装到指定的套接字中。
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CameraSocket&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>2.提供套接字、位置和/或旋转参数</strong></p>
+<p>传感器将根据指定的位置和旋转参数相对于插座进行偏移放置。旋转参数为<code>[roll, pitch, yaw]</code>（以度为单位），绕XYZ固定轴旋转，即 <script type="math/tex">R_z</script>
+<script type="math/tex">R_y</script>
+<script type="math/tex">R_x</script>。</p>
+<p><strong>3.只需提供位置和/或旋转角度即可</strong></p>
+<p>传感器将放置在给定的坐标处，相对于代理的根节点进行偏移。
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>4.提供传感器采样率</strong></p>
+<p>传感器将以该采样率进行采样。请注意，该值必须小于 <code>ticks_per_sec</code>，并且最好是 <code>ticks_per_sec</code> 的倍数。有关 <code>ticks_per_sec</code> 的更多信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#configure-framerate">帧率</a>部分。
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;Hz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p><strong>5.发布消息</strong></p>
+<p>目前，HoloOcean 支持向 LLM 发布消息（新版本已支持 ROS 包）。要向 LCM 发布传感器数据，请指定要发布的类型。
+<div class="highlight"><pre><span></span><code><span class="o">{</span>
+<span class="w">   </span><span class="s2">&quot;sensor_type&quot;</span>:<span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span>,
+<span class="w">   </span><span class="s2">&quot;lcm_channel&quot;</span>:<span class="w"> </span><span class="s2">&quot;CAMERA&quot;</span>
+<span class="o">}</span>
+</code></pre></div></p>
+<p>channel 参数指定要将传感器数据发布到哪个通道。</p>
+<p>传感器对象中唯一必需的键是<code>"sensor_type"</code>，其余键将使用默认值，如下所示。
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;sensor_type&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">],</span>
+<span class="w">   </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;publish&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;lcm_channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{}</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h2 id="_11">配置块</h2>
+<p>配置<code>configuration</code>块的内容与传感器密切相关。该配置块会原封不动地传递给传感器，由传感器进行解析。</p>
+<p>例如，<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.RGBCamera">RGBCamera</a> 的文档字符串指出它接受 <code>CaptureWidth</code> 和 <code>CaptureHeight</code> 参数，因此一个示例传感器配置如下：</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RBGCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CameraSocket&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;CaptureHeight&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1920</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;CaptureWidth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1080</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
               
             </div>
           </div><footer>
