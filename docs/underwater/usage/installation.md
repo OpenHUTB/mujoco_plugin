@@ -5,7 +5,7 @@ HoloOcean 的安装分为两部分：首先安装 Python 客户端库（`holooce
 
 ## 要求
 
-* \(\geq\) Python 3.7
+* \(\geq\) Python 3.7 （Python 3.7 成功，Python 3.10 报错）
 
 * 数 GB 存储空间
 
@@ -51,6 +51,9 @@ git clone git@github.com:byu-holoocean/HoloOcean.git holoocean
 cd holoocean/client
 pip install .
 ```
+
+!!! 注意
+    如果安装时出现报错信息：WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', OSError(0, 'Error'))': /simple/setuptools/，则关闭本地代理在进行安装
 
 接下来，若要安装 oceans 软件包的最新版本，请通过输入以下内容打开 Python shell 并按回车键。
 ```shell

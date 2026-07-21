@@ -1,19 +1,3 @@
-# 手动控制
-
-我们发现pynput是一个很好的库，用于向代理发送键盘命令以进行手动控制。
-
-这是一个使用以下键盘快捷键控制 [HovingAUV](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent) 的示例。
-
-![](../../img/underwater/controller.jpg)
-
-| 键 | 前进键 | 后退键 |
-|-------|---------------|-----------|
-| 上/下 | `i` | `k` |
-| 左/右偏航 | `j` | `l` |
-| 前进/后退 | `w` | `s` |
-| 左/右扫 | `w` | `s` |
-
-```python
 import holoocean
 import numpy as np
 from pynput import keyboard
@@ -72,5 +56,3 @@ with holoocean.make("Dam-Hovering") as env:
         # 发送到 holoocean
         env.act("auv0", command)
         state = env.tick()
-```
-

@@ -16,6 +16,7 @@ command = np.array([10,10,10,10,0,0,0,0])
 for _ in range(180):
    state = env.step(command)
 ```
+![](../img/underwater/getting_started.gif)
 
 请注意：
 
@@ -33,7 +34,8 @@ dvl = state["DVLSensor"]
 
 **就是这样！**HoloOcean的使用相当简单。
 
-查看可用的不同[世界](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/packages.html#all-packages)，阅读[API文档](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/index.html#holoocean-api-index)，或者开始制作自己的自定义[场景](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#scenarios)。
+查看可用的不同[世界](./packages/packages.md#all_packages)，阅读[API文档](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/index.html#holoocean-api-index)，或者开始制作自己的自定义[场景](./usage/scenarios.md#scenarios)。
+
 
 下面是一些片段，展示了如何使用HoloOcean的不同方面。
 

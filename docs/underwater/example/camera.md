@@ -21,6 +21,8 @@ for _ in range(200):
         cv2.destroyAllWindows()
 ```
 
+![](../../img/underwater/camera.jpg)
+
 
 ## 参考
 

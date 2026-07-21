@@ -2,13 +2,15 @@
 
 HoloOcean 的世界支持通过更换场景来进行配置（详见“场景”一节）。HoloOcean 软件包中包含了一些以 `.json` 文件形式提供的预置场景，同时也支持用户创建并使用自定义场景。
 
-用户既可以通过 Python 脚本中的字典（dictionary）来定义场景，也可以直接创建 `.json` 文件。这两种方法均遵循相同的格式规范，具体请参阅[场景文件格式](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#scenario-files)一节。
+用户既可以通过 Python 脚本中的字典（dictionary）来定义场景，也可以直接创建 `.json` 文件。这两种方法均遵循相同的格式规范，具体请参阅[场景文件格式](../usage/scenarios.md#scenario_file_format)一节。
 
 ## 使用字典进行场景配置
 
-在 Python 中创建一个符合[场景文件格式](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#scenario-files)规范的字典，并将其传递给 holoocean.make() 函数。
+在 Python 中创建一个符合[场景文件格式](../usage/scenarios.md#scenario_file_format)规范的字典，并将其传递给 holoocean.make() 函数。
 
 ### 示例
+
+![](../../img/underwater/custom_scenarios.jpg)
 
 ```python
 import holoocean

@@ -2,6 +2,8 @@
 
 在仿真过程中，将声纳传感器的输出数据可视化往往很有帮助。本脚本即可实现这一功能，在每次接收到声纳数据时进行绘图。
 
+![](../../img/underwater/sonar_profiling.jpg)
+
 请注意，运行此脚本期间会生成八叉树（octree），这可能会导致程序出现短暂的停顿。有关应对方法及更多信息，请参阅[八叉树生成](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/octree.html#octree)相关内容。
 
 ```python
