@@ -146,7 +146,7 @@
 <ul>
 <li>
 <p>
-<script type="math/tex">\geq</script> Python 3.7</p>
+<script type="math/tex">\geq</script> Python 3.7 （Python 3.7 成功，Python 3.10 报错）</p>
 </li>
 <li>
 <p>数 GB 存储空间</p>
@@ -191,6 +191,10 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>holoocean/client
 pip<span class="w"> </span>install<span class="w"> </span>.
 </code></pre></div></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果安装时出现报错信息：WARNING: Retrying (Retry(total=4, connect=None, read=None, redirect=None, status=None)) after connection broken by 'ProxyError('Cannot connect to proxy.', OSError(0, 'Error'))': /simple/setuptools/，则关闭本地代理在进行安装</p>
+</div>
 <p>接下来，若要安装 oceans 软件包的最新版本，请通过输入以下内容打开 Python shell 并按回车键。
 <div class="highlight"><pre><span></span><code>python
 </code></pre></div></p>

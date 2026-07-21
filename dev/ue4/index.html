@@ -156,6 +156,320 @@
 <h2 id="_1">问题</h2>
 <ul>
 <li>
+<p>导入鱼形机器人只有相应的方块，没有纹理</p>
+<div class="highlight"><pre><span></span><code>onecore\windows\directx\database\helperlibrary\lib\directxdatabasehelper.cpp(1020)\directxdatabasehelper.dll!00007FFD0E042CC3: (caller: 00007FFD0E0422CD) ReturnHr(19) tid(741c) 80004002 不支持此接口
+[2026.07.15-02.11.40:551][567]LogSlate: Took 0.000192 seconds to synchronously load lazily loaded font &#39;../../../Engine/Content/Slate/Fonts/Roboto-Light.ttf&#39; (167K)
+[2026.07.15-02.11.40:592][567]LogFactory: FactoryCreateFile: Blueprint with MujocoImportFactory (0 0 D:\work\workspace\fishsim\Geometry\exampleFish.xml)
+[2026.07.15-02.11.40:738][567]LogURLabEditor: [Python] Validated: D:/hutb/Build/engine/Engine/Binaries/ThirdParty/Python3/Win64/python.exe -&gt; Python 3.7.7
+[2026.07.15-02.11.44:470][567]LogURLabEditor: [Python] Stored Python path &#39;D:/hutb/Build/engine/Engine/Binaries/ThirdParty/Python3/Win64/python.exe&#39; to config: D:/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Config/LocalUnrealRoboticsLab.ini
+[2026.07.15-02.11.44:470][567]LogURLabEditor: [Python] Ready: D:/hutb/Build/engine/Engine/Binaries/ThirdParty/Python3/Win64/python.exe
+[2026.07.15-02.11.44:470][567]LogURLabEditor: Running mesh preparation: D:/hutb/Build/engine/Engine/Binaries/ThirdParty/Python3/Win64/python.exe &quot;../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Scripts/clean_meshes.py&quot; &quot;D:\work\workspace\fishsim\Geometry\exampleFish.xml&quot;
+[2026.07.15-02.11.44:847][567]LogURLabEditor: Using prepared XML: D:\work\workspace\fishsim\Geometry/exampleFish_ue.xml
+线程 19496 已退出，返回值为 0 (0x0)。
+线程 31084 已退出，返回值为 0 (0x0)。
+线程 19312 已退出，返回值为 0 (0x0)。
+线程 36548 已退出，返回值为 0 (0x0)。
+[2026.07.15-02.11.44:908][567]LogURLabEditor: Found Texture: texplane -&gt; D:\work\workspace\fishsim\Geometry/texplane
+[2026.07.15-02.11.44:908][567]LogURLabEditor: Found Material: matplane (RGBA: (R=1.000000,G=1.000000,B=1.000000,A=1.000000), Texture: texplane)
+[2026.07.15-02.11.44:908][567]LogURLabEditor: [Mesh Map] Adding mesh: name=&#39;finTop&#39; -&gt; file=&#39;D:\work\workspace\fishsim\Geometry/Meshes/finTop.obj&#39;
+[2026.07.15-02.11.44:909][567]LogURLabEditor: Pure XML Found Mesh: finTop -&gt; D:\work\workspace\fishsim\Geometry/Meshes/finTop.obj (Scale: X=1.000 Y=1.000 Z=1.000)
+[2026.07.15-02.11.44:909][567]LogURLabEditor: [Mesh Map] Adding mesh: name=&#39;finTail&#39; -&gt; file=&#39;D:\work\workspace\fishsim\Geometry/Meshes/finTail.obj&#39;
+[2026.07.15-02.11.44:909][567]LogURLabEditor: Pure XML Found Mesh: finTail -&gt; D:\work\workspace\fishsim\Geometry/Meshes/finTail.obj (Scale: X=1.000 Y=1.000 Z=1.000)
+[2026.07.15-02.11.44:909][567]LogURLabEditor: Found Material: acrylic (RGBA: (R=0.900000,G=0.900000,B=0.900000,A=0.200000), Texture: )
+[2026.07.15-02.11.44:909][567]LogURLabEditor: Found Material: alu (RGBA: (R=0.700000,G=0.700000,B=0.700000,A=1.000000), Texture: )
+[2026.07.15-02.11.44:909][567]LogURLabEditor: Found Material: marker (RGBA: (R=0.900000,G=0.400000,B=0.100000,A=0.500000), Texture: )
+[2026.07.15-02.11.44:909][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.44:909][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.44:910][567]LogUObjectGlobals: Warning: 寻找对象“Texture2D 无./Game/MuJoCoImports/exampleFish_ue_Assets/texplane”失败
+[2026.07.15-02.11.44:910][567]LogURLabEditor: Importing texture from: D:\work\workspace\fishsim\Geometry/texplane to /Game/MuJoCoImports/exampleFish_ue_Assets
+[2026.07.15-02.11.44:910][567]LogStreaming: Warning: Failed to read file &#39;D:\work\workspace\fishsim\Geometry/texplane&#39; error.
+[2026.07.15-02.11.44:910][567]LogURLabEditor: Error: Failed to load texture file: D:\work\workspace\fishsim\Geometry/texplane
+[2026.07.15-02.11.44:910][567]LogURLabEditor: Warning: Failed to import texture: texplane from D:\work\workspace\fishsim\Geometry/texplane
+[2026.07.15-02.11.44:910][567]LogURLabEditor: Creating organizational hierarchy...
+[2026.07.15-02.11.45:003][567]LogURLabEditor: Creating Default Component: main (Parent: )
+[2026.07.15-02.11.45:004][567]LogURLabImport: [MjJoint XML Import] &#39;DefaultJoint_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: True), Stiffness: Set (0.650000)
+[2026.07.15-02.11.45:004][567]LogURLabEditor:   - Found Default Joint: DefaultJoint (Type Overridden: True)
+[2026.07.15-02.11.45:005][567]LogURLabImport: [MjGeom XML Import] &#39;DefaultGeom_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjGeom XML Import] &#39;floor_GEN_VARIABLE&#39; -&gt; Material: &#39;matplane&#39;
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjGeom XML Import] &#39;floor_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjJoint XML Import] &#39;headX_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Slide (Overridden: True), Stiffness: Set (0.000000)
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjJoint XML Import] &#39;headY_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Slide (Overridden: True), Stiffness: Set (0.000000)
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjJoint XML Import] &#39;headZ_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Slide (Overridden: True), Stiffness: Set (500.000000)
+[2026.07.15-02.11.45:006][567]LogURLabImport: [MjJoint XML Import] &#39;headRollX_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: True), Stiffness: Set (10.000000)
+[2026.07.15-02.11.45:007][567]LogURLabImport: [MjJoint XML Import] &#39;headRollY_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: True), Stiffness: Set (10.000000)
+[2026.07.15-02.11.45:007][567]LogURLabImport: [MjJoint XML Import] &#39;headRollZ_0_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: True), Stiffness: Set (0.000000)
+[2026.07.15-02.11.45:007][567]LogURLabImport: [MjGeom XML Import] &#39;headPlate_0_GEN_VARIABLE&#39; -&gt; Material: &#39;acrylic&#39;
+[2026.07.15-02.11.45:007][567]LogURLabImport: [MjGeom XML Import] &#39;headPlate_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:007][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;headPlate_0&#39;
+[2026.07.15-02.11.45:007][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:008][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:008][567]LogUObjectGlobals: Warning: 寻找对象“Material /UnrealRoboticsLab/Materials/M_MuJoCo_Master.M_MuJoCo_Master”失败
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:008][567]LogURLabImport: [MjGeom XML Import] &#39;headTopPlate_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;headTopPlate_0&#39;
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:008][567]LogURLabImport: [MjGeom XML Import] &#39;headTopElectric_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;headTopElectric_0&#39;
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:008][567]LogURLabImport: [MjGeom XML Import] &#39;headAttachment_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:008][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;headAttachment_0&#39;
+[2026.07.15-02.11.45:009][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:009][567]LogURLabImport: [MjGeom XML Import] &#39;body_0_GEN_VARIABLE&#39; -&gt; Material: &#39;alu&#39;
+[2026.07.15-02.11.45:009][567]LogURLabImport: [MjGeom XML Import] &#39;body_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:009][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;body_0&#39;
+[2026.07.15-02.11.45:009][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:009][567]LogURLabImport: [MjGeom XML Import] &#39;body-joint0_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:009][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;body-joint0_0&#39;
+[2026.07.15-02.11.45:009][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:009][567]LogURLabImport: [MjGeom XML Import] &#39;finTop_0_GEN_VARIABLE&#39; -&gt; Material: &#39;acrylic&#39;
+[2026.07.15-02.11.45:009][567]LogURLabImport: [MjGeom XML Import] &#39;finTop_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:009][567]LogURLabEditor: [Mesh Import] Geom &#39;finTop_0&#39;: mesh=&#39;finTop&#39;, class=&#39;&#39;, group=0
+[2026.07.15-02.11.45:010][567]LogURLabEditor: [Mesh Import]   -&gt; Resolved mesh &#39;finTop&#39; to file: D:\work\workspace\fishsim\Geometry/Meshes/finTop.obj
+[2026.07.15-02.11.45:010][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:010][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:010][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop”失败
+[2026.07.15-02.11.45:010][567]LogURLabEditor: Importing mesh from: D:\work\workspace\fishsim\Geometry/Meshes/finTop.obj to /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes
+[2026.07.15-02.11.45:010][567]LogURLabEditor: Found higher priority mesh file: D:\work\workspace\fishsim\Geometry/Meshes/finTop.glb
+[2026.07.15-02.11.45:010][567]LogURLabEditor: Using automated factory detection for mesh: D:\work\workspace\fishsim\Geometry/Meshes/finTop.glb
+[2026.07.15-02.11.45:012][567]LogFactory: FactoryCreateFile: StaticMesh with glTFBinaryFactory (0 0 D:/work/workspace/fishsim/Geometry/Meshes/finTop.glb)
+[2026.07.15-02.11.45:012][567]LogAssetTools: Warning: 未能导入 &#39;D:/work/workspace/fishsim/Geometry/Meshes/finTop.glb’。未能创建资产 &#39;/Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop’。
+请查看输出日志中的详情。
+[2026.07.15-02.11.45:014][567]LogFileHelpers: 没有需要保存的新变更！
+[2026.07.15-02.11.45:014][567]LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+[2026.07.15-02.11.45:014][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:015][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:015][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop.finTop”失败
+[2026.07.15-02.11.45:015][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop.finTop
+[2026.07.15-02.11.45:015][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop”失败
+[2026.07.15-02.11.45:015][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop
+[2026.07.15-02.11.45:015][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:015][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop.finTop”失败
+[2026.07.15-02.11.45:015][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop.finTop
+[2026.07.15-02.11.45:015][567]LogURLabEditor: [ImportSingleMesh] Searching asset registry under: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop
+[2026.07.15-02.11.45:032][567]LogURLabEditor: Warning: Failed to import mesh &#39;finTop&#39; with MikkTSpace, attempting fallback
+[2026.07.15-02.11.45:032][567]LogURLabEditor: Using automated factory detection for mesh: D:\work\workspace\fishsim\Geometry/Meshes/finTop.glb
+[2026.07.15-02.11.45:033][567]LogFactory: FactoryCreateFile: StaticMesh with glTFBinaryFactory (0 0 D:/work/workspace/fishsim/Geometry/Meshes/finTop.glb)
+[2026.07.15-02.11.45:034][567]LogAssetTools: Warning: 未能导入 &#39;D:/work/workspace/fishsim/Geometry/Meshes/finTop.glb’。未能创建资产 &#39;/Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop’。
+请查看输出日志中的详情。
+[2026.07.15-02.11.45:034][567]LogFileHelpers: 没有需要保存的新变更！
+[2026.07.15-02.11.45:034][567]LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+[2026.07.15-02.11.45:034][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop.finTop
+[2026.07.15-02.11.45:034][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop”失败
+[2026.07.15-02.11.45:034][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop/StaticMeshes/finTop
+[2026.07.15-02.11.45:034][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop.finTop
+[2026.07.15-02.11.45:034][567]LogURLabEditor: [ImportSingleMesh] Searching asset registry under: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTop
+[2026.07.15-02.11.45:046][567]LogURLabEditor: Error: Failed to import mesh &#39;finTop&#39; - all import methods failed
+[2026.07.15-02.11.45:046][567]LogURLabImport: [MjJoint XML Import] &#39;motor_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: True), Stiffness: Set (0.000000)
+[2026.07.15-02.11.45:047][567]LogURLabImport: [MjGeom XML Import] &#39;motorShaft_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:047][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;motorShaft_0&#39;
+[2026.07.15-02.11.45:047][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:047][567]LogURLabImport: [MjGeom XML Import] &#39;motorArmLeft_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:047][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;motorArmLeft_0&#39;
+[2026.07.15-02.11.45:048][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:048][567]LogURLabImport: [MjGeom XML Import] &#39;motorArmRight_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:048][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;motorArmRight_0&#39;
+[2026.07.15-02.11.45:048][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:048][567]LogURLabImport: [MjGeom XML Import] &#39;joint0_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:048][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint0_0&#39;
+[2026.07.15-02.11.45:048][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:048][567]LogURLabImport: [MjJoint XML Import] &#39;joint0_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: False), Stiffness: Inherited (0.000000)
+[2026.07.15-02.11.45:049][567]LogURLabImport: [MjGeom XML Import] &#39;joint0-tail0_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint0-tail0_0&#39;
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:049][567]LogURLabImport: [MjGeom XML Import] &#39;tail0_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail0_0&#39;
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:049][567]LogURLabImport: [MjGeom XML Import] &#39;tail0left_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail0left_0&#39;
+[2026.07.15-02.11.45:049][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:050][567]LogURLabImport: [MjGeom XML Import] &#39;tail0right_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:050][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail0right_0&#39;
+[2026.07.15-02.11.45:050][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:050][567]LogURLabImport: [MjGeom XML Import] &#39;tail0-joint1_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:050][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail0-joint1_0&#39;
+[2026.07.15-02.11.45:050][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:050][567]LogURLabImport: [MjGeom XML Import] &#39;joint1_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:050][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint1_0&#39;
+[2026.07.15-02.11.45:051][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:051][567]LogURLabImport: [MjJoint XML Import] &#39;joint1_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: False), Stiffness: Inherited (0.000000)
+[2026.07.15-02.11.45:051][567]LogURLabImport: [MjGeom XML Import] &#39;joint1-tail1_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:051][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint1-tail1_0&#39;
+[2026.07.15-02.11.45:051][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:051][567]LogURLabImport: [MjGeom XML Import] &#39;tail1_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:051][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail1_0&#39;
+[2026.07.15-02.11.45:051][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:051][567]LogURLabImport: [MjGeom XML Import] &#39;tail1left_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail1left_0&#39;
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:052][567]LogURLabImport: [MjGeom XML Import] &#39;tail1right_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail1right_0&#39;
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:052][567]LogURLabImport: [MjGeom XML Import] &#39;tail1-joint2_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail1-joint2_0&#39;
+[2026.07.15-02.11.45:052][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:053][567]LogURLabImport: [MjGeom XML Import] &#39;joint2_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint2_0&#39;
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:053][567]LogURLabImport: [MjJoint XML Import] &#39;joint2_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: False), Stiffness: Inherited (0.000000)
+[2026.07.15-02.11.45:053][567]LogURLabImport: [MjGeom XML Import] &#39;joint2-tail2_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint2-tail2_0&#39;
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:053][567]LogURLabImport: [MjGeom XML Import] &#39;tail2_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail2_0&#39;
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:053][567]LogURLabImport: [MjGeom XML Import] &#39;tail2left_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:053][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail2left_0&#39;
+[2026.07.15-02.11.45:054][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:054][567]LogURLabImport: [MjGeom XML Import] &#39;tail2right_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:054][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail2right_0&#39;
+[2026.07.15-02.11.45:054][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:054][567]LogURLabImport: [MjGeom XML Import] &#39;tail2-joint3_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:054][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail2-joint3_0&#39;
+[2026.07.15-02.11.45:054][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:055][567]LogURLabImport: [MjGeom XML Import] &#39;joint3_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint3_0&#39;
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:055][567]LogURLabImport: [MjJoint XML Import] &#39;joint3_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: False), Stiffness: Inherited (0.000000)
+[2026.07.15-02.11.45:055][567]LogURLabImport: [MjGeom XML Import] &#39;joint3-tail3_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint3-tail3_0&#39;
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:055][567]LogURLabImport: [MjGeom XML Import] &#39;tail3_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail3_0&#39;
+[2026.07.15-02.11.45:055][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:057][567]LogURLabImport: [MjGeom XML Import] &#39;tail3left_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:057][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail3left_0&#39;
+[2026.07.15-02.11.45:057][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:057][567]LogURLabImport: [MjGeom XML Import] &#39;tail3right_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:057][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail3right_0&#39;
+[2026.07.15-02.11.45:057][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:057][567]LogURLabImport: [MjGeom XML Import] &#39;tail3-joint4_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:057][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail3-joint4_0&#39;
+[2026.07.15-02.11.45:058][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:058][567]LogURLabImport: [MjGeom XML Import] &#39;joint4_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:058][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint4_0&#39;
+[2026.07.15-02.11.45:058][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:058][567]LogURLabImport: [MjJoint XML Import] &#39;joint4_1_GEN_VARIABLE&#39; (MjName: &#39;&#39;) -&gt; Type: Hinge (Overridden: False), Stiffness: Inherited (0.000000)
+[2026.07.15-02.11.45:058][567]LogURLabImport: [MjGeom XML Import] &#39;joint4-tail4_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:058][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;joint4-tail4_0&#39;
+[2026.07.15-02.11.45:058][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:058][567]LogURLabImport: [MjGeom XML Import] &#39;tail4_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail4_0&#39;
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:059][567]LogURLabImport: [MjGeom XML Import] &#39;tail4left_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail4left_0&#39;
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:059][567]LogURLabImport: [MjGeom XML Import] &#39;tail4right_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail4right_0&#39;
+[2026.07.15-02.11.45:059][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:059][567]LogURLabImport: [MjGeom XML Import] &#39;tail4-finTail_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:060][567]LogURLabEditor: Applying visual properties to built-in visualizer for &#39;tail4-finTail_0&#39;
+[2026.07.15-02.11.45:060][567]LogURLabEditor: Error: Failed to load master material: /UnrealRoboticsLab/Materials/M_MuJoCo_Master
+[2026.07.15-02.11.45:060][567]LogURLabImport: [MjGeom XML Import] &#39;finTail_0_GEN_VARIABLE&#39; -&gt; Contype: Inherited (1), Conaffinity: Inherited (1)
+[2026.07.15-02.11.45:060][567]LogURLabEditor: [Mesh Import] Geom &#39;finTail_0&#39;: mesh=&#39;finTail&#39;, class=&#39;&#39;, group=0
+[2026.07.15-02.11.45:060][567]LogURLabEditor: [Mesh Import]   -&gt; Resolved mesh &#39;finTail&#39; to file: D:\work\workspace\fishsim\Geometry/Meshes/finTail.obj
+[2026.07.15-02.11.45:060][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:060][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:060][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail”失败
+[2026.07.15-02.11.45:060][567]LogURLabEditor: Importing mesh from: D:\work\workspace\fishsim\Geometry/Meshes/finTail.obj to /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes
+[2026.07.15-02.11.45:060][567]LogURLabEditor: Found higher priority mesh file: D:\work\workspace\fishsim\Geometry/Meshes/finTail.glb
+[2026.07.15-02.11.45:060][567]LogURLabEditor: Using automated factory detection for mesh: D:\work\workspace\fishsim\Geometry/Meshes/finTail.glb
+[2026.07.15-02.11.45:090][567]LogFactory: FactoryCreateFile: StaticMesh with glTFBinaryFactory (0 0 D:/work/workspace/fishsim/Geometry/Meshes/finTail.glb)
+[2026.07.15-02.11.45:090][567]LogAssetTools: Warning: 未能导入 &#39;D:/work/workspace/fishsim/Geometry/Meshes/finTail.glb’。未能创建资产 &#39;/Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail’。
+请查看输出日志中的详情。
+[2026.07.15-02.11.45:090][567]LogFileHelpers: 没有需要保存的新变更！
+[2026.07.15-02.11.45:090][567]LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+[2026.07.15-02.11.45:091][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:091][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:091][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail.finTail”失败
+[2026.07.15-02.11.45:091][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail.finTail
+[2026.07.15-02.11.45:091][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail”失败
+[2026.07.15-02.11.45:091][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail
+[2026.07.15-02.11.45:091][567]LogLinker: Warning: 未能加载“{FileName}”：无法找到文件。
+[2026.07.15-02.11.45:091][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail.finTail”失败
+[2026.07.15-02.11.45:091][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail.finTail
+[2026.07.15-02.11.45:092][567]LogURLabEditor: [ImportSingleMesh] Searching asset registry under: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail
+[2026.07.15-02.11.45:109][567]LogURLabEditor: Warning: Failed to import mesh &#39;finTail&#39; with MikkTSpace, attempting fallback
+[2026.07.15-02.11.45:109][567]LogURLabEditor: Using automated factory detection for mesh: D:\work\workspace\fishsim\Geometry/Meshes/finTail.glb
+[2026.07.15-02.11.45:110][567]LogFactory: FactoryCreateFile: StaticMesh with glTFBinaryFactory (0 0 D:/work/workspace/fishsim/Geometry/Meshes/finTail.glb)
+[2026.07.15-02.11.45:110][567]LogAssetTools: Warning: 未能导入 &#39;D:/work/workspace/fishsim/Geometry/Meshes/finTail.glb’。未能创建资产 &#39;/Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail’。
+请查看输出日志中的详情。
+[2026.07.15-02.11.45:110][567]LogFileHelpers: 没有需要保存的新变更！
+[2026.07.15-02.11.45:110][567]LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+[2026.07.15-02.11.45:110][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail.finTail
+[2026.07.15-02.11.45:110][567]LogUObjectGlobals: Warning: 寻找对象“StaticMesh 无./Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail”失败
+[2026.07.15-02.11.45:110][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail/StaticMeshes/finTail
+[2026.07.15-02.11.45:111][567]LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail.finTail
+[2026.07.15-02.11.45:111][567]LogURLabEditor: [ImportSingleMesh] Searching asset registry under: /Game/MuJoCoImports/exampleFish_ue_Assets/Meshes/finTail
+[2026.07.15-02.11.45:120][567]LogURLabEditor: Error: Failed to import mesh &#39;finTail&#39; - all import methods failed
+[2026.07.15-02.11.45:121][567]LogURLabImport: [MjTendon XML Import] &#39;tendonLeft_0_GEN_VARIABLE&#39; -&gt; 6 wrap entries
+[2026.07.15-02.11.45:121][567]LogURLabImport: [MjTendon XML Import] &#39;tendonRight_0_GEN_VARIABLE&#39; -&gt; 6 wrap entries
+[2026.07.15-02.11.45:121][567]LogURLabEditor: Parsed &lt;option&gt;: timestep=0.0010, gravity=X=0.000 Y=0.000 Z=0.000
+[2026.07.15-02.11.45:151][567]LogUObjectHash: Compacting FUObjectHashTables data took   2.19ms
+[2026.07.15-02.11.45:184][567]LogUObjectHash: Compacting FUObjectHashTables data took   2.82ms
+0x00007FFD14C91B6A 处(位于 UE4Editor.exe 中)引发的异常: Microsoft C++ 异常: MONZA::IgcThreadingContext&lt;MONZA::AdapterTraits_Gen12LP&gt;::msg_end，位于内存位置 0x000000EC1B4FFE60 处。
+线程 &#39;0x16c00004&#39; (32300) 已退出，返回值为 0 (0x0)。
+线程 22224 已退出，返回值为 0 (0x0)。
+</code></pre></div>
+<p>发现 .glb 生成的大小为 0。</p>
+<p>LogURLabEditor: <a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp#L459">Error: Failed to load master material:</a> /UnrealRoboticsLab/Materials/M_MuJoCo_Master</p>
+<p>其中的 M_MuJoCo_Master 是 MuJoCo 相关资产的通用母材质模板。</p>
+<ol>
+<li>集中定义外观参数：基础色、金属度、粗糙度、法线等。</li>
+<li>支持纹理开关与实例化：通过布尔参数控制是否使用某类贴图，供 Material Instance 复用。</li>
+<li>统一 MuJoCo 导入物体的视觉风格：不同机器人/场景网格可复用该母材质，减少重复材质图。</li>
+<li>提升维护效率：改母材质即可影响所有实例，便于批量调优渲染效果与性能。</li>
+</ol>
+</li>
+<li>
+<p>直接复制到 hutb\Unreal\CarlaUE4\Content\Matrials 会出现资产版本不符的问题：</p>
+<div class="highlight"><pre><span></span><code>LogAssetRegistry: Error: Package ../../../../../Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Content/Materials/M_MuJoCo_Master.uasset is too old
+</code></pre></div>
+</li>
+<li>
+<p>如果不启用 UnrealRoboticsLab 插件，将 Mujoco 模型拖入内容浏览器时会出现 xml 文件识别不了的问题，在编辑器中也看不到原来导入的 xml 模型</p>
+</li>
+<li>
+<p>打包报错</p>
+<p>报错信息：
+<div class="highlight"><pre><span></span><code>LogOutputDevice: Error: Ensure condition failed: AttachParent == nullptr || !AttachParent-&gt;AttachChildren.Contains(this) [File:D:/hutb/Build/engine/Engine/Source/Runtime/Engine/Private/Components/SceneComponent.cpp] [Line: 1756]
+LogOutputDevice: Error: SetupAttachment cannot be used once a component has already had AttachTo used to connect it to a parent.
+</code></pre></div></p>
+<p>使用vs调试打开虚幻编辑器，第一次打开 mujoco 导入的蓝图时也会在在这一行报错并停止调试（导入后再次打开就不会报错并暂停调试），继续运行不影响查看。</p>
+<p>添加调试信息的<a href="https://github.com/EpicGames/UnrealEngine/commit/ffc8fad05202d1b488e1440ec7a6c563525e862a">提交</a>。</p>
+<p>修复在已设置 <code>AttachParent</code> 的组件上调用 <code>SetupAttachment()</code> 时出现的误报问题。（已附着在父组件上的组件还继续调用 设置附着，也就是一个组件不能有两个父组件）</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 在组件尚未注册（通常在构造阶段）时，设置该组件“将来要附加到谁”以及附加的 Socket 名称。</span>
+<span class="c1">// 简要说，它是“声明式地设置附加关系”，不是立即执行完整附加流程的运行时 API。</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">USceneComponent::SetupAttachment</span><span class="p">(</span><span class="k">class</span><span class="w"> </span><span class="nc">USceneComponent</span><span class="o">*</span><span class="w"> </span><span class="n">InParent</span><span class="p">,</span><span class="w"> </span><span class="n">FName</span><span class="w"> </span><span class="n">InSocketName</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// 必须同时满足以下 4 个条件，才能执行 SetAttachParent()</span>
+<span class="w">    </span><span class="c1">// 1. 组件还没注册</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ensureMsgf</span><span class="p">(</span><span class="o">!</span><span class="n">bRegistered</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;SetupAttachment should only be used to initialize AttachParent and AttachSocketName for a future AttachToComponent. Once a component is registered you must use AttachToComponent.&quot;</span><span class="p">)))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// 2. 不能把自己挂到自己（父亲是自己）</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ensureMsgf</span><span class="p">(</span><span class="n">InParent</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;Cannot attach a component to itself.&quot;</span><span class="p">)))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="c1">// 3. 不会形成循环附加：要么父为空（表示清除/不设置父），要么父节点当前不是这个组件的子孙，避免环</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ensureMsgf</span><span class="p">(</span><span class="n">InParent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">InParent</span><span class="o">-&gt;</span><span class="n">IsAttachedTo</span><span class="p">(</span><span class="k">this</span><span class="p">),</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;Setting up attachment would create a cycle.&quot;</span><span class="p">)))</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// 4. 当前组件未通过 AttachTo 已建立过父子连接</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ensureMsgf</span><span class="p">(</span><span class="n">AttachParent</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="k">nullptr</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="o">!</span><span class="n">AttachParent</span><span class="o">-&gt;</span><span class="n">AttachChildren</span><span class="p">.</span><span class="n">Contains</span><span class="p">(</span><span class="k">this</span><span class="p">),</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;SetupAttachment cannot be used once a component has already had AttachTo used to connect it to a parent.&quot;</span><span class="p">)))</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="c1">// 注册前的初始化附加关系，注册后应使用 AttachComponent()</span>
+<span class="w">                    </span><span class="n">SetAttachParent</span><span class="p">(</span><span class="n">InParent</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">SetAttachSocketName</span><span class="p">(</span><span class="n">InSocketName</span><span class="p">);</span>
+<span class="w">                    </span><span class="n">bShouldBeAttached</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttachParent</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>修复后打包仍然报错：
+<div class="highlight"><pre><span></span><code>hutb\Build\engine\Engine\Source\Runtime\Engine\Classes\Animation/AnimBlueprintGeneratedClass.h(126): fatal error C1060: �������Ķѿռ䲻��
+</code></pre></div>
+fatal error C1060: 编译器的堆空间不足</p>
+</li>
+<li>
 <p>打开生成的蓝图没有显示对应的网格</p>
 <p>表现：在蓝图编辑器中双击worldbody中生成的GeomMesh（UE5生成的是AUTONAME_Geom），没有显示对应的网格。</p>
 <p>打开蓝图和拖入场景中运行都只有两个圆柱体。</p>

@@ -142,10 +142,11 @@
               
                 <h1 id="_1">自定义场景配置</h1>
 <p>HoloOcean 的世界支持通过更换场景来进行配置（详见“场景”一节）。HoloOcean 软件包中包含了一些以 <code>.json</code> 文件形式提供的预置场景，同时也支持用户创建并使用自定义场景。</p>
-<p>用户既可以通过 Python 脚本中的字典（dictionary）来定义场景，也可以直接创建 <code>.json</code> 文件。这两种方法均遵循相同的格式规范，具体请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#scenario-files">场景文件格式</a>一节。</p>
+<p>用户既可以通过 Python 脚本中的字典（dictionary）来定义场景，也可以直接创建 <code>.json</code> 文件。这两种方法均遵循相同的格式规范，具体请参阅<a href="../../usage/scenarios/#scenario_file_format">场景文件格式</a>一节。</p>
 <h2 id="_2">使用字典进行场景配置</h2>
-<p>在 Python 中创建一个符合<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#scenario-files">场景文件格式</a>规范的字典，并将其传递给 holoocean.make() 函数。</p>
+<p>在 Python 中创建一个符合<a href="../../usage/scenarios/#scenario_file_format">场景文件格式</a>规范的字典，并将其传递给 holoocean.make() 函数。</p>
 <h3 id="_3">示例</h3>
+<p><img alt="" src="../../../img/underwater/custom_scenarios.jpg" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
 
 <span class="n">cfg</span> <span class="o">=</span> <span class="p">{</span>

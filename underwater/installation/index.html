@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../img/favicon.ico" />
-    <title>入门与示例 - Mujoco 插件</title>
+    <title>Installation - Mujoco 插件</title>
     <link rel="stylesheet" href="../../css/theme.css" />
     <link rel="stylesheet" href="../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u5165\u95e8\u4e0e\u793a\u4f8b";
-        var mkdocs_page_input_path = "underwater/getting_started.md";
+        var mkdocs_page_name = "Installation";
+        var mkdocs_page_input_path = "underwater/installation.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">入门与示例</li>
+      <li class="breadcrumb-item active">Installation</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/getting_started.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/installation.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,69 +140,32 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">入门与示例</h1>
-<p>首先，请参阅安装以安装 holocean 包和 Ocean。</p>
-<p>HoloOcean的最小使用示例如下：</p>
-<p><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-
-<span class="n">env</span> <span class="o">=</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;PierHarbor-Hovering&quot;</span><span class="p">)</span>
-
-<span class="c1"># 悬停的AUV对每个推进器发出指令</span>
-<span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
-
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">180</span><span class="p">):</span>
-   <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</code></pre></div>
-<img alt="" src="../../img/underwater/getting_started.gif" /></p>
-<p>请注意：</p>
-<ol>
-<li>您将场景的名称传递给holoocean.make</li>
-</ol>
-<p>请参阅可用的所有不同世界和场景的软件包。</p>
-<ol>
-<li>HoloOcean的界面旨在让OpenAI Gym熟悉</li>
-</ol>
-<p>您可以使用状态字典访问特定传感器的数据：</p>
-<div class="highlight"><pre><span></span><code><span class="n">dvl</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;DVLSensor&quot;</span><span class="p">]</span>
-</code></pre></div>
-<p><strong>就是这样！</strong>HoloOcean的使用相当简单。</p>
-<p>查看可用的不同<a href="../packages/packages/#all_packages">世界</a>，阅读<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/index.html#holoocean-api-index">API文档</a>，或者开始制作自己的自定义<a href="../usage/scenarios/#scenarios">场景</a>。</p>
-<p>下面是一些片段，展示了如何使用HoloOcean的不同方面。</p>
-<h2 id="_2">内容</h2>
-<ul>
-<li>
-<p><a href="../example/camera/">可视化 RGB 相机输出</a></p>
-</li>
-<li>
-<p><a href="../example/controller/">手动控制</a></p>
-</li>
-<li>
-<p><a href="../example/custom_dynamics/">手动定义动力学</a></p>
-</li>
-<li>
-<p><a href="../example/custom_scenarios/">自定义场景配置</a></p>
-</li>
-<li>
-<p><a href="../example/multi_agent/">多智能体示例</a></p>
-</li>
-<li>
-<p><a href="../example/multi_coms/">多智能体通信</a></p>
-</li>
-<li>
-<p><a href="../example/pd_controllers/">PD 控制器</a></p>
-</li>
-<li>
-<p><a href="../example/sonar_imaging/">可视化成像声纳</a></p>
-</li>
-<li>
-<p><a href="../example/sonar_profiling/">可视化声纳数据剖面</a></p>
-</li>
-<li>
-<p><a href="../example/sonar_sidescan/">侧扫声纳可视化</a></p>
-</li>
-</ul>
-<p>仓库的根目录下还有一个 <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/example.py">examples.py</a> 文件，其中包含更多示例代码。</p>
+                <h2 id="_1">软件包安装位置</h2>
+<p>HoloOcean 软件包默认保存在当前用户配置文件中，具体位置取决于平台。</p>
+<table>
+<thead>
+<tr>
+<th>平台</th>
+<th>位置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Linux</td>
+<td>~/.local/share/holoocean/{holoocean_version}/worlds/</td>
+</tr>
+<tr>
+<td>Windows</td>
+<td>%USERPROFILE%\AppData\Local\holoocean{holoocean_version}\worlds</td>
+</tr>
+</tbody>
+</table>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>软件包会根据 HoloOcean 的版本保存在不同的子文件夹中。这样可以允许多个 HoloOcean 版本共存，而不会导致版本不兼容冲突。</p>
+</div>
+<p>这是 holoocean.util.get_holoocean_path() 返回的路径。</p>
+<p>worlds 文件夹内的每个子文件夹都被视为一个单独的软件包，因此其格式必须符合“软件包内容”中描述的归档格式。</p>
               
             </div>
           </div><footer>

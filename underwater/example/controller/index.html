@@ -142,7 +142,8 @@
               
                 <h1 id="_1">手动控制</h1>
 <p>我们发现pynput是一个很好的库，用于向代理发送键盘命令以进行手动控制。</p>
-<p>这是一个使用以下键盘快捷键控制 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HovingAUV</a> 的示例（和无人机控制不兼容）。</p>
+<p>这是一个使用以下键盘快捷键控制 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HovingAUV</a> 的示例。</p>
+<p><img alt="" src="../../../img/underwater/controller.jpg" /></p>
 <table>
 <thead>
 <tr>
@@ -229,7 +230,7 @@
             <span class="k">break</span>
         <span class="n">command</span> <span class="o">=</span> <span class="n">parse_keys</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
 
-        <span class="c1">#send to holoocean</span>
+        <span class="c1"># 发送到 holoocean</span>
         <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
         <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
 </code></pre></div>

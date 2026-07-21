@@ -142,6 +142,7 @@
               
                 <h1 id="sidescan-sonar">侧扫声纳可视化（Sidescan Sonar）</h1>
 <p>在仿真过程中，将声纳传感器的输出进行可视化通常很有用。本脚本即可实现这一功能，在每次接收到声纳数据时进行绘图。</p>
+<p><img alt="" src="../../../img/underwater/sonar_sidescan.jpg" /></p>
 <p>请注意，运行此脚本期间会生成八叉树（octree），这可能会导致短暂的停顿。有关解决方案及更多信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/octree.html#octree">八叉树生成</a>相关内容。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>

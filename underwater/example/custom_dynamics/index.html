@@ -144,6 +144,7 @@
 <p>很多时候，能够轻松实现自定义动力学对研究可能有用。为此，我们为 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HovingAUV</a> 创建了控制器，这些控制器接收线性和角加速度，并将其集成以实现自定义动力学。除了碰撞，模拟器中没有对车辆施加其他加速度，从而允许在python中实现完全自定义的动力学。这种可能性是无限的，包括复杂的流体力学、水流等。</p>
 <p>此外，动力学传感器 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.DynamicsSensor">DynamicsSensor</a> 旨在提供计算动力学所需的所有必要当前状态信息，包括加速度、速度和当前姿态信息。</p>
 <p>以下是一个实际应用示例，其中手动实现了重力、浮力和阻尼。</p>
+<p><img alt="" src="../../../img/underwater/custom_dynamics.jpg" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">holoocean</span>
 <span class="kn">from</span> <span class="nn">holoocean.agents</span> <span class="kn">import</span> <span class="n">HoveringAUV</span>
