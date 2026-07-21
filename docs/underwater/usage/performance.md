@@ -50,6 +50,8 @@ HoloOcean 默认性能相当不错，但您也可以牺牲一些功能来提高�
 
 可以降低相机采样率来提高平均每秒帧数。有关更多信息，请参阅[传感器对象](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#configure-sensors)和`Hz`参数。
 
+
+
 ## 声呐传感器 <span id="sonar_sensors"></span> 
 
 声呐传感器也会消耗大量性能资源。有很多方法可以帮助提高它们的性能。
@@ -72,7 +74,7 @@ HoloOcean 默认性能相当不错，但您也可以牺牲一些功能来提高�
 
 在较低的 `RGBCamera` 分辨率下，帧时间预计可减少约 40%。
 
-## 更改渲染质量 <span id="change_render_quality"></span> 
+## 改变渲染质量 <span id="change_render_quality"></span> 
 
 您可以调整 HoloOcean 的渲染质量，以降低（或提高）渲染质量来提升性能。请参阅 [set_render_quality()](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.set_render_quality) 方法。
 
