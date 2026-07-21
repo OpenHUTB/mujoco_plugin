@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>提升 HoloOcean 性能 - Mujoco 插件</title>
+    <title>八叉树生成 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u63d0\u5347 HoloOcean \u6027\u80fd";
-        var mkdocs_page_input_path = "underwater/usage/performance.md";
+        var mkdocs_page_name = "\u516b\u53c9\u6811\u751f\u6210";
+        var mkdocs_page_input_path = "underwater/usage/octree.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">提升 HoloOcean 性能</li>
+      <li class="breadcrumb-item active">八叉树生成</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/performance.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/octree.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,158 +140,39 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">提升 HoloOcean 性能</h1>
-<p>HoloOcean 默认性能相当不错，但您也可以牺牲一些功能来提高帧率。</p>
-<ul>
-<li><strong><a href="#rgbcamera">RGBCamera</a></strong><ul>
-<li><strong><a href="#disabling_the_rgbcamera">禁用 RGBCamera</a></strong></li>
-<li><strong><a href="#lowering_the_rgbcamera_resolution">降低 RGBCamera 分辨率</a></strong></li>
-<li><strong><a href="#changing_ticks_per_capture">调整每次拍摄的节拍数</a></strong></li>
-</ul>
-</li>
-<li><strong><a href="#sonar_sensors">声呐传感器</a></strong><ul>
-<li><strong><a href="#lowering_octree_resolution">降低八叉树分辨率</a></strong></li>
-<li><strong><a href="#changing_ticks_per_capture">更改每次捕获的帧数</a></strong></li>
-</ul>
-</li>
-<li><strong><a href="#disable_viewport_rendering">禁用视窗渲染</a></strong></li>
-<li><strong><a href="#change_render_quality">更改渲染质量</a></strong></li>
-</ul>
-<h2 id="rgbcamera">RGBCamera <span id="rgbcamera"></span></h2>
-<p>要显著提升性能，最有效的方法莫过于禁用 <code>RGBCamera</code>。每帧都渲染摄像机会导致引擎渲染代码深处发生上下文切换，从而造成严重的性能损失。</p>
-<p>此图表显示了调整 RGBCamera 设置后性能的提升或损失（左列为帧时间，单位为毫秒）。请注意，所有测试均在原版 Holodeck 中进行，但结果应该相同。</p>
+                <h1 id="_1">八叉树生成</h1>
+<p>运行带有声呐传感器的环境时，必须生成八叉树。这些八叉树通常会占用数 GB 的存储空间，因此无法作为下载包的一部分提供。</p>
+<p>启动时，会创建 <code>InitOctreeRange</code> 参数范围内的所有八叉树，然后随着智能体在环境中移动，会生成更多八叉树。这可能会导致首次运行模拟时出现停顿。屏幕上会显示警告信息，可以使用 <code>ShowWarning</code> 参数禁用此警告。所有后续的模拟运行都将使用缓存的八叉树，速度会快得多。</p>
+<p>避免等待时间的一种方法是在不显示视窗的情况下运行模拟，让其在后台生成八叉树。以下是一个示例脚本，它正是这样做的，只需将场景更改为您想要为其创建八叉树的场景即可。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
+
+<span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Building octrees...&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;PierHarbor-HoveringImagingSonar&quot;</span><span class="p">,</span> <span class="n">show_viewport</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)):</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished Simulation&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>八叉树生成后，会保存在<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/installation.html#package-locations">软件包安装目录</a>下的一个名为“octree”的文件夹中。具体如下：</p>
 <table>
 <thead>
 <tr>
-<th>分辨率</th>
-<th>UrbanCity</th>
-<th></th>
-<th>MazeWorld</th>
-<th></th>
-<th>MazeWorld</th>
-<th></th>
+<th>平台</th>
+<th>八叉树保存位置</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>没有相机</td>
-<td>8.55 ms</td>
-<td>117 fps</td>
-<td>4.69 ms</td>
-<td>213 fps</td>
-<td>2.47 ms</td>
-<td>405 fps</td>
+<td>Linux</td>
+<td>~/.local/share/holoocean/{holoocean_version}/worlds/{world_name}/LinuxNoEditor/Holodeck/Octrees</td>
 </tr>
 <tr>
-<td>64</td>
-<td>17 ms</td>
-<td>59 fps</td>
-<td>11 ms</td>
-<td>91 fps</td>
-<td>4.87 ms</td>
-<td>205 fps</td>
-</tr>
-<tr>
-<td>128</td>
-<td>20 ms</td>
-<td>50 fps</td>
-<td>11.6 ms</td>
-<td>86 fps</td>
-<td>5.59 ms</td>
-<td>179 fps</td>
-</tr>
-<tr>
-<td>256</td>
-<td>22 ms</td>
-<td>45 fps</td>
-<td>14.71 ms</td>
-<td>68 fps</td>
-<td>9.02 ms</td>
-<td>111 fps</td>
-</tr>
-<tr>
-<td>512</td>
-<td>35 ms</td>
-<td>29 fps</td>
-<td>30.8 ms</td>
-<td>32 fps</td>
-<td>24.81 ms</td>
-<td>40 fps</td>
-</tr>
-<tr>
-<td>1024</td>
-<td>89 ms</td>
-<td>11 fps</td>
-<td>84.2 ms</td>
-<td>12 fps</td>
-<td>94.55 ms</td>
-<td>11 fps</td>
-</tr>
-<tr>
-<td>2048</td>
-<td>410 ms</td>
-<td>2 fps</td>
-<td>383 ms</td>
-<td>3 fps</td>
-<td>366 ms</td>
-<td>3 fps</td>
-</tr>
-</tbody>
-</table>
-<h3 id="rgbcamera_1">禁用 <code>RGBCamera</code> <span id="disabling_the_rgbcamera"></span></h3>
-<p>从您正在使用的场景配置文件中移除 <code>RGBCamera</code> 条目。</p>
-<p>请参阅<a href="../../example/custom_scenarios/#custom-scenarios">自定义场景配置</a>。</p>
-<h3 id="rgbcamera_2">降低 <code>RGBCamera</code> 分辨率 <span id="lowering_the_rgbcamera_resolution"></span></h3>
-<p>降低 <code>RGBCamera</code> 的分辨率也有助于提高速度。创建一个<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/examples/custom-scenarios.html#custom-scenarios">自定义场景</a>，并在 RGBCamera 的<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#configuration-block">配置块</a>中设置 <code>CaptureWidth</code> 和 <code>CaptureHeight</code> 参数。</p>
-<p>更多详情请参见 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.RGBCamera">RGBCamera</a>。</p>
-<h3 id="_1">调整每次拍摄的节拍数 <span id="changing_ticks_per_capture"></span></h3>
-<p>可以降低相机采样率来提高平均每秒帧数。有关更多信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#configure-sensors">传感器对象</a>和<code>Hz</code>参数。</p>
-<h2 id="_2">声呐传感器 <span id="sonar_sensors"></span></h2>
-<p>声呐传感器也会消耗大量性能资源。有很多方法可以帮助提高它们的性能。</p>
-<h3 id="_3">降低八叉树分辨率 <span id="lowering_octree_resolution"></span></h3>
-<p>八叉树分辨率对声呐性能影响很大。<code>octree_min</code> 值越高，需要搜索的叶子节点就越少，运行速度也就越快。但这会影响图像质量，尤其是在近距离探测时。如果大多数被探测目标距离较远，则可以安全地大幅提高此参数。</p>
-<p>有关如何操作的详细信息，请参阅<a href="../scenarios/#configure_octree">配置八叉树</a>。</p>
-<h3 id="_4">更改每次捕获的帧数 <span id="changing_ticks_per_capture"></span></h3>
-<p>可以降低声呐采样率以提高平均每秒帧数。有关更多信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/scenarios.html#configure-sensors">传感器对象</a>和<code>Hz</code>参数。</p>
-<h2 id="_5">禁用视窗渲染 <span id="disable_viewport_rendering"></span></h2>
-<p>训练过程中，视窗的渲染可能并非必要。您可以使用 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.should_render_viewport">should_render_viewport()</a> 方法禁用视窗渲染。</p>
-<p>在较低的 <code>RGBCamera</code> 分辨率下，帧时间预计可减少约 40%。</p>
-<h2 id="_6">改变渲染质量 <span id="change_render_quality"></span></h2>
-<p>您可以调整 HoloOcean 的渲染质量，以降低（或提高）渲染质量来提升性能。请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.set_render_quality">set_render_quality()</a> 方法。</p>
-<p>以下是不同渲染质量下帧时间（以毫秒为单位）的对比。</p>
-<table>
-<thead>
-<tr>
-<th>质量</th>
-<th>MazeWorld</th>
-<th>UrbanCity</th>
-<th>AndroidPlayground</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><code>0</code></td>
-<td>10.34</td>
-<td>12.33</td>
-<td>6.63</td>
-</tr>
-<tr>
-<td><code>1</code></td>
-<td>10.53</td>
-<td>15.06</td>
-<td>6.84</td>
-</tr>
-<tr>
-<td><code>2</code></td>
-<td>14.81</td>
-<td>19.19</td>
-<td>8.66</td>
-</tr>
-<tr>
-<td><code>3</code></td>
-<td>15.58</td>
-<td>21.78</td>
-<td>9.2</td>
+<td>Windows</td>
+<td>%USERPROFILE%\AppData\Local\holoocean{holoocean_version}\worlds{world_name}\WindowsNoEditor\Holodeck\Octrees</td>
 </tr>
 </tbody>
 </table>
