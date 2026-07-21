@@ -158,18 +158,31 @@
 </ul>
 <p>通过VS进行启动，启动画面为：
 <img alt="" src="../../img/underwater/launch.jpg" /></p>
+<ul>
+<li>
 <p>启动到92%报错：“打开地图文件失败。可能是因为该地图使用了较新版本的引擎进行保存。”</p>
-<p>没有在内容浏览器中显示的资产：<code>Underwater\Content\HolodeckContent\Agents\NavAgent\NavAgentBlueprint.uasset</code>、<code>Underwater\Content\HolodeckContent\Agents\AgentSpectatorPawn.uasset</code>、<code>Underwater\Content\HolodeckContent\Agents\SphereRobot_Blueprint.uasset</code></p>
-<p>资产<code>`Underwater\Content\HolodeckContent\Agents\AgentFollower.uasset</code>打开编译报错。</p>
+<p>地图为：ExampleLevel.umap</p>
+<p>没有在内容浏览器中显示的资产：Underwater\Content\HolodeckContent\Agents\NavAgent\NavAgentBlueprint.uasset、Underwater\Content\HolodeckContent\Agents\AgentSpectatorPawn.uasset、Underwater\Content\HolodeckContent\Agents\SphereRobot_Blueprint.uasset</p>
+<p>资产 Underwater\Content\HolodeckContent\Agents\AgentFollower.uasset 打开编译报错。</p>
+</li>
+</ul>
 <p>可以打开相关的资产：
 <img alt="" src="../../img/underwater/HoveringAUVMesh.png" /></p>
+<p>下面说明解决资产不兼容的问题。</p>
+<h2 id="ue427-426">将 UE4.27 的资产降级为 4.26</h2>
+<p>1.使用 <a href="https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb">Asset Downgrader</a>（software/ue/AssetDowngrader.zip）中定制的 UE 5.4 虚幻编辑器打开一个空项目（也可以是需要降级的 5.4 项目，更低的版本项目没试过）。</p>
+<p>2.将需要降级的 UE 4.27 的资产复制到空项目的 Content 目录下</p>
+<p>3.从 UE 5.4 虚幻编辑器中，选中需要降级的资产，点击右上角菜单中的 <code>DowngraderSelectedAsset</code>，在弹出的对话框中，选中<code>Target Version</code>为<code>4.26.2(experimental)</code>，点击 OK 进行转换。</p>
+<p>4.将转换后的Content中的资产拷贝到 4.26 的项目中即可。</p>
+<p>使用 hutb 所对应的虚幻编辑器打开 hutb\Unreal\CarlaUE4\Plugins\Underwater\Holodeck.uproject 会不成功，需要按提示打开 VS，点击菜单的<code>调试</code>-&gt;<code>开始调试</code>（这个时候虚幻编辑器会重新编译！）</p>
 <h2 id="ue-427">通过 UE 4.27打开工程</h2>
-<p>如果出现版本不兼容，选择原地覆盖转换。</p>
+<p>如果出现版本不兼容，选择原地覆盖转换（替换成了 hutb 模拟器所对应的 UE 4.26 打开。）。</p>
 <h2 id="_3">参考文档</h2>
 <ul>
 <li><a href="https://byu-holoocean.github.io/holoocean-docs/v1.0.0">holoocean-v1.0.0</a></li>
 <li><a href="https://byu-holoocean.github.io/holoocean-docs/versionList.html">所有版本的文档</a></li>
 <li><a href="https://forums.unrealengine.com/t/missing-unrealbuildtool-exe-after-build/2674046/2">构建后缺少 UnrealBuildTool.exe</a></li>
+<li><a href="https://b23.tv/EukLZB6">UE Asset Downgrader 高版本转低版本-哔哩哔哩</a></li>
 </ul>
               
             </div>
