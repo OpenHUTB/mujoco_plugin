@@ -1,6 +1,6 @@
 # 水下机器人 HoloOcean
 
-HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰大学PCCL实验室研发），HoloOcean 能够轻松模拟海洋机器人与自主系统，支持多种传感器、智能体及功能特性。
+HoloOcean[@Potokar22icra] 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰大学PCCL实验室研发），HoloOcean 能够轻松模拟海洋机器人与自主系统，支持多种传感器、智能体及功能特性。
 
 * __[安装](./usage/installation.md)__  
 * __[入门与示例](./getting_started.md)__  
@@ -16,7 +16,7 @@ HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰
 
 * 3个拥有丰富基础设施、用于生成数据或测试水下算法的丰富世界
 
-* 配备常规水下传感器，包括多普勒测速仪（DVL）、惯性测量单元（IMU）、光学相机、各类声呐、深度传感器等
+* 配备常规水下传感器，包括多普勒测速仪（DVL）、惯性测量单元（IMU）、光学相机、各类声呐[@Potokar22iros]、深度传感器等
 
 * 高度且易于配置的传感器与任务
 
@@ -37,6 +37,4 @@ HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰
 
 ## 参考
 
-* [HoloOcean: An Underwater Robotics Simulator]()
-* [声纳（成像、剖面、侧扫）传感器的仿真论文]()
 
