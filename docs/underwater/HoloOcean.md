@@ -6,9 +6,11 @@
 
 ## 运行
 
-[Windows v1.0.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v1.0.0/Windows.zip)
+* [Windows v1.0.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v1.0.0/Windows.zip)
 
-[Linux v0.1.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v0.1.0/Linux.zip)
+* [Linux v1.0.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v1.0.0/Linux.zip)
+
+    * [Linux v0.1.0 下载地址](https://robots.et.byu.edu/holo/Ocean/v0.1.0/Linux.zip)
 
 
 ## 编译
