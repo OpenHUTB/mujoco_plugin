@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>HoloOcean 包 - Mujoco 插件</title>
+    <title>软件包结构 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "HoloOcean \u5305";
-        var mkdocs_page_input_path = "underwater/packages/packages.md";
+        var mkdocs_page_name = "\u8f6f\u4ef6\u5305\u7ed3\u6784";
+        var mkdocs_page_input_path = "underwater/packages/package_structure.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">HoloOcean 包</li>
+      <li class="breadcrumb-item active">软件包结构</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/packages/packages.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/packages/package_structure.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,116 +140,54 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">HoloOcean 包</h1>
-<p>以下是可供下载的不同包。一个 HoloOcean 扩展包包含一个或多个世界，每个世界又包含一个或多个场景。</p>
-<h2 id="_1">包 <span id="all_packages"></span></h2>
-<ul>
-<li>
-<p>海洋包</p>
-<ul>
-<li>
-<p>大坝（<a href="./Ocean/Dam/">Dam</a>）</p>
-<ul>
-<li>
-<p>大坝附近悬停（<a href="../Ocean/Dam/Dam-Hovering/">Dam-Hovering</a>）</p>
-</li>
-<li>
-<p>大坝附近悬停的相机（<a href="../Ocean/Dam/Dam-HoveringCamera/">Dam-HoveringCamera</a>）</p>
-</li>
-<li>
-<p>大坝附近悬停的成像声呐（<a href="../Ocean/Dam/Dam-HoveringImagingSonar/">Dam-HoveringImagingSonar</a>）</p>
-</li>
-</ul>
-</li>
-<li>
-<p>开放水域（<a href="../Ocean/OpenWater/openwater/">OpenWater</a>）</p>
-<ul>
-<li>
-<p>开放水域悬停（<a href="../Ocean/OpenWater/OpenWater-Hovering/">OpenWater-Hovering</a>）</p>
-</li>
-<li>
-<p>开放水域悬停相机（<a href="../Ocean/OpenWater/OpenWater-HoveringCamera/">OpenWater-HoveringCamera</a>）</p>
-</li>
-<li>
-<p>开放水域悬停成像声呐（<a href="../Ocean/OpenWater/OpenWater-HoveringImagingSonar/">OpenWater-HoveringImagingSonar</a>）</p>
-</li>
-<li>
-<p>开放水域鱼雷（<a href="../Ocean/OpenWater/OpenWater-Torpedo/">OpenWater-Torpedo</a>）</p>
-</li>
-<li>
-<p>开放水域鱼雷剖面声呐（<a href="../Ocean/OpenWater/OpenWater-TorpedoProfilingSonar/">OpenWater-TorpedoProfilingSonar</a>）</p>
-</li>
-<li>
-<p>开放水域鱼雷侧扫声呐（<a href="../Ocean/OpenWater/OpenWater-TorpedoSidescanSonar/">OpenWater-TorpedoSidescanSonar</a>）</p>
-</li>
-<li>
-<p>开放水域鱼雷单波束声呐（<a href="../Ocean/OpenWater/OpenWater-TorpedoSinglebeamSonar/">OpenWater-TorpedoSinglebeamSonar</a>）</p>
-</li>
-</ul>
-</li>
-<li>
-<p>码头港口（<a href="../Ocean/PierHarbor/pierharbor/">PierHarbor</a>）</p>
-<ul>
-<li>
-<p>码头港口悬停（<a href="../Ocean/PierHarbor/PierHarbor-Hovering/">PierHarbor-Hovering</a>）</p>
-</li>
-<li>
-<p>码头港口悬停的相机（<a href="../Ocean/PierHarbor/PierHarbor-HoveringCamera/">PierHarbor-HoveringCamera</a>）</p>
-</li>
-<li>
-<p>码头港口悬停的成像声呐（<a href="../Ocean/PierHarbor/PierHarbor-HoveringImagingSonar/">PierHarbor-HoveringImagingSonar</a>）</p>
-</li>
-<li>
-<p>码头港口鱼雷（<a href="./Ocean/PierHarbor/PierHarbor-Torpedo.md">PierHarbor-Torpedo</a>）</p>
-</li>
-</ul>
-</li>
-<li>
-<p>房间（<a href="../Ocean/Rooms/rooms/">Rooms</a>）</p>
-<ul>
-<li>房间数据生成器（<a href="../Ocean/Rooms/Rooms-DataGen/">Rooms-DataGen</a>）</li>
-</ul>
-</li>
-<li>
-<p>简易水下（<a href="../Ocean/SimpleUnderwater/simpleunderwater/">SimpleUnderwater</a>）</p>
-<ul>
-<li>
-<p>简易水下悬停（<a href="../Ocean/SimpleUnderwater/SimpleUnderwater-Hovering/">SimpleUnderwater-Hovering</a>）</p>
-</li>
-<li>
-<p>简易水下鱼雷（<a href="../Ocean/SimpleUnderwater/SimpleUnderwater-Torpedo/">SimpleUnderwater-Torpedo</a>）</p>
-</li>
-</ul>
-</li>
-</ul>
-</li>
-</ul>
-<h2 id="_2">包的文档</h2>
-<ul>
-<li>
-<p><a href="../package_structure/">软件包的结构</a></p>
-<ul>
-<li>
-<p><a href="../package_structure/#package_contents">软件包的内容</a></p>
-</li>
-<li>
-<p><a href="../package_structure/#package_structure">软件包的结构</a></p>
-</li>
-<li>
-<p><a href="../package_structure/#config_json">config.json</a></p>
-</li>
-<li>
-<p><a href="../package_structure/#materials_csv">materials.csv</a></p>
-</li>
-</ul>
-</li>
-<li>
-<p><a href="../installation/">软件包的安装位置</a></p>
-<ul>
-<li><a href="../installation/#overriding_location">覆盖位置</a></li>
-</ul>
-</li>
-</ul>
+                <h1 id="_1">软件包结构</h1>
+<p>holoOcean 软件包是一个 <code>.zip</code> 文件，其中包含 <a href="https://github.com/OpenHUTB/Underwater">holoocean-engine</a> 的构建版本，该版本包含世界以及这些世界的<a href="../../usage/scenarios/#scenarios">场景</a>。</p>
+<p>软件包文件是平台特定的，因为它包含 HoloOcean 的编译二进制文件。</p>
+<h2 id="_2">软件包的内容 <span id="package_contents"></span></h2>
+<p><code>.zip</code> 文件必须包含以下元素：</p>
+<p>1.<a href="https://github.com/OpenHUTB/Underwater">holoocean-engine</a> 的构建版本</p>
+<p>2.定义压缩包中包含的世界的 <code>config.json</code> 文件</p>
+<p>3.这些世界的场景配置</p>
+<h2 id="_3">软件包结构 <span id="package_structure"></span></h2>
+<p>package.zip 文件根目录下包含一个 <code>config.json</code> 文件，以及软件包中包含的每个世界的全部场景文件。场景文件必须遵循 <code>{WorldName}-{ScenarioName}.json</code> 的格式。</p>
+<div class="highlight"><pre><span></span><code><span class="err">+package.zip</span>
+<span class="err">+</span><span class="mi">--</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig.jso</span><span class="kc">n</span>
+<span class="err">+</span><span class="mi">--</span><span class="w"> </span><span class="err">ma</span><span class="kc">ter</span><span class="err">ials.csv</span>
+<span class="err">+</span><span class="mi">--</span><span class="w"> </span><span class="err">WorldName</span><span class="mi">-</span><span class="err">Sce</span><span class="kc">nar</span><span class="err">ioName.jso</span><span class="kc">n</span>
+<span class="err">+</span><span class="mi">--</span><span class="w"> </span><span class="err">Li</span><span class="kc">nu</span><span class="err">xNoEdi</span><span class="kc">t</span><span class="err">or</span>
+<span class="w">    </span><span class="err">+</span><span class="w"> </span><span class="err">UE</span><span class="mi">4</span><span class="w"> </span><span class="err">build</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span>
+</code></pre></div>
+<h2 id="configjson">config.json <span id="config_json"></span></h2>
+<p>此配置文件包含包级别的配置。以下是配置文件应遵循的格式：</p>
+<p>config.json:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{package_name}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;platform&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Linux | Windows}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;version&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{package_version}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;path&quot;</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{path to binary within the archive}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;worlds&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">      </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{world_name}&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;pre_start_steps&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;env_min&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="mi">-10</span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;env_max&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">]</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p>世界对象的“pre_start_steps”属性定义了在开始模拟之前应该经过多少个节拍，以应对世界对象的特殊性。</p>
+<p><code>env_min</code>/<code>env_max</code> 属性用于设置环境的上限/下限，在为声呐传感器创建八叉树时会用到。</p>
+<h2 id="materialscsv">materials.csv <span id="materials_csv"></span></h2>
+<p>此文件包含环境中各种材料的声学特性，用于计算声呐图像。以下是配置文件应遵循的格式：</p>
+<div class="highlight"><pre><span></span><code>Material, Density kg/m^3, Speed of Sound m/s
+M_Landscape, 3200, 4500
+M_URockA, 3000, 5000
+</code></pre></div>
+<p>每次模拟开始时，都会读取此文件，以便在无需重新编译整个虚幻引擎二进制文件的情况下对其进行编辑。第一行会被忽略，仅用于编辑文件时作为参考。第一列是UE4中的材质名称，第二列是材质密度（单位为kg/m³），第三列是声速（单位为m/s）。这些数据用于计算环境中各种材质的声强。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果在环境中发现的材质未包含在.csv文件中，则会将其添加到.csv文件中，并默认使用10,000的密度和声速（这将导致完全声反射）。</p>
+</div>
               
             </div>
           </div><footer>
