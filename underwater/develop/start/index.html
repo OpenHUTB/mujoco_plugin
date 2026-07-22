@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>入门指南 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5165\u95e8\u6307\u5357";
+        var mkdocs_page_input_path = "underwater/develop/start.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">入门指南</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/start.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">入门指南</h1>
+<p>虽然可以在 Linux 上进行引擎开发，但我发现使用 Windows 会更简单、更稳定。无论选择哪个平台，都需要安装以下依赖项：</p>
+<ul>
+<li>
+<p><a href="https://github.com/OpenHUTB/engine">引擎定制版</a></p>
+</li>
+<li>
+<p><a href="https://visualstudio.microsoft.com/vs/older-downloads/">Visual Studio 2019</a>（具体设置请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/index.html">引擎文档</a>）</p>
+</li>
+<li>
+<p>git</p>
+</li>
+<li>
+<p>Python 环境（推荐使用 conda）</p>
+</li>
+</ul>
+<h2 id="_2">克隆代码 <span id="cloning"></span></h2>
+<p>若要运行 HoloOcean Live，你需要配置 HoloOcean 的 C++ 和 Python 部分；目前这两部分已整合在同一个代码仓库中，操作更为便捷。</p>
+<ul>
+<li>
+<p>克隆 <a href="https://github.com/OpenHUTB/Underwater">Underwater</a> 仓库。</p>
+</li>
+<li>
+<p>进入克隆后的目录。</p>
+</li>
+<li>
+<p>切换到你想要开发的分支，通常是 develop 分支，你可以通过 <code>git checkout develop</code> 命令访问该分支。</p>
+<ul>
+<li>或者，你也可以创建一个新的分支来添加新功能，命令是 <code>git checkout -b [你的分支名称] [你要从中创建分支的分支名称]</code>。</li>
+</ul>
+</li>
+</ul>
+<p>现在可以通过运行 <code>pip install -e client/</code> 来安装 python 包。</p>
+<h2 id="_3">打开和准备项目 <span id="opening_prepping_project"></span></h2>
+<p>在克隆的仓库的引擎目录中，你会找到一个名为 holodeck.uproject 的文件。双击该文件，如果弹出引擎版本对话框，请选择“4.26”。对于任何提示“是否立即重新构建？”的对话框，请点击“是”。之后，虚幻引擎应该就会打开！</p>
+<p>虚幻引擎的开发方式有很多种，但我们将重点介绍我发现的最简便的开发方法。</p>
+<p>在虚幻编辑器中，依次点击“File”-&gt;“Cook Content for {Platform}”。几分钟后，你应该会在右下角看到一个成功弹出窗口。</p>
+<h2 id="vscode">设置 VSCode <span id="setting_up_vscode"></span></h2>
+<p>也可以使用 Visual Studio IDE，这里介绍使用 VSCode。如果您已经安装了 VSCode，并且也想这样做，请按以下步骤操作：</p>
+<ul>
+<li>
+<p>在 Unreal 编辑器中，依次点击“编辑”-&gt;“编辑器首选项”</p>
+</li>
+<li>
+<p>然后依次点击“常规”-&gt;“源代码”-&gt;“源代码编辑器”，并选择“Visual Studio Code”</p>
+</li>
+<li>
+<p>完成上述步骤后，您应该可以使用“文件”-&gt;“生成 Visual Studio Code 项目”来创建一个新的 Visual Studio Code 项目。</p>
+</li>
+<li>
+<p>要打开 Visual Studio Code，请依次点击“文件”-&gt;“打开 Visual Studio Code”。</p>
+</li>
+</ul>
+<h2 id="_4">编译  <span id="compiling"></span></h2>
+<p>通常通过点击虚幻编辑器中的“编译”按钮进行编译。每次修改代码后都需要执行此操作。当然，您也可以在 Visual Studio 中进行编译。</p>
+<p>“编译”按钮位于顶部工具栏，在“过场动画”和“构建”按钮旁边。如果您的屏幕不够宽，该按钮可能会被隐藏。点击双箭头向右滚动即可找到它。</p>
+<h2 id="_5">启动游戏  <span id="launching_game_live"></span></h2>
+<p>为了避免每次想要查看代码更改时都需要打包项目，您可以直接在虚幻编辑器中运行游戏，然后将您的 Python 代码附加到游戏中。这是一个多步骤的过程，具体如下。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果要开发声呐模块，请在UE4中点击顶部工具栏“播放”按钮旁边的向下箭头，然后点击“高级设置”。将以下代码添加到“附加启动参数”中。</p>
+<p><code>-EnvMinX=-1000 -EnvMinY=-1000 -EnvMinZ=-1000 -EnvMaxX=1000 -EnvMaxY=1000 -EnvMinZ=1000 -OctreeMin=0.02 OctreeMax=5</code></p>
+<p>这些单位都是米。您可以根据需要进行调整，它们的含义都很容易理解。</p>
+</div>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>如果您使用动态传感器，或者期望特定的每秒帧数 (tick per second)，请确保将 <code>-TicksPerSec=&lt;val&gt;</code> 设置为以下参数之一，以便获得您期望的模拟速率和行为。<code>-FramesPerSec=&lt;val&gt;</code> 命令控制程序在您计算机上的运行速度。请参阅 https://byu-holoocean.github.io/holoocean-docs/v1.0.0/usage/scenarios.html#frame-rates。此外，<code>-log</code> 参数可用于轻松关闭游戏窗口，以及查看日志消息以进行调试。</p>
+</div>
+<p>打开并准备一个类似于以下内容的 Python 脚本</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+      <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="s2">&quot;ExampleLevel&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;main_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+      <span class="s2">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+               <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+               <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                  <span class="p">{</span>
+                        <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+                  <span class="p">}</span>
+               <span class="p">],</span>
+               <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span>
+               <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]</span>
+            <span class="p">}</span>
+      <span class="p">]</span>
+   <span class="p">}</span>
+
+<span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">scenario_cfg</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">start_world</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+   <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+      <span class="n">state</span><span class="p">,</span> <span class="n">reward</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</code></pre></div>
+<p>根据需要调整脚本，添加所需的传感器/代理。</p>
+<ul>
+<li>
+<p>确保打开并准备好运行此 Python 文件。</p>
+</li>
+<li>
+<p>返回虚幻编辑器，点击顶部工具栏“运行”按钮旁边的箭头，然后选择“独立游戏”。此时会弹出一个单独的窗口，显示虚幻游戏。</p>
+</li>
+<li>
+<p>窗口弹出后，运行你的 Python 脚本。脚本会附加到新打开的虚幻游戏窗口，并像正常的 HoloOcean 模拟一样运行。注意，你可能需要尝试运行几次脚本，因为虚幻游戏窗口需要一些时间加载。</p>
+</li>
+</ul>
+<p>完成！这里还有一些需要注意的小问题。如果在退出 Python 脚本之前关闭虚幻游戏窗口，终端会冻结，你需要重新打开一个终端。我有一个固定到任务栏的 .bat 脚本来运行 Python 文件，以解决这个问题。此外，VSCode 的播放按钮也能流畅地快速打开/关闭具有正确 conda 环境的终端。</p>
+<h2 id="_6">日志记录  <span id="logging"></span></h2>
+<p>虽然这绝对不是最佳方法，但我通常使用虚幻引擎中与 print 语句等效的功能来调试代码。<a href="https://unrealcommunity.wiki/logging-lgpidy6i">这里</a>有一个关于如何将信息发送到虚幻引擎日志的优秀教程。</p>
+<p>如果您想稍后查看，此日志将保存在 holoocean-engine/Saved/Logs 目录中。或者，我更喜欢这种方式。在虚幻编辑器中，</p>
+<ul>
+<li>
+<p>转到“窗口”-&gt;“开发者工具”-&gt;“会话前端”</p>
+</li>
+<li>
+<p>在“我的会话”下，您的虚幻游戏窗口将有一个条目，其中列出了所有日志。</p>
+</li>
+</ul>
+<p>非常简单！</p>
+<p>有关开发自定义传感器/代理/环境以及如何入门的信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/agents.html#develop-agents">开发代理</a>、<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/sensors.html#develop-sensor">开发传感器</a>和<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/env.html#develop-env">开发环境</a>。</p>
+<p>要开发自定义声呐，请参阅 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Public/HolodeckSonar.h">HolodeckSonar.h</a> 和 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Private/HolodeckSonar.cpp">HolodeckSonar.cpp</a> 文件以获取所需的超类，并参阅 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Public/ImagingSonar.h">ImagingSonar.h</a> 和 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Private/ImagingSonar.cpp">ImagingSonar.cpp</a> 以获取如何使用它们的示例。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
