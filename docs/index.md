@@ -9,7 +9,7 @@ title: 主页
     * [插件指南](#guide)
     * [肌肉骨骼人](#ms)
     * [人形机器人](#humanoid)
-    * [其他机器人](#other)
+    * [水下机器人](#other)
 * [__引擎插件开发__](#dev)
 
 ---
@@ -66,12 +66,12 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 |-------|---------------|
 | [人形机器人模型](./humanoid/g1.md) | 人形机器人参考模型 |
 
-## 其他机器人 <span id="other"></span>
+## 水下机器人 <span id="other"></span>
 
 | 指南 | 涵盖的内容 |
 |-------|---------------|
+| [水下机器人](./underwater/index.md) | 高保真的水下机器人插件 |
 | [机器狗](./go2.md) | 仿生四足机器人 Go2 |
-| [水下机器人](./underwater/underwater.md) | 高保真的水下机器人插件 |
 
 ---
 

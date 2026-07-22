@@ -49,3 +49,23 @@
         * 简易水下悬停（[SimpleUnderwater-Hovering](./Ocean/SimpleUnderwater/SimpleUnderwater-Hovering.md)）
 
         * 简易水下鱼雷（[SimpleUnderwater-Torpedo](./Ocean/SimpleUnderwater/SimpleUnderwater-Torpedo.md)）
+
+
+## 包的文档
+
+* [软件包的结构](./package_structure.md)
+
+    * [软件包的内容](./package_structure.md#package_contents)
+
+    * [软件包的结构](./package_structure.md#package_structure)
+
+    * [config.json](./package_structure.md#config_json)
+
+    * [materials.csv](./package_structure.md#materials_csv)
+
+* [软件包的安装位置](installation.md)
+
+    * [覆盖位置](./installation.md#overriding_location)
+
+
+

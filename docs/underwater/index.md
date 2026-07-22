@@ -1,4 +1,4 @@
-# HoloOcean
+# 水下机器人 HoloOcean
 
 HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰大学PCCL实验室研发），HoloOcean 能够轻松模拟海洋机器人与自主系统，支持多种传感器、智能体及功能特性。
 
@@ -6,9 +6,10 @@ HoloOcean 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰
 * __[入门与示例](./getting_started.md)__  
 * __[使用 HoloOcean](./usage/usage.md)__
 * __[HoloOcean 包](./packages/packages.md)__
-
+---
 * __[环境搭建](./HoloOcean.md)__  
 * __[使用 HoloOcean 的列表](./used_by.md)__  
+* __[其他](./underwater.md)__
 
 
 ## 功能
