@@ -23,13 +23,18 @@
     * [C++](./sensors.md#cpp)
     * [Python](./sensors.md#python)
     * [让您的传感器在 Underwater 中可用](./sensors.md#allowing_your_sensor_to_be_used_in_underwater)
-* 开发代理（Agents）
-    * 通用代理
-    * 浮力代理
-* 通信协议
-    * 预备阅读材料
-    * HoloOcean 的两个组成部分
-    * 简单使用示例
-    * 第 1 部分：holoocean.make()
-    * 第 2 部分：.step()
+* [开发代理（Agents）](./agents.md)
+    * [通用代理](./agents.md#general_agents)
+    * [浮力代理](./agents.md#buoyant_agents)
+* [通信协议](./semaphores.md)
+    * [预备阅读材料](./semaphores.md#prerequisite_reading)
+    * [holoocean 的两个部分](./semaphores.md#the_two_halves_of_holoocean)
+    * [简单使用示例](./semaphores.md#simple_usage_example)
+    * [第 1 部分：holoocean.make()](./semaphores.md#simple_usage_example)
+    * [第 2 部分：.step()](./semaphores.md#part_2_step)
     * 备注
+
+## 其他
+
+* [holodeck的开发wiki](https://github.com/BYU-PCCL/holodeck/wiki)
+* [holodeck文档](https://holodeck.readthedocs.io/en/latest/)
