@@ -186,12 +186,24 @@
 <h4 id="1">1. 从命令行构建：</h4>
 <p><code>{UnrealEngineDir}/Engine/Build/BatchFiles/Linux/Build.sh holodeck Linux {BuildConfiguration} {HolodeckEngineDir}/Holodeck.uproject -waitmutex</code></p>
 <p><code>ExecutableName</code> 可以是任何值。生成的可执行文件将以此命名。通常格式为 Holodeck-{BuildConfiguration}。例如：Holodeck-Debug。如果出现“找不到目标规则”错误，只需使用“holodeck”即可。</p>
-<p><code>BuildConfiguration</code> 必须是以下选项之一：
-- <code>Debug</code>: 包含用于调试引擎和游戏的符号
-- <code>DebugGame</code>: 引擎已优化，但包含游戏的调试符号，因此游戏可调试
-- <code>Development</code>: 启用除最耗时的优化之外的所有优化
-- <code>Shipping</code>: 优化游戏和引擎代码
-- <code>Test</code>: 与 Shipping 相同，但启用了一些控制台命令、统计信息和性能分析工具</p>
+<p><code>BuildConfiguration</code> 必须是以下选项之一：</p>
+<ul>
+<li>
+<p><code>Debug</code>: 包含用于调试引擎和游戏的符号</p>
+</li>
+<li>
+<p><code>DebugGame</code>: 引擎已优化，但包含游戏的调试符号，因此游戏可调试</p>
+</li>
+<li>
+<p><code>Development</code>: 启用除最耗时的优化之外的所有优化</p>
+</li>
+<li>
+<p><code>Shipping</code>: 优化游戏和引擎代码</p>
+</li>
+<li>
+<p><code>Test</code>: 与 Shipping 相同，但启用了一些控制台命令、统计信息和性能分析工具</p>
+</li>
+</ul>
 <h4 id="2">2. 从命令行运行游戏:</h4>
 <p><code>{HolodeckEngineDir}/Build/Linux}/{TargetName}-{Linux}-{BuildConfiguration}</code></p>
 <div class="admonition 注意">
