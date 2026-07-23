@@ -1,4 +1,4 @@
-# HoloOcean 开发指南
+# 水下机器人开发指南
 
 这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！
 
@@ -13,19 +13,19 @@
     * [编译](./start.md#compiling)
     * [启动游戏（实时模式）](./start.md#launching_game_live)
     * [日志记录](./start.md#logging)
-* 开发环境
-    * 添加 HoloOcean 世界
-    * 烘焙（Cooking）资源
-    * 打包 holodeck-engine
-    * 放置到安装目录
-    * 关于创建环境对象和声纳（Sonar）的说明：
-* 开发传感器
-    * C++
-    * Python
-    * 让您的传感器在 HoloOcean 中可用
-* 开发智能体（Agents）
-    * 通用智能体
-    * 浮力智能体
+* [开发环境](./env.md)
+    * [添加 Underwater 世界](./env.md#adding_underwater_worlds)
+    * [内容烘焙](./env.md#cooking_content)
+    * [打包 Underwater](./env.md#packing_underwater)
+    * [将文件放置在安装目录中](./env.md#place_in_install_directory)
+    * [关于创建环境对象和声呐的说明](./env.md#note_on_creating_environment_objects_and_sonar)
+* [开发传感器](./sensors.md)
+    * [C++](./sensors.md#cpp)
+    * [Python](./sensors.md#python)
+    * [让您的传感器在 Underwater 中可用](./sensors.md#allowing_your_sensor_to_be_used_in_underwater)
+* 开发代理（Agents）
+    * 通用代理
+    * 浮力代理
 * 通信协议
     * 预备阅读材料
     * HoloOcean 的两个组成部分
