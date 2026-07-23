@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Configuring Jenkins CI - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Configuring Jenkins CI";
+        var mkdocs_page_input_path = "underwater/wiki/Configuring-Jenkins-CI.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Configuring Jenkins CI</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Configuring-Jenkins-CI.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <p>There is a <code>Jenkinsfile</code> included in this <a href="https://github.com/BYU-PCCL/holodeck-engine">holodeck-engine</a> repo for use with Jenkins Blue Ocean. Our CI setup makes use of the following:</p>
+<ul>
+<li>Docker</li>
+<li>The <code>jenkinsci/blueocean</code> <a href="https://hub.docker.com/r/jenkinsci/blueocean/">docker image</a></li>
+<li><a href="https://github.com/adamrehn/ue4-docker">ue4-docker</a></li>
+<li><a href="https://github.com/adamrehn/ue4cli">ue4cli</a></li>
+</ul>
+<p>Jenkins is run inside a docker container, and Holodeck itself is built inside a docker container generated by <code>ue4-docker</code>. <code>ue4-cli</code> is used to make the build process easier.</p>
+<h3 id="note-jenkins-docker-image">Note: Jenkins Docker Image</h3>
+<p>We must use a custom docker image, since we need git-lfs support. This is explained below.</p>
+<h2 id="configuring-a-new-build-server">Configuring a new build server</h2>
+<p>Install Docker and Python 3.6+, you'll need these later.</p>
+<h3 id="step-1-build-ue4-docker-image">Step 1: Build <code>ue4-docker</code> image</h3>
+<p>You'll want to do this first, since it takes several hours.</p>
+<ol>
+<li>Follow the instructions for <a href="https://adamrehn.com/docs/ue4-docker/configuration/configuring-linux">Configuring Linux</a></li>
+</ol>
+<p>You might need to add ppas for Python 3.6 (<code>-dev</code> too!) and then <code>python3.6 -m pip install ...</code> to install the pip package
+2. <a href="https://adamrehn.com/docs/ue4-docker/use-cases/continuous-integration">Build the <code>ue4-complete</code> image</a>. Make sure to specify the current Holodeck engine version.</p>
+<p>Note that you will need ~300gb of disk space for this to succeed! The requirements aren't overestimating</p>
+<h3 id="step-2-install-jenkins">Step 2: Install Jenkins</h3>
+<p>We run Jenkins in a docker container, and use a Docker volume to persist data (instead of a bind mount. Avoids permissions issues).
+1. Install <code>jenkinsci/blueocean</code></p>
+<p><code>docker pull jenkinsci/blueocean</code></p>
+<ol>
+<li>Create our custom docker image, with Git LFS</li>
+</ol>
+<p>In a new directory, create a file named <code>Dockerfile</code> that contains the following:
+   <div class="highlight"><pre><span></span><code><span class="k">FROM</span><span class="w"> </span><span class="s">jenkinsci/blueocean</span>
+<span class="k">USER</span><span class="w"> </span><span class="s">root</span>
+<span class="k">RUN</span><span class="w"> </span>apk<span class="w"> </span>add<span class="w"> </span>git-lfs
+</code></pre></div></p>
+<p>Then, run <code>docker build -t holodeck/blueocean-lfs .</code>
+3. Create a docker volume</p>
+<p><code>docker volume create jenkins-data</code>
+4. Copy this sample startup script somewhere</p>
+<p><code>bash
+   docker run \
+    -u root \
+    --rm \
+    -d \
+    -p 80:8080 \
+    -p 50000:50000 \
+    -v jenkins-data:/var/jenkins_home \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    holodeck/blueocean-lfs</code></p>
+<pre><code>- `-u` runs Jenkins as the root user in the container
+- `--rm` cleans up any temporary volumes
+- `-p 80:8080` forwards port 8080 in the container to port 80 on the host
+- `-v jenkins-data..` binds `/var/jenkins_home` in the container to the docker volume `jenkins-data`
+- `-v -v /var/run/docker.sock...` allows the Jenkins instance inside the container to access the docker daemon outside of the container so that the dockerized Jenkins can have docker containers for builds.
+
+  (we heard you liked docker so we put docker inside your docker so you can docker while you docker)
+</code></pre>
+<ol>
+<li>Configure this script to be run on startup with a systemd unit file</li>
+</ol>
+<p>In <code>/etc/systemd/system/jenkins.service</code>, place this file:</p>
+<div class="highlight"><pre><span></span><code><span class="k">[Unit]</span>
+<span class="na">Description</span><span class="o">=</span><span class="s">Jenkins in a Docker Image for Holodeck</span>
+<span class="na">After</span><span class="o">=</span><span class="s">docker.service</span>
+<span class="na">Requires</span><span class="o">=</span><span class="s">docker.service</span>
+
+<span class="k">[Service]</span>
+<span class="na">TimeoutStartSec</span><span class="o">=</span><span class="s">0</span>
+<span class="na">Restart</span><span class="o">=</span><span class="s">always</span>
+<span class="c1"># User=remote</span>
+<span class="na">ExecStart</span><span class="o">=</span><span class="s">/home/remote/holodeck/jenkins/start-jenkins.sh</span>
+
+<span class="k">[Install]</span>
+<span class="na">WantedBy</span><span class="o">=</span><span class="s">multi-user.target</span>
+</code></pre></div>
+<ol>
+<li>Start the Jenkins systemd unit by running <code>sudo systemctl start jenkins.service</code>. You can check the logs with
+   <code>sudo journalctl -u jenkins.service</code> or the status with <code>sudo systemctl status jenkins.service</code>.</li>
+</ol>
+<h3 id="step-3-configure-jenkins">Step 3: Configure Jenkins</h3>
+<ol>
+<li>Connect to <code>localhost</code>, wait until you get the <strong>Unlock Jenkins</strong> screen.</li>
+</ol>
+<p>We will need to put in a password that Jenkins generated. You can do this by inspecting the systemd log (<code>sudo journalctl -u jenkins.service</code>) or by entering the docker container entering the docker container.</p>
+<ol>
+<li>Run <code>docker ps</code> - note the name for the <code>jenkinsci/blueocean</code> container (eg <code>vigilant_mayer</code>)</li>
+<li>Run <code>docker exec -it vigilant_mayer bash</code> - this should get you a shell inside the container. Get the password from <code>/var/jenkins_home/secrets/initialAdminPassword</code></li>
+<li>Install suggested plugins, create an admin user, wait for it to restart.</li>
+<li>Navigate to <code>localhost/blue</code>, you should see the new-looking Jenkins Blue UI instead of the janky old one</li>
+<li>Select "Create new Pipeline" -&gt; "Github"</li>
+<li>Follow the link to create a new Personal Access Token. <em>Write it down somewhere</em>, once generated you can never see it again!</li>
+</ol>
+<p><strong>Note</strong> - I think this token is associated with a user and not the organization, so if my GitHub account (jaydenmilne) gets removed from the org, Jenkins might break.
+8. Select the Holodeck-Engine repo, it should detect the repo and begin to build it
+9. Configure Jenkins to periodically poll the holodeck-engine repo.
+   a. From the Jenkins dashboard, select <code>holodeck-engine</code>
+   b. Select "Configure" on the left hand side
+   c. Select the "Scan Repository Triggers" tab
+   d. Check "Periodically if not otherwise run" and choose a short interval, like 5 minutes or so.</p>
+<p>If it doesn't there could be an issue with the Jenkins server being publicly accessible, if it isn't on the open internet, Github won't be able to use webhooks to notify Jenkins of a new commit or PR. You will have to manually make Jenkins scan the repo every time:</p>
+<ul>
+<li>Open the configuration for the pipeline</li>
+<li>"Scan Repository Now" on the left</li>
+</ul>
+<p>If the server is publicly available and builds still aren't automatically happening, you may be a victim of <a href="https://issues.jenkins-ci.org/browse/JENKINS-50883">JENKINS-50883</a>. <a href="http://jayd.ml/jenkins/2019/03/05/jenkins-pipeline-webhooks">See this blog post</a></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

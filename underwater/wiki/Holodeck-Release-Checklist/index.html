@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>水下机器人开发指南 - Mujoco 插件</title>
+    <title>Holodeck Release Checklist - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u5f00\u53d1\u6307\u5357";
-        var mkdocs_page_input_path = "underwater/develop/develop.md";
+        var mkdocs_page_name = "Holodeck Release Checklist";
+        var mkdocs_page_input_path = "underwater/wiki/Holodeck-Release-Checklist.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人开发指南</li>
+      <li class="breadcrumb-item active">Holodeck Release Checklist</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/develop.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Holodeck-Release-Checklist.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,54 +140,52 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">水下机器人开发指南</h1>
-<p>这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！</p>
-<p>我们已力求内容详尽，但查阅 Holodeck 的文档或许能为您提供更多相关信息。</p>
-<h2 id="_2">内容</h2>
-<ul>
-<li><a href="../start/">入门指南</a><ul>
-<li><a href="../start/#cloning">克隆代码库</a></li>
-<li><a href="../start/#opening_prepping_project">打开并准备项目</a></li>
-<li><a href="../start/#setting_up_vscode">配置 VSCode</a></li>
-<li><a href="../start/#compiling">编译</a></li>
-<li><a href="../start/#launching_game_live">启动游戏（实时模式）</a></li>
-<li><a href="../start/#logging">日志记录</a></li>
-</ul>
+                <p>This is the rough order of things that need to happen to push a release out the door.</p>
+<ol>
+<li>As soon as the previous release is done, make sure the you've bumped the version number and append <code>dev</code> to the end 
+   See [[Holodeck Versioning|Holodeck Versioning]].
+   So if we just released <code>0.2.1</code>, bump it to <code>0.2.2dev</code></li>
+</ol>
+<p>This is done so that development releases don't get mixed in with actual releases.</p>
+<ol>
+<li>Update the <a href="https://github.com/BYU-PCCL/holodeck/blob/master/docs/changelog/changelog.rst">changelog</a> with</li>
+<li>New features</li>
+<li>Bugs present in last release that were fixed in this release</li>
+</ol>
+<p>It can be useful to look at the milestone or closed pull requests in a certain date range.</p>
+<p>Follow [[this format.|Holodeck Release Notes Template]]</p>
+<ol>
+<li>As you go through the changelog, update the rest of the documentation as needed</li>
+</ol>
+<p>Hopefully, pull requests that introduce new features or change old ones update the docs as they happen. We shouldn't put updating the docs to the last second.
+3. Get the latest build of <code>develop</code> off of Jenkins, make this your "release candidate" for Linux (make sure the version in the <code>config.json</code> of <code>holodeck-worlds</code> is correct) by going to monster.cs.byu.edu.</p>
+<ol>
+<li>Put that build on S3 (with <code>dev</code> appended to the version number), verify that the client can download it and run it on Linux. Holodeck aws account has access to the bucket at https://s3.console.aws.amazon.com/s3/buckets/holodeckworlds</li>
+<li>Run integration tests locally by having an editable install of holodeck installed (see <code>tests/README.md</code>)</li>
+<li>Run integration tests in tox by typing <code>tox</code> from the root of the holodeck repo</li>
+<li>Package a Windows version and repeat steps 5,7, and 8.</li>
+</ol>
+<p><strong>Remember to change the config files for the Windows packages!</strong></p>
+<ol>
+<li>
+<p>Build the python code and upload it to pip, make sure you can install it</p>
+<p><strong><em>MAKE SURE THE VERSION STILL HAS <code>dev</code> APPENDED TO IT</em></strong></p>
+<p>Once you upload a version to pip, you can't re-upload it without bumping the version number. pip knows to treat versions <code>dev</code> appended differently</p>
+<p>See <a href="https://packaging.python.org/tutorials/packaging-projects/#generating-distribution-archives">here</a> for instructions on how to test &amp; upload packages.</p>
+<p>If you need to upload another development version, just add a number after dev, so it would be <code>1.2.4dev0</code>
+10. Install the development version with <code>pip install --pre holodeck</code> (you may need to <code>pip uninstall holodeck</code></p>
+<p>In the output that pip prints out, make sure it installed the version with <code>dev</code> appended
+11. Run tests again, make sure everything seems OK
+12. Change the version numbers to remove <code>dev</code>, commit those changes, and merge into master
+13. Checkout master, repeat step 8 to upload the final version of the python package
+14. Upload the final binaries to S3 without the <code>dev</code> appended
+15. In <code>holodeck</code>, <code>holodeck-worlds</code>, <code>holodeck-engine</code>, and <code>holodeck-configs</code> make a release that tags the commit that the packages were generated against. This is so we can find out later exactly what was in a released version of holodeck
+16. Update the Docker images. <strong>Note that the docker build process is triggered on push/pull requests to master. The build depends on the pip package and worlds being up to date</strong>. Make sure those are in place before doing a final merge on the master branch. Check to make sure the image builds completed successfully. 
+17. Consider writing a blog post with changes on the PCCL blog
+18. Order pizza
+19. Wait for the bugs to roll in</p>
 </li>
-<li><a href="../env/">开发环境</a><ul>
-<li><a href="../env/#adding_underwater_worlds">添加 Underwater 世界</a></li>
-<li><a href="../env/#cooking_content">内容烘焙</a></li>
-<li><a href="../env/#packing_underwater">打包 Underwater</a></li>
-<li><a href="../env/#place_in_install_directory">将文件放置在安装目录中</a></li>
-<li><a href="../env/#note_on_creating_environment_objects_and_sonar">关于创建环境对象和声呐的说明</a></li>
-</ul>
-</li>
-<li><a href="../sensors/">开发传感器</a><ul>
-<li><a href="../sensors/#cpp">C++</a></li>
-<li><a href="../sensors/#python">Python</a></li>
-<li><a href="../sensors/#allowing_your_sensor_to_be_used_in_underwater">让您的传感器在 Underwater 中可用</a></li>
-</ul>
-</li>
-<li><a href="../agents/">开发代理（Agents）</a><ul>
-<li><a href="../agents/#general_agents">通用代理</a></li>
-<li><a href="../agents/#buoyant_agents">浮力代理</a></li>
-</ul>
-</li>
-<li><a href="../semaphores/">通信协议</a><ul>
-<li><a href="../semaphores/#prerequisite_reading">预备阅读材料</a></li>
-<li><a href="../semaphores/#the_two_halves_of_holoocean">holoocean 的两个部分</a></li>
-<li><a href="../semaphores/#simple_usage_example">简单使用示例</a></li>
-<li><a href="../semaphores/#simple_usage_example">第 1 部分：holoocean.make()</a></li>
-<li><a href="../semaphores/#part_2_step">第 2 部分：.step()</a></li>
-<li><a href="../semaphores/#remarks">备注</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="holodeck">Holodeck</h2>
-<ul>
-<li><a href="../../wiki/Holodeck-Onboarding/">holodeck 开发</a> - <a href="https://github.com/BYU-PCCL/holodeck/wiki">参考页面</a></li>
-<li><a href="https://holodeck.readthedocs.io/en/latest/">holodeck文档</a></li>
-</ul>
+</ol>
               
             </div>
           </div><footer>

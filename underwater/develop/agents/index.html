@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>开发代理（Agents） - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5f00\u53d1\u4ee3\u7406\uff08Agents\uff09";
+        var mkdocs_page_input_path = "underwater/develop/agents.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">开发代理（Agents）</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/agents.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="agents">开发代理（Agents）</h1>
+<p>遗憾的是，由于代理程序需要同时存在于 Python、C++ 和 UE 代码中，因此这个过程相当复杂。虽然并不难，但比较繁琐，我会在这里一步步指导你完成。</p>
+<h2 id="_1">通用代理 <span id="general_agents"></span></h2>
+<h3 id="python">Python 部分</h3>
+<p>首先，打开 <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/src/holoocean/agents.py">client/src/holoocean/agents.py</a> 文件。要创建代理程序，通常直接复制 <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/src/holoocean/agents.py#L624">TurtleAgent</a> 并根据自己的喜好进行编辑。你需要编辑以下内容：</p>
+<ul>
+<li>
+<p>类名</p>
+</li>
+<li>
+<p>代理类型（agent_type）</p>
+</li>
+<li>
+<p>所有与控制相关的内容。这包括所有常量和 <a href="https://github.com/OpenHUTB/Underwater/blob/d26be1f6b14112f69981388130332abaa3b348a3/client/src/holoocean/agents.py#L645">control_schemes()</a> 函数。请确保在返回值中将代理的输入数量赋给 <a href="https://github.com/OpenHUTB/Underwater/blob/d26be1f6b14112f69981388130332abaa3b348a3/client/src/holoocean/agents.py#L648">ContinuousActionSpace</a>。</p>
+</li>
+</ul>
+<p>Python 部分就差不多了，最终结果应该类似这样。
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">CustomAgent</span><span class="p">(</span><span class="n">HoloOceanAgent</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A simple custom bot.</span>
+
+<span class="sd">    Inherits from :class:`HoloOceanAgent`.&quot;&quot;&quot;</span>
+    <span class="c1"># Underwater 中 CustomAgent.h 的常量</span>
+    <span class="n">__MAX</span> <span class="o">=</span> <span class="mf">160.0</span>
+    <span class="n">__MIN</span> <span class="o">=</span> <span class="o">-</span><span class="n">__MAX</span>
+
+    <span class="n">agent_type</span> <span class="o">=</span> <span class="s2">&quot;CustomAgent&quot;</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">control_schemes</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">low</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__MIN</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+        <span class="n">high</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">__MAX</span><span class="p">]</span><span class="o">*</span><span class="mi">4</span>
+        <span class="k">return</span> <span class="p">[(</span><span class="s2">&quot;[first, second, third, fourth]&quot;</span><span class="p">,</span> <span class="n">ContinuousActionSpace</span><span class="p">([</span><span class="mi">4</span><span class="p">],</span> <span class="n">low</span><span class="o">=</span><span class="n">low</span><span class="p">,</span> <span class="n">high</span><span class="o">=</span><span class="n">high</span><span class="p">))]</span>
+
+    <span class="k">def</span> <span class="nf">get_joint_constraints</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">joint_name</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;CustomAgent &quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">name</span>
+
+    <span class="k">def</span> <span class="nf">__act__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">action</span><span class="p">):</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_buffer</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">action</span><span class="p">))</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">copyto</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_action_buffer</span><span class="p">,</span> <span class="n">action</span><span class="p">)</span>
+</code></pre></div></p>
+<p>在同一文件的下方，<a href="https://github.com/OpenHUTB/Underwater/blob/d26be1f6b14112f69981388130332abaa3b348a3/client/src/holoocean/agents.py#L861">AgentDefinition</a> 类中，有一个字典将名称映射到 Python 类。为我们的新类添加一个条目，例如“CustomAgent”: CustomAgent,。名称应与类中设置的 agent_type 匹配。</p>
+<h3 id="c">C++ 部分</h3>
+<p>接下来，在 UE4 中打开 <a href="https://github.com/OpenHUTB/Underwater">Underwater</a>。然后转到“文件”-&gt;“打开 Visual Studio”（或者在您选择的 C++ 编辑器中打开项目文件）。您需要复制 4 个 TurtleAgent 文件，并相应地重命名它们：TurtleAgent.cpp、TurtleAgent.h、TurtleAgentController.cpp 和 TurtleAgentController.h 应分别复制到 CustomAgent.cpp、CustomAgent.h、CustomAgentController.cpp 和 CustomAgentController.h。确保它们与被复制的文件位于同一文件夹中（应该位于公共/私有文件夹的组合中）。</p>
+<p>接下来，我们将编辑 CustomAgent.h。请执行以下操作：</p>
+<ul>
+<li>
+<p>将 <code>ATurtleAgent();</code> 改为 <code>ACustomAgent();</code></p>
+</li>
+<li>
+<p>将 <code>class HOLODECK_API ATurtleAgent : public AHolodeckAgent</code> 改为<code>class HOLODECK_API ACustomAgent : public AHolodeckAgent</code></p>
+</li>
+<li>
+<p>将 <code>unsigned int GetRawActionSizeInBytes() const override { return 2 * sizeof(float); };</code> 这行代码中的 2 改为你的代理的输入数量。</p>
+</li>
+<li>
+<p>将 <code>float CommandArray[2];</code> 这行代码中的 2 改为你的代理的输入数量。</p>
+</li>
+</ul>
+<p>CustomAgent.cpp 文件是大部分魔法发生的地方：你的动态特性、对输入的反应等等都应该在这里实现。在其中，将以下所有内容更改为：</p>
+<ul>
+<li>
+<p><code>#include "TurtleAgent.h"</code> 改为 <code>#include "CustomAgent.h"</code></p>
+</li>
+<li>
+<p>所有 <code>ATurtleAgent</code> 改为 <code>ACustomAgent</code></p>
+</li>
+<li>
+<p>你希望代理执行的任何操作，或者它如何响应输入，都需要放入 <code>Tick(float DeltaSeconds)</code> 函数中。</p>
+</li>
+</ul>
+<p>在 CustomAgentController.h 文件中，将以下所有内容更改为：</p>
+<ul>
+<li>
+<p><code>#include "TurtleAgent.h"</code> 改为 <code>#include "CustomAgent.h"</code></p>
+</li>
+<li>
+<p><code>#include "TurtleAgentController.generated.h"</code> 改为 <code>#include "CustomAgentController.generated.h"</code></p>
+</li>
+<li>
+<p>将所有 <code>ATurtleAgentController</code> 实例更改为 <code>ACustomAgentController</code></p>
+</li>
+</ul>
+<p>在 CustomAgentController.cpp 文件中，将以下所有内容更改为：</p>
+<ul>
+<li><code>#include "TurtleAgentController.h"</code> 改为 <code>#include "CustomAgentController.h"</code></li>
+</ul>
+<p>将所有 <code>ATurtleAgentController</code> 实例更改为 <code>ACustomAgentController</code></p>
+<p>以上就是 C++ 部分的内容。</p>
+<h3 id="_2">虚幻引擎</h3>
+<p>这一步可能有点隐蔽。在 UE4 中，点击顶部工具栏上的编译按钮。这会将我们新的 C++ 代码加载到 UE4 中。如果出现错误，很可能是上一步操作有误，需要返回调试。编译成功后，在内容浏览器中导航至 <a href="https://github.com/OpenHUTB/Underwater/tree/master/Content/HolodeckContent/Agents">Content/HolodeckContent/Agents</a> 文件夹。创建一个新文件夹用于存放你的代理，并进入该文件夹。右键单击并选择创建蓝图类。此时会弹出一个对话框，要求你选择父类。选择上一步中的 C++ 类（<code>CustomAgent</code>），并将你的新蓝图命名为类似 CustomAgentBp 的名称。在这里，你可以添加网格、权重等，使你的代理拥有你想要的外观和重量。这有时会有点棘手，但网上有很多关于制作自定义 Pawn 的 UE4 教程。</p>
+<p>最后，我们需要将 Python 类与 UE4/C++ 代码连接起来。在内容浏览器中导航至 <a href="https://github.com/OpenHUTB/Underwater/tree/master/Content">Content/</a> 目录，然后打开 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Content/HolodeckGameModeBP.uasset">HolodeckGameModeBP</a>。您会在右侧的“默认”部分看到一个名为“Agent Bp Map”的条目。展开它，并插入一个新条目。在左侧选择您之前在代码中设置的 agent_type，然后在右侧选择我们刚刚创建的蓝图（CustomAgentBp）。</p>
+<p>就是这样！如果您发现任何不清楚或错误的地方，请随时编辑并澄清，以便其他读者理解。您需要重新打包您的环境（参见上文），然后应该就可以使用您的新代理了！</p>
+<h2 id="_3">浮力代理 <span id="buoyant_agents"></span></h2>
+<p><code>AHolodeckBuoyantAgent</code> 类的创建是为了避免未来所有添加到 Underwater 中的 AUV 都需要重新实现浮力动力学。只需设置一些必要的变量，一切即可开箱即用。所有物理信息都在 C++ 中设置，而不是在蓝图中设置。蓝图中设置的任何内容（例如质量或质心偏移）都会在 C++ 中被覆盖。</p>
+<p>我们不会在此详细介绍如何创建自定义代理，请参阅上文相关章节。唯一的区别是，您需要继承 <code>AHolodeckBuoyantAgent</code> 而不是 <code>AHolodeckAgent</code>，并且可能需要复制 <code>AHoveringAUV</code> 的文件而不是 <code>ATurtleAgent</code> 的文件。</p>
+<h3 id="_4">必要变量</h3>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>所有这些变量都基于正确的原点存储（不包含 OffsetToOrigin 偏移量）。</p>
+</div>
+<p>必须在类构造函数中或在调用 <code>Super::InitializeAgent()</code> 之前在 <code>InitializeAgent</code> 函数中设置以下变量。
+<div class="highlight"><pre><span></span><code><span class="kt">float</span><span class="w"> </span><span class="n">Volume</span><span class="p">;</span>
+<span class="n">FVector</span><span class="w"> </span><span class="n">CenterBuoyancy</span><span class="p">;</span>
+<span class="n">FVector</span><span class="w"> </span><span class="n">CenterMass</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">MassInKG</span><span class="p">;</span>
+<span class="n">FVector</span><span class="w"> </span><span class="n">OffsetToOrigin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span>
+</code></pre></div></p>
+<p>这些设置基本都符合预期。如果你的网格导入时轴心点正确，那么你可以不用设置 <code>OffsetToOrigin</code>。</p>
+<h3 id="_5">额外变量</h3>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>除 <code>SurfacePoints</code> 外，所有这些变量均以正确的原点为基准存储（不包含 OffsetToOrigin 和 CenterVehicle 参数）。</p>
+</div>
+<p>您可以设置这些变量来自定义表面浮力的各种使用方式，即使不进行设置，所有变量也会被计算。表面浮力的计算方法是：在载具的“边界框”内随机采样点，然后实时检查有多少点位于表面之上。您可以通过在 UE4 中打开静态网格并点击“边界框”来查看此边界框。如果您的机器人不是方框，则此方法显然不够精确，但对于我们更接近方框的载具来说，这种方法是有效的。或者，如果您想离线采样并存储这些点，您可以手动显式设置它们。</p>
+<div class="highlight"><pre><span></span><code><span class="n">FVector</span><span class="w"> </span><span class="n">CenterVehicle</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FVector</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">);</span><span class="w"> </span><span class="c1">// 载具中心相对于真实原点的位置。如果原点不是载具中心，则需要进行设置。</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">NumSurfacePoints</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">;</span>
+<span class="n">FBox</span><span class="w"> </span><span class="n">BoundingBox</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FBox</span><span class="p">();</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FVector</span><span class="o">&gt;</span><span class="w"> </span><span class="n">SurfacePoints</span><span class="p">;</span>
+<span class="kt">float</span><span class="w"> </span><span class="n">SurfaceLevel</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</code></pre></div>
+<ul>
+<li>
+<p><code>CenterVehicle</code> 是载具物理中心到真实原点的距离。它用于确保边界框位于正确的位置。如果您不使用载具中心作为表面点，则必须设置此值。</p>
+</li>
+<li>
+<p><code>NumSurfacePoints</code> 可能是您接下来最可能需要设置的参数。顾名思义，它代表的是表面点的数量。根据机器人的大小，可能需要调整此值的大小。</p>
+</li>
+<li>
+<p><code>BoundingBox</code> 是载具周围的边界框。如果未设置，网格会自动计算。如果自动计算的边界框过大，您可以手动设置。</p>
+</li>
+<li>
+<p><code>SurfacePoints</code> 是采样点。如果您不想使用边界框方法，请显式设置此参数。注意：为了降低复杂度，这些点已预先加上 <code>OffsetToOrigin</code> 和 <code>CenterVehicle</code> 的值。（也就是说，我们不希望每个游戏刻都重复执行 2 * NumSurfacePoints 的加法运算）</p>
+</li>
+<li>
+<p><code>SurfaceLevel</code> 是水位。对于我们所有的环境，该值均已设置为 0。</p>
+</li>
+</ul>
+<h3 id="_6">调试工具</h3>
+<p>为了能够可视化边界框和表面点，确保它们的位置正确，您可以在代理的 tick 方法中使用继承的 <code>ShowBoundingBox()</code> 和 <code>ShowSurfacePoints()</code> 函数。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

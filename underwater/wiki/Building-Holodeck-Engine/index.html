@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>水下机器人开发指南 - Mujoco 插件</title>
+    <title>Building Holodeck Engine - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u5f00\u53d1\u6307\u5357";
-        var mkdocs_page_input_path = "underwater/develop/develop.md";
+        var mkdocs_page_name = "Building Holodeck Engine";
+        var mkdocs_page_input_path = "underwater/wiki/Building-Holodeck-Engine.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人开发指南</li>
+      <li class="breadcrumb-item active">Building Holodeck Engine</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/develop.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Building-Holodeck-Engine.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,54 +140,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">水下机器人开发指南</h1>
-<p>这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！</p>
-<p>我们已力求内容详尽，但查阅 Holodeck 的文档或许能为您提供更多相关信息。</p>
-<h2 id="_2">内容</h2>
+                <p>The engine side of holodeck is an Unreal project that has synchronization code written in C++ to communicate with the engine, found in the <a href="https://github.com/BYU-PCCL/holodeck-engine"><code>holodeck-engine</code></a> repo. For details on how those two halves communicate, see <a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol">Holodeck Communication Protocol</a>.</p>
+<h3 id="1-get-unreal-editor">1. Get Unreal Editor</h3>
+<p>In order to modify the engine, you must have the Unreal Editor installed. For Windows, you can just install it from the Epic Game Launcher (see https://www.unrealengine.com/), but for Linux you must compile the editor  yourself (see <a href="https://docs.unrealengine.com/en-US/Platforms/Linux/BeginnerLinuxDeveloper/SettingUpAnUnrealWorkflow/index.html">here</a></p>
+<p>You must install the version of Unreal Editor that holodeck is currently using, check the <a href="https://holodeck.readthedocs.io/en/latest/changelog/changelog.html">changelog</a> to see which version holodeck-engine is currently using. As of this writing the current version is 4.22.</p>
+<h3 id="2-clone-repo">2. Clone Repo</h3>
+<p>To start, clone the repo (https://github.com/BYU-PCCL/holodeck-engine). You must have git-lfs installed and enabled, after running <code>git clone</code> you should be able to run <code>git lfs pull</code> and get output like the following:
+<div class="highlight"><pre><span></span><code><span class="gp">jayden@NAGA:~/dev/temp$ </span>git<span class="w"> </span>clone<span class="w"> </span>git@github.com:BYU-PCCL/holodeck-engine.git
+<span class="go">Cloning into &#39;holodeck-engine&#39;...</span>
+<span class="go">remote: Enumerating objects: 57, done.</span>
+<span class="go">remote: Counting objects: 100% (57/57), done.</span>
+<span class="go">remote: Compressing objects: 100% (44/44), done.</span>
+<span class="go">remote: Total 6769 (delta 22), reused 24 (delta 12), pack-reused 6712</span>
+<span class="go">Receiving objects: 100% (6769/6769), 4.53 MiB | 9.84 MiB/s, done.</span>
+<span class="go">Resolving deltas: 100% (3884/3884), done.</span>
+<span class="go">Filtering content: 100% (181/181), 224.26 MiB | 9.61 MiB/s, done.</span>
+<span class="gp">jayden@NAGA:~/dev/temp$ </span><span class="nb">cd</span><span class="w"> </span>holodeck-engine/
+<span class="gp">jayden@NAGA:~/dev/temp/holodeck-engine$ </span>git<span class="w"> </span>lfs<span class="w"> </span>pull
+<span class="gp">jayden@NAGA:~/dev/temp/holodeck-engine$</span>
+</code></pre></div></p>
+<h3 id="3-opening-project">3. Opening Project</h3>
+<p>You should now be able to open <code>holodeck.uproject</code> in the editor.</p>
+<p>If you get an error about assets being corrupt, you didn't do a git lfs pull correctly.</p>
+<p>If you get an error about assets being saved with a different engine version, make sure you installed the correct version.</p>
+<p>You should see the ExampleLevel loaded up:</p>
+<p><img alt="" src="../images/editor.png" /></p>
+<h3 id="4">4. 生成项目文件</h3>
+<p>在 Windows 系统中，右键单击资源管理器中的 <code>holodeck.uproject</code> 文件，然后选择"Refresh Visual Studio Projects"。</p>
+<p>在 Linux 系统中，请参阅<a href="../How-to-Configure-Debugger-on-Linux/">如何在 Linux 上调试 Holodeck 引擎</a>以生成项目文件。</p>
+<p>这样，您就可以在 IDE 中打开 Holodeck 并编辑 C++ 文件，以及调试已编译的项目。</p>
+<h3 id="5">5. 烘焙内容</h3>
+<p>在虚幻编辑器中，选择“文件”-&gt;“为 {平台} 烘焙内容”。几分钟后，右下角应该会弹出成功提示。</p>
+<p>必须先执行此操作，才能从调试器运行 Holodeck。</p>
+<h3 id="6">6. 运行项目</h3>
+<p>您可以从这里开始，打包项目以便从客户端启动（例如使用 <code>holodeck.make()</code> 或实例化一个 <code>HolodeckEnvironment</code>），或者将客户端附加到在调试器或虚幻编辑器中运行的引擎实例。</p>
 <ul>
-<li><a href="../start/">入门指南</a><ul>
-<li><a href="../start/#cloning">克隆代码库</a></li>
-<li><a href="../start/#opening_prepping_project">打开并准备项目</a></li>
-<li><a href="../start/#setting_up_vscode">配置 VSCode</a></li>
-<li><a href="../start/#compiling">编译</a></li>
-<li><a href="../start/#launching_game_live">启动游戏（实时模式）</a></li>
-<li><a href="../start/#logging">日志记录</a></li>
+<li><a href="../Packaging-Project/">打包项目</a></li>
 </ul>
-</li>
-<li><a href="../env/">开发环境</a><ul>
-<li><a href="../env/#adding_underwater_worlds">添加 Underwater 世界</a></li>
-<li><a href="../env/#cooking_content">内容烘焙</a></li>
-<li><a href="../env/#packing_underwater">打包 Underwater</a></li>
-<li><a href="../env/#place_in_install_directory">将文件放置在安装目录中</a></li>
-<li><a href="../env/#note_on_creating_environment_objects_and_sonar">关于创建环境对象和声呐的说明</a></li>
-</ul>
-</li>
-<li><a href="../sensors/">开发传感器</a><ul>
-<li><a href="../sensors/#cpp">C++</a></li>
-<li><a href="../sensors/#python">Python</a></li>
-<li><a href="../sensors/#allowing_your_sensor_to_be_used_in_underwater">让您的传感器在 Underwater 中可用</a></li>
-</ul>
-</li>
-<li><a href="../agents/">开发代理（Agents）</a><ul>
-<li><a href="../agents/#general_agents">通用代理</a></li>
-<li><a href="../agents/#buoyant_agents">浮力代理</a></li>
-</ul>
-</li>
-<li><a href="../semaphores/">通信协议</a><ul>
-<li><a href="../semaphores/#prerequisite_reading">预备阅读材料</a></li>
-<li><a href="../semaphores/#the_two_halves_of_holoocean">holoocean 的两个部分</a></li>
-<li><a href="../semaphores/#simple_usage_example">简单使用示例</a></li>
-<li><a href="../semaphores/#simple_usage_example">第 1 部分：holoocean.make()</a></li>
-<li><a href="../semaphores/#part_2_step">第 2 部分：.step()</a></li>
-<li><a href="../semaphores/#remarks">备注</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="holodeck">Holodeck</h2>
-<ul>
-<li><a href="../../wiki/Holodeck-Onboarding/">holodeck 开发</a> - <a href="https://github.com/BYU-PCCL/holodeck/wiki">参考页面</a></li>
-<li><a href="https://holodeck.readthedocs.io/en/latest/">holodeck文档</a></li>
-</ul>
+<p>待办事项：编写并链接到相关页面，解释如何在此处运行项目。</p>
+<h2 id="faq">FAQ</h2>
+<h4 id="_1">所有关卡/资产都去哪儿了？</h4>
+<p>我们购买了许多素材的授权来创建我们打包分发的关卡，但我们并不拥有这些素材的所有权。根据这些授权协议的条款，我们无法以未处理的形式分发它们。很遗憾，holodeck-engine 代码库中的内容就是我们所能提供的全部，抱歉。您可以自由创建自己的关卡/世界并自行授权。</p>
               
             </div>
           </div><footer>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>水下机器人开发指南 - Mujoco 插件</title>
+    <title>How to Configure Debugger on Linux - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u5f00\u53d1\u6307\u5357";
-        var mkdocs_page_input_path = "underwater/develop/develop.md";
+        var mkdocs_page_name = "How to Configure Debugger on Linux";
+        var mkdocs_page_input_path = "underwater/wiki/How-to-Configure-Debugger-on-Linux.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人开发指南</li>
+      <li class="breadcrumb-item active">How to Configure Debugger on Linux</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/develop.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/How-to-Configure-Debugger-on-Linux.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,54 +140,61 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">水下机器人开发指南</h1>
-<p>这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！</p>
-<p>我们已力求内容详尽，但查阅 Holodeck 的文档或许能为您提供更多相关信息。</p>
-<h2 id="_2">内容</h2>
+                <h2 id="clion">CLion</h2>
+<h4 id="1-clion">1. 创建 CLion 工程文件</h4>
 <ul>
-<li><a href="../start/">入门指南</a><ul>
-<li><a href="../start/#cloning">克隆代码库</a></li>
-<li><a href="../start/#opening_prepping_project">打开并准备项目</a></li>
-<li><a href="../start/#setting_up_vscode">配置 VSCode</a></li>
-<li><a href="../start/#compiling">编译</a></li>
-<li><a href="../start/#launching_game_live">启动游戏（实时模式）</a></li>
-<li><a href="../start/#logging">日志记录</a></li>
+<li>在虚幻引擎中打开 Holodeck</li>
+<li>选择菜单中的：编辑 -&gt; 编辑器偏好设置 -&gt; 通用 -&gt; 源代码 -&gt; 源代码编辑器 -&gt; CLion</li>
+<li>选择菜单中的：文件 -&gt; 生成 CLion 工程 (如果项目已生成，则此选项将显示为“刷新 CLion 项目”)</li>
 </ul>
-</li>
-<li><a href="../env/">开发环境</a><ul>
-<li><a href="../env/#adding_underwater_worlds">添加 Underwater 世界</a></li>
-<li><a href="../env/#cooking_content">内容烘焙</a></li>
-<li><a href="../env/#packing_underwater">打包 Underwater</a></li>
-<li><a href="../env/#place_in_install_directory">将文件放置在安装目录中</a></li>
-<li><a href="../env/#note_on_creating_environment_objects_and_sonar">关于创建环境对象和声呐的说明</a></li>
-</ul>
-</li>
-<li><a href="../sensors/">开发传感器</a><ul>
-<li><a href="../sensors/#cpp">C++</a></li>
-<li><a href="../sensors/#python">Python</a></li>
-<li><a href="../sensors/#allowing_your_sensor_to_be_used_in_underwater">让您的传感器在 Underwater 中可用</a></li>
-</ul>
-</li>
-<li><a href="../agents/">开发代理（Agents）</a><ul>
-<li><a href="../agents/#general_agents">通用代理</a></li>
-<li><a href="../agents/#buoyant_agents">浮力代理</a></li>
-</ul>
-</li>
-<li><a href="../semaphores/">通信协议</a><ul>
-<li><a href="../semaphores/#prerequisite_reading">预备阅读材料</a></li>
-<li><a href="../semaphores/#the_two_halves_of_holoocean">holoocean 的两个部分</a></li>
-<li><a href="../semaphores/#simple_usage_example">简单使用示例</a></li>
-<li><a href="../semaphores/#simple_usage_example">第 1 部分：holoocean.make()</a></li>
-<li><a href="../semaphores/#part_2_step">第 2 部分：.step()</a></li>
-<li><a href="../semaphores/#remarks">备注</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="holodeck">Holodeck</h2>
+<p><img alt="" src="../../../img/underwater/create_clion_project_file.jpg" /></p>
+<h4 id="2-open-the-project-in-clion">2. Open the project in CLion</h4>
+<p>Open the project from the project root in CLion or in Unreal Engine Editor goto File -&gt; Open CLion</p>
+<h4 id="3-edit-the-configurations">3. Edit the configurations</h4>
+<p><strong>Note:</strong> You need to copy libopenvr_api.so from <code>{where you cloned ue4}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64</code> to <code>holodeck-engine/Binaries/Linux</code> to be able to run/debug the game following these instructions.
+- In CLion goto Run -&gt; Edit Configurations (also available in the run section of the toolbar)
+- Select Holodeck-Linux-DebugGame
+- Set the value in <code>Executable</code> to {HOLODECK-ENGINE-ROOT}/Binaries/Linux/Holodeck-Linux-DebugGame
+- Leave 'Program arguments<code>blank. Alternatively, you can specify the map/world to load e.g</code>TestWorld<code>- Click OK
+- Use the debug icon to debug the game or press</code>Shift + F9`</p>
+<h4 id="4-run-holodeck-in-debug-mode">4. Run Holodeck in debug mode</h4>
+<p>After the setup, you should be able to click on Run -&gt; Debug <configuration_name>, click on the debug icon on the top right corner of the toolbar or simply use Shift + F9 to debug Holodeck. </p>
+<blockquote>
+<p>Note: This will build the project and open Unreal Engine in debug mode. Running Holodeck in Unreal Engine should hit any reachable breakpoints you set.</p>
+</blockquote>
+<h2 id="vscode">VSCode</h2>
+<h4 id="1-create-vscode-project-files">1. Create VSCode project files</h4>
 <ul>
-<li><a href="../../wiki/Holodeck-Onboarding/">holodeck 开发</a> - <a href="https://github.com/BYU-PCCL/holodeck/wiki">参考页面</a></li>
-<li><a href="https://holodeck.readthedocs.io/en/latest/">holodeck文档</a></li>
+<li>Open Holodeck in Unreal Engine</li>
+<li>Edit -&gt; Editor Preferences -&gt; General -&gt; Source Code -&gt; Source Code Editor -&gt; VSCode</li>
+<li>File -&gt; Generate VSCode Project (this will be "Refresh VSCode Project"  if the project was already generated)</li>
 </ul>
+<h4 id="2-open-the-project-in-vscode">2. Open the project in VSCode</h4>
+<p>Open the workspace from the project root in VSCode</p>
+<h4 id="3-copy-missing-library">3. Copy missing library</h4>
+<p>Copy <code>libopenvr_api.so</code> from <code>{where you cloned ue4}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64</code> to <code>holodeck-engine/Binaries/Linux</code></p>
+<h4 id="4-run">4. Run</h4>
+<p>F5 to debug, Ctrl + Shift + B to build </p>
+<h2 id="command-line">Command line</h2>
+<h4 id="1-build-from-the-command-line">1. Build from the command line:</h4>
+<p><code>{UnrealEngineDir}/Engine/Build/BatchFiles/Linux/Build.sh holodeck Linux {BuildConfiguration} {HolodeckEngineDir}/Holodeck.uproject -waitmutex</code></p>
+<p><code>ExecutableName</code> can be anything. The resulting executable will have this name. Typically would be Holodeck-{BuildConfiguration}. E.g. Holodeck-Debug. If you get a couldn't find target rules error just use "holodeck"</p>
+<p><code>BuildConfiguration</code> must be one of:
+- <code>Debug</code>: Includes symbols for debugging both the engine and the game
+- <code>DebugGame</code>: the engine is optimized but the game's debug symbols are included so the game is debuggable
+- <code>Development</code>: enables all but the most time-consuming optimizations
+- <code>Shipping</code>: well, optimize the game and engine code
+- <code>Test</code>: same as shipping but with some console commands, stats, and profiling tools enabled</p>
+<h4 id="2-run-the-game-from-the-command-line">2. Run the game from the command line:</h4>
+<p><code>{HolodeckEngineDir}/Build/Linux}/{TargetName}-{Linux}-{BuildConfiguration}</code></p>
+<blockquote>
+<p>Note: You may need to cook the project for Linux else you'd get some kind of "uncooked" game error. To cook the game for Linux, open the game in UnrealEditor click File -&gt; Cook Content -&gt; [PlatformName] or File -&gt; Cook Content for Linux.</p>
+</blockquote>
+<h4 id="3-attach-a-debugger-to-the-process">3. Attach a debugger to the process:</h4>
+<p>You can use your debugger of choice to attach to the game's running process</p>
+<h4 id="links-to-helpful-unreal-engine-docs">Links to helpful Unreal Engine docs:</h4>
+<p><a href="https://docs.unrealengine.com/en-US/Engine/Basics/Projects/Packaging/index.html">Packaging Projects</a></p>
+<p><a href="https://docs.unrealengine.com/en-US/Programming/Development/CompilingProjects/index.html">Build configuration</a></p>
               
             </div>
           </div><footer>

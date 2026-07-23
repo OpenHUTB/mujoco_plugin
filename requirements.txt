@@ -3,3 +3,4 @@ imageio
 mkdocs-bibtex
 pypandoc-binary
 pymdown-extensions
+# mkdocs-inline-select-svg-plugin

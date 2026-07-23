@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>WORK IN PROGRESS - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "WORK IN PROGRESS";
+        var mkdocs_page_input_path = "underwater/wiki/Adding-Agents.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">WORK IN PROGRESS</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Adding-Agents.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="work-in-progress">WORK IN PROGRESS</h1>
+<h3 id="fair-warning">Fair Warning:</h3>
+<p>Adding custom agents in holodeck is not for the faint of heart.</p>
+<p>If you just want a variation on an agent, it might be best to modify an existing
+agent and swap out the mesh or modify its behavior.</p>
+<h2 id="overview">Overview</h2>
+<p>You will need to modify both <a href="https://github.com/BYU-PCCL/holodeck-engine">holodeck-engine</a>
+and <a href="https://github.com/BYU-PCCL/holodeck">holodeck</a>. Be sure to have both of
+those set up and ready for development (see <a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Onboarding">Onboarding</a>).</p>
+<p>Particularly, follow
+ - <a href="https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine">Building Holodeck Engine</a>
+ - <a href="https://github.com/BYU-PCCL/holodeck/wiki/Developing-%60holodeck%60-package">Developing <code>holodeck</code> package</a></p>
+<p>During this tutorial we will make a "TeapotAgent". We recommend using Windows, 
+since UE4 on Linux isn't very polished. </p>
+<h4 id="holodeck-changes"><code>holodeck</code> changes</h4>
+<ul>
+<li>Subclass <code>HolodeckAgent</code>, implement:</li>
+<li><code>agent_type</code></li>
+<li><code>control_schemes</code></li>
+<li><code>__repr__</code></li>
+<li><code>__act__</code></li>
+<li>Create identifiers for control schemes (<code>ControlSchemes</code> class)</li>
+<li>Add type key to <code>AgentDefinition</code> (maps agent name, ie <code>"SphereAgent"</code>, to the class)</li>
+</ul>
+<h4 id="holodeck-engine-changes"><code>holodeck-engine</code> changes</h4>
+<ul>
+<li>Subclass:</li>
+<li><code>HolodeckAgent</code></li>
+<li><code>HolodeckControlScheme</code></li>
+<li><code>HolodeckPawnController</code></li>
+<li>Create blueprint</li>
+<li></li>
+</ul>
+<h2 id="part-0-validating-dev-setup">Part 0: Validating Dev Setup</h2>
+<p>Let's make sure that you're ready to build holodeck. </p>
+<p>Open <code>holodeck.uproject</code> from <code>holodeck-engine</code>. It may tell you that it needs 
+to rebuild, allow it to. The Unreal Editor should open and 
+<a href="../images/editor.png">show the example level</a>. </p>
+<p>From the editor, select File -&gt; Refresh Visual Studio Project. You should now
+be able to open the project in Visual Studio. Build it and ensure there are no
+errors.</p>
+<h2 id="part-1-unreal-engine-changes">Part 1: Unreal Engine Changes</h2>
+<p>For some background see <a href="https://docs.unrealengine.com/en-US/Gameplay/Framework/Controller/index.html">UE4s Controller explaination</a>.
+In holodeck, agent controllers are mainly used to initialize and configure 
+control schemes. Control schemes map inputs from the client to actions on the
+UE4 object. </p>
+<p>For this example, we won't implement a control scheme or a complex
+controller, and the agent will have only one hard-coded control scheme. Look
+at the UAV for an example if you want to do this.</p>
+<h3 id="create-c-classes">Create C++ classes</h3>
+<ol>
+<li>In the editor, press the folder icon in the content browser and change the
+   it to "C++ Classes". Navigate to <code>Holodeck\HolodeckCore\Public</code></li>
+</ol>
+<p><img alt="content browser" src="../images/change-to-cpp.png" />
+2. Right click on "HolodeckPawnController" and select "Create C++ class derived from HolodeckPawnController"
+3. Set the name to "HolodeckPawnController" and change the path to
+   <code>holodeck-engine/Source/Holodeck/Agents/Public/</code>
+4. Make sure the project still builds (press the "Compile" button in the editor)
+5. Since we will only have one control scheme, the <code>TeapotAgentController</code> 
+   doesn't really need to do anything. For brevity, we will put everything in 
+   the header file. Open your IDE and put the following in 
+   <code>TeapotAgentController.h</code>:
+   <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="cp">#pragma once</span>
+
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;CoreMinimal.h&quot;</span>
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;HolodeckCore/Public/HolodeckPawnController.h&quot;</span>
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;TeapotAgentController.generated.h&quot;</span>
+
+<span class="w"> </span><span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="w"> </span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HOLODECK_API</span><span class="w"> </span><span class="n">ATeapotAgentController</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">AHolodeckPawnController</span>
+<span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+
+<span class="w">   </span><span class="n">ATeapotAgentController</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">FObjectInitializer</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ObjectInitializer</span><span class="p">)</span>
+<span class="w">       </span><span class="o">:</span><span class="w"> </span><span class="n">AHolodeckPawnController</span><span class="p">(</span><span class="n">ObjectInitializer</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogTemp</span><span class="p">,</span><span class="w"> </span><span class="n">Warning</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;TeapotAgentController Initialized&quot;</span><span class="p">));</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="w">   </span><span class="cm">/**</span>
+<span class="cm">     * Default Destructor</span>
+<span class="cm">     */</span>
+<span class="w">   </span><span class="o">~</span><span class="n">ATeapotAgentController</span><span class="p">()</span><span class="w"> </span><span class="p">{};</span>
+
+<span class="w">   </span><span class="kt">void</span><span class="w"> </span><span class="nf">AddControlSchemes</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="c1">// no control schemes</span>
+<span class="w">   </span><span class="p">}</span>
+
+<span class="w"> </span><span class="p">};</span>
+</code></pre></div>
+6. Now we need to subclass <code>Holodeck/HolodeckCore/Public/HolodeckAgent</code> and make
+   <code>TeapotAgent</code>, repeat steps 2-4.
+7. Once again, we'll put all the implementation in the header, for brevity's
+   sake. <code>TeapotAgent.h</code>:
+   <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="cp">#pragma once</span>
+
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;CoreMinimal.h&quot;</span>
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;HolodeckCore/Public/HolodeckAgent.h&quot;</span>
+<span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;TeapotAgent.generated.h&quot;</span>
+
+<span class="w"> </span><span class="cm">/**</span>
+<span class="cm"> * </span>
+<span class="cm"> */</span>
+<span class="w"> </span><span class="n">UCLASS</span><span class="p">()</span>
+<span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">HOLODECK_API</span><span class="w"> </span><span class="n">ATeapotAgent</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">AHolodeckAgent</span>
+<span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="n">GENERATED_BODY</span><span class="p">()</span>
+
+<span class="w">   </span><span class="c1">// ^ do not anger this macro, or bad things will happen</span>
+<span class="w"> </span><span class="k">public</span><span class="o">:</span>
+<span class="w">   </span><span class="n">ATeapotAgent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+
+<span class="w">     </span><span class="c1">// Load the controller and set it as the default. </span>
+<span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AIControllerClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LoadClass</span><span class="o">&lt;</span><span class="n">AController</span><span class="o">&gt;</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;/Script/Holodeck.TeapotAgentController&quot;</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">LOAD_None</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AutoPossessAI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EAutoPossessAI</span><span class="o">::</span><span class="n">PlacedInWorld</span><span class="p">;</span>
+<span class="w">   </span><span class="p">};</span>
+
+<span class="w">   </span><span class="kt">void</span><span class="w"> </span><span class="nf">InitializeAgent</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">Super</span><span class="o">::</span><span class="n">InitializeAgent</span><span class="p">();</span>
+<span class="w">     </span><span class="n">RootMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Cast</span><span class="o">&lt;</span><span class="n">UStaticMeshComponent</span><span class="o">&gt;</span><span class="p">(</span><span class="n">RootComponent</span><span class="p">);</span>
+<span class="w">   </span><span class="p">};</span>
+
+<span class="w">   </span><span class="kt">void</span><span class="w"> </span><span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">DeltaSeconds</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">float</span><span class="w"> </span><span class="n">max_thrust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0f</span><span class="p">;</span><span class="w">  </span><span class="c1">// meters</span>
+
+<span class="w">     </span><span class="c1">// clamp the thrust to within +/- 10</span>
+<span class="w">     </span><span class="n">FVector</span><span class="w"> </span><span class="n">Impulse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FVector</span><span class="p">(</span>
+<span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">),</span>
+<span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">),</span>
+<span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">)</span>
+<span class="w">     </span><span class="p">);</span>
+
+<span class="w">     </span><span class="c1">// Holodeck&#39;s units are in meters, but UE4 uses centimeters. Helper function to convert</span>
+<span class="w">     </span><span class="c1">// between the two</span>
+<span class="w">     </span><span class="n">Impulse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConvertLinearVector</span><span class="p">(</span><span class="n">Impulse</span><span class="p">,</span><span class="w"> </span><span class="n">ClientToUE</span><span class="p">);</span>
+
+<span class="w">     </span><span class="c1">// Note that this doesn&#39;t rotate the imulse into the agent&#39;s frame of reference, so</span>
+<span class="w">     </span><span class="c1">// Impulse is aligned with the world. See TurtleAgent.cpp</span>
+<span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">AddForce</span><span class="p">(</span><span class="n">Impulse</span><span class="p">);</span>
+
+<span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="c1">// engage teapot mode! teapots grow when in teapot mode</span>
+<span class="w">       </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">SetWorldScale3D</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
+<span class="w">     </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">       </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">SetWorldScale3D</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="w">   </span><span class="p">};</span>
+
+<span class="w">   </span><span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">UAVMesh</span><span class="p">)</span>
+<span class="w">     </span><span class="n">UStaticMeshComponent</span><span class="o">*</span><span class="w"> </span><span class="n">RootMesh</span><span class="p">;</span>
+
+
+<span class="w">   </span><span class="c1">// This function should match the size of CommandArray. Holodeck uses this value to allocate</span>
+<span class="w">   </span><span class="c1">// the shared memory buffer between the engine/server any the client/python interpreter.</span>
+<span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">GetRawActionSizeInBytes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
+<span class="w">   </span><span class="c1">// The action sent from the client will be copied into this buffer</span>
+<span class="w">   </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="nf">GetRawActionBuffer</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">CommandArray</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="w">   </span><span class="c1">// This has to do with the AbuseSensor. Set it to -1 to disable it, teapots are strong</span>
+<span class="w">   </span><span class="kt">float</span><span class="w"> </span><span class="nf">GetAccelerationLimit</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">   </span><span class="k">private</span><span class="o">:</span>
+<span class="w">   </span><span class="cm">/**</span>
+<span class="cm">   * 0: x impulse</span>
+<span class="cm">   * 1: y impulse</span>
+<span class="cm">   * 2: z impulse</span>
+<span class="cm">   * 3: engage teapot mode (t/f)</span>
+<span class="cm">   */</span>
+<span class="w">   </span><span class="kt">float</span><span class="w"> </span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
+
+<span class="w"> </span><span class="p">};</span>
+</code></pre></div></p>
+<h3 id="create-agent-blueprint">Create Agent Blueprint</h3>
+<p>We've made a C++ class for our agent, but most agents are blueprints that
+subclass the C++ class, since there are various things that are easier to do in
+blueprints.</p>
+<ol>
+<li>Find the <code>TeapotAgent</code>, right click and select "Create Blueprint class based
+   on TeapotAgent" called <code>TeapotAgentBlueprint</code>, place it in 
+   <code>Content/HolodeckContent/Agents/TeapotAgent/</code>. Another Editor window will 
+   open.</li>
+<li>Press "Add Component" in the upper left corner and add a "Static Mesh", name
+   it <code>TeapotAgentMesh</code>.</li>
+</ol>
+<p><img alt="add a static mesh" src="../images/add_static_mesh.png" />
+3. Drag <code>TeapotAgentMesh</code> on top of <code>DefaultSceneRoot</code> to make it the new root
+   component</p>
+<p><img alt="drag on top" src="../images/drag_on_top.png" />
+4. On the right, set the static mesh to <code>teapot</code> (there is a teapot mesh included
+   with holodeck)</p>
+<p><img alt="set static mesh" src="../images/set_static_mesh.png" />
+5. </p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>通信协议 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u901a\u4fe1\u534f\u8bae";
+        var mkdocs_page_input_path = "underwater/develop/semaphores.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">通信协议</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/semaphores.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">通信协议</h1>
+<p>在本页面中，我将解释 holoocean 的两个部分（客户端和引擎）如何通信。</p>
+<h2 id="_2">预备阅读材料 <span id="prerequisite_reading"></span></h2>
+<p>复习一下<a href="https://en.wikipedia.org/wiki/Semaphore_(programming)">信号量</a>和<a href="https://en.wikipedia.org/wiki/Shared_memory">共享内存</a>。</p>
+<h2 id="holoocean">holoocean 的两个部分 <span id="the_two_halves_of_holoocean"></span></h2>
+<p>我们所说的“holoocean”实际上是两个独立的模块。</p>
+<h3 id="holoocean_1"><a href="https://github.com/OpenHUTB/Underwater/tree/master/client">holoocean</a> <span id="holoocean"></span></h3>
+<ul>
+<li>
+<p>也称为：- “Python 端” - “客户端” - 但负责初始化“服务器”</p>
+</li>
+<li>
+<p>是一个可通过 pip 安装的 Python 包</p>
+</li>
+<li>
+<p>用户仅与此包交互</p>
+</li>
+<li>
+<p>主要负责与引擎进行数据交换</p>
+</li>
+<li>
+<p>负责初始化引擎和训练场景</p>
+</li>
+</ul>
+<h3 id="underwater"><a href="https://github.com/OpenHUTB/Underwater">Underwater</a></h3>
+<ul>
+<li>
+<p>别称： - “C++ 部分” - “引擎”</p>
+</li>
+<li>
+<p>虚幻引擎项目 (<a href="https://github.com/OpenHUTB/Underwater/blob/master/Holodeck.uproject">.uproject</a>)</p>
+</li>
+<li>
+<p>编译后的二进制文件由 holoocean 软件包下载并安装</p>
+</li>
+<li>
+<p>需要安装<a href="https://github.com/OpenHUTB/engine">虚幻编辑器</a>并进行构建/打包</p>
+</li>
+</ul>
+<h2 id="_3">简单使用示例  <span id="simple_usage_example"></span></h2>
+<p>在本示例中，我们将解释 <code>holoocean</code> 和 <code>Underwater</code> 之间需要进行哪些通信才能使此示例正常运行：
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+
+<span class="c1"># (1). 启动引擎</span>
+<span class="n">env</span> <span class="o">=</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;SimpleUnderwater-Hovering&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">10</span><span class="p">):</span>
+  <span class="c1"># 初始化关卡及其内部的主代理</span>
+  <span class="n">env</span><span class="o">.</span><span class="n">reset</span><span class="p">()</span>
+
+  <span class="c1"># 准备一条要发送给主代理的命令</span>
+  <span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">]</span>
+  <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">):</span>
+    <span class="c1"># (2). 向代理发送命令，执行模拟，并返回来自引擎的信息</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
+</code></pre></div></p>
+<h2 id="1-holooceanmake">第 1 部分：holoocean.make()  <span id="simple_usage_example"></span></h2>
+<p><code>holoocean.make()</code> 函数主要是一个辅助函数，用于实例化 <code>HoloOceanEnvironment</code> 对象。<code>.make()</code> 会加载一个配置文件，并将相应的参数传递给 <code>HoloOceanEnvironment</code> 的 <code>__init__()</code> 函数。</p>
+<p><code>__init__()</code> 函数主要执行以下三项操作：</p>
+<p>1.启动 <code>holoocean-engine</code> 进程，并告知其所需的最小加载量</p>
+<p>2.创建 HoloOceanClient 实例</p>
+<ul>
+<li>
+<p>创建同步信号量</p>
+</li>
+<li>
+<p>提供 <code>malloc()</code> 函数，用于在客户端分配共享内存</p>
+</li>
+<li>
+<p>传感器、代理等使用此函数</p>
+</li>
+</ul>
+<p>3.实例化代理和传感器，它们使用 <code>malloc()</code> 函数分配缓冲区</p>
+<h3 id="_4">创建加载信号量</h3>
+<p>“加载信号量”由客户端创建，并由引擎发出信号。</p>
+<p>服务器进程启动后，客户端会等待服务器发出信号，以便确认服务器已初始化完成。</p>
+<!-- 
+![](../../img/underwater/loading-1.svg)
+-->
+<p><img alt="" src="../../../img/underwater/loading-1.jpg" /></p>
+<h3 id="_5">启动子进程</h3>
+<p>接下来，客户端将创建引擎子进程。它会在引擎的命令行中传入一个 UUID，该 UUID 将用于生成唯一的信号量名称。</p>
+<p><img alt="" src="../../../img/underwater/loading-2.jpg" /></p>
+<p><strong>关于 UUID 的说明</strong></p>
+<p>信号量（semaphore）和共享内存的名称（例如 <code>/HOLODECK_LOADING_SEM</code>）在整个操作系统内的所有进程间是全局可见的。</p>
+<p>为了避免不同 Holodeck 实例之间发生命名冲突，<code>holoocean.make()</code> 会为创建的每个环境生成一个 UUID，并将其作为命令行参数传递给引擎，例如：
+<div class="highlight"><pre><span></span><code>holodeck.exe<span class="w"> </span>--HolodeckUUID<span class="o">=</span>8ac7059c-fb71-48fb-a0b1-a1ea8a4c6c10
+</code></pre></div></p>
+<p>该 UUID 会被附加到信号量或共享内存的名称后面，从而支持多个实例同时运行，例如：</p>
+<p><code>/HOLODECK_LOADING_SEM8ac7059c-fb71-48fb-a0b1-a1ea8a4c6c10</code></p>
+<p>如果未提供 <code>--HolodeckUUID</code> 参数，则默认值为空字符串（""）。这在调试时非常有用。</p>
+<h3 id="_6">等待引擎加载</h3>
+<p>引擎正在初始化，客户端等待 /HOLODECK_LOADING_SEM 完成。</p>
+<p><img alt="" src="../../../img/underwater/loading-3.jpg" /></p>
+<h3 id="_7">引擎加载完成</h3>
+<p>引擎加载完成后，将等待另一个信号量，同时客户端执行其他操作。</p>
+<p><img alt="" src="../../../img/underwater/loading-4.jpg" /></p>
+<p>此时，客户端通过发送一系列命令来生成代理、传感器和任务。</p>
+<p>本页未详细介绍这一点，但就我们的目的而言，重要的是每个代理和传感器都会分配共享内存缓冲区，以实现引擎和客户端之间的通信。</p>
+<h3 id="_8">主同步信号量</h3>
+<p>在 <code>HoloOceanEnvironment</code> 的 <code>__init__()</code> 方法中，它会创建一个 <code>HolodeckClient</code> 对象，该对象会生成两个重要的同步信号量。这些信号量使得引擎和客户端能够同步运行，并交替执行（参见 <a href="https://github.com/OpenHUTB/Underwater/tree/master/Source/Holodeck/HolodeckCore/Private/HolodeckServer.cpp">HolodeckServer.cpp</a> / <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/src/holoocean/holooceanclient.py">holooceanclient.py</a>）。</p>
+<p><strong><code>/HOLODECK_SEMAPHORE_SERVER</code></strong></p>
+<ul>
+<li>
+<p>被称为信号量</p>
+<ul>
+<li>这名字是谁起的？</li>
+</ul>
+</li>
+<li>
+<p><strong>引擎</strong>在<strong>客户端</strong>执行任何操作时都会等待这个信号量。</p>
+</li>
+<li>
+<p>这会<strong>阻塞游戏主循环！</strong></p>
+<ul>
+<li>
+<p>引擎窗口在等待信号量时会显示为锁定状态。</p>
+</li>
+<li>
+<p>您无法关闭、调整大小或移动窗口。</p>
+</li>
+<li>
+<p>https://github.com/BYU-PCCL/holodeck/issues/18</p>
+</li>
+</ul>
+</li>
+</ul>
+<p><strong><code>/HOLODECK_SEMAPHORE_CLIENT</code></strong></p>
+<ul>
+<li>
+<p>称为信号量2（semaphore2）</p>
+</li>
+<li>
+<p><strong>客户端</strong>会等待此信号量，同时<strong>引擎</strong>会模拟一个时钟周期。</p>
+</li>
+<li>
+<p>当<strong>客户端</strong>准备好让<strong>引擎</strong>模拟下一个时钟周期时，<strong>客户端</strong>会向 <code>/HOLODECK_SEMAPHORE_SERVER</code> 发送信号。</p>
+</li>
+</ul>
+<p>我们将在下文中看到这些信号量的使用方法。</p>
+<h3 id="_9">共享内存缓冲区</h3>
+<p>共享内存缓冲区在 Holoocean 中用途广泛。</p>
+<p>1.用于来回发送命令</p>
+<ul>
+<li>例如：生成代理、移动视窗等</li>
+</ul>
+<p>2.代理</p>
+<ul>
+<li>
+<p>动作缓冲区（<code>uuid</code> + 代理名称）</p>
+<ul>
+<li>告知代理客户端在每个游戏刻提供的输入</li>
+</ul>
+</li>
+<li>
+<p>传送标志（<code>_teleport_flag</code>）、传送缓冲区（<code>_teleport_command</code>）</p>
+<ul>
+<li>指示代理是否以及应该传送到哪里</li>
+</ul>
+</li>
+<li>
+<p>控制方案（<code>_control_scheme</code>）</p>
+<ul>
+<li>告知引擎代理正在使用的控制方案（如何解释动作缓冲区）</li>
+</ul>
+</li>
+</ul>
+<p>3.传感器</p>
+<ul>
+<li>传感器数据缓冲区（代理名称 <code>_</code> + 传感器名称）</li>
+</ul>
+<h2 id="2-step">第 2 部分：<code>.step()</code>  <span id="part_2_step"></span></h2>
+<p>现在我们已经有了一个运行环境，那么如何实现数据之间的双向传输呢？</p>
+<p>我们将分析以下代码的执行过程：
+<div class="highlight"><pre><span></span><code><span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1000</span><span class="p">])</span>
+</code></pre></div></p>
+<h3 id="1">1.代理的操作</h3>
+<p>首先，我们将提供的动作（<code>[0, 0, 2, 1000]</code>）复制到代理的操作缓冲区中：</p>
+<p><img alt="" src="../../../img/underwater/step-1.jpg" /></p>
+<h3 id="2">2.信号服务器</h3>
+<p>接下来，客户端向 信号量服务<code>/HOLODECK_SEMAPHORE_SERVER</code> 发送信号，唤醒服务器。</p>
+<p><img alt="" src="../../../img/underwater/step-2.jpg" /></p>
+<h3 id="3">3.客户端等待，服务器处理</h3>
+<p><img alt="" src="../../../img/underwater/step-3.jpg" /></p>
+<h3 id="4">4.服务器对传感器数据进行采样，并将其复制到缓冲区</h3>
+<p><img alt="" src="../../../img/underwater/step-4.jpg" /></p>
+<h3 id="5">5.唤醒客户端</h3>
+<p><img alt="" src="../../../img/underwater/step-5.jpg" /></p>
+<h3 id="6">6.服务器阻塞并等待客户端再次发出信号</h3>
+<p><img alt="" src="../../../img/underwater/step-6.jpg" /></p>
+<h2 id="_10">备注  <span id="remarks"></span></h2>
+<p>一些值得注意的事项。</p>
+<p>1.复制到共享缓冲区的数据会持续存在。如果写入了一个操作，该操作将一直执行，直到写入另一个操作为止。传感器数据也是如此。</p>
+<p>2.引擎的默认 UUID 为空字符串<code>""</code>。这意味着，如果您从编辑器或 Visual Studio 启动引擎，并且在创建 <code>HoloOceanEnvironment</code> 对象时指定 UUID 为空字符串<code>""</code>，则可以使用 Python 客户端连接到该引擎。</p>
+<h2 id="_11">其他</h2>
+<p>本文摘自<a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol">此处</a>，仅作存档之用，可以获取对应的<a href="../../wiki/protocol/protocol.pptx">PPT</a>。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

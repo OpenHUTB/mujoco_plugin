@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>水下机器人开发指南 - Mujoco 插件</title>
+    <title>How To Debug - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u5f00\u53d1\u6307\u5357";
-        var mkdocs_page_input_path = "underwater/develop/develop.md";
+        var mkdocs_page_name = "How To Debug";
+        var mkdocs_page_input_path = "underwater/wiki/How-To-Debug.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人开发指南</li>
+      <li class="breadcrumb-item active">How To Debug</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/develop.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/How-To-Debug.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,54 +140,85 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">水下机器人开发指南</h1>
-<p>这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！</p>
-<p>我们已力求内容详尽，但查阅 Holodeck 的文档或许能为您提供更多相关信息。</p>
-<h2 id="_2">内容</h2>
+                <p>When working on <code>holodeck</code> or <code>holodeck-engine</code>, you may be wondering how to
+debug your code. </p>
 <ul>
-<li><a href="../start/">入门指南</a><ul>
-<li><a href="../start/#cloning">克隆代码库</a></li>
-<li><a href="../start/#opening_prepping_project">打开并准备项目</a></li>
-<li><a href="../start/#setting_up_vscode">配置 VSCode</a></li>
-<li><a href="../start/#compiling">编译</a></li>
-<li><a href="../start/#launching_game_live">启动游戏（实时模式）</a></li>
-<li><a href="../start/#logging">日志记录</a></li>
+<li><a href="#modifying-%60holodeck%60-package">Modifying the <code>holodeck</code> package</a></li>
+<li><a href="#Modifying-%60holodeck-engine%60">Modifying the <code>holodeck-engine</code> project</a></li>
 </ul>
+<h2 id="modifying-holodeck-package">Modifying <code>holodeck</code> package</h2>
+<p>If you are just modifying the Python package, you just need to make sure that
+there is a compatible package installed in the <a href="https://holodeck.readthedocs.io/en/latest/packages/docs/installation.html">Holodeck search path.</a></p>
+<h3 id="working-off-of-master">Working off of master</h3>
+<p>If you are building off of master, you should be able to just use the binaries
+we provide with (<code>holodeck.install</code>) as long as you don't make any breaking
+changes.</p>
+<h3 id="working-off-of-develop">Working off of develop</h3>
+<p>We don't provide builds of <code>develop</code> so you will need to build the engine
+yourself (<a href="https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine">Building Holodeck Engine</a>).</p>
+<p>After you can build it, <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project">package it</a> and <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project#place-in-install-directory">place it in the install directory</a>.</p>
+<p>After following those instructions, you should be able to call <code>holodeck.make</code>.</p>
+<h2 id="modifying-holodeck-engine">Modifying <code>holodeck-engine</code></h2>
+<p>Working on the engine is trickier. You can build it and place it in the expected
+directory, <a href="#working-off-of-develop">as above</a>, but that's slow and annoying,
+and you can't attach a debugger.</p>
+<p>The crux of both of the following methods is that the engine must have a client
+attach for it in order for it to tick (ie advance the state and parse input).</p>
+<p>If you've read and understood <a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol">Holodeck Communication Protocol</a>
+, the reason for this should make sense.</p>
+<h3 id="launch-from-the-unreal-editor">Launch From the Unreal Editor</h3>
+<p>If you want to debug a particular level you have open in the editor, from the</p>
+<ol>
+<li>Launch game</li>
+</ol>
+<p>From the toolbar above the viewport select the down arrow next to 
+   <strong>Play</strong> -&gt; Standalone Game</p>
+<p><img alt="Play -&gt; Dropdown -&gt; Standalone Game" src="../images/play-standalone.png" />.</p>
+<p>Running in its own process means that if the engine crashes or the client
+   disconnects, the editor won't lock up or crash.</p>
+<ol>
+<li>Attach Client</li>
+</ol>
+<p><a href="#attaching-client">See below</a></p>
+<h3 id="launch-from-visual-studio">Launch from Visual Studio</h3>
+<p>Make sure you have <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project#cooking-content">cooked content</a>
+before attempting this.</p>
+<ol>
+<li>Optional: Select Level</li>
+</ol>
+<p>If you want to launch a particular level:</p>
+<ol>
+<li>Go to Debug Menu -&gt; Holodeck Properties -&gt; Debugging</li>
+<li>In "Command Arguments", put the name of the level to load</li>
+<li>
+<p>OK</p>
 </li>
-<li><a href="../env/">开发环境</a><ul>
-<li><a href="../env/#adding_underwater_worlds">添加 Underwater 世界</a></li>
-<li><a href="../env/#cooking_content">内容烘焙</a></li>
-<li><a href="../env/#packing_underwater">打包 Underwater</a></li>
-<li><a href="../env/#place_in_install_directory">将文件放置在安装目录中</a></li>
-<li><a href="../env/#note_on_creating_environment_objects_and_sonar">关于创建环境对象和声呐的说明</a></li>
-</ul>
+<li>
+<p>Launch the game from Visual Studio (play button, make sure DebugGame is 
+   selected)</p>
 </li>
-<li><a href="../sensors/">开发传感器</a><ul>
-<li><a href="../sensors/#cpp">C++</a></li>
-<li><a href="../sensors/#python">Python</a></li>
-<li><a href="../sensors/#allowing_your_sensor_to_be_used_in_underwater">让您的传感器在 Underwater 中可用</a></li>
-</ul>
-</li>
-<li><a href="../agents/">开发代理（Agents）</a><ul>
-<li><a href="../agents/#general_agents">通用代理</a></li>
-<li><a href="../agents/#buoyant_agents">浮力代理</a></li>
-</ul>
-</li>
-<li><a href="../semaphores/">通信协议</a><ul>
-<li><a href="../semaphores/#prerequisite_reading">预备阅读材料</a></li>
-<li><a href="../semaphores/#the_two_halves_of_holoocean">holoocean 的两个部分</a></li>
-<li><a href="../semaphores/#simple_usage_example">简单使用示例</a></li>
-<li><a href="../semaphores/#simple_usage_example">第 1 部分：holoocean.make()</a></li>
-<li><a href="../semaphores/#part_2_step">第 2 部分：.step()</a></li>
-<li><a href="../semaphores/#remarks">备注</a></li>
-</ul>
-</li>
-</ul>
-<h2 id="holodeck">Holodeck</h2>
-<ul>
-<li><a href="../../wiki/Holodeck-Onboarding/">holodeck 开发</a> - <a href="https://github.com/BYU-PCCL/holodeck/wiki">参考页面</a></li>
-<li><a href="https://holodeck.readthedocs.io/en/latest/">holodeck文档</a></li>
-</ul>
+</ol>
+<p><img alt="launching in visual studio" src="../images/debug-config-vs.png" /></p>
+<ol>
+<li>Attach Client</li>
+</ol>
+<p><a href="#attaching-client">See below</a></p>
+<h3 id="attaching-client">Attaching Client</h3>
+<p>Once you have the engine running, you need to attach a client to it. This is
+most easily done by creating your own <a href="https://holodeck.readthedocs.io/en/latest/holodeck/environments.html#holodeck.environments.HolodeckEnvironment"><code>HolodeckEnvironment</code></a>
+object.</p>
+<div class="highlight"><pre><span></span><code><span class="n">env</span> <span class="o">=</span> <span class="n">HolodeckEnvironment</span><span class="p">(</span>
+    <span class="n">start_world</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>This attaches because the default UUID for both <code>HolodeckEnvironent</code> and the 
+engine (if <code>--HolodeckUUID=</code> is not provided on the engine's command line) is 
+<code>""</code> or the empty string.</p>
+<p>After that object is created, you should be able to call <code>env.tick(5000)</code> and
+move the camera around.</p>
+<p>If you want to spawn agents and sensors, provide a scenario configuration dict 
+to the <code>scenario</code> option in the constructor for <code>HolodeckEnvironment</code> (see 
+<a href="https://holodeck.readthedocs.io/en/latest/packages/docs/scenarios.html">Scenarios</a>)</p>
               
             </div>
           </div><footer>
