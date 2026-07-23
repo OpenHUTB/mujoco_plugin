@@ -32,42 +32,37 @@ If you get an error about assets being saved with a different engine version, ma
 
 You should see the ExampleLevel loaded up:
 
-<img src="images/editor.png" height="50%" width="50%" alt="Editor loaded up">
+![](./images/editor.png)
 
-### 4. Generate Project Files
+### 4. 生成项目文件
 
-On Windows, right click the `holodeck.uproject` file in Explorer and select
-"Refresh Visual Studio Projects"
+在 Windows 系统中，右键单击资源管理器中的 `holodeck.uproject` 文件，然后选择"Refresh Visual Studio Projects"。
 
-On Linux, see [How to Debug Holodeck Engine on Linux](https://github.com/BYU-PCCL/holodeck/wiki/How-to-Configure-Debugger-on-Linux) to generate the project files.
+在 Linux 系统中，请参阅[如何在 Linux 上调试 Holodeck 引擎](./How-to-Configure-Debugger-on-Linux.md)以生成项目文件。
 
-This allows you to open Holodeck in an IDE and edit the C++ files, as well as 
-debug the compiled project.
-
-### 5. Cook Content
-In the Unreal Editor, go to File -> Cook Content for {Platform}. After a few 
-minutes you should get a success popup in the lower right.
-
-You must do this before you run Holodeck from the debugger.
+这样，您就可以在 IDE 中打开 Holodeck 并编辑 C++ 文件，以及调试已编译的项目。
 
 
-### 6. Run It
-From here, you can either package the project in order to launch it from the 
-client (eg using `holodeck.make()` or instantiating a `HolodeckEnvironment`), or
-by attaching the client to an instance of the engine running in a debugger or
-the Unreal editor. 
+### 5. 烘焙内容
 
-- [Packaging the Project](https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project)
+在虚幻编辑器中，选择“文件”->“为 {平台} 烘焙内容”。几分钟后，右下角应该会弹出成功提示。
 
-TODO: Write up and link to pages explaining how to run the project here.
+必须先执行此操作，才能从调试器运行 Holodeck。
+
+
+### 6. 运行项目
+
+您可以从这里开始，打包项目以便从客户端启动（例如使用 `holodeck.make()` 或实例化一个 `HolodeckEnvironment`），或者将客户端附加到在调试器或虚幻编辑器中运行的引擎实例。
+
+- [打包项目](./Packaging-Project.md)
+
+待办事项：编写并链接到相关页面，解释如何在此处运行项目。
+
 
 ## FAQ
 
-#### Where are all the levels/assets? 
+#### 所有关卡/资产都去哪儿了？
 
-We have licensed many assets to create the levels we distribute in packages, we
-do not own them. According to the terms of those licenses, we are unable to 
-distribute them in non-cooked form. Unfortunately, what you get in the 
-holodeck-engine repo is all we can provide, sorry. You are free to create your
-own levels/worlds and license them yourselves.
+我们购买了许多素材的授权来创建我们打包分发的关卡，但我们并不拥有这些素材的所有权。根据这些授权协议的条款，我们无法以未处理的形式分发它们。很遗憾，holodeck-engine 代码库中的内容就是我们所能提供的全部，抱歉。您可以自由创建自己的关卡/世界并自行授权。
+
 

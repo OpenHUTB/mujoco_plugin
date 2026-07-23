@@ -1,8 +1,6 @@
 # 通信协议
 
-本文摘自[此处](https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol)，仅作存档之用。
-
-在本维基页面中，我将解释 holoocean 的两个部分（客户端和引擎）如何通信。
+在本页面中，我将解释 holoocean 的两个部分（客户端和引擎）如何通信。
 
 ## 预备阅读材料 <span id="prerequisite_reading"></span>
 
@@ -235,3 +233,8 @@ state = env.step([0, 0, 2, 1000])
 1.复制到共享缓冲区的数据会持续存在。如果写入了一个操作，该操作将一直执行，直到写入另一个操作为止。传感器数据也是如此。
 
 2.引擎的默认 UUID 为空字符串`""`。这意味着，如果您从编辑器或 Visual Studio 启动引擎，并且在创建 `HoloOceanEnvironment` 对象时指定 UUID 为空字符串`""`，则可以使用 Python 客户端连接到该引擎。
+
+
+## 其他
+
+本文摘自[此处](https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol)，仅作存档之用，可以获取对应的[PPT](../wiki/protocol/protocol.pptx)。

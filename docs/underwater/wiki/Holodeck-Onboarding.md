@@ -1,14 +1,14 @@
-If you're reading this, you want to work on Holodeck! Congratulations! 
+如果你正在阅读这篇文章，说明你想参与 Holodeck 的开发！恭喜！
 
-Here are some tutorials for getting up to speed working on Holodeck.
+这里有一些教程，可以帮助你快速上手 Holodeck 的开发。
 
-If you find any information that is missing or out of date, this is a wiki! Edit it!
+如果你发现任何信息缺失或过时，请放心，这是一个维基百科！欢迎编辑！
 
 ![](https://i151.photobucket.com/albums/s155/xlbitchlx/Pikachu/UCPikachu.gif?width=250&height=250&crop=1:1,smart)
 
 ### Get Started
-- [Overview of holodeck and how the two halves communicate](https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol)
-- [Building `holodeck-engine`](https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine)
+- [holodeck 及其两部分如何通信](../develop/semaphores.md)
+- [构建 `holodeck-engine`](./Building-Holodeck-Engine.md)
 - [Getting `holodeck` pip package ready for development on your machine](https://github.com/BYU-PCCL/holodeck/wiki/Developing-%60holodeck%60-package)
 - [Packaging the project](https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project)
 - [Debugging `holodeck` and `holodeck-engine`](https://github.com/BYU-PCCL/holodeck/wiki/How-To-Debug)

@@ -1,9 +1,11 @@
 ## CLion
 
-#### 1. Create CLion project files
-- Open Holodeck in Unreal Engine
-- Edit -> Editor Preferences -> General -> Source Code -> Source Code Editor -> CLion
-- File -> Generate CLion Project (this will be "Refresh CLion Project"  if the project was already generated)
+#### 1. 创建 CLion 工程文件
+- 在虚幻引擎中打开 Holodeck
+- 选择菜单中的：编辑 -> 编辑器偏好设置 -> 通用 -> 源代码 -> 源代码编辑器 -> CLion
+- 选择菜单中的：文件 -> 生成 CLion 工程 (如果项目已生成，则此选项将显示为“刷新 CLion 项目”)
+
+![](../../img/underwater/create_clion_project_file.jpg)
 
 #### 2. Open the project in CLion
 Open the project from the project root in CLion or in Unreal Engine Editor goto File -> Open CLion

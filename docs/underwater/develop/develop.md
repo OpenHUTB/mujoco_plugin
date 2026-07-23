@@ -32,9 +32,9 @@
     * [简单使用示例](./semaphores.md#simple_usage_example)
     * [第 1 部分：holoocean.make()](./semaphores.md#simple_usage_example)
     * [第 2 部分：.step()](./semaphores.md#part_2_step)
-    * 备注
+    * [备注](./semaphores.md#remarks)
 
-## 其他
+## Holodeck
 
-* [Underwater的引擎开发](../wiki/Holodeck-Onboarding.md) - [holodeck的开发wiki](https://github.com/BYU-PCCL/holodeck/wiki)
+* [holodeck 开发](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
 * [holodeck文档](https://holodeck.readthedocs.io/en/latest/)
