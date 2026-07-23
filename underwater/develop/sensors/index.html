@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>开发传感器 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5f00\u53d1\u4f20\u611f\u5668";
+        var mkdocs_page_input_path = "underwater/develop/sensors.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">开发传感器</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/sensors.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">开发传感器</h1>
+<p>与代理类似，传感器也是同时使用 C++ 和 Python 构建的。</p>
+<h2 id="c">C++ <span id="cpp"></span></h2>
+<p>每个传感器都需要一个“.h”头文件和一个“.cpp”文件，这是 C++ 的标准做法。</p>
+<p>这两个文件都将放在 Underwater 代码库中。您的“.h”头文件很可能应该放在 <a href="https://github.com/OpenHUTB/Underwater/tree/master/Source/Holodeck/Sensors/Public">Source/Holodeck/Sensors/Public</a> 目录下，而您的“.cpp”文件则应该放在 <a href="https://github.com/OpenHUTB/Underwater/tree/master/Source/Holodeck/Sensors/Private">Source/Holodeck/Sensors/Private</a> 目录下。</p>
+<h3 id="h">.h 文件</h3>
+<p>首先，您需要在 .h 文件中包含以下内容：
+<div class="highlight"><pre><span></span><code><span class="cp">#pragma once</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Holodeck.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;HolodeckSensor.h&quot;</span>
+</code></pre></div></p>
+<p>接下来，您需要设置传感器的类，其代码大致如下：
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ExampleSensor.generated.h&quot;</span>
+
+<span class="n">UCLASS</span><span class="p">(</span><span class="n">ClassGroup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">Custom</span><span class="p">),</span><span class="w"> </span><span class="n">meta</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">BlueprintSpawnableComponent</span><span class="p">))</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">HOLODECK_API</span><span class="w"> </span><span class="n">UExampleSensor</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="k">public</span><span class="w"> </span><span class="n">UHolodeckSensor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">GENERATED_BODY</span><span class="p">()</span>
+<span class="w">    </span><span class="k">public</span><span class="o">:</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="k">protected</span><span class="o">:</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="k">private</span><span class="o">:</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="p">};</span>
+</code></pre></div></p>
+<p>需要注意以下几点：</p>
+<ul>
+<li>
+<p>传感器名称前必须包含字符“U”。</p>
+</li>
+<li>
+<p>GENERATED_BODY() 函数会自动生成一些内容，但要使其正常工作，您还需要在包含文件中添加以下代码行，并使用您的传感器名称。在本例中，我们使用的是 ExampleSensor：
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;ExampleSensor.generated.h&quot;</span>
+</code></pre></div></p>
+</li>
+</ul>
+<p>现在我们来看看需要添加到 .h 文件中的一些主要函数。首先，请确保您的传感器有一个构造函数和一个类似这样的 InitializeSensor() 重写函数（请注意，这些函数应该放在“public”下）：</p>
+<div class="highlight"><pre><span></span><code><span class="n">UExampleSensor</span><span class="p">();</span>
+<span class="k">virtual</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">InitializeSensor</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</code></pre></div>
+<p>接下来，在“受保护的（<code>protected</code>）”部分，你需要一个 tick 函数。这个函数定义了每次仿真周期开始时传感器的行为。它的细节可以在我们讲解“.cpp”文件时再详细介绍，但现在，只需像这样声明它：
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">TickSensorComponent</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">DeltaTime</span><span class="p">,</span><span class="w"> </span><span class="n">ELevelTick</span><span class="w"> </span><span class="n">TickType</span><span class="p">,</span><span class="w"> </span><span class="n">FActorComponentTickFunction</span><span class="o">*</span><span class="w"> </span><span class="n">ThisTickFunction</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="p">;</span>
+</code></pre></div></p>
+<p>最后，传感器必不可少的最后一个要素是“private”部分中指向父代理的指针。它存储着传感器所附加对象的引用。您只需要以下代码行：
+<div class="highlight"><pre><span></span><code><span class="n">AActor</span><span class="o">*</span><span class="w"> </span><span class="n">Parent</span><span class="p">;</span>
+</code></pre></div></p>
+<p>您可能还需要添加一些辅助函数和一些类变量，但是以上内容应该是您自定义传感器所需的基本要素。</p>
+<h3 id="cpp">.cpp 文件</h3>
+<p>现在您正在编辑 .cpp 文件，请确保包含匹配的头文件，以及 <code>holodeck.h</code> 和您需要的任何其他库。接下来，我们可以开始定义函数了。首先从构造函数开始。它应该类似于以下代码：
+<div class="highlight"><pre><span></span><code><span class="n">UExampleSensor</span><span class="o">::</span><span class="n">UExampleSensor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">PrimaryComponentTick</span><span class="p">.</span><span class="n">bCanEverTick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="n">SensorName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;ExampleSensor&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+现在我们还需要初始化传感器，使其具备正常工作所需的所有变量。例如，我们需要确保将传感器附加到其父级，如下所示：
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">UExampleSensor::InitializeSensor</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Super</span><span class="o">::</span><span class="n">InitializeSensor</span><span class="p">();</span>
+<span class="w">    </span><span class="c1">// 你需要获取指向传感器所连接对象的指针。</span>
+<span class="w">    </span><span class="n">Parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">GetAttachmentRootActor</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+接下来我们可以看一下 tick 函数。它的工作原理通常是让引擎通过共享缓冲区将传感器信息返回给客户端。所以，我们让传感器每次 tick 时都返回浮点数 2.0：</p>
+<div class="highlight"><pre><span></span><code><span class="kt">void</span><span class="w"> </span><span class="nf">UExampleSensor::TickSensorComponent</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">DeltaTime</span><span class="p">,</span><span class="w"> </span><span class="n">ELevelTick</span><span class="w"> </span><span class="n">TickType</span><span class="p">,</span><span class="w"> </span><span class="n">FActorComponentTickFunction</span><span class="o">*</span><span class="w"> </span><span class="n">ThisTickFunction</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">float</span><span class="o">*</span><span class="w"> </span><span class="n">FloatBuffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">float</span><span class="o">*&gt;</span><span class="p">(</span><span class="n">Buffer</span><span class="p">);</span>
+<span class="w">    </span><span class="n">FloatBuffer</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">2.0</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>这些应该是所有必要的功能，但您还需要根据 .h 文件填写其他功能。</p>
+<h2 id="python">Python <span id="python"></span></h2>
+<p>现在我们有了 C++ 文件，实际上不需要为传感器创建一个新的 Python 文件。相反，你需要打开 sensors.py 文件（位于 Underwater 代码库的 <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/src/holoocean/sensors.py">client/src/holoocean/sensors.py</a>），并为你的新传感器添加一个类。请务必按如下方式设置传感器类型，因为这在后面会很重要。
+<div class="highlight"><pre><span></span><code><span class="k">class</span> <span class="nc">ExampleSensor</span><span class="p">(</span><span class="n">HolodeckSensor</span><span class="p">):</span>
+    <span class="n">sensor_type</span> <span class="o">=</span> <span class="s2">&quot;ExampleSensor&quot;</span>
+</code></pre></div></p>
+<p>此时，您还需要初始化所有需要初始化的内容，但所有与传感器无关的内容都可以由父类初始化。如果您有需要初始化的项目，至少您可能需要类似以下的代码：
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">client</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">,</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;OpticalModemSensor&quot;</span><span class="p">,</span>  <span class="n">config</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">(</span><span class="n">ExampleSensor</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">client</span><span class="p">,</span> <span class="n">agent_name</span><span class="p">,</span> <span class="n">agent_type</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">name</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">)</span>
+</code></pre></div></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>以上内容并非总是必需的，但在某些情况下会很有用。</p>
+</div>
+<p>除此之外，还需要指定数据类型 (dtype) 和数据形状 (data_shape)。它们让客户端知道应该从缓冲区接收哪种类型的数据。回想一下，在 .cpp 文件中，我们将 tick 函数设置为返回浮点数 2.0。我们也只返回了单个浮点数，而不是多个。考虑到这一点，我们知道 dtype 应该是浮点数，data_shape 应该是 1。它应该看起来像这样：
+<div class="highlight"><pre><span></span><code><span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">dtype</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="c1"># 请注意，我们使用 numpy 的数据类型来获得 Python 数据的正确大小。</span>
+
+<span class="nd">@property</span>
+<span class="k">def</span> <span class="nf">data_shape</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+</code></pre></div></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>data_shape 可以根据需要存储多维数组，因此对于 2x2 数组，返回 [2, 2]。</p>
+</div>
+<h2 id="underwater">允许你的传感器在 Underwater 中使用 <span id="allowing_your_sensor_to_be_used_in_underwater"></span></h2>
+<p>至此，传感器的主体部分基本已经完成。但还有一些地方需要修改。首先，在 <a href="https://github.com/OpenHUTB/Underwater/blob/master/client/src/holoocean/sensors.py">sensors.py</a> 文件的末尾，SensorDefinition 类中应该有一个 <em>sensor_keys</em> 字典。你需要向该字典添加一行，以便某些函数能够根据正确的字符串获取传感器类型。在本例中，我们只需在字典末尾添加以下代码：
+<div class="highlight"><pre><span></span><code><span class="s2">&quot;ExampleSensor&quot;</span><span class="p">:</span><span class="n">ExampleSensor</span><span class="p">,</span>
+</code></pre></div></p>
+<p>同样，您需要找到文件 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/ClientCommands/Public/AddSensorCommand.h">AddSensorCommand.h</a>，并在将传感器添加到 <a href="https://github.com/OpenHUTB/Underwater/blob/d26be1f6b14112f69981388130332abaa3b348a3/Source/Holodeck/ClientCommands/Private/AddSensorCommand.cpp#L28">AddSensorCommand.cpp</a> 的 SensorMap 之前，添加 #include 语句来包含您的传感器的 .h 文件，如下所示：
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="w"> </span><span class="s">&quot;ExampleSensor&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">UExampleSensor</span><span class="o">::</span><span class="n">StaticClass</span><span class="p">()</span><span class="w"> </span><span class="p">},</span>
+</code></pre></div></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

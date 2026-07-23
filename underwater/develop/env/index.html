@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>水下机器人开发指南 - Mujoco 插件</title>
+    <title>开发环境 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u5f00\u53d1\u6307\u5357";
-        var mkdocs_page_input_path = "underwater/develop/develop.md";
+        var mkdocs_page_name = "\u5f00\u53d1\u73af\u5883";
+        var mkdocs_page_input_path = "underwater/develop/env.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">水下机器人开发指南</li>
+      <li class="breadcrumb-item active">开发环境</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/develop.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/env.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,49 +140,46 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">水下机器人开发指南</h1>
-<p>这份文档足以帮助您着手进行 HoloOcean 的开发工作。如果您发现其中有明显的遗漏或不足，欢迎提交 Issue 或 Pull Request 加以完善！</p>
-<p>我们已力求内容详尽，但查阅 Holodeck 的文档或许能为您提供更多相关信息。</p>
-<h2 id="_2">内容</h2>
-<ul>
-<li><a href="../start/">入门指南</a><ul>
-<li><a href="../start/#cloning">克隆代码库</a></li>
-<li><a href="../start/#opening_prepping_project">打开并准备项目</a></li>
-<li><a href="../start/#setting_up_vscode">配置 VSCode</a></li>
-<li><a href="../start/#compiling">编译</a></li>
-<li><a href="../start/#launching_game_live">启动游戏（实时模式）</a></li>
-<li><a href="../start/#logging">日志记录</a></li>
-</ul>
-</li>
-<li><a href="../env/">开发环境</a><ul>
-<li><a href="../env/#adding_underwater_worlds">添加 Underwater 世界</a></li>
-<li><a href="../env/#cooking_content">内容烘焙</a></li>
-<li><a href="../env/#packing_underwater">打包 Underwater</a></li>
-<li><a href="../env/#place_in_install_directory">将文件放置在安装目录中</a></li>
-<li><a href="../env/#note_on_creating_environment_objects_and_sonar">关于创建环境对象和声呐的说明</a></li>
-</ul>
-</li>
-<li><a href="../sensors/">开发传感器</a><ul>
-<li><a href="../sensors/#cpp">C++</a></li>
-<li><a href="../sensors/#python">Python</a></li>
-<li><a href="../sensors/#allowing_your_sensor_to_be_used_in_underwater">让您的传感器在 Underwater 中可用</a></li>
-</ul>
-</li>
-<li>开发代理（Agents）<ul>
-<li>通用代理</li>
-<li>浮力代理</li>
-</ul>
-</li>
-<li>通信协议<ul>
-<li>预备阅读材料</li>
-<li>HoloOcean 的两个组成部分</li>
-<li>简单使用示例</li>
-<li>第 1 部分：holoocean.make()</li>
-<li>第 2 部分：.step()</li>
-<li>备注</li>
-</ul>
-</li>
-</ul>
+                <h1 id="_1">开发环境</h1>
+<p>本文部分内容参考了<a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project">此处</a>的资料。</p>
+<p>虚幻引擎项目在分发前需要进行打包。此过程会生成引擎可执行文件，并将客户端启动引擎所需的所有资源打包在一起，无需通过编辑器或 Visual Studio 启动。</p>
+<p>此过程会将 Holodeck 的 C++ 代码编译，并将 <code>.uasset</code> 文件（包括蓝图！）打包成一个大的 <code>.pak</code> 文件，并创建所需的目录结构。</p>
+<h2 id="underwater">添加 Underwater 世界  <span id="adding_underwater_worlds"></span></h2>
+<p>最终的软件包将仅包含已添加到项目中的世界（在编辑器中称为“关卡”）。<code>holoOcean</code> 代码库中仅包含示例关卡。您只需在虚幻引擎编辑器中创建新关卡即可创建新的世界。更多信息请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/Basics/Levels/HowTo/WorkWithLevelAssets/index.html">虚幻引擎文档</a>。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>由于 HoloOcean 附带的其他打包世界包含付费资源，因此仅供 BYU FRoStLab 的正式成员使用。其他用户需要在 holoocean 代码库中自行开发世界。</p>
+</div>
+<h2 id="_2">内容烘焙  <span id="cooking_content"></span></h2>
+<p>当您在 Visual Studio 中运行 Underwater 时，可能需要刷新内容以“更新” Underwater 读取的资源、关卡和蓝图。</p>
+<h3 id="_3">在虚幻引擎编辑器中：</h3>
+<p>文件 ➡ 刷新内容（Windows/Linux）</p>
+<h2 id="underwater_1">打包 Underwater <span id="packing_underwater"></span></h2>
+<p>从虚幻编辑器：</p>
+<p>1.文件 ➡ 打包项目 ➡ Windows x64/Linux</p>
+<p><img alt="" src="../../../img/underwater/package-project.png" /></p>
+<p>2.选择输出文件夹</p>
+<p>通常选择 Underwater 代码库根目录下的“dist”文件夹。</p>
+<h2 id="_4">将文件放置在安装目录中 <span id="place_in_install_directory"></span></h2>
+<p>为了能够调用 <code>holodeck.make()</code>，您需要将打包好的引擎放置在<a href="../../packages/installation/">软件包安装位置</a>。</p>
+<p>请确保路径中的版本号与 <code>holodeck.util.get_holodeck_version</code> 命令的输出结果一致。</p>
+<p>1.将 <code>dist</code> 文件夹的内容复制到上面指定的软件包路径中。
+<div class="highlight"><pre><span></span><code><span class="err">+</span><span class="w"> </span><span class="err">worlds</span>
+<span class="err">|</span><span class="mf">--+</span><span class="w"> </span><span class="err">PackageName</span>
+<span class="w">    </span><span class="err">|</span><span class="mi">--</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig.jso</span><span class="kc">n</span>
+<span class="w">    </span><span class="err">|</span><span class="mi">--</span><span class="w"> </span><span class="err">WorldName</span><span class="mi">-</span><span class="err">Sce</span><span class="kc">nar</span><span class="err">ioName.jso</span><span class="kc">n</span>
+<span class="w">    </span><span class="err">|</span><span class="mf">--+</span><span class="w"> </span><span class="err">Li</span><span class="kc">nu</span><span class="err">xNoEdi</span><span class="kc">t</span><span class="err">or</span><span class="w"> </span><span class="err">(ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span><span class="w"> </span><span class="kc">fr</span><span class="err">om</span><span class="w"> </span><span class="err">dis</span><span class="kc">t</span><span class="w"> </span><span class="kc">f</span><span class="err">older)</span>
+<span class="w">        </span><span class="err">|</span><span class="w"> </span><span class="err">UE</span><span class="mi">4</span><span class="w"> </span><span class="err">build</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span>
+</code></pre></div></p>
+<p>2.请按照上述文件结构从 holodeck-configs 复制配置。</p>
+<div class="admonition 重要提示">
+<p class="admonition-title">重要提示</p>
+<p>config.json 文件是为 Linux 编写的，必须进行编辑才能在 Windows 系统下正常工作。请将 platform 和 path 字段修改为以下内容：
+<code>"platform": "windows"</code>、
+<code>"path": "WindowsNoEditor/Holodeck/Binaries/Win64/Holodeck.exe"</code></p>
+</div>
+<h2 id="_5">关于创建环境对象和声呐的说明 <span id="note_on_creating_environment_objects_and_sonar"></span></h2>
+<p>声呐模拟在生成八叉树时依赖于对象的碰撞网格。如果对象的碰撞网格比视觉网格粗糙，则该对象在声呐图像中的表示将不准确。可以通过在虚幻引擎编辑器中，将静态网格编辑器详细信息部分的“碰撞复杂度”选项设置为“使用复杂碰撞作为简单碰撞”来解决此问题。</p>
               
             </div>
           </div><footer>
