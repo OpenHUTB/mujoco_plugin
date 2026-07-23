@@ -54,10 +54,15 @@
 `ExecutableName` 可以是任何值。生成的可执行文件将以此命名。通常格式为 Holodeck-{BuildConfiguration}。例如：Holodeck-Debug。如果出现“找不到目标规则”错误，只需使用“holodeck”即可。
 
 `BuildConfiguration` 必须是以下选项之一：
+
 - `Debug`: 包含用于调试引擎和游戏的符号
+
 - `DebugGame`: 引擎已优化，但包含游戏的调试符号，因此游戏可调试
+
 - `Development`: 启用除最耗时的优化之外的所有优化
+
 - `Shipping`: 优化游戏和引擎代码
+
 - `Test`: 与 Shipping 相同，但启用了一些控制台命令、统计信息和性能分析工具
 
 
