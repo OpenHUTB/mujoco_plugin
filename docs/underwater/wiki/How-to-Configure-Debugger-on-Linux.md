@@ -7,63 +7,71 @@
 
 ![](../../img/underwater/create_clion_project_file.jpg)
 
-#### 2. Open the project in CLion
-Open the project from the project root in CLion or in Unreal Engine Editor goto File -> Open CLion
+#### 2. 在 CLion 中打开项目
+在 CLion 中从项目根目录打开项目，或者在虚幻引擎编辑器中，转到“File -> Open CLion”。
 
-#### 3. Edit the configurations
-**Note:** You need to copy libopenvr_api.so from `{where you cloned ue4}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64` to `holodeck-engine/Binaries/Linux` to be able to run/debug the game following these instructions.
-- In CLion goto Run -> Edit Configurations (also available in the run section of the toolbar)
-- Select Holodeck-Linux-DebugGame
-- Set the value in `Executable` to {HOLODECK-ENGINE-ROOT}/Binaries/Linux/Holodeck-Linux-DebugGame
-- Leave 'Program arguments` blank. Alternatively, you can specify the map/world to load e.g `TestWorld`
-- Click OK
-- Use the debug icon to debug the game or press `Shift + F9`
 
-#### 4. Run Holodeck in debug mode
-After the setup, you should be able to click on Run -> Debug <configuration_name>, click on the debug icon on the top right corner of the toolbar or simply use Shift + F9 to debug Holodeck. 
+#### 3. 编辑配置
 
-> Note: This will build the project and open Unreal Engine in debug mode. Running Holodeck in Unreal Engine should hit any reachable breakpoints you set.
+!!! 注意
+    您需要将 libopenvr_api.so 从 `{您克隆 ue4 的位置}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64` 复制到 `holodeck-engine/Binaries/Linux`，以便能够按照这些说明运行/调试游戏。
+
+- 在 CLion 中，转到“Run -> Edit Configurations”（也可在工具栏的“运行”部分找到）
+- 选择 Holodeck-Linux-DebugGame
+- 将`Executable`的值设置为 {HOLODECK-ENGINE-ROOT}/Binaries/Linux/Holodeck-Linux-DebugGame
+- 将“程序参数”留空。或者，您可以指定要加载的地图/世界，例如 `TestWorld`
+- 点击 OK
+- 使用调试图标调试游戏，或按 `Shift + F9`。
+
+#### 4. 以调试模式运行 Holodeck
+设置完成后，您应该可以点击“Run -> Debug <configuration_name>”，点击工具栏右上角的调试图标，或者直接使用 Shift + F9 来调试 Holodeck。
+
+!!! 注意
+    这将构建项目并以调试模式打开虚幻引擎。在虚幻引擎中运行 Holodeck 应该会触发您设置的所有断点。
+
 
 ## VSCode
-#### 1. Create VSCode project files
-- Open Holodeck in Unreal Engine
-- Edit -> Editor Preferences -> General -> Source Code -> Source Code Editor -> VSCode
-- File -> Generate VSCode Project (this will be "Refresh VSCode Project"  if the project was already generated)
+#### 1. 创建 VSCode 项目文件
+- 在虚幻引擎中打开 Holodeck
+- 选择菜单中的：编辑 -> 编辑器偏好设置 -> 通用 -> 源代码 -> 源代码编辑器 -> VSCode
+- 选择菜单中的：文件 -> 生成 VSCode 项目(如果项目已生成，则此选项将显示为“刷新 CLion 项目”)
 
-#### 2. Open the project in VSCode
-Open the workspace from the project root in VSCode
+#### 2. 在 VSCode 中打开项目
+在 VSCode 中从项目根目录打开工作区。
 
-#### 3. Copy missing library
-Copy `libopenvr_api.so` from `{where you cloned ue4}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64` to `holodeck-engine/Binaries/Linux`
+#### 3. 复制缺失的库
+将 `libopenvr_api.so` 从 `{您克隆 ue4 的位置}/UnrealEngine/Engine/Binaries/ThirdParty/OpenVR/OpenVRv1_0_16/linux64` 复制到 `holodeck-engine/Binaries/Linux`
 
 #### 4. Run
-F5 to debug, Ctrl + Shift + B to build 
+按 F5 进行调试，按 Ctrl + Shift + B 进行构建
 
-## Command line
-#### 1. Build from the command line:
+
+## 命令行
+#### 1. 从命令行构建：
 `{UnrealEngineDir}/Engine/Build/BatchFiles/Linux/Build.sh holodeck Linux {BuildConfiguration} {HolodeckEngineDir}/Holodeck.uproject -waitmutex`
 
 
-`ExecutableName` can be anything. The resulting executable will have this name. Typically would be Holodeck-{BuildConfiguration}. E.g. Holodeck-Debug. If you get a couldn't find target rules error just use "holodeck"
+`ExecutableName` 可以是任何值。生成的可执行文件将以此命名。通常格式为 Holodeck-{BuildConfiguration}。例如：Holodeck-Debug。如果出现“找不到目标规则”错误，只需使用“holodeck”即可。
 
-`BuildConfiguration` must be one of:
-- `Debug`: Includes symbols for debugging both the engine and the game
-- `DebugGame`: the engine is optimized but the game's debug symbols are included so the game is debuggable
-- `Development`: enables all but the most time-consuming optimizations
-- `Shipping`: well, optimize the game and engine code
-- `Test`: same as shipping but with some console commands, stats, and profiling tools enabled
+`BuildConfiguration` 必须是以下选项之一：
+- `Debug`: 包含用于调试引擎和游戏的符号
+- `DebugGame`: 引擎已优化，但包含游戏的调试符号，因此游戏可调试
+- `Development`: 启用除最耗时的优化之外的所有优化
+- `Shipping`: 优化游戏和引擎代码
+- `Test`: 与 Shipping 相同，但启用了一些控制台命令、统计信息和性能分析工具
 
 
-#### 2. Run the game from the command line:
+#### 2. 从命令行运行游戏:
 `{HolodeckEngineDir}/Build/Linux}/{TargetName}-{Linux}-{BuildConfiguration}`
 
-> Note: You may need to cook the project for Linux else you'd get some kind of "uncooked" game error. To cook the game for Linux, open the game in UnrealEditor click File -> Cook Content -> [PlatformName] or File -> Cook Content for Linux.
+!!! 注意
+    您可能需要为 Linux 系统编译项目，否则可能会出现“未编译”的游戏错误。要为 Linux 系统编译游戏，请在 UnrealEditor 中打开游戏，然后单击“文件”->“烘焙内容”->“[平台名称]”或“文件”->“烘焙 Linux 内容”。 
 
-#### 3. Attach a debugger to the process:
-You can use your debugger of choice to attach to the game's running process
+#### 3. 将调试器附加到进程:
+您可以使用您选择的调试器附加到游戏的运行进程。
 
-#### Links to helpful Unreal Engine docs:
+#### 相关虚幻引擎文档链接:
 
-[Packaging Projects](https://docs.unrealengine.com/en-US/Engine/Basics/Projects/Packaging/index.html)
+[项目打包](https://docs.unrealengine.com/en-US/Engine/Basics/Projects/Packaging/index.html)
 
-[Build configuration](https://docs.unrealengine.com/en-US/Programming/Development/CompilingProjects/index.html)
+[构建配置](https://docs.unrealengine.com/en-US/Programming/Development/CompilingProjects/index.html)
