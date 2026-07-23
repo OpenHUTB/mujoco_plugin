@@ -36,5 +36,5 @@
 
 ## 其他
 
-* [holodeck的开发wiki](https://github.com/BYU-PCCL/holodeck/wiki)
+* [Underwater的引擎开发](../wiki/Holodeck-Onboarding.md) - [holodeck的开发wiki](https://github.com/BYU-PCCL/holodeck/wiki)
 * [holodeck文档](https://holodeck.readthedocs.io/en/latest/)

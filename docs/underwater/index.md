@@ -1,6 +1,6 @@
 # 水下机器人 HoloOcean
 
-HoloOcean[@Potokar22icra] 基于虚幻引擎（由Epic Games开发）和全息舱（由杨百翰大学PCCL实验室研发），HoloOcean 能够轻松模拟海洋机器人与自主系统，支持多种传感器、智能体及功能特性。
+HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模拟海洋机器人与自主系统，支持多种传感器、智能体及功能特性。
 
 * __[安装](./usage/installation.md)__  
 * __[入门与示例](./getting_started.md)__  
