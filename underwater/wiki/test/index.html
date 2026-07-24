@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>Holodeck Onboarding - Mujoco 插件</title>
+    <title>Holodeck 集成测试 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Holodeck Onboarding";
-        var mkdocs_page_input_path = "underwater/wiki/Holodeck-Onboarding.md";
+        var mkdocs_page_name = "Holodeck \u96c6\u6210\u6d4b\u8bd5";
+        var mkdocs_page_input_path = "underwater/wiki/test.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Holodeck Onboarding</li>
+      <li class="breadcrumb-item active">Holodeck 集成测试</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Holodeck-Onboarding.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/test.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,32 +140,37 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>如果你正在阅读这篇文章，说明你想参与 Holodeck 的开发！恭喜！</p>
-<p>这里有一些教程，可以帮助你快速上手 Holodeck 的开发。</p>
-<p>如果你发现任何信息缺失或过时，请放心，这是一个维基百科！欢迎编辑！</p>
-<p><img alt="" src="https://i151.photobucket.com/albums/s155/xlbitchlx/Pikachu/UCPikachu.gif?width=250&amp;height=250&amp;crop=1:1,smart" /></p>
-<h3 id="get-started">Get Started</h3>
-<ul>
-<li><a href="../../develop/semaphores/">holodeck 及其两部分如何通信</a></li>
-<li><a href="../Building-Holodeck-Engine/">构建 <code>holodeck-engine</code></a></li>
-<li><a href="https://github.com/BYU-PCCL/holodeck/wiki/Developing-%60holodeck%60-package">在您的机器上准备用于开发的 <code>holodeck</code> pip 包</a></li>
-<li><a href="../Packaging-Project/">打包项目</a></li>
-<li><a href="../How-To-Debug/">调试 holodeck 和 holodeck-engine</a></li>
-<li><a href="../How-to-Configure-Debugger-on-Linux/">在 Linux 上配置调试器</a></li>
-<li><a href="../../packages/installation/">手动安装构建</a></li>
-<li><a href="../test/">运行测试</a></li>
-<li><a href="https://github.com/BYU-PCCL/holodeck/blob/develop/docs/README.md#building">Building Documentation</a></li>
-</ul>
-<h3 id="add-content-to-holodeck-engine">Add Content to <code>holodeck-engine</code></h3>
-<ul>
-<li><a href="https://github.com/BYU-PCCL/holodeck/wiki/Adding-Agents">Adding Agents</a></li>
-<li>Adding Worlds</li>
-<li>Adding Tasks</li>
-</ul>
-<h3 id="advanced-topics">Advanced Topics</h3>
-<ul>
-<li><a href="https://github.com/BYU-PCCL/holodeck/wiki/Using-the-UE4-Profiler">Profiling UE4</a> (improve performance)</li>
-</ul>
+                <h1 id="holodeck">Holodeck 集成测试</h1>
+<h2 id="_1">前提条件</h2>
+<p><code>pip install tox</code></p>
+<h3 id="tox">什么是 tox</h3>
+<p>Tox 会自动创建一个虚拟环境，并根据 <code>config.py</code> 中指定的依赖项进行配置，然后针对该虚拟环境运行 <code>pytest</code>。这使得我们可以像测试安装在全新机器上的软件包一样测试 Holodeck。</p>
+<h2 id="_2">我只想对正在使用的代码进行测试</h2>
+<h3 id="holodeck_1">安装 Holodeck 的开发版本</h3>
+<p>你可以使用 pip 安装 <code>Holodeck</code> 模块的“可编辑”模式——这意味着你可以从任何位置<code>import holodeck</code>，它将使用 <a href="https://github.com/BYU-PCCL/holodeck/tree/master/src/holodeck">src/holodeck</a> 目录下的代码。</p>
+<p>首先，卸载你已安装的任何 Holodeck 版本：<code>pip uninstall holodeck</code></p>
+<p>然后，从该仓库的根目录运行 <code>pip install --editable .</code></p>
+<p>打开 Python 终端，确保导入 Holodeck <code>import holodeck</code> 并运行 <code>holodeck.util.get_holodeck_version()</code> 后输出 <code>X.Y.Zdev</code></p>
+<h3 id="pytest">运行 pytest</h3>
+<p>安装好 Holodeck 的开发版本后，从该仓库的根目录运行 <code>pytest</code>。你应该会看到类似这样的输出。</p>
+<div class="highlight"><pre><span></span><code>============================= test session starts =============================
+platform win32 -- Python 3.7.1, pytest-4.5.0, py-1.8.0, pluggy-0.12.0
+cachedir: .tox\py37\.pytest_cache
+rootdir: C:\Users\jayde\Documents\holodeck, inifile: pytest.ini
+collected 28 items
+
+tests\scenarios\test_loading_scenarios.py ..............           [ 50%]
+tests\scenarios\test_reset.py .......                              [ 75%]
+tests\scenarios\test_rgb_camera_not_null.py .......                [100%]
+
+========================= 28 passed in 131.77 seconds =========================
+___________________________________ summary ___________________________________
+  py37: commands succeeded
+  congratulations :)
+</code></pre></div>
+<p>在 PyCharm 中，你也可以右键点击测试用例，单独运行/调试它。</p>
+<h2 id="tox_1">运行 Tox</h2>
+<p>只需在本仓库根目录下输入 <code>tox</code> 即可。</p>
               
             </div>
           </div><footer>

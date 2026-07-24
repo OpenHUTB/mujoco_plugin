@@ -140,85 +140,65 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>When working on <code>holodeck</code> or <code>holodeck-engine</code>, you may be wondering how to
-debug your code. </p>
+                <p>在使用 <code>holodeck</code> 或 <code>holodeck-engine</code> 时，您可能会想知道如何调试代码。</p>
 <ul>
-<li><a href="#modifying-%60holodeck%60-package">Modifying the <code>holodeck</code> package</a></li>
-<li><a href="#Modifying-%60holodeck-engine%60">Modifying the <code>holodeck-engine</code> project</a></li>
+<li><a href="#modifying_holodeck_package">修改 <code>holodeck</code> 包</a></li>
+<li><a href="#modifying_holodeck_engine">修改 <code>holodeck-engine</code> 项目</a></li>
 </ul>
-<h2 id="modifying-holodeck-package">Modifying <code>holodeck</code> package</h2>
-<p>If you are just modifying the Python package, you just need to make sure that
-there is a compatible package installed in the <a href="https://holodeck.readthedocs.io/en/latest/packages/docs/installation.html">Holodeck search path.</a></p>
-<h3 id="working-off-of-master">Working off of master</h3>
-<p>If you are building off of master, you should be able to just use the binaries
-we provide with (<code>holodeck.install</code>) as long as you don't make any breaking
-changes.</p>
-<h3 id="working-off-of-develop">Working off of develop</h3>
-<p>We don't provide builds of <code>develop</code> so you will need to build the engine
-yourself (<a href="https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine">Building Holodeck Engine</a>).</p>
-<p>After you can build it, <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project">package it</a> and <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project#place-in-install-directory">place it in the install directory</a>.</p>
-<p>After following those instructions, you should be able to call <code>holodeck.make</code>.</p>
-<h2 id="modifying-holodeck-engine">Modifying <code>holodeck-engine</code></h2>
-<p>Working on the engine is trickier. You can build it and place it in the expected
-directory, <a href="#working-off-of-develop">as above</a>, but that's slow and annoying,
-and you can't attach a debugger.</p>
-<p>The crux of both of the following methods is that the engine must have a client
-attach for it in order for it to tick (ie advance the state and parse input).</p>
-<p>If you've read and understood <a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Communication-Protocol">Holodeck Communication Protocol</a>
-, the reason for this should make sense.</p>
-<h3 id="launch-from-the-unreal-editor">Launch From the Unreal Editor</h3>
-<p>If you want to debug a particular level you have open in the editor, from the</p>
+<h2 id="holodeck">修改 <code>holodeck</code> 包 <span id="modifying_holodeck_package"></span></h2>
+<p>如果您只是修改 Python 包，只需确保 <a href="../../packages/installation/">Holodeck 搜索路径</a>中已安装兼容的包即可。</p>
+<h3 id="master">基于 master 分支</h3>
+<p>如果您基于 master 分支构建，只要不进行任何破坏性更改，您应该可以直接使用我们提供的二进制文件（<code>holodeck.install</code>）。</p>
+<h3 id="develop">基于 develop 分支 <span id="working_off_of_develop"></span></h3>
+<p>我们不提供 <code>develop</code> 分支的构建版本，因此您需要自行构建引擎（<a href="../Building-Holodeck-Engine/">构建 Holodeck 引擎</a>）。</p>
+<p>构建完成后，将其<a href="../Packaging-Project/">打包</a>并<a href="../../packages/installation/">放置在安装目录</a>中。</p>
+<p>按照这些说明操作后，您应该可以调用 <code>holodeck.make</code>。</p>
+<h2 id="holodeck-engine">修改 <code>holodeck-engine</code> 项目 <span id="modifying_holodeck_engine"></span></h2>
+<p>引擎的开发比较棘手。你可以<a href="#working_off_of_develop">像上面那样</a>构建引擎并将其放置在预期的目录中，但这既慢又麻烦，而且你无法附加调试器。</p>
+<p>以下两种方法的关键在于，引擎必须有客户端连接才能运行（即推进状态并解析输入）。</p>
+<p>如果你已经阅读并理解了 <a href="../../develop/semaphores/">Holodeck 通信协议</a>，那么这一点就很容易理解了。</p>
+<h3 id="_1">从虚幻编辑器启动</h3>
+<p>如果您想调试编辑器中打开的特定关卡，请从以下位置启动游戏：</p>
 <ol>
-<li>Launch game</li>
+<li>启动游戏</li>
 </ol>
-<p>From the toolbar above the viewport select the down arrow next to 
-   <strong>Play</strong> -&gt; Standalone Game</p>
-<p><img alt="Play -&gt; Dropdown -&gt; Standalone Game" src="../images/play-standalone.png" />.</p>
-<p>Running in its own process means that if the engine crashes or the client
-   disconnects, the editor won't lock up or crash.</p>
+<p>在视窗上方的工具栏中，选择“<strong>运行</strong>”旁边的向下箭头-&gt;“<strong>独立进程游戏</strong>”。</p>
+<p><img alt="" src="../../../img/underwater/play_standalone.jpg" /></p>
+<p>在独立进程中运行意味着，即使引擎崩溃或客户端断开连接，编辑器也不会卡死或崩溃。</p>
 <ol>
-<li>Attach Client</li>
+<li>客户端附着</li>
 </ol>
-<p><a href="#attaching-client">See below</a></p>
-<h3 id="launch-from-visual-studio">Launch from Visual Studio</h3>
-<p>Make sure you have <a href="https://github.com/BYU-PCCL/holodeck/wiki/Packaging-Project#cooking-content">cooked content</a>
-before attempting this.</p>
+<p><a href="#attaching_client">请参见下方</a></p>
+<h3 id="visual-studio">从 Visual Studio 启动</h3>
+<p>请确保在尝试此操作之前<a href="../../develop/env/#cooking_content">已烘焙好内容</a>。</p>
 <ol>
-<li>Optional: Select Level</li>
+<li>可选：选择关卡</li>
 </ol>
-<p>If you want to launch a particular level:</p>
+<p>如果您想启动特定关卡：</p>
 <ol>
-<li>Go to Debug Menu -&gt; Holodeck Properties -&gt; Debugging</li>
-<li>In "Command Arguments", put the name of the level to load</li>
+<li>转到“调试”菜单 -&gt; “Holodeck 属性” -&gt; “调试”</li>
+<li>在“命令参数”中，输入要加载的关卡名称</li>
 <li>
-<p>OK</p>
+<p>确定</p>
 </li>
 <li>
-<p>Launch the game from Visual Studio (play button, make sure DebugGame is 
-   selected)</p>
+<p>从 Visual Studio 启动游戏（点击“运行”按钮，确保已选择“DebugGame”）。</p>
 </li>
 </ol>
 <p><img alt="launching in visual studio" src="../images/debug-config-vs.png" /></p>
 <ol>
-<li>Attach Client</li>
+<li>客户端附着</li>
 </ol>
-<p><a href="#attaching-client">See below</a></p>
-<h3 id="attaching-client">Attaching Client</h3>
-<p>Once you have the engine running, you need to attach a client to it. This is
-most easily done by creating your own <a href="https://holodeck.readthedocs.io/en/latest/holodeck/environments.html#holodeck.environments.HolodeckEnvironment"><code>HolodeckEnvironment</code></a>
-object.</p>
+<p>请查看下方<a href="#attaching-client">客户端附着</a>。</p>
+<h3 id="_2">客户端附着  <span id="attaching_client"></span></h3>
+<p>引擎运行起来之后，你需要将客户端连接到它。最简单的方法是创建你自己的 <a href="https://holodeck.readthedocs.io/en/latest/holodeck/environments.html#holodeck.environments.HolodeckEnvironment"><code>HolodeckEnvironment</code></a> 对象。</p>
 <div class="highlight"><pre><span></span><code><span class="n">env</span> <span class="o">=</span> <span class="n">HolodeckEnvironment</span><span class="p">(</span>
     <span class="n">start_world</span><span class="o">=</span><span class="kc">False</span>
 <span class="p">)</span>
 </code></pre></div>
-<p>This attaches because the default UUID for both <code>HolodeckEnvironent</code> and the 
-engine (if <code>--HolodeckUUID=</code> is not provided on the engine's command line) is 
-<code>""</code> or the empty string.</p>
-<p>After that object is created, you should be able to call <code>env.tick(5000)</code> and
-move the camera around.</p>
-<p>If you want to spawn agents and sensors, provide a scenario configuration dict 
-to the <code>scenario</code> option in the constructor for <code>HolodeckEnvironment</code> (see 
-<a href="https://holodeck.readthedocs.io/en/latest/packages/docs/scenarios.html">Scenarios</a>)</p>
+<p>这是因为 <code>HolodeckEnvironent</code> 和引擎的默认 UUID（如果引擎命令行中未提供 <code>--HolodeckUUID=</code> 参数）均为空字符串 <code>""</code>。</p>
+<p>创建该对象后，您应该可以调用 <code>env.tick(5000)</code> 并移动摄像机。</p>
+<p>如果您想要生成代理和传感器，请在 <code>HolodeckEnvironment</code> 的构造函数中为 <code>scenario</code> 选项提供一个场景配置字典（参见<a href="../../usage/scenarios/">场景</a>部分）。</p>
               
             </div>
           </div><footer>
