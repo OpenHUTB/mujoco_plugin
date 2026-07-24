@@ -10,4 +10,5 @@
 !!! 注意
    由于这些世界包含付费资源，因此仅供 BYU PCCL 的正式成员使用。其他用户需要使用 holodeck-engine 开发自己的世界。
 
-后面内容参考[内容烘焙、打包、放置](../../underwater/develop/develop.md#cooking_content)
+后面内容参考[内容烘焙、打包、放置](../../underwater/develop/env.md#cooking_content)。
+
