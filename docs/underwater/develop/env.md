@@ -9,7 +9,7 @@
 
 ## 添加 Underwater 世界  <span id="adding_underwater_worlds"></span>
 
-最终的软件包将仅包含已添加到项目中的世界（在编辑器中称为“关卡”）。`holoOcean` 代码库中仅包含示例关卡。您只需在虚幻引擎编辑器中创建新关卡即可创建新的世界。更多信息请参阅[虚幻引擎文档](https://openhutb.github.io/engine_doc/zh-CN/Basics/Levels/HowTo/WorkWithLevelAssets/index.html)。
+最终的软件包将仅包含已添加到项目中的世界（在编辑器中称为“关卡”）。`holoOcean` 代码库中仅包含示例关卡。您只需在虚幻引擎编辑器中[创建新关卡](./custom_level.md)即可创建新的世界。更多信息请参阅[虚幻引擎文档](https://openhutb.github.io/engine_doc/zh-CN/Basics/Levels/HowTo/WorkWithLevelAssets/index.html)。
 
 !!! 注意
     由于 HoloOcean 附带的其他打包世界包含付费资源，因此仅供 BYU FRoStLab 的正式成员使用。其他用户需要在 holoocean 代码库中自行开发世界。
