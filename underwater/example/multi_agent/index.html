@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>多智能体示例 - Mujoco 插件</title>
+    <title>多智能体示例  - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u591a\u667a\u80fd\u4f53\u793a\u4f8b";
+        var mkdocs_page_name = "\u591a\u667a\u80fd\u4f53\u793a\u4f8b ";
         var mkdocs_page_input_path = "underwater/example/multi_agent.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">多智能体示例</li>
+      <li class="breadcrumb-item active">多智能体示例 </li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/example/multi_agent.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -140,7 +140,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">多智能体示例</h1>
+                <h1 id="multi_agentpy">多智能体示例 <a href="https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/multi_agent.py">multi_agent.py</a></h1>
 <p>使用 HoloOcean，您可以同时控制多个智能体。与其调用 <code>.step()</code>（该方法既向主智能体发送单个指令，又推进仿真进程），不如调用 <code>.act()</code>。<code>.act()</code> 仅向特定智能体发送指令，而不会推进仿真进程。</p>
 <p>当所有智能体都接收到各自的动作指令后，您可以调用 <code>.tick()</code> 来推进仿真进程。</p>
 <p>调用 <code>.act()</code> 之后，每次调用 <code>.tick()</code> 时，系统都会向该智能体发送相同的指令。若要更改指令，只需再次调用 <code>.act()</code> 即可。</p>

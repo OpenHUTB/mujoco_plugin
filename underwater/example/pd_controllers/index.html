@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>PD 控制器 - Mujoco 插件</title>
+    <title>PD 控制器  - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "PD \u63a7\u5236\u5668";
+        var mkdocs_page_name = "PD \u63a7\u5236\u5668 ";
         var mkdocs_page_input_path = "underwater/example/pd_controllers.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">PD 控制器</li>
+      <li class="breadcrumb-item active">PD 控制器 </li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/example/pd_controllers.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -140,7 +140,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="pd">PD 控制器</h1>
+                <h1 id="pd-pd_controllerspy">PD 控制器 <a href="https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/pd_controllers.py">pd_controllers.py</a></h1>
 <p>部分内置智能体（如 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/agents.html#holoocean.agents.HoveringAUV">HoveringAUV</a> 和 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/agents.html#holoocean.agents.SurfaceVessel">SurfaceVessel</a>）集成了简单的 PD 控制器，以便在生成数据的过程中轻松进行导航。当选择 PD 控制方案时，传递给 HoloOcean 的控制指令即为目标导航状态。下图展示了<strong>水面舰艇</strong>（Surface Vessel）的一个应用示例：它在水面上依次导航至多个预设的航点。</p>
 <p><img alt="" src="../../../img/underwater/pd_controllers.jpg" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>

@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>手动定义动力学 - Mujoco 插件</title>
+    <title>手动定义动力学  - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u624b\u52a8\u5b9a\u4e49\u52a8\u529b\u5b66";
+        var mkdocs_page_name = "\u624b\u52a8\u5b9a\u4e49\u52a8\u529b\u5b66 ";
         var mkdocs_page_input_path = "underwater/example/custom_dynamics.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">手动定义动力学</li>
+      <li class="breadcrumb-item active">手动定义动力学 </li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/example/custom_dynamics.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -140,7 +140,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">手动定义动力学</h1>
+                <h1 id="custom_dynamicspy">手动定义动力学 <a href="https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/custom_dynamics.py">custom_dynamics.py</a></h1>
 <p>很多时候，能够轻松实现自定义动力学对研究可能有用。为此，我们为 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HovingAUV</a> 创建了控制器，这些控制器接收线性和角加速度，并将其集成以实现自定义动力学。除了碰撞，模拟器中没有对车辆施加其他加速度，从而允许在python中实现完全自定义的动力学。这种可能性是无限的，包括复杂的流体力学、水流等。</p>
 <p>此外，动力学传感器 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.DynamicsSensor">DynamicsSensor</a> 旨在提供计算动力学所需的所有必要当前状态信息，包括加速度、速度和当前姿态信息。</p>
 <p>以下是一个实际应用示例，其中手动实现了重力、浮力和阻尼。</p>

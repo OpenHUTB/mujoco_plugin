@@ -161,6 +161,10 @@
 <p><img alt="" src="../../../img/underwater/package_project.jpg" /></p>
 <p>2.选择输出目录</p>
 <p>我通常选择 <code>holodeck-engine</code> 仓库根目录下的“dist”目录。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>双击执行输出目录中的<code>WindowsNoEditor/Holodeck.exe</code>并不能看到默认的场景，执行<code>WindowsNoEditor\Holodeck\Binaries\Win64\Holodeck.exe</code>才能看到默认的场景。想要看到水下机器人需要通过运行 <a href="https://github.com/OpenHUTB/mujoco_plugin/tree/main/src/underwater/holo_ocean">Python 脚本</a>。</p>
+</div>
 <h2 id="_3">将文件放置在安装目录中 <span id="place_in_install_directory"></span></h2>
 <p>为了能够调用 <code>holodeck.make()</code>，您需要将打包好的引擎放置在<a href="../../packages/installation/">软件包安装位置</a>。</p>
 <p>请确保路径中的版本号与 <code>holodeck.util.get_holodeck_version</code> 命令的输出结果一致。</p>
@@ -169,7 +173,7 @@
 <span class="err">|</span><span class="mf">--+</span><span class="w"> </span><span class="err">PackageName</span>
 <span class="w">    </span><span class="err">|</span><span class="mi">--</span><span class="w"> </span><span class="err">co</span><span class="kc">nf</span><span class="err">ig.jso</span><span class="kc">n</span>
 <span class="w">    </span><span class="err">|</span><span class="mi">--</span><span class="w"> </span><span class="err">WorldName</span><span class="mi">-</span><span class="err">Sce</span><span class="kc">nar</span><span class="err">ioName.jso</span><span class="kc">n</span>
-<span class="w">    </span><span class="err">|</span><span class="mf">--+</span><span class="w"> </span><span class="err">Li</span><span class="kc">nu</span><span class="err">xNoEdi</span><span class="kc">t</span><span class="err">or</span><span class="w"> </span><span class="err">(ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span><span class="w"> </span><span class="kc">fr</span><span class="err">om</span><span class="w"> </span><span class="err">dis</span><span class="kc">t</span><span class="w"> </span><span class="kc">f</span><span class="err">older)</span>
+<span class="w">    </span><span class="err">|</span><span class="mf">--+</span><span class="w"> </span><span class="err">Li</span><span class="kc">nu</span><span class="err">xNoEdi</span><span class="kc">t</span><span class="err">or</span><span class="w"> </span><span class="err">(发行目录的输出)</span>
 <span class="w">        </span><span class="err">|</span><span class="w"> </span><span class="err">UE</span><span class="mi">4</span><span class="w"> </span><span class="err">build</span><span class="w"> </span><span class="err">ou</span><span class="kc">t</span><span class="err">pu</span><span class="kc">t</span>
 </code></pre></div></p>
 <p>2.请按照上述文件结构从 holodeck-configs 复制配置。</p>
