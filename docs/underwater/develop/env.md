@@ -17,24 +17,27 @@
 
 ## 内容烘焙  <span id="cooking_content"></span>
 
-当您在 Visual Studio 中运行 Underwater 时，可能需要刷新内容以“更新” Underwater 读取的资源、关卡和蓝图。
+当您在 Visual Studio 中运行 `holodeck-engine` 时，可能需要烘焙内容以“刷新”`holodeck-engine` 读取的资源、关卡和蓝图。
 
-### 在虚幻引擎编辑器中：
+**从虚幻编辑器：**
 
-文件 ➡ 刷新内容（Windows/Linux）
+文件 ➡ 烹饪 Windows/Linux 的内容
+
+![](../../img/underwater/cooking_content.jpg)
+
 
 ## 打包 Underwater <span id="packing_underwater"></span>
 
-从虚幻编辑器：
+**从虚幻编辑器：**
 
 1.文件 ➡ 打包项目 ➡ Windows x64/Linux
 
-![](../../img/underwater/package-project.png)
+   ![](../../img/underwater/package_project.jpg)
 
 
-2.选择输出文件夹
-
-通常选择 Underwater 代码库根目录下的“dist”文件夹。
+2.选择输出目录
+    
+   我通常选择 `holodeck-engine` 仓库根目录下的“dist”目录。
 
 
 ## 将文件放置在安装目录中 <span id="place_in_install_directory"></span>

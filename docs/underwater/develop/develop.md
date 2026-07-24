@@ -38,3 +38,4 @@
 
 * [holodeck 开发](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
 * [holodeck文档](https://holodeck.readthedocs.io/en/latest/)
+* [所有相关的仓库](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
