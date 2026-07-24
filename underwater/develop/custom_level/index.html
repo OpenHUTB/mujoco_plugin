@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>创建自定义关卡 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u521b\u5efa\u81ea\u5b9a\u4e49\u5173\u5361";
+        var mkdocs_page_input_path = "underwater/develop/custom_level.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">创建自定义关卡</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/develop/custom_level.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">创建自定义关卡</h1>
+<p>要在 HoloOcean 中创建自定义关卡，您必须使用虚幻引擎 (Unreal Engine) 来制作关卡。有关保存和创建新关卡的更多信息，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/LDQuickStart/index.html">引擎文档</a>。</p>
+<p>HoloOcean 关卡主要包含两个方面：地形和水体。</p>
+<h2 id="_2">地形</h2>
+<p>如需创建自定义地形方面的帮助，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/Landscape/index.html">虚幻引擎的地形文档</a>。该文档解释了如何在编辑器中使用地形模式，以及如何应用和创建地形材质。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>创建地形时，请注意水面位于 z=0 处。为了确保水下代理正常工作，水下地形必须低于 z=0。</p>
+</div>
+<p>要获取地形所需的材质或素材，您可以在 <a href="https://www.fab.com/">Fab</a> 上购买或找到一些免费素材。<a href="https://www.fab.com/sellers/Quixel">Quixel</a> 提供许多免费素材和材质。</p>
+<p>如果您希望封闭环境的四周，可以放置墙壁等素材，或者雕刻地形边缘使其更高。您可以在 SimpleUnderwater 环境中查看这两种示例。</p>
+<p><img alt="" src="../../../img/underwater/landscape_example.png" /></p>
+<h2 id="_3">水体</h2>
+<p><strong>虚幻引擎的水体插件与 HoloOcean 不兼容，无法正常工作</strong>。要实现水下效果，您需要在环境中放置一个水面和两个 PostProcessVolume。请注意，以下设置仅供参考，您可能需要根据关卡情况进行调整。</p>
+<h3 id="_4">水面</h3>
+<p>要创建水面，请在 z=0 处放置一个平面 Actor。将其材质更改为任何类似水的材质。您还需要更改碰撞设置，以便载具可以穿过该平面。在“详细信息”面板中，搜索“collision(碰撞)”，并将自定义碰撞预设设置为忽略所有选项。</p>
+<p><img alt="" src="../../../img/underwater/plane_settings.png" /></p>
+<p>为了确保您的水平面与我们的潮汐系统兼容，请将水平面标记为“水面(WaterSurface)”，并使该平面可移动。</p>
+<p><img alt="" src="../../../img/underwater/water_plane.png" /></p>
+<h3 id="postprocessvolume-1">水色（后期处理体积 PostProcessVolume 1）</h3>
+<p>要添加后期处理体积，请前往“放置 Actor”➡“体积”➡“后期处理体积”，然后将其拖入关卡。调整体积的大小以适应整个水下区域。要调整体积的颜色，请前往“详细信息”面板➡“颜色分级”➡“其他”➡“场景颜色色调”。蓝色到绿色是最佳选择，大坝环境的“场景颜色色调”设置为十六进制 sRGB AAD9C8FF。</p>
+<p>如大坝环境所示，水面是一个位于 z=0 的独立平面。环绕环境的红色轮廓框即为后期处理体积。</p>
+<p><img alt="" src="../../../img/underwater/water_w_postprocess.png" /></p>
+<p>请务必将 PostProcessVolume 标记为 WaterPPV，以便“水雾命令”和“潮汐命令”能够正常工作。</p>
+<h3 id="postprocessvolume-2">水雾（后期处理体积 PostProcessVolume 2）</h3>
+<p>要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 <code>MM_Fog_Water_Simple</code> 材质。在“详细信息”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 <code>MM_Fog_Water_Simple</code>。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。</p>
+<p><img alt="" src="../../../img/underwater/water_fog_material.png" /></p>
+<p>应用材质后，您可以调整其参数以获得所需的水下效果。最相关的参数包括：</p>
+<ul>
+<li>
+<p><strong>Fog_Depth</strong> – 控制雾气的扩散范围。</p>
+</li>
+<li>
+<p><strong>Fog_Opacity</strong> – 控制雾气的密度。</p>
+</li>
+<li>
+<p><strong>Fog_Color</strong> – 定义雾气的颜色（归一化 RGB，<code>0.0 – 1.0</code>）。</p>
+</li>
+</ul>
+<p>虽然也可以修改 <code>Fog_Transition</code> 参数，但通常建议将其保留为默认值<code>0.1</code>，并先调整其他参数。只有当您需要更精细地控制雾气与场景的融合方式时，才需要修改 Fog_Transition 参数。</p>
+<p><img alt="" src="../../../img/underwater/fog_params.png" /></p>
+<p>请务必将 PostProcessVolume 标记为 <code>WaterPPV</code>，以便 Water Fog 命令和 Tides 命令能够正常工作。</p>
+<p>如果需要，您也可以使用 <code>MM_Fog_Water_Simple</code> 材质的副本执行上述步骤，然后根据需要进行修改并另存为新的材质名称。这样可以保留原始材质的设置以供将来使用。</p>
+<h2 id="_5">光照</h2>
+<p>如果您创建的是基础关卡，光照应该已经自动生效。否则，请前往“窗口”➡“环境光混合器”。然后，请确保创建所有可用的光照选项。</p>
+<p>快速检查一下，确保您的关卡包含以下元素：定向光、指数高度雾、天空大气、天空光和体积云。</p>
+<p>为了确保指数高度雾与我们的昼夜循环设置兼容，请将“雾散射颜色”和“定向散射颜色”设置为黑色。“雾密度”和“雾高度衰减”可以根据您的需要进行调整。</p>
+<p><img alt="" src="../../../img/underwater/exp_fog.png" /></p>
+<h2 id="_6">添加对象</h2>
+<h3 id="_7">获取资源</h3>
+<p>要为您的关卡添加资源，您需要导入自己的资源或在 <a href="https://www.fab.com/">Fab</a> 上查找资源。</p>
+<p>为了复刻类似 HoloOcean 的关卡，我们使用以下资源包：</p>
+<ul>
+<li>
+<p><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/Dam/dam.html#dam">Dam</a>：</p>
+<ul>
+<li><a href="https://www.fab.com/listings/0c40a773-c71b-4c51-9286-721126fd9b0f">海底环境</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/OpenWater/openwater.html#openwater">OpenWater</a>：</p>
+<ul>
+<li><a href="https://www.fab.com/listings/f6ff3c58-7fcd-43b8-bc0a-55ab6c405e1b">模块化水坝环境</a></li>
+</ul>
+</li>
+<li>
+<p><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/PierHarbor/pierharbor.html#pierharbor">PierHarbor</a>：</p>
+<ul>
+<li>
+<p><a href="https://www.fab.com/listings/d15bb4d9-e292-4bc0-a058-14aee645f69e">集装箱船</a></p>
+</li>
+<li>
+<p><a href="https://www.fab.com/listings/7e671469-af0a-4516-88a4-dfffefdbc640">Boat Pack Vol_1</a></p>
+</li>
+<li>
+<p><a href="https://www.fab.com/listings/4a89aaec-7b13-46b6-957e-667262149c12">码头集合</a> - 和 Town10 的码头类似</p>
+</li>
+<li>
+<p><a href="https://www.fab.com/listings/aeed2616-24b1-4bb9-8fde-cd268602dfcc">模块化港口建筑套件</a></p>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="_8">导入资产</h2>
+<p>如果您已从 Fab 购买或获取了免费资源，可以在 Epic Games 启动器的“虚幻引擎库”选项卡下查看。在“Fab 库”部分，您可以点击“添加到项目”，然后选择您的项目以添加资源。</p>
+<p>如果您要导入自己的模型，最好将其保存为 FBX 文件。之后，您可以在虚幻引擎编辑器中点击“导入”按钮并选择您的 FBX 文件。有关导入资源的更多帮助，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/WorkingWithContent/Importing/index.html">虚幻引擎文档</a>。</p>
+<h2 id="_9">放置资产</h2>
+<p>您可以从内容抽屉(Content Drawer)中将资源拖放到自定义关卡中。或者，您可以选择带有绿色加号的立方体图标，快速将基本形状等 Actor 添加到关卡中。</p>
+<p><img alt="" src="../../../img/underwater/place_actor.png" /></p>
+<p>在关卡中移动、旋转和缩放对象非常简单。您可以直接在“详细信息”面板中编辑这些值，也可以使用键盘快捷键。</p>
+<table>
+<thead>
+<tr>
+<th>键</th>
+<th>动作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>W</code></td>
+<td>选择移动工</td>
+</tr>
+<tr>
+<td><code>E</code></td>
+<td>选择旋转工具</td>
+</tr>
+<tr>
+<td><code>R</code></td>
+<td>选择缩放工具</td>
+</tr>
+</tbody>
+</table>
+<p>更多信息请参阅引擎的<a href="https://openhutb.github.io/engine_doc/zh-CN/Basics/Actors/Transform/index.html">变换Actor</a>文档。</p>
+<h2 id="_10">启用语义标签</h2>
+<p>HoloOcean 允许为世界资源分配标签。诸如语义分割相机之类的传感器使用这些标签向代理返回语义信息，以执行图像分割等任务。</p>
+<p>要设置语义标注，请参考我们的教程：<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/custom-semantics.html#semantic-segmentation">添加自定义语义标签</a>。</p>
+<h2 id="_11">启用深度相机</h2>
+<p>HoloOcean 包含一个深度相机传感器，可以为代理提供深度信息。要启用这个传感器，你需要在环境中以及希望被深度相机检测到的每个资产上更改设置。在 Unreal 编辑器的 Details 面板中，导航到你希望深度相机可见的每个资产。对于每个资产，搜索“depth”，然后启用“Render CustomDepth Pass”。地形也需要这样设置。</p>
+<p>如果你已经为语义标记设置了世界，那么深度相机所需的步骤你可能已经完成了。</p>
+<p><img alt="" src="../../../img/underwater/depth_camera_settings.png" /></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>按照步骤在你的世界中设置语义标签，将会为接收到语义标签的资源启用“渲染自定义深度通道（Render CustomDepth Pass）”。记得对世界中所有剩余没有语义标签的资源重复上述过程，包括地形。</p>
+</div>
+<h2 id="_12">关于物体和声呐碰撞设置的说明</h2>
+<p>声呐模拟在生成八叉树时依赖物体的碰撞网格。</p>
+<p>首先，确保设置环境边界的最小值和最大值。在通过虚幻引擎独立运行时，可以通过设置额外的启动参数来完成，如这里所示：实时启动游戏。如果你已经打包了你的世界，这个设置需要在配置文件中进行。</p>
+<div class="admonition 警告">
+<p class="admonition-title">警告</p>
+<p>每当一个对象被更改或移动时，必须重新生成关卡的八叉树。要重新生成八叉树，请删除八叉树文件夹并重新运行你的模拟。关于八叉树的位置，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/sensors/docs/octree.html#octree">八叉树生成</a>。</p>
+</div>
+<p>如果对象的碰撞网格比视觉网格粗糙，那么该对象在声纳图像中的表现将不准确。可以通过使用虚幻引擎编辑器并在静态网格编辑器的细节部分将“碰撞复杂度（Collision Complexity）”选项设置为“使用复杂碰撞作为简单碰撞（use complex collision as simple）”来解决这个问题。</p>
+<p><img alt="" src="../../../img/underwater/collision_setting.png" /></p>
+<p>如果你的碰撞网格仍然有问题，通常在静态网格编辑器的细节面板中启用“双面几何（Double Sided Geometry）”会很有帮助。</p>
+<p><img alt="" src="../../../img/underwater/static_mesh_double_sided.png" /></p>
+<p>最后，在关卡中，点击对象并进入详细信息面板。找到碰撞部分，然后启用“模拟生成碰撞事件（Simulation Generates Hit Events）”。</p>
+<p><img alt="" src="../../../img/underwater/level_collision_settings.png" /></p>
+<p>你可以通过在关卡或静态网格编辑器中将视图模式更改为“玩家碰撞（Player Collision）”来验证碰撞网格的形状。</p>
+<p><img alt="" src="../../../img/underwater/check_collisions.png" /></p>
+<h2 id="_13">物体的额外潮汐设置</h2>
+<p>为了创建可以随潮水移动的兼容非代理漂浮物，你必须在角色标签中添加关键字 Float，然后进入静态网格的碰撞设置，确保勾选了自定义碰撞。</p>
+<p><img alt="" src="../../../img/underwater/tide_non-agent_collisions.png" /></p>
+<p><img alt="" src="../../../img/underwater/tide_non-agent_tag.png" /></p>
+<h2 id="_14">天气</h2>
+<p>要在你的自定义关卡中添加天气功能，你首先需要将天气管理器（Weather Manager）蓝图添加到你的游戏世界中。操作方法是：进入内容浏览器 ➡ 天气内容，然后将 BP_Weather_Manager 拖到你的关卡里。</p>
+<p>接下来，你需要添加两种不同的体积云（Volumetric Cloud）演员。进入放置参与者 ➡ 视觉效果 ➡ 体积云，然后把它拖到关卡中两次。</p>
+<p>在放置好两个参与者之后，为它们分配云材质并添加标签：</p>
+<p>1.选择第一个体积云参与者。</p>
+<p>2.在详情面板中，找到 Cloud Material ➡ Material，然后分配位于 Weather Content 文件夹中的材质m_SimpleVolumetricCloud_Inst_Sunny。你也可以直接把材质从文件夹拖到材质栏里。</p>
+<p>3.给参与者添加标签：进入 Actor ➡ Advanced ➡ Tags，点击  添加一个元素，然后把标签命名为 Sunny。</p>
+<p>对第二个体积云参与者重复相同的操作，不过这次使用 m_SimpleVolumetricCloud_Inst_Cloudy 材质，并将标签命名为 Cloudy。</p>
+<p><img alt="" src="../../../img/underwater/volumetric_cloud.png" /></p>
+<p>最后，你也应该把你创建的水面标记为“WaterSurface”。</p>
+<h2 id="_15">空气雾</h2>
+<p>如果你想在水面以上的模拟中加入空气雾或雾气，你可以添加一个覆盖目标区域的后处理体积（PostProcessVolume），并为它分配 <code>MM_Fog_Air</code> 材质。在<strong>详情</strong>面板中，导航到<em>渲染功能 ➡ 后处理材质</em>，向数组中添加一个元素，设置为<strong>资产引用（Asset Reference）</strong>，然后选择 <code>MM_Fog_Air</code>。或者，你也可以直接从 <code>Content/WeatherContent/Fog/MM_Fog_Air</code> 拖动材质过来。</p>
+<p><img alt="" src="../../../img/underwater/air_fog_material.png" /></p>
+<p>应用后，你可以调整材质参数来实现所需的氛围效果。最相关的参数有：</p>
+<ul>
+<li>
+<p><strong>Fog_Depth</strong> – 控制雾的扩展距离。</p>
+</li>
+<li>
+<p><strong>Fog_Opacity</strong> – 控制雾的浓度。</p>
+</li>
+<li>
+<p><strong>Fog_Color</strong> – 定义雾的颜色（归一化RGB，<code>0.0 – 1.0</code>）。</p>
+</li>
+</ul>
+<p>虽然 <strong>Fog_Transition</strong> 参数也可以修改，但通常建议保持默认值<code>0.1</code>，先调整其他参数。只有在需要更精细地控制雾与场景的融合时才修改它。</p>
+<p><img alt="" src="../../../img/underwater/fog_params.png" /></p>
+<p>确保将 PostProcessVolume 标记为 <code>AirPPV</code>，这样 Air Fog Command 和 Tides Command 才能正常工作。</p>
+<h2 id="flashlights">关于手电筒 Flashlights</h2>
+<p>为了让载具车辆的手电筒正常工作，你的关卡必须包含 <code>FlashlightManager</code>。你可以通过将 <code>Content/HolodeckContent/Agents/FlashlightManager</code> 中的管理器拖到你的世界中来添加它。</p>
+<p><code>FlashlightManager</code> 不会改变环境的外观或物理效果——它只是启用手电筒功能。</p>
+<h2 id="_16">测试你的自定义关卡</h2>
+<p>为了快速测试你的关卡，通常最简单的方法是以独立模式运行。这样你可以快速验证碰撞设置或视觉效果，而不用打包关卡。请参考“从 Unreal 引擎编辑器启动游戏”来<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/start.html#live-game">直接运行你的关卡</a>。</p>
+<p>否则，每次修改后你都需要重新打包关卡。请参考<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/package-env.html#packaging-environments">打包环境</a>获取更多信息。</p>
+<h2 id="_17">参考</h2>
+<ul>
+<li><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/create-env.html">Creating a Custom Level</a></li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
