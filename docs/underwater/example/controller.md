@@ -1,6 +1,6 @@
-# 手动控制
+# 手动控制 [controller.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/controller.py)
 
-我们发现pynput是一个很好的库，用于向代理发送键盘命令以进行手动控制。
+我们发现 pynput 是一个很好的库，用于向代理发送键盘命令以进行手动控制。
 
 这是一个使用以下键盘快捷键控制 [HovingAUV](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent) 的示例。
 

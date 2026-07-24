@@ -39,6 +39,9 @@
     
    我通常选择 `holodeck-engine` 仓库根目录下的“dist”目录。
 
+!!! 注意
+    双击执行输出目录中的`WindowsNoEditor/Holodeck.exe`并不能看到默认的场景，执行`WindowsNoEditor\Holodeck\Binaries\Win64\Holodeck.exe`才能看到默认的场景。想要看到水下机器人需要通过运行 [Python 脚本](https://github.com/OpenHUTB/mujoco_plugin/tree/main/src/underwater/holo_ocean)。
+
 
 ## 将文件放置在安装目录中 <span id="place_in_install_directory"></span>
 
@@ -52,7 +55,7 @@
 |--+ PackageName
     |-- config.json
     |-- WorldName-ScenarioName.json
-    |--+ LinuxNoEditor (output from dist folder)
+    |--+ LinuxNoEditor (发行目录的输出)
         | UE4 build output
 ```
 

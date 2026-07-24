@@ -1,6 +1,6 @@
 # 可视化 RGB 相机（RGBCamera）输出
 
-在代理训练时显示RGB相机的输出可能很有用。下面是一个使用 `cv2` 库的示例。
+在代理训练时显示RGB相机的输出（[camera.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/camera.py)）可能很有用。下面是一个使用 `cv2` 库的示例。
 
 当窗口打开时，按 `0` 键勾选环境并显示下一个窗口。
 

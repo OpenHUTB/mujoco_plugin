@@ -1,4 +1,4 @@
-# 多智能体示例
+# 多智能体示例 [multi_agent.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/multi_agent.py)
 
 使用 HoloOcean，您可以同时控制多个智能体。与其调用 `.step()`（该方法既向主智能体发送单个指令，又推进仿真进程），不如调用 `.act()`。`.act()` 仅向特定智能体发送指令，而不会推进仿真进程。
 

@@ -2,7 +2,7 @@
 
 首先，请参阅安装以安装 holocean 包和 Ocean。
 
-HoloOcean的最小使用示例如下：
+HoloOcean的最小使用示例（[getting_started.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/getting_started.py)）如下：
 
 ```python
 import holoocean
@@ -20,11 +20,11 @@ for _ in range(180):
 
 请注意：
 
-1. 您将场景的名称传递给holoocean.make
+1. 您将场景的名称传递给 holoocean.make
 
    请参阅可用的所有不同世界和场景的软件包。
 
-2. HoloOcean的界面旨在让OpenAI Gym熟悉
+2. HoloOcean 的界面旨在让 OpenAI Gym 熟悉
 
 您可以使用状态字典访问特定传感器的数据：
 

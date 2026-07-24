@@ -1,4 +1,4 @@
-# 可视化成像声纳
+# 可视化成像声纳 [sonar_imaging.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/sonar_imaging.py)
 
 在仿真过程中，将声纳传感器的输出进行可视化通常很有帮助。本脚本即可实现这一功能，在每次接收到声纳数据时进行绘图。
 

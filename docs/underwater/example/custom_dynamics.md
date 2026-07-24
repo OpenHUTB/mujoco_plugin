@@ -1,4 +1,4 @@
-# 手动定义动力学
+# 手动定义动力学 [custom_dynamics.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/custom_dynamics.py)
 
 很多时候，能够轻松实现自定义动力学对研究可能有用。为此，我们为 [HovingAUV](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent) 创建了控制器，这些控制器接收线性和角加速度，并将其集成以实现自定义动力学。除了碰撞，模拟器中没有对车辆施加其他加速度，从而允许在python中实现完全自定义的动力学。这种可能性是无限的，包括复杂的流体力学、水流等。
 

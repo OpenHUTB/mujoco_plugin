@@ -1,4 +1,4 @@
-# 自定义场景配置
+# 自定义场景配置 [custom_scenarios.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/custom_scenarios.py)
 
 HoloOcean 的世界支持通过更换场景来进行配置（详见“场景”一节）。HoloOcean 软件包中包含了一些以 `.json` 文件形式提供的预置场景，同时也支持用户创建并使用自定义场景。
 
