@@ -140,59 +140,15 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <p>An Unreal project needs to be packaged before it can be distributed. This 
-process produces the engine executables and bundles up all of the assets that
-are needed for the client to start up the engine by itself without starting it
-from the editor or Visual Studio.</p>
-<p>This process will compile the C++ code for Holodeck and "cook" the <code>.uasset</code>
-files (including blueprints!) into one large <code>.pak</code> file, and create the 
-directory structure needed.</p>
-<p><a href="https://lucid.app/lucidchart/invitations/accept/b6a8ee14-4fd7-44ca-a73f-39d77de9200e">Visual aid</a></p>
-<h2 id="adding-holodeck-worlds">Adding Holodeck Worlds</h2>
-<p>The finished package will only contain the worlds (called "levels" in the editor) that are added into the project. The <code>holodeck-engine</code> repo only contains the example level. The rest of the worlds are found in the <a href="https://github.com/BYU-PCCL/holodeck-worlds">holodeck-worlds repo</a>, which contains multiple vanilla unreal projects. To add them to the project, clone the worlds repo and copy the <code>Content</code> folder from the worlds you want to add. Paste this folder into the <code>holodeck-engine</code> repo and allow it to overwrite any conflicting files. </p>
-<p><strong>Note</strong>: Because these worlds contain purchased assets, they are only available to official BYU PCCL members. Others will have to develop their own worlds in the holodeck-engine.</p>
-<h2 id="cooking-content">Cooking Content</h2>
-<p>When you are running <code>holodeck-engine</code> from Visual Studio, you may need to cook
-the content to "refresh" the assets, levels, and blueprints that 
-<code>holodeck-engine</code> reads. </p>
-<p><strong>From Unreal Editor:</strong></p>
-<p>File ➡ Cook Content for Windows/Linux</p>
-<h2 id="packaging-holodeck-engine">Packaging holodeck-engine</h2>
-<p><strong>From Unreal Editor:</strong></p>
-<ol>
-<li>
-<p>File ➡ Package Project ➡ Windows x64/Linux
-   <img alt="menus to package project" src="../images/package-project.png" /></p>
-</li>
-<li>
-<p>Select an output folder</p>
-</li>
-</ol>
-<p>I usually pick "dist" inside the root of the <code>holodeck-engine</code> repo</p>
-<h2 id="place-in-install-directory">Place in install directory</h2>
-<p>In order to be able to call <code>holodeck.make()</code>, you will need to place the 
-packaged engine in <a href="https://holodeck.readthedocs.io/en/latest/packages/docs/installation.html">holodeck's package install directory</a>.</p>
-<p>Make sure the version in the path matches the output of the 
-<code>holdoeck.util.get_holodeck_version</code> command.</p>
-<ol>
-<li>Copy contents of <code>dist</code> folder into the package path found above.</li>
-</ol>
-<div class="highlight"><pre><span></span><code>+ worlds
-|--+ PackageName
-   |-- config.json
-   |-- WorldName-ScenarioName.json
-   |--+ LinuxNoEditor (output from dist folder)
-      | UE4 build output
-</code></pre></div>
-<ol>
-<li>Copy configurations from <code>holodeck-configs</code> following the file structure above.</li>
-</ol>
-<p><strong>IMPORTANT</strong> The <code>config.json</code> file is written for Linux, and must be edited to work in windows.
-   Edit the <code>platform</code> and <code>path</code> fields to the following:</p>
-<pre><code>`"platform": "windows"`
-
-`"path": "WindowsNoEditor/Holodeck/Binaries/Win64/Holodeck.exe"`
-</code></pre>
+                <p>虚幻引擎项目在分发前需要进行打包。此过程会生成引擎可执行文件，并将客户端启动引擎所需的所有资源打包在一起，无需通过编辑器或 Visual Studio 启动。</p>
+<p>此过程还会编译 Holodeck 的 C++ 代码，并将 <code>.uasset</code> 文件（包括蓝图！）打包成一个大型 <code>.pak</code> 文件，并创建所需的目录结构。</p>
+<h2 id="holodeck">添加 Holodeck 世界</h2>
+<p>最终的软件包将仅包含已添加到项目中的世界（在编辑器中称为“关卡”）。<code>holodeck-engine</code> 代码库仅包含示例关卡。其余世界位于 <a href="https://github.com/BYU-PCCL/holodeck-worlds">holodeck-worlds repo</a> 代码库中，该代码库包含多个原版虚幻引擎项目。要将它们添加到项目中，请克隆 worlds 代码库，然后从要添加的世界中复制 <code>Content</code> 文件夹。将此文件夹粘贴到 <code>holodeck-engine</code> 代码库中，并允许其覆盖任何冲突的文件。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+</div>
+<p>由于这些世界包含付费资源，因此仅供 BYU PCCL 的正式成员使用。其他用户需要使用 holodeck-engine 开发自己的世界。</p>
+<p>后面内容参考<a href="../../develop/develop/#cooking_content">内容烘焙、打包、放置</a></p>
               
             </div>
           </div><footer>

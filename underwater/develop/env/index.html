@@ -151,16 +151,17 @@
 <p>由于 HoloOcean 附带的其他打包世界包含付费资源，因此仅供 BYU FRoStLab 的正式成员使用。其他用户需要在 holoocean 代码库中自行开发世界。</p>
 </div>
 <h2 id="_2">内容烘焙  <span id="cooking_content"></span></h2>
-<p>当您在 Visual Studio 中运行 Underwater 时，可能需要刷新内容以“更新” Underwater 读取的资源、关卡和蓝图。</p>
-<h3 id="_3">在虚幻引擎编辑器中：</h3>
-<p>文件 ➡ 刷新内容（Windows/Linux）</p>
+<p>当您在 Visual Studio 中运行 <code>holodeck-engine</code> 时，可能需要烘焙内容以“刷新”<code>holodeck-engine</code> 读取的资源、关卡和蓝图。</p>
+<p><strong>从虚幻编辑器：</strong></p>
+<p>文件 ➡ 烹饪 Windows/Linux 的内容</p>
+<p><img alt="" src="../../../img/underwater/cooking_content.jpg" /></p>
 <h2 id="underwater_1">打包 Underwater <span id="packing_underwater"></span></h2>
-<p>从虚幻编辑器：</p>
+<p><strong>从虚幻编辑器：</strong></p>
 <p>1.文件 ➡ 打包项目 ➡ Windows x64/Linux</p>
-<p><img alt="" src="../../../img/underwater/package-project.png" /></p>
-<p>2.选择输出文件夹</p>
-<p>通常选择 Underwater 代码库根目录下的“dist”文件夹。</p>
-<h2 id="_4">将文件放置在安装目录中 <span id="place_in_install_directory"></span></h2>
+<p><img alt="" src="../../../img/underwater/package_project.jpg" /></p>
+<p>2.选择输出目录</p>
+<p>我通常选择 <code>holodeck-engine</code> 仓库根目录下的“dist”目录。</p>
+<h2 id="_3">将文件放置在安装目录中 <span id="place_in_install_directory"></span></h2>
 <p>为了能够调用 <code>holodeck.make()</code>，您需要将打包好的引擎放置在<a href="../../packages/installation/">软件包安装位置</a>。</p>
 <p>请确保路径中的版本号与 <code>holodeck.util.get_holodeck_version</code> 命令的输出结果一致。</p>
 <p>1.将 <code>dist</code> 文件夹的内容复制到上面指定的软件包路径中。
@@ -178,7 +179,7 @@
 <code>"platform": "windows"</code>、
 <code>"path": "WindowsNoEditor/Holodeck/Binaries/Win64/Holodeck.exe"</code></p>
 </div>
-<h2 id="_5">关于创建环境对象和声呐的说明 <span id="note_on_creating_environment_objects_and_sonar"></span></h2>
+<h2 id="_4">关于创建环境对象和声呐的说明 <span id="note_on_creating_environment_objects_and_sonar"></span></h2>
 <p>声呐模拟在生成八叉树时依赖于对象的碰撞网格。如果对象的碰撞网格比视觉网格粗糙，则该对象在声呐图像中的表示将不准确。可以通过在虚幻引擎编辑器中，将静态网格编辑器详细信息部分的“碰撞复杂度”选项设置为“使用复杂碰撞作为简单碰撞”来解决此问题。</p>
               
             </div>
