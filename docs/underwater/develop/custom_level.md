@@ -6,11 +6,15 @@ HoloOcean 关卡主要包含两个方面：地形和水体。
 
 ## 地形
 
-如需创建自定义地形方面的帮助，请参阅[虚幻引擎的地形文档](https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/Landscape/index.html)。该文档解释了如何在编辑器中使用地形模式，以及如何应用和创建地形材质。
+1.点击**模式**下拉菜单上的**地形**选项；
+
+2.按左边的地形配置进行设置，然后按下**创建**按钮创建地形。
+
+如需创建自定义地形方面的详细帮助，请参阅[虚幻引擎的地形文档](https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/Landscape/index.html)。该文档解释了如何在编辑器中使用地形模式，以及如何应用和创建地形材质。
 
 
 !!! 注意
-    创建地形时，请注意水面位于 z=0 处。为了确保水下代理正常工作，水下地形必须低于 z=0。
+    创建地形时，请注意水面位于 z=0 处。为了确保水下代理正常工作，水下地形必须低于 z=0（水面变换属性中的z设置为0）。
 
 要获取地形所需的材质或素材，您可以在 [Fab](https://www.fab.com/) 上购买或找到一些免费素材。[Quixel](https://www.fab.com/sellers/Quixel) 提供许多免费素材和材质。
 
@@ -25,29 +29,31 @@ HoloOcean 关卡主要包含两个方面：地形和水体。
 
 ### 水面
 
-要创建水面，请在 z=0 处放置一个平面 Actor。将其材质更改为任何类似水的材质。您还需要更改碰撞设置，以便载具可以穿过该平面。在“详细信息”面板中，搜索“collision(碰撞)”，并将自定义碰撞预设设置为忽略所有选项。
+要创建水面，请在 z=0 处放置一个“平面” StaticMeshActor。将其材质更改为任何类似水的材质。您还需要更改碰撞设置，以便载具可以穿过该平面。在“细节”面板的“搜索详情”中，搜索“collision(碰撞)”，并将自定义碰撞预设设置为忽略所有选项。
 
 ![](../../img/underwater/plane_settings.png)
 
-为了确保您的水平面与我们的潮汐系统兼容，请将水平面标记为“水面(WaterSurface)”，并使该平面可移动。
+为了确保您的水平面与我们的潮汐系统兼容，请将水平面标记为“WaterSurface（水面）”，并使该平面“可移动”。
 
 ![](../../img/underwater/water_plane.png)
 
 
 ### 水色（后期处理体积 PostProcessVolume 1）
 
-要添加后期处理体积，请前往“放置 Actor”➡“体积”➡“后期处理体积”，然后将其拖入关卡。调整体积的大小以适应整个水下区域。要调整体积的颜色，请前往“详细信息”面板➡“颜色分级”➡“其他”➡“场景颜色色调”。蓝色到绿色是最佳选择，大坝环境的“场景颜色色调”设置为十六进制 sRGB AAD9C8FF。
+要添加后期处理体积，请前往“放置 Actor”➡“体积”➡“后期处理体积”，然后将其拖入关卡。调整体积的大小以适应整个水下区域。要调整体积的颜色，请前往“细节”面板➡“颜色分级”➡“Misc”➡“场景颜色着色”。蓝色到绿色是最佳选择，大坝环境的“场景颜色着色”设置为“十六进制 sRGB”的值为`AAD9C8FF`。
 
 如大坝环境所示，水面是一个位于 z=0 的独立平面。环绕环境的红色轮廓框即为后期处理体积。
 
 ![](../../img/underwater/water_w_postprocess.png)
 
-请务必将 PostProcessVolume 标记为 WaterPPV，以便“水雾命令”和“潮汐命令”能够正常工作。
+请务必将 PostProcessVolume 标记设置为 `WaterPPV`，以便“水雾命令”和“潮汐命令”能够正常工作。
+
+![](../../img/underwater/post_process_volume_tag.png)
 
 
 ### 水雾（后期处理体积 PostProcessVolume 2）
 
-要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 `MM_Fog_Water_Simple` 材质。在“详细信息”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 `MM_Fog_Water_Simple`。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。
+要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 `MM_Fog_Water_Simple` 材质。在“细节”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 `MM_Fog_Water_Simple`。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。
 
 ![](../../img/underwater/water_fog_material.png)
 
