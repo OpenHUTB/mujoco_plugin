@@ -144,10 +144,12 @@
 <p>要在 HoloOcean 中创建自定义关卡，您必须使用虚幻引擎 (Unreal Engine) 来制作关卡。有关保存和创建新关卡的更多信息，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/LDQuickStart/index.html">引擎文档</a>。</p>
 <p>HoloOcean 关卡主要包含两个方面：地形和水体。</p>
 <h2 id="_2">地形</h2>
-<p>如需创建自定义地形方面的帮助，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/Landscape/index.html">虚幻引擎的地形文档</a>。该文档解释了如何在编辑器中使用地形模式，以及如何应用和创建地形材质。</p>
+<p>1.点击<strong>模式</strong>下拉菜单上的<strong>地形</strong>选项；</p>
+<p>2.按左边的地形配置进行设置，然后按下<strong>创建</strong>按钮创建地形。</p>
+<p>如需创建自定义地形方面的详细帮助，请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/BuildingWorlds/Landscape/index.html">虚幻引擎的地形文档</a>。该文档解释了如何在编辑器中使用地形模式，以及如何应用和创建地形材质。</p>
 <div class="admonition 注意">
 <p class="admonition-title">注意</p>
-<p>创建地形时，请注意水面位于 z=0 处。为了确保水下代理正常工作，水下地形必须低于 z=0。</p>
+<p>创建地形时，请注意水面位于 z=0 处。为了确保水下代理正常工作，水下地形必须低于 z=0（水面变换属性中的z设置为0）。</p>
 </div>
 <p>要获取地形所需的材质或素材，您可以在 <a href="https://www.fab.com/">Fab</a> 上购买或找到一些免费素材。<a href="https://www.fab.com/sellers/Quixel">Quixel</a> 提供许多免费素材和材质。</p>
 <p>如果您希望封闭环境的四周，可以放置墙壁等素材，或者雕刻地形边缘使其更高。您可以在 SimpleUnderwater 环境中查看这两种示例。</p>
@@ -155,17 +157,18 @@
 <h2 id="_3">水体</h2>
 <p><strong>虚幻引擎的水体插件与 HoloOcean 不兼容，无法正常工作</strong>。要实现水下效果，您需要在环境中放置一个水面和两个 PostProcessVolume。请注意，以下设置仅供参考，您可能需要根据关卡情况进行调整。</p>
 <h3 id="_4">水面</h3>
-<p>要创建水面，请在 z=0 处放置一个平面 Actor。将其材质更改为任何类似水的材质。您还需要更改碰撞设置，以便载具可以穿过该平面。在“详细信息”面板中，搜索“collision(碰撞)”，并将自定义碰撞预设设置为忽略所有选项。</p>
+<p>要创建水面，请在 z=0 处放置一个“平面” StaticMeshActor。将其材质更改为任何类似水的材质。您还需要更改碰撞设置，以便载具可以穿过该平面。在“细节”面板的“搜索详情”中，搜索“collision(碰撞)”，并将自定义碰撞预设设置为忽略所有选项。</p>
 <p><img alt="" src="../../../img/underwater/plane_settings.png" /></p>
-<p>为了确保您的水平面与我们的潮汐系统兼容，请将水平面标记为“水面(WaterSurface)”，并使该平面可移动。</p>
+<p>为了确保您的水平面与我们的潮汐系统兼容，请将水平面标记为“WaterSurface（水面）”，并使该平面“可移动”。</p>
 <p><img alt="" src="../../../img/underwater/water_plane.png" /></p>
 <h3 id="postprocessvolume-1">水色（后期处理体积 PostProcessVolume 1）</h3>
-<p>要添加后期处理体积，请前往“放置 Actor”➡“体积”➡“后期处理体积”，然后将其拖入关卡。调整体积的大小以适应整个水下区域。要调整体积的颜色，请前往“详细信息”面板➡“颜色分级”➡“其他”➡“场景颜色色调”。蓝色到绿色是最佳选择，大坝环境的“场景颜色色调”设置为十六进制 sRGB AAD9C8FF。</p>
+<p>要添加后期处理体积，请前往“放置 Actor”➡“体积”➡“后期处理体积”，然后将其拖入关卡。调整体积的大小以适应整个水下区域。要调整体积的颜色，请前往“细节”面板➡“颜色分级”➡“Misc”➡“场景颜色着色”。蓝色到绿色是最佳选择，大坝环境的“场景颜色着色”设置为“十六进制 sRGB”的值为<code>AAD9C8FF</code>。</p>
 <p>如大坝环境所示，水面是一个位于 z=0 的独立平面。环绕环境的红色轮廓框即为后期处理体积。</p>
 <p><img alt="" src="../../../img/underwater/water_w_postprocess.png" /></p>
-<p>请务必将 PostProcessVolume 标记为 WaterPPV，以便“水雾命令”和“潮汐命令”能够正常工作。</p>
+<p>请务必将 PostProcessVolume 标记设置为 <code>WaterPPV</code>，以便“水雾命令”和“潮汐命令”能够正常工作。</p>
+<p><img alt="" src="../../img/underwater/post_process_volume_tag.png" /></p>
 <h3 id="postprocessvolume-2">水雾（后期处理体积 PostProcessVolume 2）</h3>
-<p>要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 <code>MM_Fog_Water_Simple</code> 材质。在“详细信息”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 <code>MM_Fog_Water_Simple</code>。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。</p>
+<p>要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 <code>MM_Fog_Water_Simple</code> 材质。在“细节”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 <code>MM_Fog_Water_Simple</code>。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。</p>
 <p><img alt="" src="../../../img/underwater/water_fog_material.png" /></p>
 <p>应用材质后，您可以调整其参数以获得所需的水下效果。最相关的参数包括：</p>
 <ul>
