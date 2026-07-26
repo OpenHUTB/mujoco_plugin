@@ -15,13 +15,13 @@
 - [在 Linux 上配置调试器](./How-to-Configure-Debugger-on-Linux.md)
 - [手动安装构建](../packages/installation.md)
 - [运行测试](./test.md)
-- [Building Documentation](https://github.com/BYU-PCCL/holodeck/blob/develop/docs/README.md#building)
+- [构建文档](https://github.com/BYU-PCCL/holodeck/blob/develop/docs/README.md#building)
 
 
-### Add Content to `holodeck-engine`
-- [Adding Agents](https://github.com/BYU-PCCL/holodeck/wiki/Adding-Agents)
-- Adding Worlds
-- Adding Tasks
+### 向 `holodeck-engine` 添加内容
+- [添加代理](./Adding-Agents.md)
+- 添加世界
+- 添加任务
 
-### Advanced Topics
-- [Profiling UE4](https://github.com/BYU-PCCL/holodeck/wiki/Using-the-UE4-Profiler) (improve performance)
+### 高级主题
+- [UE4性能分析](./Using-the-UE4-Profiler.md) （提升性能）
