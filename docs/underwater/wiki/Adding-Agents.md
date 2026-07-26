@@ -1,78 +1,67 @@
-# WORK IN PROGRESS
+# 添加代理
+!!! 友情提示
+    在 holodeck 中添加自定义代理并非易事。
 
-### Fair Warning:
+如果您只是想要对现有代理进行一些修改，最好的办法可能是修改现有代理，例如替换模型或修改其行为。
 
-Adding custom agents in holodeck is not for the faint of heart.
 
-If you just want a variation on an agent, it might be best to modify an existing
-agent and swap out the mesh or modify its behavior.
+## 概述
 
-## Overview
+您需要修改 [holodeck-engine](https://github.com/BYU-PCCL/holodeck-engine) 和 [holodeck](https://github.com/BYU-PCCL/holodeck) 这两个文件。请确保已完成这两个文件的设置并准备好进行开发（参见[入门指南](./Holodeck-Onboarding.md)）。
 
-You will need to modify both [holodeck-engine](https://github.com/BYU-PCCL/holodeck-engine)
-and [holodeck](https://github.com/BYU-PCCL/holodeck). Be sure to have both of
-those set up and ready for development (see [Onboarding](https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Onboarding)).
+尤其请遵循以下步骤：
 
-Particularly, follow
- - [Building Holodeck Engine](https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine)
- - [Developing `holodeck` package](https://github.com/BYU-PCCL/holodeck/wiki/Developing-%60holodeck%60-package)
+ - [构建 Holodeck 引擎](./Building-Holodeck-Engine.md)
 
-During this tutorial we will make a "TeapotAgent". We recommend using Windows, 
-since UE4 on Linux isn't very polished. 
+ - [开发 `holodeck` 软件包](./developing_holodeck_package.md)
 
-#### `holodeck` changes
-- Subclass `HolodeckAgent`, implement:
+在本教程中，我们将创建一个“TeapotAgent”。我们建议使用 Windows 系统，因为 UE4 在 Linux 上的运行尚不完善。
+
+#### `holodeck` 变更
+- 继承 `HolodeckAgent` 类，并实现：
   - `agent_type`
   - `control_schemes`
   - `__repr__`
   - `__act__`
-- Create identifiers for control schemes (`ControlSchemes` class)
-- Add type key to `AgentDefinition` (maps agent name, ie `"SphereAgent"`, to the class)
+- 为控制方案（`ControlSchemes` 类）创建标识符
+- 向 `AgentDefinition` 添加 type 键（将代理名称，例如`"SphereAgent"`，映射到类）
 
-#### `holodeck-engine` changes
-- Subclass:
+#### `holodeck-engine` 变更
+- 子类：
   - `HolodeckAgent`
   - `HolodeckControlScheme`
   - `HolodeckPawnController`
-- Create blueprint
-- 
-## Part 0: Validating Dev Setup
+- 创建蓝图
 
-Let's make sure that you're ready to build holodeck. 
+## 第 0 部分：验证开发环境
 
-Open `holodeck.uproject` from `holodeck-engine`. It may tell you that it needs 
-to rebuild, allow it to. The Unreal Editor should open and 
-[show the example level](images/editor.png). 
+让我们确保您已准备好构建 holodeck。
 
-From the editor, select File -> Refresh Visual Studio Project. You should now
-be able to open the project in Visual Studio. Build it and ensure there are no
-errors.
+打开 `holodeck-engine` 中的 `holodeck.uproject` 文件。它可能会提示需要重新构建，请允许它重新构建。虚幻引擎编辑器应该会打开并显示示例关卡。
+![](./images/editor.png)
 
-## Part 1: Unreal Engine Changes
+在编辑器中，选择“文件”->“刷新 Visual Studio 项目”。现在您应该可以在 Visual Studio 中打开该项目了。构建项目并确保没有错误。
 
-For some background see [UE4s Controller explaination](https://docs.unrealengine.com/en-US/Gameplay/Framework/Controller/index.html).
-In holodeck, agent controllers are mainly used to initialize and configure 
-control schemes. Control schemes map inputs from the client to actions on the
-UE4 object. 
+## 第一部分：虚幻引擎变更
 
-For this example, we won't implement a control scheme or a complex
-controller, and the agent will have only one hard-coded control scheme. Look
-at the UAV for an example if you want to do this.
+背景知识请参阅 [UE4 控制器说明](https://openhutb.github.io/engine_doc/zh-CN/InteractiveExperiences/Framework/Controller/index.html)。在 holodeck 中，代理控制器主要用于初始化和配置控制方案。控制方案将客户端的输入映射到 UE4 对象上的动作。
 
-### Create C++ classes
+在本示例中，我们不会实现控制方案或复杂的控制器，代理将只有一个硬编码的控制方案。如果您想实现此功能，可以参考无人机示例。
 
-1. In the editor, press the folder icon in the content browser and change the
-   it to "C++ Classes". Navigate to `Holodeck\HolodeckCore\Public`
+### 创建 C++ 类
+
+**1.**在编辑器中，点击内容浏览器中的文件夹图标，将其更改为“C++ 类”。导航至 `Holodeck\HolodeckCore\Public` 目录。
 
    ![content browser](images/change-to-cpp.png)
-2. Right click on "HolodeckPawnController" and select "Create C++ class derived from HolodeckPawnController"
-3. Set the name to "HolodeckPawnController" and change the path to
+
+**2.**右键单击“HolodeckPawnController”，然后选择“创建继承自 HolodeckPawnController 的 C++ 类”。
+
+**3.**将名称设置为“HolodeckPawnController”，并将路径更改为
    `holodeck-engine/Source/Holodeck/Agents/Public/`
-4. Make sure the project still builds (press the "Compile" button in the editor)
-5. Since we will only have one control scheme, the `TeapotAgentController` 
-   doesn't really need to do anything. For brevity, we will put everything in 
-   the header file. Open your IDE and put the following in 
-   `TeapotAgentController.h`:
+
+**4.**确保项目仍然可以构建（在编辑器中单击“编译”按钮）
+
+**5.**由于我们只有一个控制方案，因此 `TeapotAgentController` 实际上不需要执行任何操作。为了简洁起见，我们将所有内容都放在头文件中。打开您的 IDE，并将以下内容添加到 `TeapotAgentController.h` 中：
    ```c++
     #pragma once
 
@@ -106,10 +95,9 @@ at the UAV for an example if you want to do this.
       
     };
    ```
-6. Now we need to subclass `Holodeck/HolodeckCore/Public/HolodeckAgent` and make
-   `TeapotAgent`, repeat steps 2-4.
-7. Once again, we'll put all the implementation in the header, for brevity's
-   sake. `TeapotAgent.h`:
+6.现在我们需要继承 `Holodeck/HolodeckCore/Public/HolodeckAgent` 类，并创建 `TeapotAgent` 类，重复步骤 2-4。
+
+7.为了简洁起见，我们将所有实现代码都放在头文件中。`TeapotAgent.h`：
    ```cpp
     #pragma once
 
@@ -125,12 +113,12 @@ at the UAV for an example if you want to do this.
     {
       GENERATED_BODY()
 
-      // ^ do not anger this macro, or bad things will happen
+      // ^ 不要惹怒这个宏，否则会发生不好的事情。
     public:
       ATeapotAgent() {
         this->PrimaryActorTick.bCanEverTick = true;
 
-        // Load the controller and set it as the default. 
+        // 加载控制器并将其设置为默认控制器。
         this->AIControllerClass = LoadClass<AController>(NULL, TEXT("/Script/Holodeck.TeapotAgentController"), NULL, LOAD_None, NULL);
         this->AutoPossessAI = EAutoPossessAI::PlacedInWorld;
       };
@@ -141,25 +129,23 @@ at the UAV for an example if you want to do this.
       };
 
       void Tick(float DeltaSeconds) override {
-        float max_thrust = 10.0f;  // meters
+        float max_thrust = 10.0f;  // 米
 
-        // clamp the thrust to within +/- 10
+        // 将推力限制在 +/- 10 以内
         FVector Impulse = FVector(
           FMath::Clamp(this->CommandArray[0], -max_thrust, max_thrust),
           FMath::Clamp(this->CommandArray[1], -max_thrust, max_thrust),
           FMath::Clamp(this->CommandArray[2], -max_thrust, max_thrust)
         );
 
-        // Holodeck's units are in meters, but UE4 uses centimeters. Helper function to convert
-        // between the two
+        // Holodeck 的单位是米，但UE4使用厘米。提供一个辅助函数来实现这两种单位之间的转换。
         Impulse = ConvertLinearVector(Impulse, ClientToUE);
 
-        // Note that this doesn't rotate the imulse into the agent's frame of reference, so
-        // Impulse is aligned with the world. See TurtleAgent.cpp
+        // 请注意，这不会将脉冲旋转到代理的参考系中，因此脉冲与世界对齐，请查看 TurtleAgent.cpp。
         this->RootMesh->AddForce(Impulse);
 
         if (static_cast<bool>(this->CommandArray[4])) {
-          // engage teapot mode! teapots grow when in teapot mode
+          // 开启茶壶模式！茶壶在茶壶模式下会变大。
           this->RootMesh->SetWorldScale3D(FVector(2));
         } else {
           this->RootMesh->SetWorldScale3D(FVector(1));
@@ -170,47 +156,40 @@ at the UAV for an example if you want to do this.
         UStaticMeshComponent* RootMesh;
       
       
-      // This function should match the size of CommandArray. Holodeck uses this value to allocate
-      // the shared memory buffer between the engine/server any the client/python interpreter.
+      // 此函数的大小应与 CommandArray 的大小相匹配。Holodeck 使用此值在引擎/服务器和客户端/Python 解释器之间分配共享内存缓冲区。
       unsigned int GetRawActionSizeInBytes() const override { return 4 * sizeof(float); };
-      // The action sent from the client will be copied into this buffer
+      // 客户端发送的操作将被复制到此缓冲区中。
       void* GetRawActionBuffer() const override { return (void*)CommandArray; };
 
-      // This has to do with the AbuseSensor. Set it to -1 to disable it, teapots are strong
+      // 这跟 AbuseSensor 器有关。将其设置为 -1 即可禁用它，茶壶威力很大。
       float GetAccelerationLimit() override { return 400; }
 
       private:
       /**
-      * 0: x impulse
-      * 1: y impulse
-      * 2: z impulse
-      * 3: engage teapot mode (t/f)
+      * 0: x 方向冲力
+      * 1: y 方向冲力
+      * 2: z 方向冲力
+      * 3: 启动茶壶模式 (t/f)
       */
       float CommandArray[4];
 
     };
    ```
 
-### Create Agent Blueprint
+### 创建代理蓝图
 
-We've made a C++ class for our agent, but most agents are blueprints that
-subclass the C++ class, since there are various things that are easier to do in
-blueprints.
+我们已经为代理创建了一个 C++ 类，但大多数代理都是继承自该 C++ 类的蓝图，因为在蓝图中可以更轻松地完成许多操作。
 
-1. Find the `TeapotAgent`, right click and select "Create Blueprint class based
-   on TeapotAgent" called `TeapotAgentBlueprint`, place it in 
-   `Content/HolodeckContent/Agents/TeapotAgent/`. Another Editor window will 
-   open.
-2. Press "Add Component" in the upper left corner and add a "Static Mesh", name
-   it `TeapotAgentMesh`.
+**1.**找到 `TeapotAgent`，右键单击并选择“基于 TeapotAgent 创建蓝图类”，将其命名为 `TeapotAgentBlueprint`，并将其放置在 `Content/HolodeckContent/Agents/TeapotAgent/` 目录下。此时会打开另一个编辑器窗口。
+
+**2.**点击左上角的“添加组件”，添加一个“静态网格体”，并将其命名为 `TeapotAgentMesh`。 
 
    ![add a static mesh](images/add_static_mesh.png)
-3. Drag `TeapotAgentMesh` on top of `DefaultSceneRoot` to make it the new root
-   component
+
+**3.**将 `TeapotAgentMesh` 拖到 `DefaultSceneRoot` 上方，使其成为新的根组件。
 
   ![drag on top](images/drag_on_top.png)
-4. On the right, set the static mesh to `teapot` (there is a teapot mesh included
-   with holodeck)
-  
+
+**4.**在右侧，将静态网格设置为`teapot`（holodeck中包含一个茶壶网格）。
+
   ![set static mesh](images/set_static_mesh.png)
-5. 

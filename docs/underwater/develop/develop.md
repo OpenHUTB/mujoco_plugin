@@ -33,9 +33,9 @@
     * [第 1 部分：holoocean.make()](./semaphores.md#simple_usage_example)
     * [第 2 部分：.step()](./semaphores.md#part_2_step)
     * [备注](./semaphores.md#remarks)
+* [holodeck 开发维基页面](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
 
 ## Holodeck
 
-* [holodeck 开发](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
 * [holodeck文档](https://holodeck.readthedocs.io/en/latest/)
 * [所有相关的仓库](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
