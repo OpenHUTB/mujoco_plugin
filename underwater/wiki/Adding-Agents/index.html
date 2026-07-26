@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>WORK IN PROGRESS - Mujoco 插件</title>
+    <title>添加代理 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "WORK IN PROGRESS";
+        var mkdocs_page_name = "\u6dfb\u52a0\u4ee3\u7406";
         var mkdocs_page_input_path = "underwater/wiki/Adding-Agents.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">WORK IN PROGRESS</li>
+      <li class="breadcrumb-item active">添加代理</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/wiki/Adding-Agents.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
@@ -140,69 +140,58 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="work-in-progress">WORK IN PROGRESS</h1>
-<h3 id="fair-warning">Fair Warning:</h3>
-<p>Adding custom agents in holodeck is not for the faint of heart.</p>
-<p>If you just want a variation on an agent, it might be best to modify an existing
-agent and swap out the mesh or modify its behavior.</p>
-<h2 id="overview">Overview</h2>
-<p>You will need to modify both <a href="https://github.com/BYU-PCCL/holodeck-engine">holodeck-engine</a>
-and <a href="https://github.com/BYU-PCCL/holodeck">holodeck</a>. Be sure to have both of
-those set up and ready for development (see <a href="https://github.com/BYU-PCCL/holodeck/wiki/Holodeck-Onboarding">Onboarding</a>).</p>
-<p>Particularly, follow
- - <a href="https://github.com/BYU-PCCL/holodeck/wiki/Building-Holodeck-Engine">Building Holodeck Engine</a>
- - <a href="https://github.com/BYU-PCCL/holodeck/wiki/Developing-%60holodeck%60-package">Developing <code>holodeck</code> package</a></p>
-<p>During this tutorial we will make a "TeapotAgent". We recommend using Windows, 
-since UE4 on Linux isn't very polished. </p>
-<h4 id="holodeck-changes"><code>holodeck</code> changes</h4>
+                <h1 id="_1">添加代理</h1>
+<div class="admonition 友情提示">
+<p class="admonition-title">友情提示</p>
+<p>在 holodeck 中添加自定义代理并非易事。</p>
+</div>
+<p>如果您只是想要对现有代理进行一些修改，最好的办法可能是修改现有代理，例如替换模型或修改其行为。</p>
+<h2 id="_2">概述</h2>
+<p>您需要修改 <a href="https://github.com/BYU-PCCL/holodeck-engine">holodeck-engine</a> 和 <a href="https://github.com/BYU-PCCL/holodeck">holodeck</a> 这两个文件。请确保已完成这两个文件的设置并准备好进行开发（参见<a href="../Holodeck-Onboarding/">入门指南</a>）。</p>
+<p>尤其请遵循以下步骤：</p>
 <ul>
-<li>Subclass <code>HolodeckAgent</code>, implement:</li>
+<li>
+<p><a href="../Building-Holodeck-Engine/">构建 Holodeck 引擎</a></p>
+</li>
+<li>
+<p><a href="../developing_holodeck_package/">开发 <code>holodeck</code> 软件包</a></p>
+</li>
+</ul>
+<p>在本教程中，我们将创建一个“TeapotAgent”。我们建议使用 Windows 系统，因为 UE4 在 Linux 上的运行尚不完善。</p>
+<h4 id="holodeck"><code>holodeck</code> 变更</h4>
+<ul>
+<li>继承 <code>HolodeckAgent</code> 类，并实现：</li>
 <li><code>agent_type</code></li>
 <li><code>control_schemes</code></li>
 <li><code>__repr__</code></li>
 <li><code>__act__</code></li>
-<li>Create identifiers for control schemes (<code>ControlSchemes</code> class)</li>
-<li>Add type key to <code>AgentDefinition</code> (maps agent name, ie <code>"SphereAgent"</code>, to the class)</li>
+<li>为控制方案（<code>ControlSchemes</code> 类）创建标识符</li>
+<li>向 <code>AgentDefinition</code> 添加 type 键（将代理名称，例如<code>"SphereAgent"</code>，映射到类）</li>
 </ul>
-<h4 id="holodeck-engine-changes"><code>holodeck-engine</code> changes</h4>
+<h4 id="holodeck-engine"><code>holodeck-engine</code> 变更</h4>
 <ul>
-<li>Subclass:</li>
+<li>子类：</li>
 <li><code>HolodeckAgent</code></li>
 <li><code>HolodeckControlScheme</code></li>
 <li><code>HolodeckPawnController</code></li>
-<li>Create blueprint</li>
-<li></li>
+<li>创建蓝图</li>
 </ul>
-<h2 id="part-0-validating-dev-setup">Part 0: Validating Dev Setup</h2>
-<p>Let's make sure that you're ready to build holodeck. </p>
-<p>Open <code>holodeck.uproject</code> from <code>holodeck-engine</code>. It may tell you that it needs 
-to rebuild, allow it to. The Unreal Editor should open and 
-<a href="../images/editor.png">show the example level</a>. </p>
-<p>From the editor, select File -&gt; Refresh Visual Studio Project. You should now
-be able to open the project in Visual Studio. Build it and ensure there are no
-errors.</p>
-<h2 id="part-1-unreal-engine-changes">Part 1: Unreal Engine Changes</h2>
-<p>For some background see <a href="https://docs.unrealengine.com/en-US/Gameplay/Framework/Controller/index.html">UE4s Controller explaination</a>.
-In holodeck, agent controllers are mainly used to initialize and configure 
-control schemes. Control schemes map inputs from the client to actions on the
-UE4 object. </p>
-<p>For this example, we won't implement a control scheme or a complex
-controller, and the agent will have only one hard-coded control scheme. Look
-at the UAV for an example if you want to do this.</p>
-<h3 id="create-c-classes">Create C++ classes</h3>
-<ol>
-<li>In the editor, press the folder icon in the content browser and change the
-   it to "C++ Classes". Navigate to <code>Holodeck\HolodeckCore\Public</code></li>
-</ol>
-<p><img alt="content browser" src="../images/change-to-cpp.png" />
-2. Right click on "HolodeckPawnController" and select "Create C++ class derived from HolodeckPawnController"
-3. Set the name to "HolodeckPawnController" and change the path to
-   <code>holodeck-engine/Source/Holodeck/Agents/Public/</code>
-4. Make sure the project still builds (press the "Compile" button in the editor)
-5. Since we will only have one control scheme, the <code>TeapotAgentController</code> 
-   doesn't really need to do anything. For brevity, we will put everything in 
-   the header file. Open your IDE and put the following in 
-   <code>TeapotAgentController.h</code>:
+<h2 id="0">第 0 部分：验证开发环境</h2>
+<p>让我们确保您已准备好构建 holodeck。</p>
+<p>打开 <code>holodeck-engine</code> 中的 <code>holodeck.uproject</code> 文件。它可能会提示需要重新构建，请允许它重新构建。虚幻引擎编辑器应该会打开并显示示例关卡。
+<img alt="" src="../images/editor.png" /></p>
+<p>在编辑器中，选择“文件”-&gt;“刷新 Visual Studio 项目”。现在您应该可以在 Visual Studio 中打开该项目了。构建项目并确保没有错误。</p>
+<h2 id="_3">第一部分：虚幻引擎变更</h2>
+<p>背景知识请参阅 <a href="https://openhutb.github.io/engine_doc/zh-CN/InteractiveExperiences/Framework/Controller/index.html">UE4 控制器说明</a>。在 holodeck 中，代理控制器主要用于初始化和配置控制方案。控制方案将客户端的输入映射到 UE4 对象上的动作。</p>
+<p>在本示例中，我们不会实现控制方案或复杂的控制器，代理将只有一个硬编码的控制方案。如果您想实现此功能，可以参考无人机示例。</p>
+<h3 id="c">创建 C++ 类</h3>
+<p><strong>1.</strong>在编辑器中，点击内容浏览器中的文件夹图标，将其更改为“C++ 类”。导航至 <code>Holodeck\HolodeckCore\Public</code> 目录。</p>
+<p><img alt="content browser" src="../images/change-to-cpp.png" /></p>
+<p><strong>2.</strong>右键单击“HolodeckPawnController”，然后选择“创建继承自 HolodeckPawnController 的 C++ 类”。</p>
+<p><strong>3.</strong>将名称设置为“HolodeckPawnController”，并将路径更改为
+   <code>holodeck-engine/Source/Holodeck/Agents/Public/</code></p>
+<p><strong>4.</strong>确保项目仍然可以构建（在编辑器中单击“编译”按钮）</p>
+<p><strong>5.</strong>由于我们只有一个控制方案，因此 <code>TeapotAgentController</code> 实际上不需要执行任何操作。为了简洁起见，我们将所有内容都放在头文件中。打开您的 IDE，并将以下内容添加到 <code>TeapotAgentController.h</code> 中：
    <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="cp">#pragma once</span>
 
 <span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;CoreMinimal.h&quot;</span>
@@ -235,10 +224,8 @@ at the UAV for an example if you want to do this.</p>
 
 <span class="w"> </span><span class="p">};</span>
 </code></pre></div>
-6. Now we need to subclass <code>Holodeck/HolodeckCore/Public/HolodeckAgent</code> and make
-   <code>TeapotAgent</code>, repeat steps 2-4.
-7. Once again, we'll put all the implementation in the header, for brevity's
-   sake. <code>TeapotAgent.h</code>:
+6.现在我们需要继承 <code>Holodeck/HolodeckCore/Public/HolodeckAgent</code> 类，并创建 <code>TeapotAgent</code> 类，重复步骤 2-4。</p>
+<p>7.为了简洁起见，我们将所有实现代码都放在头文件中。<code>TeapotAgent.h</code>：
    <div class="highlight"><pre><span></span><code><span class="w"> </span><span class="cp">#pragma once</span>
 
 <span class="w"> </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;CoreMinimal.h&quot;</span>
@@ -253,12 +240,12 @@ at the UAV for an example if you want to do this.</p>
 <span class="w"> </span><span class="p">{</span>
 <span class="w">   </span><span class="n">GENERATED_BODY</span><span class="p">()</span>
 
-<span class="w">   </span><span class="c1">// ^ do not anger this macro, or bad things will happen</span>
+<span class="w">   </span><span class="c1">// ^ 不要惹怒这个宏，否则会发生不好的事情。</span>
 <span class="w"> </span><span class="k">public</span><span class="o">:</span>
 <span class="w">   </span><span class="n">ATeapotAgent</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
 <span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">PrimaryActorTick</span><span class="p">.</span><span class="n">bCanEverTick</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
 
-<span class="w">     </span><span class="c1">// Load the controller and set it as the default. </span>
+<span class="w">     </span><span class="c1">// 加载控制器并将其设置为默认控制器。</span>
 <span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AIControllerClass</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LoadClass</span><span class="o">&lt;</span><span class="n">AController</span><span class="o">&gt;</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;/Script/Holodeck.TeapotAgentController&quot;</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">LOAD_None</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
 <span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">AutoPossessAI</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">EAutoPossessAI</span><span class="o">::</span><span class="n">PlacedInWorld</span><span class="p">;</span>
 <span class="w">   </span><span class="p">};</span>
@@ -269,25 +256,23 @@ at the UAV for an example if you want to do this.</p>
 <span class="w">   </span><span class="p">};</span>
 
 <span class="w">   </span><span class="kt">void</span><span class="w"> </span><span class="nf">Tick</span><span class="p">(</span><span class="kt">float</span><span class="w"> </span><span class="n">DeltaSeconds</span><span class="p">)</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span>
-<span class="w">     </span><span class="kt">float</span><span class="w"> </span><span class="n">max_thrust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0f</span><span class="p">;</span><span class="w">  </span><span class="c1">// meters</span>
+<span class="w">     </span><span class="kt">float</span><span class="w"> </span><span class="n">max_thrust</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mf">10.0f</span><span class="p">;</span><span class="w">  </span><span class="c1">// 米</span>
 
-<span class="w">     </span><span class="c1">// clamp the thrust to within +/- 10</span>
+<span class="w">     </span><span class="c1">// 将推力限制在 +/- 10 以内</span>
 <span class="w">     </span><span class="n">FVector</span><span class="w"> </span><span class="n">Impulse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FVector</span><span class="p">(</span>
 <span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">),</span>
 <span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">),</span>
 <span class="w">       </span><span class="n">FMath</span><span class="o">::</span><span class="n">Clamp</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span><span class="w"> </span><span class="o">-</span><span class="n">max_thrust</span><span class="p">,</span><span class="w"> </span><span class="n">max_thrust</span><span class="p">)</span>
 <span class="w">     </span><span class="p">);</span>
 
-<span class="w">     </span><span class="c1">// Holodeck&#39;s units are in meters, but UE4 uses centimeters. Helper function to convert</span>
-<span class="w">     </span><span class="c1">// between the two</span>
+<span class="w">     </span><span class="c1">// Holodeck 的单位是米，但UE4使用厘米。提供一个辅助函数来实现这两种单位之间的转换。</span>
 <span class="w">     </span><span class="n">Impulse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ConvertLinearVector</span><span class="p">(</span><span class="n">Impulse</span><span class="p">,</span><span class="w"> </span><span class="n">ClientToUE</span><span class="p">);</span>
 
-<span class="w">     </span><span class="c1">// Note that this doesn&#39;t rotate the imulse into the agent&#39;s frame of reference, so</span>
-<span class="w">     </span><span class="c1">// Impulse is aligned with the world. See TurtleAgent.cpp</span>
+<span class="w">     </span><span class="c1">// 请注意，这不会将脉冲旋转到代理的参考系中，因此脉冲与世界对齐，请查看 TurtleAgent.cpp。</span>
 <span class="w">     </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">AddForce</span><span class="p">(</span><span class="n">Impulse</span><span class="p">);</span>
 
 <span class="w">     </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="k">static_cast</span><span class="o">&lt;</span><span class="kt">bool</span><span class="o">&gt;</span><span class="p">(</span><span class="k">this</span><span class="o">-&gt;</span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">4</span><span class="p">]))</span><span class="w"> </span><span class="p">{</span>
-<span class="w">       </span><span class="c1">// engage teapot mode! teapots grow when in teapot mode</span>
+<span class="w">       </span><span class="c1">// 开启茶壶模式！茶壶在茶壶模式下会变大。</span>
 <span class="w">       </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">SetWorldScale3D</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">2</span><span class="p">));</span>
 <span class="w">     </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
 <span class="w">       </span><span class="k">this</span><span class="o">-&gt;</span><span class="n">RootMesh</span><span class="o">-&gt;</span><span class="n">SetWorldScale3D</span><span class="p">(</span><span class="n">FVector</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
@@ -298,46 +283,34 @@ at the UAV for an example if you want to do this.</p>
 <span class="w">     </span><span class="n">UStaticMeshComponent</span><span class="o">*</span><span class="w"> </span><span class="n">RootMesh</span><span class="p">;</span>
 
 
-<span class="w">   </span><span class="c1">// This function should match the size of CommandArray. Holodeck uses this value to allocate</span>
-<span class="w">   </span><span class="c1">// the shared memory buffer between the engine/server any the client/python interpreter.</span>
+<span class="w">   </span><span class="c1">// 此函数的大小应与 CommandArray 的大小相匹配。Holodeck 使用此值在引擎/服务器和客户端/Python 解释器之间分配共享内存缓冲区。</span>
 <span class="w">   </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">GetRawActionSizeInBytes</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">float</span><span class="p">);</span><span class="w"> </span><span class="p">};</span>
-<span class="w">   </span><span class="c1">// The action sent from the client will be copied into this buffer</span>
+<span class="w">   </span><span class="c1">// 客户端发送的操作将被复制到此缓冲区中。</span>
 <span class="w">   </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="nf">GetRawActionBuffer</span><span class="p">()</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="o">*</span><span class="p">)</span><span class="n">CommandArray</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
 
-<span class="w">   </span><span class="c1">// This has to do with the AbuseSensor. Set it to -1 to disable it, teapots are strong</span>
+<span class="w">   </span><span class="c1">// 这跟 AbuseSensor 器有关。将其设置为 -1 即可禁用它，茶壶威力很大。</span>
 <span class="w">   </span><span class="kt">float</span><span class="w"> </span><span class="nf">GetAccelerationLimit</span><span class="p">()</span><span class="w"> </span><span class="k">override</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="mi">400</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
 
 <span class="w">   </span><span class="k">private</span><span class="o">:</span>
 <span class="w">   </span><span class="cm">/**</span>
-<span class="cm">   * 0: x impulse</span>
-<span class="cm">   * 1: y impulse</span>
-<span class="cm">   * 2: z impulse</span>
-<span class="cm">   * 3: engage teapot mode (t/f)</span>
+<span class="cm">   * 0: x 方向冲力</span>
+<span class="cm">   * 1: y 方向冲力</span>
+<span class="cm">   * 2: z 方向冲力</span>
+<span class="cm">   * 3: 启动茶壶模式 (t/f)</span>
 <span class="cm">   */</span>
 <span class="w">   </span><span class="kt">float</span><span class="w"> </span><span class="n">CommandArray</span><span class="p">[</span><span class="mi">4</span><span class="p">];</span>
 
 <span class="w"> </span><span class="p">};</span>
 </code></pre></div></p>
-<h3 id="create-agent-blueprint">Create Agent Blueprint</h3>
-<p>We've made a C++ class for our agent, but most agents are blueprints that
-subclass the C++ class, since there are various things that are easier to do in
-blueprints.</p>
-<ol>
-<li>Find the <code>TeapotAgent</code>, right click and select "Create Blueprint class based
-   on TeapotAgent" called <code>TeapotAgentBlueprint</code>, place it in 
-   <code>Content/HolodeckContent/Agents/TeapotAgent/</code>. Another Editor window will 
-   open.</li>
-<li>Press "Add Component" in the upper left corner and add a "Static Mesh", name
-   it <code>TeapotAgentMesh</code>.</li>
-</ol>
-<p><img alt="add a static mesh" src="../images/add_static_mesh.png" />
-3. Drag <code>TeapotAgentMesh</code> on top of <code>DefaultSceneRoot</code> to make it the new root
-   component</p>
-<p><img alt="drag on top" src="../images/drag_on_top.png" />
-4. On the right, set the static mesh to <code>teapot</code> (there is a teapot mesh included
-   with holodeck)</p>
-<p><img alt="set static mesh" src="../images/set_static_mesh.png" />
-5. </p>
+<h3 id="_4">创建代理蓝图</h3>
+<p>我们已经为代理创建了一个 C++ 类，但大多数代理都是继承自该 C++ 类的蓝图，因为在蓝图中可以更轻松地完成许多操作。</p>
+<p><strong>1.</strong>找到 <code>TeapotAgent</code>，右键单击并选择“基于 TeapotAgent 创建蓝图类”，将其命名为 <code>TeapotAgentBlueprint</code>，并将其放置在 <code>Content/HolodeckContent/Agents/TeapotAgent/</code> 目录下。此时会打开另一个编辑器窗口。</p>
+<p><strong>2.</strong>点击左上角的“添加组件”，添加一个“静态网格体”，并将其命名为 <code>TeapotAgentMesh</code>。 </p>
+<p><img alt="add a static mesh" src="../images/add_static_mesh.png" /></p>
+<p><strong>3.</strong>将 <code>TeapotAgentMesh</code> 拖到 <code>DefaultSceneRoot</code> 上方，使其成为新的根组件。</p>
+<p><img alt="drag on top" src="../images/drag_on_top.png" /></p>
+<p><strong>4.</strong>在右侧，将静态网格设置为<code>teapot</code>（holodeck中包含一个茶壶网格）。</p>
+<p><img alt="set static mesh" src="../images/set_static_mesh.png" /></p>
               
             </div>
           </div><footer>
