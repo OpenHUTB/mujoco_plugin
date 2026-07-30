@@ -1,11 +1,5 @@
 # make package 问题与解决方案
 
-> 阶段：Shipping 构建 + Cook + Stage + Package  
-> 编译环境：UE4.26 + CarlaUE4 + UnrealRoboticsLab 插件, Ubuntu Linux  
-> 日期：2026-07-28
-
----
-
 ## 问题一：Editor-only 模块链接到 Shipping 构建
 
 **错误信息：**

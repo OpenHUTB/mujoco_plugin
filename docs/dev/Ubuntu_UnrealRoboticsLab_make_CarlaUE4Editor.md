@@ -1,11 +1,5 @@
 # CarlaUE4 Linux 编译问题与解决方案
 
-> 编译目标：UE4.26 + CarlaUE4 + UnrealRoboticsLab 插件
-> 编译环境：Ubuntu Linux, Clang
-> 最后更新：2026-07-27
-
----
-
 ## 一、MuJoCo 版本不匹配
 
 ### 问题 1.1：大量 MuJoCo API 未声明
