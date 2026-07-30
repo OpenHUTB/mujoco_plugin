@@ -1,6 +1,6 @@
 # 水下机器人 HoloOcean
 
-全息海洋（Hologram, LoloOcean）其前身为“全息甲板(Hogodeck)”。
+全息海洋（Hologram, LoloOcean）其前身为“全息甲板(Holodeck)”。
 
 详细文档请参看 [HoloOceam](./index.md)（参考文档请查看[UE4.27归档版](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/index.html) ，文档的源码位于[27_archival_develop目录](https://github.com/byu-holoocean/holoocean-docs/tree/main/UE4.27_archival_develop)）。
 
@@ -58,14 +58,39 @@
 
 
 
-## 通过 UE 4.27打开工程
+## 通过 UE 4.27 打开工程
 
 如果出现版本不兼容，选择原地覆盖转换（替换成了 hutb 模拟器所对应的 UE 4.26 打开。）。
 
 
-## 参考文档
+## 待合并特性
+
+<!-- https://github.com/byu-holoocean/HoloOcean/tree/develop -->
+<!-- HoloOcean 特性 -->
+* ROS 2 集成
+* 高保真福森（Fossen）载具水动力学
+* （待推出）浅水方程生成沿海环境和高保真波浪
+
+<!-- 2.2.2 - 2.3.0 特性 -->
+* 水下洋流
+* 生物量、盐度和温度 (BST) 传感器
+* 潮汐控制
+* 水下载具手电筒
+
+<!-- 2.4.0 特性 -->
+* 声呐传感器的光线投射和GPU实现
+* 快速傅里叶变换波形
+* FFT 波的新浮力
+* 哈士奇载具（军用极限卡车）
+
+
+## 参考
 
 * [holoocean-v1.0.0](https://byu-holoocean.github.io/holoocean-docs/v1.0.0)
 * [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html)
+* [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - 从 UnrealEngine fork，[develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)
+* [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)
+* [HoloOcean 的 bitbucket 仓库列表](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
+* [HoloOcean 论文](https://www.cs.cmu.edu/~kaess/pub/Potokar22icra.pdf)
 * [构建后缺少 UnrealBuildTool.exe](https://forums.unrealengine.com/t/missing-unrealbuildtool-exe-after-build/2674046/2)
 * [UE Asset Downgrader 高版本转低版本-哔哩哔哩](https://b23.tv/EukLZB6)

@@ -8,6 +8,11 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 * __[HoloOcean 包](./packages/packages.md)__
 * __[代理](./agents/agents.md)__
 * __[开发指南](./develop/develop.md)__
+* __[PythonAPI 参考](https://openhutb.github.io/doc/python_api/#water)__
+
+---
+
+* __[ROS2 桥接器](./develop/ros2.md)__
 
 ---
 * __[环境搭建](./HoloOcean.md)__  
