@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>CarlaUE4 Linux 编译问题与解决方案 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "CarlaUE4 Linux \u7f16\u8bd1\u95ee\u9898\u4e0e\u89e3\u51b3\u65b9\u6848";
+        var mkdocs_page_input_path = "dev/Ubuntu_UnrealRoboticsLab_make_CarlaUE4Editor.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">CarlaUE4 Linux 编译问题与解决方案</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/dev/Ubuntu_UnrealRoboticsLab_make_CarlaUE4Editor.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="carlaue4-linux">CarlaUE4 Linux 编译问题与解决方案</h1>
+<h2 id="mujoco">一、MuJoCo 版本不匹配</h2>
+<h3 id="11-mujoco-api">问题 1.1：大量 MuJoCo API 未声明</h3>
+<p><strong>错误信息：</strong>
+- <code>use of undeclared identifier 'mjGAIN_DCMOTOR'</code>
+- <code>use of undeclared identifier 'mjBIAS_DCMOTOR'</code>
+- <code>use of undeclared identifier 'mjDYN_DCMOTOR'</code>
+- <code>use of undeclared identifier 'mjNPOLY'</code>
+- <code>no member named 'sleep_tolerance' in 'mjOption_'</code>
+- <code>no member named 'body_awake' in 'mjData_'</code>
+- <code>no member named 'tree_sleep_policy' in 'mjModel_'</code></p>
+<p><strong>根因：</strong>
+CI 流水线安装的 MuJoCo 3.3.5 太旧。上述 API 在 MuJoCo 3.4.0 ~ 3.7.0 之间才逐步引入：
+- <code>mjNPOLY</code>、<code>mjGAIN_DCMOTOR</code>、<code>mjBIAS_DCMOTOR</code>、<code>mjDYN_DCMOTOR</code> → 3.7.0
+- <code>sleep_tolerance</code>、<code>body_awake</code>、<code>tree_sleep_policy</code> → 3.4.0</p>
+<p><strong>解决方案：</strong>
+从 MuJoCo GitHub Releases 下载 <strong>3.7.0</strong> Linux 预编译包，替换 <code>third_party/install/MuJoCo/</code>。</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 下载</span>
+curl<span class="w"> </span>-L<span class="w"> </span>-o<span class="w"> </span>mujoco-3.7.0-linux-x86_64.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span><span class="s2">&quot;https://github.com/google-deepmind/mujoco/releases/download/3.7.0/mujoco-3.7.0-linux-x86_64.tar.gz&quot;</span>
+
+<span class="c1"># 安装</span>
+tar<span class="w"> </span>-xzf<span class="w"> </span>mujoco-3.7.0-linux-x86_64.tar.gz<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-C<span class="w"> </span>Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/third_party/install/MuJoCo<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--strip-components<span class="o">=</span><span class="m">1</span>
+
+<span class="c1"># 同时保存到 CI 依赖目录</span>
+cp<span class="w"> </span>mujoco-3.7.0-linux-x86_64.tar.gz<span class="w"> </span>Build/dependencies/Plugins/
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Build/dependencies/Plugins/mujoco-3.7.0-linux-x86_64.tar.gz</code>（新增）
+- <code>.github/workflows/build_linux.yml</code>（更新版本号）</p>
+<hr />
+<h2 id="c">二、C++ 标准版本</h2>
+<h3 id="21stdbyte">问题 2.1：<code>std::byte</code> 不存在</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: no member named &#39;byte&#39; in namespace &#39;std&#39;
+error: unknown type name &#39;mjByteVec&#39;; did you mean &#39;mjIntVec&#39;?
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>std::byte</code> 是 C++17 特性。MuJoCo 3.x 的 <code>mjspec.h</code> 使用 <code>std::byte</code> 定义 <code>mjByteVec</code>，但 UE4.26 默认使用 C++14 标准编译。</p>
+<p>在 <code>URLab.Build.cs</code> 中设置 <code>CppStandard = CppStandardVersion.Cpp17</code> 理论上可行，但 UBT 缓存和模块级设置的传播路径不够稳定。</p>
+<p><strong>解决方案：</strong>
+在 MuJoCo 的 <code>mjspec.h</code> 中添加 C++14 兼容层（polyfill）：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 在 #include &lt;vector&gt; 之后、extern &quot;C&quot; { 之前插入：</span>
+
+<span class="c1">// C++14 compatibility: std::byte was introduced in C++17.</span>
+<span class="c1">// UE 4.26 defaults to C++14. Provide a polyfill so MuJoCo compiles.</span>
+<span class="cp">#if __cplusplus &lt; 201703L</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">std</span><span class="w"> </span><span class="p">{</span>
+<span class="w">  </span><span class="k">enum</span><span class="w"> </span><span class="k">class</span><span class="w"> </span><span class="nc">byte</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="p">{};</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p>同时在 <code>URLab.Build.cs</code> 中保留 <code>CppStandard = CppStandardVersion.Cpp17</code> 作为兜底。</p>
+<p><strong>涉及文件：</strong>
+- <code>third_party/install/MuJoCo/include/mujoco/mjspec.h</code>（polyfill）
+- <code>Source/URLab/URLab.Build.cs</code>（CppStandard 设置）</p>
+<hr />
+<h2 id="_1">三、平台宏污染</h2>
+<h3 id="31linux-__declspec">问题 3.1：Linux 编译时 <code>__declspec</code> 报错</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: &#39;__declspec&#39; attributes are not enabled;
+use &#39;-fdeclspec&#39; or &#39;-fms-extensions&#39; to enable support for __declspec attributes
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>URLab.Build.cs</code> 中 Linux 分支有 <code>PublicDefinitions.Add("_WIN32=0")</code>。C 预处理器的 <code>#if defined _WIN32</code> 只检查宏是否<strong>存在</strong>，不看值。<code>#define _WIN32 0</code> 让 <code>defined _WIN32</code> 返回 <code>true</code>，导致 MuJoCo 的 <code>mjexport.h</code> 在 Linux 上走入了 Windows 的 <code>__declspec(dllimport)</code> 分支。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// mjexport.h 的判断逻辑</span>
+<span class="cp">#if defined _WIN32 || defined __CYGWIN__</span>
+<span class="w">  </span><span class="cp">#define MUJOCO_HELPER_DLL_IMPORT __declspec(dllimport)  </span><span class="c1">// ← Linux 上被命中</span>
+<span class="cp">#else</span>
+<span class="w">  </span><span class="cp">#define MUJOCO_HELPER_DLL_IMPORT __attribute__ ((visibility (&quot;default&quot;)))</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p><strong>解决方案：</strong>
+从 <code>URLab.Build.cs</code> 的 Linux 分支中删除 <code>_WIN32=0</code> 和 <code>USE_DECLSPEC=1</code>。</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 修改前</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Linux</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;_WIN32=0&quot;</span><span class="p">);</span><span class="w">        </span><span class="c1">// ← 删除</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;USE_DECLSPEC=1&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// ← 删除</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;__linux__=1&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;__unix__=1&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="c1">// 修改后</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Target</span><span class="p">.</span><span class="n">Platform</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">UnrealTargetPlatform</span><span class="p">.</span><span class="n">Linux</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">CppStandard</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CppStandardVersion</span><span class="p">.</span><span class="n">Cpp17</span><span class="p">;</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;__linux__=1&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;__unix__=1&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLab/URLab.Build.cs</code></p>
+<hr />
+<h3 id="32urlabh-_win32">问题 3.2：<code>URLab.h</code> 无条件定义 <code>_WIN32</code></h3>
+<p><strong>根因：</strong>
+<code>URLab.h</code> 中有如下代码：</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#ifndef _WIN32</span>
+<span class="w">    </span><span class="cp">#define _WIN32 PLATFORM_WINDOWS  </span><span class="c1">// Linux 上 PLATFORM_WINDOWS = 0</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p>这导致即使 Build.cs 不再定义 <code>_WIN32</code>，URLab.h 仍然在 Linux 上定义它，同样会触发 MuJoCo 的 <code>__declspec</code> 路径。</p>
+<p><strong>解决方案：</strong>
+改为仅在 Windows 平台定义：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 修改前</span>
+<span class="cp">#ifndef _WIN32</span>
+<span class="w">    </span><span class="cp">#define _WIN32 PLATFORM_WINDOWS</span>
+<span class="cp">#endif</span>
+
+<span class="c1">// 修改后</span>
+<span class="c1">// Only define _WIN32 on actual Windows builds, not on Linux</span>
+<span class="c1">// (PLATFORM_WINDOWS is 0 on Linux, but #define _WIN32 0 still makes</span>
+<span class="c1">//  `defined _WIN32` true, causing MuJoCo&#39;s mjexport.h to use __declspec)</span>
+<span class="cp">#if PLATFORM_WINDOWS</span>
+<span class="w">    </span><span class="cp">#ifndef _WIN32</span>
+<span class="w">        </span><span class="cp">#define _WIN32 1</span>
+<span class="w">    </span><span class="cp">#endif</span>
+<span class="cp">#endif</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLab/Public/URLab.h</code></p>
+<hr />
+<h3 id="33coacd-if-_win32-wundef">问题 3.3：CoACD 第三方库 <code>#if _WIN32</code> 触发 <code>-Wundef</code></h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: &#39;_WIN32&#39; is not defined, evaluates to 0 [-Werror,-Wundef]
+</code></pre></div></p>
+<p><strong>根因：</strong>
+经过上述修复后，Linux 上 <code>_WIN32</code> 不再被定义。但 CoACD 的 <code>coacd.h</code> 中有 <code>#if _WIN32</code>（未定义的宏在 <code>#if</code> 中求值为 0），这在 <code>-Wundef</code> + <code>-Werror</code> 下报错。</p>
+<p><strong>解决方案：</strong>
+在 <code>URLab.Build.cs</code> 中禁用未定义标识符警告：</p>
+<div class="highlight"><pre><span></span><code><span class="n">bEnableUndefinedIdentifierWarnings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLab/URLab.Build.cs</code></p>
+<hr />
+<h2 id="fbxmeshimportdata">四、FbxMeshImportData 枚举冲突</h2>
+<h3 id="41-ue426">问题 4.1：前向声明与 UE4.26 定义冲突</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: enumeration previously declared with fixed underlying type
+note: previous declaration is here
+</code></pre></div></p>
+<p><strong>详细：</strong>
+<div class="highlight"><pre><span></span><code>FbxMeshImportData.h:22:7: error: enumeration previously declared with fixed underlying type
+        enum Type
+             ^
+MujocoGenerationAction.h:34:45: note: previous declaration is here
+namespace EFBXNormalGenerationMethod { enum Type : int; }
+                                            ^
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>MujocoGenerationAction.h</code> 中有一个前向声明：</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">EFBXNormalGenerationMethod</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Type</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>但 UE4.26 的 <code>FbxMeshImportData.h</code> 实际定义是：</p>
+<div class="highlight"><pre><span></span><code><span class="k">namespace</span><span class="w"> </span><span class="nn">EFBXNormalGenerationMethod</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="nc">Type</span><span class="w"> </span><span class="p">{</span><span class="w">           </span><span class="c1">// ← 没有 : int</span>
+<span class="w">        </span><span class="n">BuiltIn</span><span class="p">,</span>
+<span class="w">        </span><span class="n">MikkTSpace</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>C++ 标准不允许前向声明带固定底层类型而定义不带（或反过来）。</p>
+<p><strong>解决尝试：</strong></p>
+<table>
+<thead>
+<tr>
+<th>尝试</th>
+<th>方案</th>
+<th>结果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>去掉 <code>: int</code> → <code>enum Type;</code></td>
+<td>C++14 不允许无固定底层类型的枚举前向声明</td>
+</tr>
+<tr>
+<td>2</td>
+<td>保留 <code>: int</code> → 给定义也加 <code>: int</code></td>
+<td>不能改引擎文件</td>
+</tr>
+</tbody>
+</table>
+<p><strong>最终解决方案：</strong>
+删除前向声明，直接 <code>#include</code> 完整定义的头文件：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 修改前</span>
+<span class="c1">// Forward declarations</span>
+<span class="k">namespace</span><span class="w"> </span><span class="nn">EFBXNormalGenerationMethod</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="nc">Type</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="kt">int</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="c1">// 修改后</span>
+<span class="c1">// Forward declarations</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Factories/FbxMeshImportData.h&quot;</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLabEditor/Public/MujocoGenerationAction.h</code></p>
+<hr />
+<h2 id="_2">五、其他编译错误</h2>
+<h3 id="51">问题 5.1：<code>/*</code> 嵌套在块注释中</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: &#39;/*&#39; within block comment [-Werror,-Wcomment]
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>MjCamera.h:140</code> 的 Doxygen 块注释中包含 <code>tcp://*:5558</code>，其中 <code>//*</code> 被解析为嵌套的 <code>/*</code>，触发了 <code>-Wcomment</code> 警告（<code>-Werror</code> 使其成为错误）。</p>
+<div class="highlight"><pre><span></span><code><span class="cm">/** @brief The ZMQ Endpoint for this specific camera (e.g., tcp://*:5558). */</span>
+<span class="c1">//                                                   ^ 这里的 //* 被看作 /*</span>
+</code></pre></div>
+<p><strong>解决方案：</strong>
+将 <code>/** */</code> 块注释改为 <code>///</code> 行注释：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">/// @brief The ZMQ Endpoint for this specific camera (e.g., tcp://*:5558).</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h</code></p>
+<hr />
+<h3 id="52efbxnormalgenerationmethodmikktspace">问题 5.2：<code>EFBXNormalGenerationMethod::MikkTSpace</code> 找不到</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: no member named &#39;MikkTSpace&#39; in namespace &#39;EFBXNormalGenerationMethod&#39;
+error: no member named &#39;BuiltIn&#39; in namespace &#39;EFBXNormalGenerationMethod&#39;
+</code></pre></div></p>
+<p><strong>根因：</strong>
+枚举冲突（见问题 4.1）导致编译器无法正确解析 <code>EFBXNormalGenerationMethod</code> 命名空间中的成员。</p>
+<p><strong>解决方案：</strong>
+用 <code>static_cast</code> 替代命名空间枚举成员访问：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 修改前</span>
+<span class="n">UStaticMesh</span><span class="o">*</span><span class="w"> </span><span class="n">ImportedMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttemptMeshImport</span><span class="p">(</span><span class="n">ActualSourcePath</span><span class="p">,</span><span class="w"> </span><span class="n">DestinationPath</span><span class="p">,</span>
+<span class="w">    </span><span class="n">EFBXNormalGenerationMethod</span><span class="o">::</span><span class="n">MikkTSpace</span><span class="p">);</span>
+<span class="n">ImportedMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttemptMeshImport</span><span class="p">(</span><span class="n">ActualSourcePath</span><span class="p">,</span><span class="w"> </span><span class="n">DestinationPath</span><span class="p">,</span>
+<span class="w">    </span><span class="n">EFBXNormalGenerationMethod</span><span class="o">::</span><span class="n">BuiltIn</span><span class="p">);</span>
+
+<span class="c1">// 修改后</span>
+<span class="c1">// UE4.26 workaround: avoid EFBXNormalGenerationMethod::MikkTSpace/BuiltIn</span>
+<span class="c1">// due to UHT forward-declaration conflict</span>
+<span class="n">UStaticMesh</span><span class="o">*</span><span class="w"> </span><span class="n">ImportedMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttemptMeshImport</span><span class="p">(</span><span class="n">ActualSourcePath</span><span class="p">,</span><span class="w"> </span><span class="n">DestinationPath</span><span class="p">,</span>
+<span class="w">    </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">EFBXNormalGenerationMethod</span><span class="o">::</span><span class="n">Type</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span><span class="w"> </span><span class="c1">// MikkTSpace</span>
+<span class="n">ImportedMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttemptMeshImport</span><span class="p">(</span><span class="n">ActualSourcePath</span><span class="p">,</span><span class="w"> </span><span class="n">DestinationPath</span><span class="p">,</span>
+<span class="w">    </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">EFBXNormalGenerationMethod</span><span class="o">::</span><span class="n">Type</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="w"> </span><span class="c1">// BuiltIn</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<hr />
+<h3 id="53ffilehelper">问题 5.3：<code>FFileHelper</code> 未声明</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: use of undeclared identifier &#39;FFileHelper&#39;
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>MujocoMeshImporter.cpp</code> 使用了 <code>FFileHelper::LoadFileToArray</code> 但没有 include 其头文件。</p>
+<p><strong>解决方案：</strong>
+添加 <code>#include "Misc/FileHelper.h"</code>。</p>
+<div class="highlight"><pre><span></span><code><span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;MujocoGenerationAction.h&quot;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Misc/FileHelper.h&quot;</span><span class="c1">       // ← 新增</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;URLabEditorLogging.h&quot;</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<hr />
+<h3 id="54">问题 5.4：变量未初始化</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>error: variable &#39;NumUVChannels&#39; is uninitialized when used here [-Werror,-Wuninitialized]
+</code></pre></div></p>
+<p><strong>根因：</strong>
+<code>NumVertices</code>、<code>NumTriangles</code>、<code>NumUVChannels</code> 三个变量声明时未初始化，赋值代码被注释掉。</p>
+<p><strong>解决方案：</strong>
+声明时给初始值 0：</p>
+<div class="highlight"><pre><span></span><code><span class="n">int32</span><span class="w"> </span><span class="n">NumVertices</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">int32</span><span class="w"> </span><span class="n">NumTriangles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="n">int32</span><span class="w"> </span><span class="n">NumUVChannels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<hr />
+<h2 id="_3">六、第三方库</h2>
+<h3 id="61coacd">问题 6.1：CoACD 头文件找不到</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>fatal error: &#39;Coacd/coacd.h&#39; file not found
+</code></pre></div></p>
+<p><strong>根因：</strong>
+CoACD.zip 解压后的目录结构为 <code>CoACD/CoACD/include/CoACD/coacd.h</code>（嵌套了一层），而 <code>URLab.Build.cs</code> 的 <code>AddThirdPartyLibrary</code> 函数添加的 include 路径是 <code>CoACD/include/</code>，导致 <code>coacd.h</code> 不在搜索路径中。</p>
+<p><strong>解决方案：</strong></p>
+<ol>
+<li>
+<p>将嵌套的 include 目录移出来：
+<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>CoACD/CoACD/include<span class="w"> </span>CoACD/include
+</code></pre></div></p>
+</li>
+<li>
+<p>目录名 <code>CoACD</code>（大写）和代码中的 <code>#include "Coacd/coacd.h"</code>（小写 <code>d</code>）不匹配。Linux 文件系统区分大小写，需要统一：
+<div class="highlight"><pre><span></span><code>mv<span class="w"> </span>CoACD/include/CoACD<span class="w"> </span>CoACD/include/Coacd
+</code></pre></div></p>
+</li>
+<li>
+<p>CI 工作流同步修复：
+<div class="highlight"><pre><span></span><code><span class="c1"># .github/workflows/build_linux.yml</span>
+<span class="l l-Scalar l-Scalar-Plain">unzip -qo Build/dependencies/Plugins/CoACD.zip \</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">-d Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/third_party/install/CoACD</span>
+
+<span class="l l-Scalar l-Scalar-Plain"># 新增：修复目录嵌套</span>
+<span class="l l-Scalar l-Scalar-Plain">if [ -d .../CoACD/CoACD/include ] &amp;&amp; [ ! -d .../CoACD/include ]; then</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">mv .../CoACD/CoACD/include .../CoACD/include</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">mv .../CoACD/include/CoACD .../CoACD/include/Coacd</span>
+<span class="l l-Scalar l-Scalar-Plain">fi</span>
+</code></pre></div></p>
+</li>
+</ol>
+<p><strong>涉及文件：</strong>
+- <code>third_party/install/CoACD/include/</code>（目录结构调整）
+- <code>.github/workflows/build_linux.yml</code>（CI 同步）</p>
+<hr />
+<h3 id="62zmq">问题 6.2：ZMQ 头文件找不到</h3>
+<p><strong>错误信息：</strong>
+<div class="highlight"><pre><span></span><code>fatal error: &#39;zmq.h&#39; file not found
+</code></pre></div></p>
+<p><strong>根因：</strong>
+CI 提供的 <code>libzmq-linux.tar.gz</code> 预编译包只包含 <code>.so</code> 动态库，<code>include/</code> 目录为空，没有 <code>zmq.h</code>。</p>
+<p><strong>解决方案：</strong>
+系统已安装 <code>libzmq3-dev</code>（<code>/usr/include/zmq.h</code>），创建软链接：</p>
+<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-sf<span class="w"> </span>/usr/include/zmq.h<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>third_party/install/libzmq/include/zmq.h
+</code></pre></div>
+<p><strong>涉及文件：</strong>
+- <code>third_party/install/libzmq/include/zmq.h</code>（软链接）</p>
+<hr />
+<h2 id="_4">修改文件清单</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>文件</th>
+<th>改动类型</th>
+<th>解决问题</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><code>third_party/install/MuJoCo/</code></td>
+<td>替换为 3.7.0</td>
+<td>1.1 API 缺失</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>mjspec.h</code></td>
+<td>添加 C++14 polyfill</td>
+<td>2.1 <code>std::byte</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>URLab.Build.cs</code></td>
+<td>删 <code>_WIN32=0</code>、加 Cpp17、禁用 <code>-Wundef</code></td>
+<td>3.1 <code>__declspec</code>、2.1、3.3</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>URLab.h</code></td>
+<td><code>_WIN32</code> 仅 Windows 定义</td>
+<td>3.2 宏污染</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>MujocoGenerationAction.h</code></td>
+<td>前向声明 → include 头文件</td>
+<td>4.1 枚举冲突</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>MujocoMeshImporter.cpp</code></td>
+<td>枚举 cast + include + 初始化</td>
+<td>5.2、5.3、5.4</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>MjCamera.h</code></td>
+<td><code>/**</code> → <code>///</code></td>
+<td>5.1 嵌套注释</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>CoACD/include/</code></td>
+<td>目录结构调整</td>
+<td>6.1 CoACD</td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>libzmq/include/</code></td>
+<td>软链接 zmq.h</td>
+<td>6.2 ZMQ</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>build_linux.yml</code></td>
+<td>MuJoCo 版本 + CoACD 修复</td>
+<td>CI 同步</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="_5">编译前必须执行的步骤</h2>
+<p>每次修改 Build.cs、头文件或第三方库后，UBT 缓存可能导致旧配置被使用。编译前务必清理缓存：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>/path/to/hutb
+
+<span class="c1"># 清理 UBT 缓存</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>/home/ubuntu/UnrealEngine_4.26/Engine/Intermediate/Build/Linux/B4D820EA
+
+<span class="c1"># 清理项目中间文件</span>
+rm<span class="w"> </span>-rf<span class="w"> </span>Unreal/CarlaUE4/Intermediate
+
+<span class="c1"># 编译</span>
+<span class="nb">source</span><span class="w"> </span>./setEnv64.sh
+make<span class="w"> </span>CarlaUE4Editor<span class="w"> </span><span class="nv">ARGS</span><span class="o">=</span><span class="s2">&quot;--chrono&quot;</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
