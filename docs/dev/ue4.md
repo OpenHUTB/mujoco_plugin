@@ -1,4 +1,7 @@
 # 适配 [hutb 模拟器](https://github.com/OpenHUTB/hutb)
+[1.Ubuntu系统启用错误禁用的 UnrealRoboticsLab 插件后执行make CarlaUE4Editor的编译问题与解决方案](./Ubuntu_UnrealRoboticsLab_make_CarlaUE4Editor.md)
+
+[2.Ubuntu系统启用错误禁用的 UnrealRoboticsLab 插件后执行make_package的编译问题与解决方案](./Ubuntu_UnrealRoboticsLab_make_package.md)
 
 !!! 注意
     如果不需要编辑模型，可以直接进入 [网盘](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb) 进行下载`software/hutb/hutb_v2.10.0.zip`，解压后即可运行。
