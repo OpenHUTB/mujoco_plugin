@@ -142,7 +142,7 @@
               
                 <h1 id="bst">生物量、盐度和温度 (BST) 传感器</h1>
 <p>基于真实数据，模拟全球生物量、盐度和温度的分布和采样。</p>
-<p>有关如何使用此传感器的示例，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度和温度采样</a>。</p>
+<p>有关如何使用此传感器的示例，请参阅<a href="../example/sampling_bst.md">生物量、盐度和温度采样</a>。</p>
 <p>有关 Python API，请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/sensors.html#holoocean.sensors.BSTSensor">BSTSensor</a>。</p>
 <p>要将自定义函数传递给用于计算生物量、盐度或温度的 BST 传感器，请在脚本开头调用以下命令。有关自定义 BST 传感器的更多信息，请参阅下面的示例配置、上面链接的示例脚本以及 API 文档：<code>set_temperature_function(new_function)</code>，其中“new_function”是指向您的自定义函数的指针，该函数仅接受参数“location”（一个包含 3 个元素的数组）。</p>
 <h2 id="_1">图表绘制</h2>
@@ -153,7 +153,7 @@
 </div>
 <div class="admonition 注意">
 <p class="admonition-title">注意</p>
-<p>我们注意到，实时更新的热图可能会导致延迟，并对模拟运行时间产生显著影响。<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度、温度采样</a>示例页面演示了如何使用 Python 多进程在实时更新热图的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，我们强烈建议您使用多进程。</p>
+<p>我们注意到，实时更新的热图可能会导致延迟，并对模拟运行时间产生显著影响。<a href="../example/sampling_bst.md">生物量、盐度、温度采样</a>示例页面演示了如何使用 Python 多进程在实时更新热图的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，我们强烈建议您使用多进程。</p>
 </div>
 <p>以下示例展示了生物量、盐度和温度分布的默认配置以及两种不同的配置方法。默认配置示例展示了在不更改任何其他参数的情况下，分布的默认状态。第二个示例演示了如何仅通过更改环境场景配置来实现自定义。最后一个示例演示了如何设计自定义函数并将其设置为生物量、盐度和温度的新分布模型。</p>
 <p><img alt="" src="../../../img/underwater/DefaultBST.png" /></p>
@@ -242,7 +242,7 @@
 <span class="p">}</span>
 </code></pre></div>
 <h2 id="_3">自定义函数</h2>
-<p>由于实现自定义函数不仅仅是修改配置参数，我们仅包含了传递给 <code>HoloOceanEnvironment.initialize_bst_graphs</code> 函数调用的自定义函数。如果您想查看自定义函数的完整实现，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度、温度采样</a>示例。</p>
+<p>由于实现自定义函数不仅仅是修改配置参数，我们仅包含了传递给 <code>HoloOceanEnvironment.initialize_bst_graphs</code> 函数调用的自定义函数。如果您想查看自定义函数的完整实现，请参阅<a href="../example/sampling_bst.md">生物量、盐度、温度采样</a>示例。</p>
 <p><img alt="" src="../../../img/underwater/CustomFunctionsBST.png" /></p>
 <p>自定义函数和配置参数：</p>
 <div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">biomass_fx</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>

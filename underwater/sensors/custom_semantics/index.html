@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>Raycast 语义激光雷达传感器 - Mujoco 插件</title>
+    <title>添加自定义语义标签 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "Raycast \u8bed\u4e49\u6fc0\u5149\u96f7\u8fbe\u4f20\u611f\u5668";
-        var mkdocs_page_input_path = "underwater/sensors/raycast_semantic_lidar_sensor.md";
+        var mkdocs_page_name = "\u6dfb\u52a0\u81ea\u5b9a\u4e49\u8bed\u4e49\u6807\u7b7e";
+        var mkdocs_page_input_path = "underwater/sensors/custom_semantics.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">Raycast 语义激光雷达传感器</li>
+      <li class="breadcrumb-item active">添加自定义语义标签</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/raycast_semantic_lidar_sensor.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/custom_semantics.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,38 +140,47 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="raycast">Raycast 语义激光雷达传感器</h1>
-<p>使用光线投射模拟激光雷达传感器。返回传感器范围内所有被探测到的物体的点云，以及每个被探测到物体的语义数据，包括被探测到物体的唯一对象 ID 和语义标签/类别。点云会根据环境的语义地图进行分类。此外，还会返回每个点的强度和环/通道数。</p>
-<p>有关参数和如何使用此传感器的更多信息，请参阅 <a href="../raycast_lidar_sensor/">Raycast LIDAR</a>。</p>
-<p>有关如何使用基础非语义传感器的示例，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/raycast-lidar.html#visualizing-raycast-lidar">可视化 Raycast LIDAR</a>。将传感器类型更改为 RaycastSemanticLidar 即可返回语义信息。</p>
+                <h1 id="_1">添加自定义语义标签</h1>
+<p>为了让 HoloOcean 识别语义标签，关卡中的每个资源都必须添加标签并更改渲染设置。这些更改必须在虚幻引擎编辑器中完成。</p>
 <div class="admonition 注意">
 <p class="admonition-title">注意</p>
-<p>所有 HoloOcean 关卡均已应用语义标签。如果您正在创建自定义关卡，则必须启用语义标签并定义任何新标签。有关说明和我们当前的语义标签列表，请参阅<a href="../custom_semantics/">添加自定义语义标签</a>。</p>
+<p>HoloOcean 的语义实现使用模板值作为标签，因此标签值范围为 0-255。</p>
 </div>
-<p>有关 Python API，请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/sensors.html#holoocean.sensors.RaycastSemanticLidar">RaycastSemanticLidar</a>。</p>
-<p>传感器定义示例：</p>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
-<span class="w">    </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RaycastSemanticLidar&quot;</span><span class="p">,</span>
-<span class="w">    </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">        </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CameraSocket&quot;</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;Channels&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">128</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;Range&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">200</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;PointsPerSecond&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">20000</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;RotationFrequency&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;UpperFovLimit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;LowerFovLimit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-30</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;HorizontalFov&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">360.0</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;AtmospAttenRate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;RandomSeed&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;DropOffGenRate&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.45</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;DropOffIntensityLimit&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.8</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;DropOffAtZeroIntensity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.4</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;ShowDebugPoints&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">True</span><span class="p">,</span>
-<span class="w">        </span><span class="nt">&quot;NoiseStdDev&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.0</span>
-<span class="w">    </span><span class="p">},</span>
-<span class="w">    </span><span class="nt">&quot;Hz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
-<span class="p">}</span>
-</code></pre></div>
+<p>为了方便操作，HoloOcean 提供了一个 Tagger 类，可以根据对象的文件夹标题自动应用标签。如果您不需要任何自定义标签，可以参考 HoloOcean 提供的标签列表（位于<a href="#semantic_labels">可用语义标签</a>页面），然后继续<a href="#automatic_labels">使用 Tagger 类自动添加标签</a>。</p>
+<h2 id="_2">设置自定义标签</h2>
+<p>要向 HoloOcean 添加新标签，您需要将其添加到几个 C++ 文件中，并选择一种颜色与标签关联。</p>
+<h3 id="_3">自定义标签</h3>
+<p>要添加自定义标签，请将标签名称添加到 Tagger.cpp 中的 GetLabelByFolderName 函数以及 ObjectLabel.h 中的 ObjectLabel 枚举中。</p>
+<p><img alt="" src="../../../img/underwater/tagger_label.png" /></p>
+<p>“GetLabelByFolderName”中包含的文件夹标题示例</p>
+<p><img alt="" src="../../../img/underwater/object_label.png" /></p>
+<p>“对象标签”中与文件夹标题关联的数字示例</p>
+<h3 id="_4">更改标签颜色</h3>
+<p>要更改每个标签关联的颜色，您可以修改 engine/source/Holodeck/Utils/Public/HolooceanPallete.h 中列出的 RGB 值。</p>
+<h2 id="_5">为资源添加标签</h2>
+<h3 id="_6">使用标签器自动添加标签 <span id='automatic_labels'></span></h3>
+<p>要让标签器自动添加标签，您需要确保资源放置在与其标签对应的文件夹中。例如，所有放置在“Bus”文件夹中的公交车资源都将被标记为与“Bus”对应的模板值。</p>
+<p><img alt="" src="../../../img/underwater/folder_structure.png" /></p>
+<p>接下来，启用标签器。在虚幻编辑器中，找到 C++ 类，然后导航到 Holodeck/Utils/Public/Tagger 目录，找到标签器的 C++ 文件。</p>
+<p><img alt="" src="../../../img/underwater/tagger_location.png" /></p>
+<p>将 Tagger C++ 文件拖入关卡中。在“详细信息”面板中，单击 Tagger 并启用“应为语义分割添加标签”。</p>
+<p><img alt="" src="../../../img/underwater/tagger_enabled.png" /></p>
+<p>然后，点击“触发标签对象”以自动应用标签。</p>
+<p><img alt="" src="../../../img/underwater/tagger_triggered.png" /></p>
+<h3 id="_7">手动添加标签</h3>
+<p>要手动设置标签，请在“详细信息”面板中选择要添加标签的资源。在该资源下，搜索“标签”以查找演员标签。将您的标签添加到参与者标签列表中。</p>
+<p><img alt="" src="../../../img/underwater/manual_tag.png" /></p>
+<p>然后，搜索“深度”，启用“渲染自定义深度通道”，并将“自定义深度模板值”设置为与您的标签关联的值。对每个要添加标签的资源执行此操作。此外，为景观启用“渲染自定义深度通道”，以确保其在深度输出中可见。</p>
+<p><img alt="" src="../../../img/underwater/manual_stencil.png" /></p>
+<h2 id="_8">在编辑器中可视化标签</h2>
+<p>要可视化关卡并确保对象标签正确，请将视图模式从“点亮”更改为“自定义模板”。</p>
+<p><img alt="" src="../../../img/underwater/custom_stencil_view.png" /></p>
+<h2 id="_9">可用语义标签 <span id='semantic_labels'></span></h2>
+<p>以下是 HoloOcean 当前已实现的所有标签列表。Ocean 和 BusinessCampus 包中的每个世界都使用这些标签的子集，具体取决于该世界中的资源（请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/BusinessCampus/BusinessCampus.html#business-campus">BusinessCampus</a> 和 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/Ocean.html#ocean">Ocean 包</a>中的世界子页面）。</p>
+<h2 id="_10">参考</h2>
+<ul>
+<li><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/custom-semantics.html">Adding Custom Semantic Labels</a></li>
+</ul>
               
             </div>
           </div><footer>
