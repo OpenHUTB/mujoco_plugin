@@ -27,3 +27,6 @@ print("Finished Simulation")
 |-------|--------|
 | Linux     | ~/.local/share/holoocean/{holoocean_version}/worlds/{world_name}/LinuxNoEditor/Holodeck/Octrees  |
 | Windows     | %USERPROFILE%\AppData\Local\holoocean\{holoocean_version}\worlds\{world_name}\WindowsNoEditor\Holodeck\Octrees  |
+
+
+在这个八叉树文件夹中，每个层级名称都会有对应的子文件夹，每个层级名称下又会有一个子文件夹，每个子文件夹里又会有一个对应不同大小的八叉树。如果文件正在被保存，则表示模拟仍在运行，并未冻结。

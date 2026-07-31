@@ -2,7 +2,7 @@
 
 在仿真过程中，将声纳传感器的输出进行可视化往往很有帮助。本脚本即可实现这一功能，在每次接收到声纳数据时进行绘图。
 
-请注意，运行此脚本时会生成八叉树（octree），这可能会导致短暂的停顿。有关解决方案及更多信息，请参阅[八叉树生成](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/octree.html#octree)相关内容。
+请注意，运行此脚本时会生成八叉树（octree），这可能会导致短暂的停顿。有关解决方案及更多信息，请参阅[八叉树生成](../usage/octree.md)相关内容。
 
 ```python
 import holoocean
