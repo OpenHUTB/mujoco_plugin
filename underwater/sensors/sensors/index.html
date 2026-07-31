@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>HoloOcean 中的单位和坐标 - Mujoco 插件</title>
+    <title>传感器 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "HoloOcean \u4e2d\u7684\u5355\u4f4d\u548c\u5750\u6807";
-        var mkdocs_page_input_path = "underwater/usage/units_and_coordinates.md";
+        var mkdocs_page_name = "\u4f20\u611f\u5668";
+        var mkdocs_page_input_path = "underwater/sensors/sensors.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">HoloOcean 中的单位和坐标</li>
+      <li class="breadcrumb-item active">传感器</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/units_and_coordinates.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/sensors.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,42 +140,7 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">HoloOcean 中的单位和坐标</h1>
-<p>HoloOcean 使用米作为单位，所有位置、距离和偏移量均采用右手坐标系。</p>
-<h2 id="_1">坐标系 <span id="coordinate_system"></span></h2>
-<p>虚幻引擎默认使用左手坐标系，但为了符合机器人学的通用规范，我们使用右手坐标系，其中 <code>z</code> 轴正方向为上。</p>
-<p>因此，当您需要在 HoloOcean 中指定位置时，格式如下。</p>
-<p><code>[x, y, z]</code> 其中：</p>
-<ul>
-<li>
-<p><code>x</code> 轴正方向表示<strong>向前</strong></p>
-</li>
-<li>
-<p><code>y</code> 轴正方向表示<strong>向左</strong></p>
-</li>
-<li>
-<p><code>z</code> 轴正方向表示<strong>向上</strong></p>
-</li>
-</ul>
-<p>请记住，<code>[x, y, z]</code> 的单位是米（虚幻引擎默认使用厘米，我们更改了单位以方便操作）。</p>
-<h2 id="_2">旋转 <span id="rotations"></span></h2>
-<p>旋转角度以 <code>[roll, pitch, yaw]</code> / <code>[x, y, z]</code> 格式指定，单位通常为度。这意味着：</p>
-<ul>
-<li>
-<p><strong>Roll</strong>（横滚）：绕固定的前向 (<code>x</code>) 轴旋转</p>
-</li>
-<li>
-<p><strong>Pitch</strong>（俯仰）：绕固定的右向 (<code>y</code>) 轴旋转</p>
-</li>
-<li>
-<p><strong>Yaw</strong>（偏航）：绕固定的上向 (<code>z</code>) 轴旋转</p>
-</li>
-</ul>
-<p>顺序如此。</p>
-<h2 id="_3">代理、插槽、传感器帧 <span id="agent_socket_sensor_frames"></span></h2>
-<p>每个代理都有一个位于其中心（通常是质心，极少数情况下是网格中心）的坐标系。该坐标系始终与代理在右手坐标系中的前、左、上方向对齐。</p>
-<p>代理配备了用于安装传感器的插槽。每个插槽都有其自身的坐标系，通常与代理坐标系的方向相同。有关每个代理插槽的位置和方向的详细信息，请参阅 <a href="../../agents/agents/">HoloOcean 代理</a> 中的各个代理页面。</p>
-<p>传感器可以放置在插槽中，但位置或方向可能存在偏移。除极少数例外情况外，传感器会以与插槽坐标系偏移量所定义的坐标系返回数据。用户有责任跟踪传感器数据报告的坐标系。有关每个传感器返回数据的坐标系的详细信息，请参阅 <a href="../../sensors/sensors/">HoloOcean 传感器</a> 中的各个传感器页面。</p>
+                <h1 id="_1">传感器</h1>
               
             </div>
           </div><footer>
