@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>八叉树生成 - Mujoco 插件</title>
+    <title>侧扫声呐 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u516b\u53c9\u6811\u751f\u6210";
-        var mkdocs_page_input_path = "underwater/usage/octree.md";
+        var mkdocs_page_name = "\u4fa7\u626b\u58f0\u5450";
+        var mkdocs_page_input_path = "underwater/sensors/sidescan_sonar_sensor.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">八叉树生成</li>
+      <li class="breadcrumb-item active">侧扫声呐</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/usage/octree.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/sidescan_sonar_sensor.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,43 +140,33 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">八叉树生成</h1>
-<p>运行带有声呐传感器的环境时，必须生成八叉树。这些八叉树通常会占用数 GB 的存储空间，因此无法作为下载包的一部分提供。</p>
-<p>启动时，会创建 <code>InitOctreeRange</code> 参数范围内的所有八叉树，然后随着智能体在环境中移动，会生成更多八叉树。这可能会导致首次运行模拟时出现停顿。屏幕上会显示警告信息，可以使用 <code>ShowWarning</code> 参数禁用此警告。所有后续的模拟运行都将使用缓存的八叉树，速度会快得多。</p>
-<p>避免等待时间的一种方法是在不显示视窗的情况下运行模拟，让其在后台生成八叉树。以下是一个示例脚本，它正是这样做的，只需将场景更改为您想要为其创建八叉树的场景即可。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">tqdm</span> <span class="kn">import</span> <span class="n">tqdm</span>
-
-<span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span><span class="o">-</span><span class="mi">20</span><span class="p">])</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Building octrees...&quot;</span><span class="p">)</span>
-<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;PierHarbor-HoveringImagingSonar&quot;</span><span class="p">,</span> <span class="n">show_viewport</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
-    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">tqdm</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="mi">1000</span><span class="p">)):</span>
-        <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Finished Simulation&quot;</span><span class="p">)</span>
-</code></pre></div>
-<p>八叉树生成后，会保存在<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/packages/docs/installation.html#package-locations">软件包安装目录</a>下的一个名为“octree”的文件夹中。具体如下：</p>
-<table>
-<thead>
-<tr>
-<th>平台</th>
-<th>八叉树保存位置</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Linux</td>
-<td>~/.local/share/holoocean/{holoocean_version}/worlds/{world_name}/LinuxNoEditor/Holodeck/Octrees</td>
-</tr>
-<tr>
-<td>Windows</td>
-<td>%USERPROFILE%\AppData\Local\holoocean{holoocean_version}\worlds{world_name}\WindowsNoEditor\Holodeck\Octrees</td>
-</tr>
-</tbody>
-</table>
-<p>在这个八叉树文件夹中，每个层级名称都会有对应的子文件夹，每个层级名称下又会有一个子文件夹，每个子文件夹里又会有一个对应不同大小的八叉树。如果文件正在被保存，则表示模拟仍在运行，并未冻结。</p>
+                <h1 id="_1">侧扫声呐</h1>
+<p>使用八叉树模拟侧扫声呐。具有较窄的仰角和较宽的横轴，并模拟两侧扫描。</p>
+<p>有关如何使用此传感器的示例，请参阅<a href="../../example/sonar_sidescan/">可视化侧扫声呐</a>。</p>
+<p>有关 Python API，请参阅 <a href="https://openhutb.github.io/doc/python_api/#holoocean.sensors.SidescanSonar">SidescanSonar</a>。</p>
+<p>传感器定义示例：
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SidescanSonar&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;SonarSocket&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Hz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;Azimuth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">170</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;Elevation&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.25</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;RangeMin&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.5</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;RangeMax&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;RangeBins&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;AddSigma&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;MultSigma&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">0.05</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;ShowWarning&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;InitOctreeRange&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;ViewRegion&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;ViewOctree&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-10</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;WaterDensity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">997</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;WaterSpeedSound&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1480</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;UseApprox&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div></p>
               
             </div>
           </div><footer>

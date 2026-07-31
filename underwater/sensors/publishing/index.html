@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>传感器 - Mujoco 插件</title>
+    <title>发布传感器数据 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u4f20\u611f\u5668";
-        var mkdocs_page_input_path = "underwater/sensors/sensors.md";
+        var mkdocs_page_name = "\u53d1\u5e03\u4f20\u611f\u5668\u6570\u636e";
+        var mkdocs_page_input_path = "underwater/sensors/publishing.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">传感器</li>
+      <li class="breadcrumb-item active">发布传感器数据</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/sensors.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/publishing.md" class="icon icon-github"> 在 GitHub 上编辑</a>
     </li>
   </ul>
   <hr/>
@@ -140,53 +140,119 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">传感器</h1>
-<p>HoloOcean 传感器用于从环境中收集数据。传感器连接到代理的特定位置，称为“插槽”（有关每个代理上的插槽位置，请参阅 <a href="../../agents/agents/">HoloOcean 代理</a>）。传感器将数据发布到模拟状态，该状态可以通过环境的 <code>.tick()</code> 和 <code>.step()</code> 函数的返回值来访问。</p>
-<h2 id="_2">使用传感器</h2>
+                <h1 id="_1">发布传感器数据</h1>
+<h2 id="lcm">使用 LCM 发布数据</h2>
+<p>HoloOcean 支持将数据发布到<strong>轻量级通信和编组</strong>（Lightweight Communications and Marshalling, LCM），LCM 是一种用于在不同进程之间通信的消息系统。这允许您将传感器数据发布到 LCM 通道，这些通道可用于与其他系统通信。</p>
+<p>LCM 配置在<a href="../../usage/scenarios/">场景</a>文件中进行。LCM 将数据发布到称为提供程序的介质。提供程序可以是本地、网络、日志文件等。可以在场景文件的头部指定提供程序。有关选项，请参阅<a href="https://lcm-proj.github.io/lcm/">此处</a>。如果未指定提供程序，HoloOcean 将使用默认的 LCM udqm。</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{Scenario Name}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;world&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{world it is associated with}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;lcm_provider&quot;</span><span class="p">:</span><span class="w"> </span><span class="nt">&quot;file:///home/lcm.log&quot;</span>
+<span class="w">   </span><span class="nt">&quot;agents&quot;</span><span class="p">:[</span>
+<span class="w">      </span><span class="s2">&quot;array of agent objects&quot;</span>
+<span class="w">   </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>选定服务提供者后，HoloOcean 会单独发布每个传感器。lcm_channel 参数在传感器配置中设置。如果未指定通道，则不会发布该传感器。</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">   </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;RGBCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;sensor_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;FrontCamera&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="nt">&quot;lcm_channel&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;CAMERA&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="ros2-bridge">使用 ROS2 Bridge 发布数据 <span id='ros'></span></h2>
+<p>ROS2（机器人操作系统）是一款流行的机器人开发中间件。我们开发了 ROS2 桥接包，使用户能够将 ROS2 与其他中间件系统（例如 LCM 和 HoloOcean）连接起来。这样，您就可以使用 ROS2 控制 HoloOcean 智能体，并将传感器数据发布到 ROS2 主题。</p>
+<p>此功能专为与福森车辆动力学实现配合使用而编写。</p>
+<h3 id="_2">安装</h3>
+<p>使用 ROS2 Bridge 需要下载一个单独的软件包。安装 HoloOcean 后，将以下仓库克隆到 ROS2 工作区：<a href="https://github.com/byu-holoocean/holoocean-ros">https://github.com/byu-holoocean/holoocean-ros</a></p>
+<div class="admonition 警告">
+<p class="admonition-title">警告</p>
 <ul>
 <li>
-<p><a href="../sensor_config/">传感器配置</a></p>
+<p>目前，ROS2 桥接器仅支持单代理场景。</p>
 </li>
 <li>
-<p><a href="../../usage/octree/">八叉树生成</a></p>
+<p>在虚拟环境（例如 conda）中运行 holoocean 和 ROS2 可能会导致依赖关系问题。</p>
 </li>
 <li>
-<p><a href="../publishing/">发布传感器数据</a></p>
+<p>仿真速度可能会达到极限，从而导致计时误差。</p>
 </li>
 </ul>
-<h2 id="holoocean">HoloOcean传感器</h2>
-<p>以下传感器的设计灵感源于真实世界的传感器，旨在收集真实数据。大多数传感器都包含用于调整噪声、偏差和其他特性的参数，以模拟真实世界传感器的行为。</p>
-<h3 id="_3">感知传感器</h3>
+</div>
+<p>holoocean 的 ROS 工作空间与 Humble 安装的 ROS2 兼容。请按照 <a href="https://docs.ros.org/en/humble/Tutorials">ROS2 安装教程</a> 进行操作。</p>
+<h3 id="_3">使用方法</h3>
+<p>在 ROS 工作空间中构建软件包后，即可运行示例控制器：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>/opt/ros/humble/setup.bash
+colcon<span class="w"> </span>build
+<span class="nb">source</span><span class="w"> </span>install/setup.bash
+
+ros2<span class="w"> </span>launch<span class="w"> </span>holoocean_main<span class="w"> </span>torpedo_launch.py
+</code></pre></div>
+<p>请按照 ROS2 文档构建用于控制 holoocean 环境的节点。</p>
+<p>holoocean_main 节点：</p>
 <ul>
 <li>
-<p><a href="../singlebeam_sonar_sensor/">单波束声呐</a></p>
+<p>订阅控制器命令</p>
 </li>
 <li>
-<p><a href="../sidescan_sonar_sensor/">侧扫声呐</a></p>
+<p>发布 holoocean 状态下返回的传感器数据</p>
+</li>
+<li>
+<p>创建一个定时器来向环境发送节拍信息</p>
 </li>
 </ul>
-<p>成像声呐</p>
-<p>剖面声呐</p>
-<p>多普勒测速仪 (DVL)</p>
-<p>深度传感器</p>
-<p>RGB 摄像机</p>
-<p>摄像机</p>
-<p>惯性测量单元 (IMU)</p>
-<p>全球定位系统 (GPS)</p>
-<p>磁力计</p>
-<p>测距传感器</p>
-<h3 id="_4">通信传感器</h3>
-<p>声学信标</p>
-<p>光调制解调器</p>
-<h3 id="_5">状态传感器</h3>
-<p>以下传感器并非物理传感器，而是用于返回仅在仿真环境中可用的信息。它们有助于调试、收集真实数据、捕获仿真视频以及其他需要仿真信息的应用。其中一些传感器的功能有所重叠，但为了方便不同应用场景，我们仍将其列出。</p>
-<p>视窗传感器</p>
-<p>位置传感器</p>
-<p>旋转传感器</p>
-<p>方向传感器</p>
-<p>姿态传感器</p>
-<p>速度传感器</p>
-<p>动力学传感器</p>
+<p>holoocean 发布者将使用命名空间“holoocean”（请参阅​​ ROS 文档中关于命名空间的说明）。主题名称将与传感器的场景名称保持一致。如果没有指定名称，则主题名称将与传感器类型相同。</p>
+<p>Holoocean接口包：</p>
+<ul>
+<li>包含用于发布传感器数据的消息和服务</li>
+</ul>
+<p>command_example节点：</p>
+<ul>
+<li>
+<p>按指定时间间隔发布随机HSD命令</p>
+</li>
+<li>
+<p>或者发布预先编程的HSD命令序列</p>
+</li>
+</ul>
+<h2 id="_4">发布您自己的传感器</h2>
+<p>ROS2 桥接器可以配置为与自定义传感器配合使用。在 HoloOcean 中实现您的传感器（参见<a href="../../develop/sensors/">开发传感器</a>）后，请按照以下步骤发布您的传感器数据： </p>
+<ul>
+<li>
+<p>在 <code>holoocean_interfaces</code> 目录下创建一个 <code>.msg</code> 文件（例如 <code>SensorData.msg</code>） </p>
+</li>
+<li>
+<p>将 <code>.msg</code> 文件添加到 CMake 列表中（例如 <code>msg/SensorData.msg</code>） </p>
+</li>
+<li>
+<p>在传感器数据转换器文件中：</p>
+<ul>
+<li>
+<p>在 convert_to_msg 函数中添加一个 elif 语句</p>
+</li>
+<li>
+<p>向 sensor_keys 表中添加一个键</p>
+</li>
+<li>
+<p>在文件的第一行导入消息对象（例如 from holoocean_interfaces.msg import SensorData）</p>
+</li>
+<li>
+<p>添加一个将数据编码为 ROS 消息的函数</p>
+</li>
+</ul>
+</li>
+</ul>
+<p>运行以下代码以重新构建您的 ROS2 工作区：</p>
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>/opt/ros/humble/setup.bash
+colcon<span class="w"> </span>build
+<span class="nb">source</span><span class="w"> </span>install/setup.bash
+</code></pre></div>
+<h2 id="_5">记录数据</h2>
+<p>您可以使用 <code>ros2bag</code> 记录 HoloOcean 环境中的数据。安装 <code>ros2bag</code> 后，您可以在 ros2_ws 文件夹中运行如下命令来记录传感器数据或命令：
+<div class="highlight"><pre><span></span><code><span class="nb">source</span><span class="w"> </span>install/setup.bash
+ros2<span class="w"> </span>bag<span class="w"> </span>record<span class="w"> </span>/holoocean/desiredHSD<span class="w"> </span>/holoocean/RotationSensor<span class="w"> </span>/holoocean/LocationSensor<span class="w"> </span>-o<span class="w"> </span>/path/to/save_data
+</code></pre></div></p>
+<p>您可以点击<a href="https://docs.ros.org/en/humble/Tutorials/Beginner-CLI-Tools/Recording-And-Playing-Back-Data/Recording-And-Playing-Back-Data.html">此处</a>阅读 ROS2 文档，了解更多关于录制和回放 ROS2 bag 数据的信息。</p>
               
             </div>
           </div><footer>

@@ -200,7 +200,7 @@
 <p class="admonition-title">注意</p>
 <p>agents 数组中的第一个代理是“主代理”。</p>
 </div>
-<h2 id="_4">帧率</h2>
+<h2 id="_4">帧率 <span id="configure_framerate"></span></h2>
 <p>您可以配置两个参数来控制帧率的变化：每秒节拍数<code>ticks_per_sec</code> 和 每秒帧数<code>frames_per_sec</code>。</p>
 <p><code>ticks_per_sec</code> 参数用于设置模拟每秒的节拍数。该值必须高于所用传感器的采样率（以 Hz 为单位）。默认值为 30。</p>
 <p><code>frames_per_sec</code> 参数是环境可以运行的最大帧率 (FPS)。如果设置为 <em>true</em>，则帧率将与 <code>ticks_per_sec</code> 相同。如果设置为 <em>false</em>，则帧率不受限制，环境将以尽可能快的速度运行。如果设置为一个数值，则该数值将作为帧率上限。</p>
