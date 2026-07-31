@@ -21,25 +21,33 @@ HoloOcean 传感器用于从环境中收集数据。传感器连接到代理的�
 
 * [侧扫声呐](./sidescan_sonar_sensor.md)
 
-成像声呐
+* [成像声呐](./imaging_sonar_sensor.md)
 
-剖面声呐
+* [剖面声呐](./profiling_sonar_sensor.md)
 
-多普勒测速仪 (DVL)
+* [多普勒测速仪 (DVL)](./dvl_sensor.md)
 
-深度传感器
+* [深度传感器](./depth_sensor.md)
 
-RGB 摄像机
+* [RGB 摄像机](./rgb_camera_sensor.md)
 
-摄像机
+* [摄像机](./camera_sensor.md)
 
-惯性测量单元 (IMU)
+* [语义分割相机](./semantic_segmentation_camera_sensor.md)
 
-全球定位系统 (GPS)
+* [惯性测量单元 (IMU)](./imu_sensor.md)
 
-磁力计
+* [全球定位系统 (GPS)](./gps_sensor.md)
 
-测距传感器
+* [磁力计](./magnetometer_sensor.md)
+
+* [测距传感器](./range_finder_sensor.md)
+
+* [Raycast激光雷达](./raycast_lidar_sensor.md)
+
+* [Raycast语义激光雷达传感器](./raycast_semantic_lidar_sensor.md)
+
+* [生物量、盐度和温度（BST）传感器](./bst_sensor.md)
 
 ### 通信传感器
 
