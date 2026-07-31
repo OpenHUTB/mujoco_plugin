@@ -22,13 +22,13 @@
 
         * 开放水域悬停成像声呐（[OpenWater-HoveringImagingSonar](./Ocean/OpenWater/OpenWater-HoveringImagingSonar.md)）
 
-        * 开放水域鱼雷（[OpenWater-Torpedo](./Ocean/OpenWater/OpenWater-Torpedo.md)）
+        * 开放水域鱼雷型（[OpenWater-Torpedo](./Ocean/OpenWater/OpenWater-Torpedo.md)）
 
-        * 开放水域鱼雷剖面声呐（[OpenWater-TorpedoProfilingSonar](./Ocean/OpenWater/OpenWater-TorpedoProfilingSonar.md)）
+        * 开放水域鱼雷型剖面声呐（[OpenWater-TorpedoProfilingSonar](./Ocean/OpenWater/OpenWater-TorpedoProfilingSonar.md)）
 
-        * 开放水域鱼雷侧扫声呐（[OpenWater-TorpedoSidescanSonar](./Ocean/OpenWater/OpenWater-TorpedoSidescanSonar.md)）
+        * 开放水域鱼雷型侧扫声呐（[OpenWater-TorpedoSidescanSonar](./Ocean/OpenWater/OpenWater-TorpedoSidescanSonar.md)）
 
-        * 开放水域鱼雷单波束声呐（[OpenWater-TorpedoSinglebeamSonar](./Ocean/OpenWater/OpenWater-TorpedoSinglebeamSonar.md)）
+        * 开放水域鱼雷型单波束声呐（[OpenWater-TorpedoSinglebeamSonar](./Ocean/OpenWater/OpenWater-TorpedoSinglebeamSonar.md)）
 
     * 码头港口（[PierHarbor](./Ocean/PierHarbor/pierharbor.md)）
 
@@ -38,7 +38,7 @@
 
         * 码头港口悬停的成像声呐（[PierHarbor-HoveringImagingSonar](./Ocean/PierHarbor/PierHarbor-HoveringImagingSonar.md)）
 
-        * 码头港口鱼雷（[PierHarbor-Torpedo](./Ocean/PierHarbor/PierHarbor-Torpedo.md)）
+        * 码头港口鱼雷型机器人（[PierHarbor-Torpedo](./Ocean/PierHarbor/PierHarbor-Torpedo.md)）
 
     * 房间（[Rooms](./Ocean/Rooms/rooms.md)）
 
@@ -48,7 +48,7 @@
 
         * 简易水下悬停（[SimpleUnderwater-Hovering](./Ocean/SimpleUnderwater/SimpleUnderwater-Hovering.md)）
 
-        * 简易水下鱼雷（[SimpleUnderwater-Torpedo](./Ocean/SimpleUnderwater/SimpleUnderwater-Torpedo.md)）
+        * 简易水下鱼雷型机器人（[SimpleUnderwater-Torpedo](./Ocean/SimpleUnderwater/SimpleUnderwater-Torpedo.md)）
 
 
 ## 包的文档

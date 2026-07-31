@@ -1,4 +1,4 @@
-# 开放水域鱼雷剖面声呐（OpenWater-TorpedoProfilingSonar）
+# 开放水域鱼雷型机器人剖面声呐（OpenWater-TorpedoProfilingSonar）
 
 此场景开始时，一艘鱼雷型自主水下航行器（TorpedoAUV）位于潜艇附近。该航行器与基础版本相同，只是加装了声呐。八叉树叶片尺寸为2厘米。除非另有说明，所有传感器均与其类别名称相同，例如，惯性测量单元传感器（IMUSensor）的名称为“IMUSensor”。
 

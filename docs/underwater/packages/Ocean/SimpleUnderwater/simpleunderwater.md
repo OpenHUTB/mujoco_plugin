@@ -8,4 +8,4 @@
 
 * 简易水下悬停（[SimpleUnderwater-Hovering](./SimpleUnderwater-Hovering.md)
 
-* 简易水下鱼雷（[SimpleUnderwater-Torpedo](./SimpleUnderwater-Torpedo.md)）
+* 简易水下鱼雷型机器人（[SimpleUnderwater-Torpedo](./SimpleUnderwater-Torpedo.md)）

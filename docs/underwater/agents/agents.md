@@ -8,7 +8,7 @@ HoloOcean 中可用代理的文档：
 
 * 水面航行器 ([SurfaceVessel](./surface_vessel_agent.md))
 
-* 鱼雷式自主水下航行器 ([TorpedoAUV](./torpedo_auv_agent.md))
+* 鱼雷型自主水下航行器 ([TorpedoAUV](./torpedo_auv_agent.md))
 
 * [BlueRov2](./blue_rov_agent.md)
 

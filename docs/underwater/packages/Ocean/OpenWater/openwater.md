@@ -12,12 +12,12 @@
 
 * 开放水域悬停成像声呐（[OpenWater-HoveringImagingSonar](./OpenWater-HoveringImagingSonar.md)）
 
-* 开放水域鱼雷（[OpenWater-Torpedo](./OpenWater-Torpedo.md)）
+* 开放水域鱼雷型机器人（[OpenWater-Torpedo](./OpenWater-Torpedo.md)）
 
-* 开放水域鱼雷剖面声呐（[OpenWater-TorpedoProfilingSonar](./OpenWater-TorpedoProfilingSonar.md)）
+* 开放水域鱼雷型机器人剖面声呐（[OpenWater-TorpedoProfilingSonar](./OpenWater-TorpedoProfilingSonar.md)）
 
-* 开放水域鱼雷侧扫声呐（[OpenWater-TorpedoSidescanSonar](./OpenWater-TorpedoSidescanSonar.md)）
+* 开放水域鱼雷型机器人侧扫声呐（[OpenWater-TorpedoSidescanSonar](./OpenWater-TorpedoSidescanSonar.md)）
 
-* 开放水域鱼雷单波束声呐（[OpenWater-TorpedoSinglebeamSonar](./OpenWater-TorpedoSinglebeamSonar.md)）
+* 开放水域鱼雷型机器人单波束声呐（[OpenWater-TorpedoSinglebeamSonar](./OpenWater-TorpedoSinglebeamSonar.md)）
 
 ![](../../../../img/underwater/open_close.png)

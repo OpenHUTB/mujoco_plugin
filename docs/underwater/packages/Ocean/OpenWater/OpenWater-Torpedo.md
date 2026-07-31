@@ -1,4 +1,4 @@
-# 开放水域鱼雷（OpenWater-Torpedo）
+# 开放水域鱼雷型机器人（OpenWater-Torpedo）
 
 此场景开始时，一艘鱼雷型自主水下航行器（TorpedoAUV）位于潜艇附近。除非另有说明，所有传感器的名称均与其类名相同，例如，IMUSensor 的名称为“IMUSensor”。
 
