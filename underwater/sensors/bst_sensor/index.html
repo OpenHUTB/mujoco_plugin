@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>生物量、盐度和温度 (BST) 传感器 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u751f\u7269\u91cf\u3001\u76d0\u5ea6\u548c\u6e29\u5ea6 (BST) \u4f20\u611f\u5668";
+        var mkdocs_page_input_path = "underwater/sensors/bst_sensor.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">生物量、盐度和温度 (BST) 传感器</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/master/docs/underwater/sensors/bst_sensor.md" class="icon icon-github"> 在 GitHub 上编辑</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="bst">生物量、盐度和温度 (BST) 传感器</h1>
+<p>基于真实数据，模拟全球生物量、盐度和温度的分布和采样。</p>
+<p>有关如何使用此传感器的示例，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度和温度采样</a>。</p>
+<p>有关 Python API，请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/sensors.html#holoocean.sensors.BSTSensor">BSTSensor</a>。</p>
+<p>要将自定义函数传递给用于计算生物量、盐度或温度的 BST 传感器，请在脚本开头调用以下命令。有关自定义 BST 传感器的更多信息，请参阅下面的示例配置、上面链接的示例脚本以及 API 文档：<code>set_temperature_function(new_function)</code>，其中“new_function”是指向您的自定义函数的指针，该函数仅接受参数“location”（一个包含 3 个元素的数组）。</p>
+<h2 id="_1">图表绘制</h2>
+<p>您可以通过调用以下命令实时绘制 BST 数据图表：<code>visualizer = env.initialize_bst_graphs()</code>，不同的图表参数请参见 API 文档和示例 <code>visualizer.update(location)</code>，其中 <code>location</code> 是从位置传感器获取的实时位置。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>自从实现了生物量、盐度和温度采样以来，我们也实现了动态潮汐。默认的生物量、盐度和温度函数没有考虑动态潮汐和动态水位，因此，如果您希望将这些动态模型纳入计算，您可以设置使用动态潮汐数据的自定义生物量、盐度和温度函数。</p>
+</div>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>我们注意到，实时更新的热图可能会导致延迟，并对模拟运行时间产生显著影响。<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度、温度采样</a>示例页面演示了如何使用 Python 多进程在实时更新热图的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，我们强烈建议您使用多进程。</p>
+</div>
+<p>以下示例展示了生物量、盐度和温度分布的默认配置以及两种不同的配置方法。默认配置示例展示了在不更改任何其他参数的情况下，分布的默认状态。第二个示例演示了如何仅通过更改环境场景配置来实现自定义。最后一个示例演示了如何设计自定义函数并将其设置为生物量、盐度和温度的新分布模型。</p>
+<p><img alt="" src="../../../img/underwater/DefaultBST.png" /></p>
+<p>默认配置：
+<div class="highlight"><pre><span></span><code><span class="err">sce</span><span class="kc">nar</span><span class="err">io</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span>
+<span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test_currents&quot;</span><span class="p">,</span>
+<span class="nt">&quot;world&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;PierHarbor&quot;</span><span class="p">,</span>
+<span class="nt">&quot;package_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Ocean&quot;</span><span class="p">,</span>
+<span class="nt">&quot;main_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+<span class="nt">&quot;ticks_per_sec&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="nt">&quot;frames_per_sec&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="nt">&quot;agents&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;agent_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;agent_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;sensors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BSTSensor&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;configuration&quot;</span><span class="p">:{}</span>
+<span class="w">                </span><span class="p">},</span>
+<span class="w">                </span><span class="p">{</span>
+<span class="w">                    </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+<span class="w">                    </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COM&quot;</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">            </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;control_scheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">-20</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">-10</span><span class="p">]</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<h2 id="_2">定制配置</h2>
+<p><img alt="" src="../../../img/underwater/CustomConfigBST.png" /></p>
+<p>自定义配置参数：</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;sensor_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;BSTSensor&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;socket&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;Hz&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;configuration&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;max_biomass&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;biomass_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="err">)</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;peak_depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mf">110.0</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;biomass_clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">-15</span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;strength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;falloff&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">15</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">-30</span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;strength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;falloff&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;surface_psu&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;deep_psu&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">30</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;halocline_depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;halocline_thickness&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;salinity_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">(</span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="mi">41</span><span class="err">)</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;salinity_clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">-85</span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;strength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;falloff&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">],</span>
+<span class="w">        </span><span class="nt">&quot;surface_temp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;deep_temp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">26</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;thermocline_depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">110</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;thermocline_thickness&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">50</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;temperature_range&quot;</span><span class="p">:</span><span class="w"> </span><span class="err">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="err">)</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">&quot;temperature_clusters&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">-75</span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;strength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;falloff&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">                </span><span class="nt">&quot;position&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">-10</span><span class="p">,</span><span class="w"> </span><span class="mi">20</span><span class="p">,</span><span class="w"> </span><span class="mi">-95</span><span class="p">],</span>
+<span class="w">                </span><span class="nt">&quot;strength&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">12</span><span class="p">,</span>
+<span class="w">                </span><span class="nt">&quot;falloff&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">25</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h2 id="_3">自定义函数</h2>
+<p>由于实现自定义函数不仅仅是修改配置参数，我们仅包含了传递给 <code>HoloOceanEnvironment.initialize_bst_graphs</code> 函数调用的自定义函数。如果您想查看自定义函数的完整实现，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst">生物量、盐度、温度采样</a>示例。</p>
+<p><img alt="" src="../../../img/underwater/CustomFunctionsBST.png" /></p>
+<p>自定义函数和配置参数：</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span> <span class="nf">biomass_fx</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="c1"># NOTE: It&#39;s required that we name this parameter &quot;location&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="n">x_fade</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">min</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span> <span class="o">/</span> <span class="mi">100</span><span class="p">))</span>  <span class="c1"># fades from 0 at x=0.5 to 5.5 at x=100, then stays at 5.5</span>
+    <span class="k">return</span> <span class="mf">5.0</span> <span class="o">*</span> <span class="n">x_fade</span> <span class="o">+</span> <span class="mf">0.5</span>
+
+<span class="k">def</span> <span class="nf">salinity_fx</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="c1"># This function creates decaying oscillations that originate from a single point</span>
+    <span class="kn">import</span> <span class="nn">math</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="n">center</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">50</span><span class="p">]</span>
+    <span class="c1"># The zip() function in Python pairs corresponding values in two iterables together in tuples</span>
+    <span class="n">dist</span> <span class="o">=</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="nb">sum</span><span class="p">((</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">location</span><span class="p">,</span> <span class="n">center</span><span class="p">)))</span>
+    <span class="k">if</span> <span class="n">dist</span> <span class="o">&gt;</span> <span class="mi">80</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mi">34</span>  <span class="c1"># base salinity</span>
+    <span class="n">amplitude</span> <span class="o">=</span> <span class="mi">4</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">dist</span><span class="o">/</span><span class="mi">80</span><span class="p">)</span>
+    <span class="k">return</span> <span class="mi">34</span> <span class="o">+</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">dist</span> <span class="o">*</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mi">10</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">temperature_fx</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="c1"># This function creates a checkerboard-type pattern across the world</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="n">square_size</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">checks</span> <span class="o">=</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">coord</span> <span class="o">//</span> <span class="n">square_size</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">coord</span> <span class="ow">in</span> <span class="p">[</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">])</span>
+    <span class="k">return</span> <span class="mi">10</span> <span class="k">if</span> <span class="n">checks</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span> <span class="k">else</span> <span class="mi">20</span>  <span class="c1"># alternate between two temps</span>
+
+<span class="n">scenario</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;BST Custom Functions&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;main_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ticks_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;frames_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;BSTSensor&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;biomass_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+                            <span class="s2">&quot;salinity_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">28</span><span class="p">,</span> <span class="mi">39</span><span class="p">),</span>
+                            <span class="s2">&quot;temperature_range&quot;</span><span class="p">:</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">21</span><span class="p">)</span>
+                        <span class="p">}</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+            <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" class="fa fa-github" style="color: #fcfcfc"> GitHub</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
