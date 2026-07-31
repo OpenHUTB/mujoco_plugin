@@ -1,8 +1,8 @@
-# HoloOcean 包
+# HoloOcean 软件包
 
 以下是可供下载的不同包。一个 HoloOcean 扩展包包含一个或多个世界，每个世界又包含一个或多个场景。
 
-## 包 <span id="all_packages"></span>
+## 软件包 <span id="all_packages"></span>
 
 * 海洋包
 

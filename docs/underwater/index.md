@@ -5,7 +5,8 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 * __[安装](./usage/installation.md)__  
 * __[入门与示例](./getting_started.md)__  
 * __[使用 HoloOcean](./usage/usage.md)__
-* __[HoloOcean 包](./packages/packages.md)__
+* __[HoloOcean 软件包](./packages/packages.md)__
+* __[传感器](./sensors/sensors.md)__
 * __[代理](./agents/agents.md)__
 * __[开发指南](./develop/develop.md)__
 * __[PythonAPI 参考](https://openhutb.github.io/doc/python_api/#water)__
