@@ -2,7 +2,7 @@
 
 基于真实数据，模拟全球生物量、盐度和温度的分布和采样。
 
-有关如何使用此传感器的示例，请参阅[生物量、盐度和温度采样](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst)。
+有关如何使用此传感器的示例，请参阅[生物量、盐度和温度采样](../example/sampling_bst.md)。
 
 有关 Python API，请参阅 [BSTSensor](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/sensors.html#holoocean.sensors.BSTSensor)。
 
@@ -16,7 +16,7 @@
     自从实现了生物量、盐度和温度采样以来，我们也实现了动态潮汐。默认的生物量、盐度和温度函数没有考虑动态潮汐和动态水位，因此，如果您希望将这些动态模型纳入计算，您可以设置使用动态潮汐数据的自定义生物量、盐度和温度函数。
 
 !!! 注意
-    我们注意到，实时更新的热图可能会导致延迟，并对模拟运行时间产生显著影响。[生物量、盐度、温度采样](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst)示例页面演示了如何使用 Python 多进程在实时更新热图的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，我们强烈建议您使用多进程。
+    我们注意到，实时更新的热图可能会导致延迟，并对模拟运行时间产生显著影响。[生物量、盐度、温度采样](../example/sampling_bst.md)示例页面演示了如何使用 Python 多进程在实时更新热图的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，我们强烈建议您使用多进程。
 
 以下示例展示了生物量、盐度和温度分布的默认配置以及两种不同的配置方法。默认配置示例展示了在不更改任何其他参数的情况下，分布的默认状态。第二个示例演示了如何仅通过更改环境场景配置来实现自定义。最后一个示例演示了如何设计自定义函数并将其设置为生物量、盐度和温度的新分布模型。
 
@@ -115,7 +115,7 @@ scenario = {
 
 ## 自定义函数
 
-由于实现自定义函数不仅仅是修改配置参数，我们仅包含了传递给 `HoloOceanEnvironment.initialize_bst_graphs` 函数调用的自定义函数。如果您想查看自定义函数的完整实现，请参阅[生物量、盐度、温度采样](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/sampling_bst.html#sampling-bst)示例。
+由于实现自定义函数不仅仅是修改配置参数，我们仅包含了传递给 `HoloOceanEnvironment.initialize_bst_graphs` 函数调用的自定义函数。如果您想查看自定义函数的完整实现，请参阅[生物量、盐度、温度采样](../example/sampling_bst.md)示例。
 
 ![](../../img/underwater/CustomFunctionsBST.png)
 

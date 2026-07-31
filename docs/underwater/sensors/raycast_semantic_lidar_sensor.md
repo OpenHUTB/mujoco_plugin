@@ -7,7 +7,7 @@
 有关如何使用基础非语义传感器的示例，请参阅[可视化 Raycast LIDAR](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/examples/examples/raycast-lidar.html#visualizing-raycast-lidar)。将传感器类型更改为 RaycastSemanticLidar 即可返回语义信息。
 
 !!! 注意
-    所有 HoloOcean 关卡均已应用语义标签。如果您正在创建自定义关卡，则必须启用语义标签并定义任何新标签。有关说明和我们当前的语义标签列表，请参阅[添加自定义语义标签](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/custom-semantics.html#semantic-segmentation)。
+    所有 HoloOcean 关卡均已应用语义标签。如果您正在创建自定义关卡，则必须启用语义标签并定义任何新标签。有关说明和我们当前的语义标签列表，请参阅[添加自定义语义标签](./custom_semantics.md)。
 
 有关 Python API，请参阅 [RaycastSemanticLidar](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/sensors.html#holoocean.sensors.RaycastSemanticLidar)。
 
