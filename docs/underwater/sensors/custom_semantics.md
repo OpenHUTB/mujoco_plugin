@@ -74,6 +74,66 @@
 
 以下是 HoloOcean 当前已实现的所有标签列表。Ocean 和 BusinessCampus 包中的每个世界都使用这些标签的子集，具体取决于该世界中的资源（请参阅 [BusinessCampus](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/BusinessCampus/BusinessCampus.html#business-campus) 和 [Ocean 包](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/Ocean.html#ocean)中的世界子页面）。
 
+| 文件夹名字  | 模板值 | RGB 值 |
+|-------|--------|-------|
+| None（无）     | 0  | {0, 0, 0}  |
+| Cube（立方体）     | 1  | {240, 29, 219}  |
+| Sphere（球体）     | 2  | {29, 89, 240}  |
+| BaseShape（基础形状）     | 3  | {29, 240, 89}  |
+| Landscape（景色）     | 4  | {153, 153, 153}  |
+| GroundGrass（草地）     | 5  | {91, 235, 52}  |
+| GroundRock（地面岩石）     | 6  | {196, 101, 6}  |
+| Ground（地面）     | 7  | {194, 164, 159}  |
+| GroundPath（地面路径）     | 8  | {76, 117, 252}  |
+| WaterPlane（水面）     | 9  | {66, 135, 245}  |
+| Boat（小船）     | 10  | {128, 64, 128}  |
+| Yacht（游艇）     | 11  | {70, 70, 70}  |
+| ContainerBoat（集装箱船）     | 12  | {102, 102, 156}  |
+| Concrete（混泥土）     | 13  | {214, 138, 230}  |
+| Pipe（管道）     | 14  | {73, 227, 78}  |
+| PipeCover（管道盖板）     | 15  | {85, 166, 3}  |
+| VentCover（通气孔盖）     | 16  | {245, 215, 66}  |
+| Rock（石头）     | 17  | {153, 115, 9}  |
+| Seaweed（海藻）     | 18  | {75, 166, 5}  |
+| Coral（珊瑚）     | 19  | {235, 64, 52}  |
+| Plane（飞机）     | 20  | {176, 165, 146}  |
+| Sub（潜艇）     | 21  | {146, 161, 176}  |
+| Pier（码头）     | 22  | {186, 76, 2}  |
+| Buoy（浮标）     | 23  | {237, 53, 7}  |
+| Trash（垃圾）     | 24  | {107, 156, 137}  |
+| Grass（草）     | 25  | {91, 235, 52}  |
+| Asphalt（沥青）     | 26  | {79, 82, 77}  |
+| Bench（长凳）     | 27  | {212, 191, 125}  |
+| BikeRack（自行车架）     | 28  | {209, 208, 203}  |
+| Building（建筑物）     | 29  | {31, 240, 205}  |
+| Bus（公共汽车）     | 30  | {240, 220, 43}  |
+| Bush（灌木）     | 31  | {177, 247, 124}  |
+| Car（汽车）     | 32  | {224, 109, 237}  |
+| Ceiling（天花板）     | 33  | {161, 247, 233}  |
+| Chair（椅子）     | 34  | {65, 13, 255}  |
+| Cone（圆锥体）     | 35  | {255, 169, 10}  |
+| Crate（板条箱）     | 36  | {140, 86, 0}  |
+| Desk（书桌）     | 37  | {242, 65, 224}  |
+| Dumpster（大垃圾桶）     | 38  | {0, 138, 14}  |
+| FireHydrant（消防栓）     | 39  | {255, 0, 0}  |
+| Floor（地板）     | 40  | {2, 125, 104}  |
+| GarbageCan（垃圾桶）     | 41  | {0, 184, 92}  |
+| Pallet（托盘）     | 42  | {143, 129, 6}  |
+| ParkingGate（停车门）     | 43  | {222, 164, 177}  |
+| PatioUmbrella（庭院遮阳伞）     | 44  | {195, 0, 255}  |
+| Railing（栏杆）     | 45  | {242, 97, 130}  |
+| SemiTruck（半挂式卡车）     | 46  | {124, 6, 138}  |
+| Sidewalk（人行道）     | 47  | {232, 232, 232}  |
+| SpeedLimitSign（限速标志）     | 48  | {222, 218, 245}  |
+| StopSign（停车标志）     | 49  | {250, 37, 62}  |
+| StreetLamps（路灯）     | 50  | {255, 149, 10}  |
+| Table（桌子）     | 51  | {186, 17, 169}  |
+| Tree（树）     | 52  | {69, 99, 46}  |
+| Wall（墙）     | 53  | {126, 60, 250}  |
+| Unlabeled（未贴标签）     | 54  | {0, 0, 0}  |
+| Any（任何一个）     | 255  | {255, 255, 255}  |
+
+
 ## 参考
 
 * [Adding Custom Semantic Labels](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/develop/env-docs/custom-semantics.html)
