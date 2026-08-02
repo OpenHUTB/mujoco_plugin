@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>Air Fog（空气雾）指令 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "Air Fog\uff08\u7a7a\u6c14\u96fe\uff09\u6307\u4ee4";
+        var mkdocs_page_input_path = "underwater/env_appearance/air_fog.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">Air Fog（空气雾）指令</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/env_appearance/air_fog.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="air-fog">Air Fog（空气雾）指令</h1>
+<p>Air Fog 指令允许您调整环境中的雾效，从而改变水面上物体的可见距离与清晰度。该指令可用于模拟不同的空气能见度条件。</p>
+<p><img alt="" src="../../../img/underwater/air_fog.jpg" /></p>
+<h2 id="_1">使用方法</h2>
+<p>您可以配置以下参数：</p>
+<ul>
+<li>
+<p><strong>fogDensity</strong>：控制雾气的整体浓度。范围：<code>0.0 – 10.0</code></p>
+</li>
+<li>
+<p><strong>fogDepth</strong>：雾效开始出现的距离（相对于摄像机）。范围：<code>0.0 – 10.0</code>（默认值 = 3.0）</p>
+</li>
+<li>
+<p><strong>color_R</strong>：雾气颜色的红色通道值。范围：<code>0.0 – 1.0</code>（默认值 = 0.45）</p>
+</li>
+<li>
+<p><strong>color_G</strong>：雾气颜色的绿色通道值。范围：<code>0.0 – 1.0</code>（默认值 = 0.5）</p>
+</li>
+<li>
+<p><strong>color_B</strong>：雾气颜色的蓝色通道值。范围：<code>0.0 – 1.0</code>（默认值 = 0.6）</p>
+</li>
+</ul>
+<h3 id="_2">通过代码实现</h3>
+<p>以下示例展示了如何使用空气雾（air fog）命令来实现上图中所示的能见度效果：
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+      <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">air_fog</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># 将雾浓度设置为 1</span>
+</code></pre></div>
+此外，您还可以修改雾的深度和颜色。
+<div class="highlight"><pre><span></span><code><span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;...&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+      <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">air_fog</span><span class="p">(</span>
+                  <span class="mf">0.8</span><span class="p">,</span>
+                  <span class="n">fogDepth</span><span class="o">=</span><span class="mf">5.0</span><span class="p">,</span>
+                  <span class="n">color_R</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">color_G</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+                  <span class="n">color_B</span><span class="o">=</span><span class="mf">0.6</span>
+            <span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+</code></pre></div></p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>有关如何使用此命令的更多信息，请参阅 API 文档：<a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/holoocean/commands.html#holoocean.command.AirFogCommand">AirFogCommand</a>。</p>
+</div>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>若要修改水下雾效，请改用专用命令。请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/env_appearance/water_appearance/water_appearance.html#water-fog-command">Water Fog Command</a>。</p>
+<p>水下雾效（Underwater Fog）是一种渲染技术，用来模拟光线在水中传播时被吸收和散射的视觉效果。它通过深度（你离水面或物体的距离）来计算雾的浓度。你潜得越深，或者看远处的水下物体时，它就显得越模糊、颜色越偏蓝绿。</p>
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
