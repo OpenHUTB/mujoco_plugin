@@ -54,7 +54,7 @@ HoloOcean 传感器用于从环境中收集数据。传感器连接到代理的�
 
 * [声学信标](./acoustic_beacon_sensor.md)
 
-光调制解调器
+* [光调制解调器](./optical_modem_sensor.md)
 
 ### 状态传感器
 
