@@ -14,6 +14,7 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 ---
 
 * __[ROS2 桥接器](./develop/ros2.md)__
+* __[环境外观](./env_appearance/env_appearance.md)__
 
 ---
 * __[环境搭建](./HoloOcean.md)__  
