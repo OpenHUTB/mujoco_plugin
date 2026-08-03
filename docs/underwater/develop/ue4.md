@@ -11,3 +11,4 @@
 
 * 将 HoveringAUV 蓝图添加到场景后，运行时候却看不到
     * 分析：AI控制器类为 HoveringAUVController，之前删除了 DefaultPlayerController.uasset
+    * 分析：只是“编辑器视图专用”可视元素（按 G 会切换 Editor/ Game 视图，HoveringAUV 元素在 Game 视图下会消失）。但是鱼雷型潜水器不消失。
