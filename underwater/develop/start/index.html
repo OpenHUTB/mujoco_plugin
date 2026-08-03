@@ -262,6 +262,10 @@
 <p>非常简单！</p>
 <p>有关开发自定义传感器/代理/环境以及如何入门的信息，请参阅<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/agents.html#develop-agents">开发代理</a>、<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/sensors.html#develop-sensor">开发传感器</a>和<a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/env.html#develop-env">开发环境</a>。</p>
 <p>要开发自定义声呐，请参阅 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Public/HolodeckSonar.h">HolodeckSonar.h</a> 和 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Private/HolodeckSonar.cpp">HolodeckSonar.cpp</a> 文件以获取所需的超类，并参阅 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Public/ImagingSonar.h">ImagingSonar.h</a> 和 <a href="https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Private/ImagingSonar.cpp">ImagingSonar.cpp</a> 以获取如何使用它们的示例。</p>
+<h2 id="_7">代码格式化  <span id="code_formatting"></span></h2>
+<p>如果您要提交修改 C++ 或 Python 代码的 pull request，请确保您的代码格式正确。Python 代码应使用 <a href="https://docs.astral.sh/ruff/">ruff</a> 进行格式化，C++ 代码应使用提供的 clang-format 配置进行格式化，并遵循 UE 风格指南。要格式化 C++ 代码，您可以从 engine/ue5-clang-format-file 运行以下命令：
+<div class="highlight"><pre><span></span><code>find<span class="w"> </span>../Source<span class="w"> </span>-iname<span class="w"> </span><span class="s2">&quot;*.h&quot;</span><span class="w"> </span>-o<span class="w"> </span>-iname<span class="w"> </span><span class="s2">&quot;*.cpp&quot;</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>xargs<span class="w"> </span>clang-format<span class="w"> </span>-style<span class="o">=</span>file<span class="w"> </span>-i
+</code></pre></div></p>
               
             </div>
           </div><footer>

@@ -165,6 +165,21 @@
 <p class="admonition-title">注意</p>
 <p>双击执行输出目录中的<code>WindowsNoEditor/Holodeck.exe</code>并不能看到默认的场景，执行<code>WindowsNoEditor\Holodeck\Binaries\Win64\Holodeck.exe</code>才能看到默认的场景。想要看到水下机器人需要通过运行 <a href="https://github.com/OpenHUTB/mujoco_plugin/tree/main/src/underwater/holo_ocean">Python 脚本</a>。</p>
 </div>
+<h3 id="windows-linux">附：从 Windows 交叉编译到 Linux</h3>
+<p><strong>1.</strong> 在 Epic Games 启动器中找到您的虚幻引擎版本。右键单击“启动”按钮旁边的箭头，然后选择“选项”。</p>
+<p><img alt="" src="../../../img/underwater/linux_steps_p1.png" /></p>
+<p><strong>2.</strong> 在“目标平台”下，选择 Linux 并进行安装。</p>
+<p><img alt="" src="../../../img/underwater/linux_steps_p2.png" /></p>
+<p><strong>3.</strong> UE 4.26 下载交叉编译工具链 -v17（请参阅<a href="https://openhutb.github.io/engine_doc/zh-CN/SharingAndReleasing/Linux/AdvancedLinuxDeveloper/LinuxCrossCompileLegacy/index.html">虚幻引擎的交叉编译文档</a>，UE 4.27 下载 -v19）。
+<img alt="" src="../../../img/underwater/linux_steps_p3_UE4.png" /></p>
+<p>UE 5.3 下载交叉编译工具链 v22（请参阅<a href="https://dev.epicgames.com/documentation/en-us/unreal-engine/linux-development-requirements-for-unreal-engine?application_version=5.3">虚幻引擎的交叉编译文档</a>）。
+<img alt="" src="../../../img/underwater/linux_steps_p3.png" /></p>
+<p><strong>3.1</strong>. </p>
+<p>运行<code>D:\UnrealToolchains\v18_clang-11.0.1-centos7\x86_64-unknown-linux-gnu\bin\clang++ -v</code>，验证是否安装成功（注意：需使用绝对路径，<code>%LINUX_MULTIARCH_ROOT%x86_64-unknown-linux-gnu\bin\clang++ -v</code>会提示命令找不到）</p>
+<p><strong>4.</strong> 修改 Visual Studio 2022 的安装，使其包含“使用 C++ 进行 Linux 和嵌入式开发”组件。</p>
+<p><img alt="" src="../../../img/underwater/linux_steps_p4.png" /></p>
+<p>经过这些更改，您应该能够从 Windows 编译 Linux 版本。</p>
+<p>该步骤参考<a href="https://zhuanlan.zhihu.com/p/616964048">UnrealEngine交叉编译</a>。</p>
 <h2 id="_3">将文件放置在安装目录中 <span id="place_in_install_directory"></span></h2>
 <p>为了能够调用 <code>holodeck.make()</code>，您需要将打包好的引擎放置在<a href="../../packages/installation/">软件包安装位置</a>。</p>
 <p>请确保路径中的版本号与 <code>holodeck.util.get_holodeck_version</code> 命令的输出结果一致。</p>
