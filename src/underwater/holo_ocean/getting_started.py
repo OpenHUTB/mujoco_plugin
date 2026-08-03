@@ -1,9 +1,5 @@
 import holoocean
-import holodeck
 import numpy as np
-
-holoocean_version = holodeck.util.get_holodeck_version
-print(f"Holoocean version: {holoocean_version}")
 
 env = holoocean.make("PierHarbor-Hovering")
 
