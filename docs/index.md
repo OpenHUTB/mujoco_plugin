@@ -71,7 +71,7 @@ https://github.com/donghaiwang/UnrealRoboticsLab/commit/51cce72a014a42612125ea6b
 | 指南 | 涵盖的内容 |
 |-------|---------------|
 | [水下机器人](./underwater/index.md) | 高保真的水下机器人插件 |
-| [HoloOcean](./underwater/index.md) | HoloOcean 的理论介绍 |
+| [HoloOcean](./underwater/holoocean_paper.md) | HoloOcean 的理论介绍 |
 | [机器狗](./go2.md) | 仿生四足机器人 Go2 |
 
 ---
