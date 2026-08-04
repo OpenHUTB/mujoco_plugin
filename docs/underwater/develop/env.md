@@ -98,7 +98,7 @@ UE 5.3 下载交叉编译工具链 v22（请参阅[虚幻引擎的交叉编译�
     `"path": "WindowsNoEditor/Holodeck/Binaries/Win64/Holodeck.exe"`
 
 
-## 关于创建环境对象和声呐的说明 <span id="note_on_creating_environment_objects_and_sonar"></span>
+## [关于创建环境对象和声呐的说明](../develop/custom_level.md#object_collision) <span id="note_on_creating_environment_objects_and_sonar"></span>
 
 
-声呐模拟在生成八叉树时依赖于对象的碰撞网格。如果对象的碰撞网格比视觉网格粗糙，则该对象在声呐图像中的表示将不准确。可以通过在虚幻引擎编辑器中，将静态网格编辑器详细信息部分的“碰撞复杂度”选项设置为“使用复杂碰撞作为简单碰撞”来解决此问题。
+

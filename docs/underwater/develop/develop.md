@@ -35,6 +35,7 @@
     * [第 2 部分：.step()](./semaphores.md#part_2_step)
     * [备注](./semaphores.md#remarks)
 * [holodeck 开发维基页面](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
+* [疑难解答](./troubleshooting.md)
 
 ## Holodeck
 

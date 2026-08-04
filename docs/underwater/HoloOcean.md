@@ -88,7 +88,7 @@
 
 * [holoocean-v1.0.0](https://byu-holoocean.github.io/holoocean-docs/v1.0.0)
 * [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html)
-* [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - 从 UnrealEngine fork，[develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)
+* [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - [develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)（从 UnrealEngine fork）
 * [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)
 * [HoloOcean 的 bitbucket 仓库列表](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
 * [HoloOcean 论文](https://www.cs.cmu.edu/~kaess/pub/Potokar22icra.pdf)
