@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>HoloOcean：水下机器人模拟器 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "HoloOcean\uff1a\u6c34\u4e0b\u673a\u5668\u4eba\u6a21\u62df\u5668";
+        var mkdocs_page_input_path = "underwater/holoocean_paper.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">HoloOcean：水下机器人模拟器</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/holoocean_paper.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="holoocean">HoloOcean：水下机器人模拟器</h1>
+<h2 id="_1">摘要</h2>
+<p>由于水下实地试验的困难和高昂成本，对于测试和开发算法来说，高保真水下模拟器是必不可少的。为满足这一需求，我们提出了 HoloOcean，一款基于虚幻引擎 4（UE4）构建的开源水下模拟器。HoloOcean 配备了多代理支持、各种常见水下传感器的实现以及模拟通信支持。我们还实现了一种新型声呐传感器模型，该模型利用环境的八叉树表示来高效且真实地生成声呐图像。由于基于 UE4 构建，新增环境非常容易，从而便于拓展功能的开发。最后，HoloOcean 通过一个简单的 Python 接口进行控制，可通过 pip 简便安装，并且只需少量代码即可执行模拟。</p>
+<p><img alt="" src="../../img/underwater/paper_1.png" /></p>
+<div class="div" style="text-align: center">
+<i>HoloOcean 是一个开源的水下模拟器，基于虚幻引擎 4 构建。</i></div>
+<div class="div" style="text-align: center">
+<i>它配备了各种常见的水下传感器，如 DVL、IMU、光学和声学调制解调器，以及成像声呐。</i></div>
+<style>
+.div {
+    height: 20px;
+    line-height: 1px;
+}
+</style>
+
+<h2 id="_2">一、引言</h2>
+<p>一个用于自主水下航行器（Autonomous Underwater Vehicles, AUV）的有效仿真环境可以加速算法和应用的开发。这对于所有机器人系统都是适用的，但对于AUV尤其必要，因为实地测试成本高且风险大。</p>
+<p>现代自动水下航行器（AUV）有许多应用，可以显著提升科学知识、生活质量和安全性。这些应用包括对海洋基础设施如大坝、船体和通信线路的检查，以及对海洋的探索，这可能带来地质学、海洋生物学和医学领域的发现。然而，所有这些应用都需要复杂的算法设计和测试，如果没有先在虚拟环境中进行开发，这将是昂贵且极具挑战性的。</p>
+<p>我们介绍 HoloOcean，一款开源的水下模拟器。它构建于强化学习模拟器 Holodeck <sup id="fnref:HolodeckPCCL"><a class="footnote-ref" href="#fn:HolodeckPCCL">1</a></sup> 及 Unreal Engine 4 (UE4) <sup id="fnref:unreal_engine"><a class="footnote-ref" href="#fn:unreal_engine">2</a></sup> 的功能基础之上。UE4 特别提供了精确的模拟动力学、高保真图像、成熟的环境构建编辑器，以及用于添加自定义传感器、代理等的 C 接口。具体来说，HoloOcean 拥有以下特性：</p>
+<ul>
+<li>
+<p>一个简单的 Python 接口，允许快速安装和轻松使用。 </p>
+</li>
+<li>
+<p>易于添加新环境。UE4 是一个文档完善的游戏开发引擎，已经制作了许多海洋和水下资产。 </p>
+</li>
+<li>
+<p>一个新颖且高效的成像声纳实现，基于八叉树结构，能够生成逼真的声纳图像。</p>
+</li>
+<li>
+<p>完全支持多代理任务，包括实现的声学和光学调制解调器传感器，以进行逼真的协作模拟。</p>
+</li>
+</ul>
+<p>本文的组织结构如下。第二部分回顾了当前的水下机器人模拟器和声纳传感器模型。在第三部分，我们描述了我们新颖的声纳成像算法，随后在第四部分中，我们回顾了其他各种常见水下传感器的实现和测量模型，如多普勒速度计（DVL）、惯性测量单元（IMU）、GPS、相机和深度传感器。第五部分描述了多代理任务以及通过光学和声学调制解调器的通信。第六部分介绍了任务的自定义以及简单的 Python 接口。第七部分展示了在 UE4 中制作的各种环境，第八部分总结了本文并提出了未来工作。</p>
+<h2 id="_3">二、相关工作</h2>
+<p>创建一个逼真的水下模拟器需要许多功能才能对算法开发有用，包括但不限于多代理支持；逼真的传感器模拟；准确的水下动力学；易于使用；与现有系统的集成；以及最好是开源的 <sup id="fnref:Cook2014"><a class="footnote-ref" href="#fn:Cook2014">3</a></sup>。另一个要求是没有过重的依赖。像机器人操作系统（ROS）<sup id="fnref:Quigley2009"><a class="footnote-ref" href="#fn:Quigley2009">4</a></sup>这样的重依赖可能会使安装和使用变得繁琐，尤其当模拟器只是用于数据生成时。这些功能的各种尝试列在表 I 中，但据我们所知，目前还没有哪一个能满足所有这些标准。</p>
+<table>
+<thead>
+<tr>
+<th>模拟器</th>
+<th>多代理</th>
+<th>通讯</th>
+<th>声呐</th>
+<th>开源</th>
+<th>依赖少</th>
+<th>维护</th>
+<th>简单任务设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HoloOcean</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+<td>√</td>
+</tr>
+<tr>
+<td>UUV 模拟器</td>
+<td>√</td>
+<td>×</td>
+<td>*</td>
+<td>√</td>
+<td>×</td>
+<td>*</td>
+<td>√</td>
+</tr>
+<tr>
+<td>UWSim</td>
+<td>√</td>
+<td>×</td>
+<td>*</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>√</td>
+</tr>
+<tr>
+<td>MarineSim</td>
+<td>√</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>×</td>
+<td>*</td>
+</tr>
+</tbody>
+</table>
+<p>表 I：常见水下模拟器的比较。✓ 表示模拟器具有该功能，∗ 表示该功能实现有限或未知，× 表示没有该功能。还有许多其他常见的机器人模拟器没有列在这里，但大多数都不支持水下机器人。</p>
+<p>UUV 模拟器<sup id="fnref:Manhaes2016"><a class="footnote-ref" href="#fn:Manhaes2016">5</a></sup>是比较成熟的选项之一，它基于流行的开源机器人模拟器 Gazebo<sup id="fnref:N_2004"><a class="footnote-ref" href="#fn:N_2004">6</a></sup>构建。它对静水和流体动力学效应建模准确，支持多智能体，有初步的声纳实现<sup id="fnref:Cerqueira2017"><a class="footnote-ref" href="#fn:Cerqueira2017">7</a></sup>，而且配置起来很方便。不过，它需要安装 ROS，缺少多智能体通信，而且看起来没有在积极维护。</p>
+<h2 id="_4">三、成像声纳</h2>
+<p>成像声纳是一种常见的水下传感器，用于生成环境的图像。这些图像可以用于定位、制图、可视化或各种其他算法。在本节中，我们讲解成像声纳的工作原理，并展示我们生成逼真图像的算法，概述如图 <a href="#fig_3">2</a> 所示。</p>
+<p><img alt="" src="../../img/underwater/paper_3.png" /> <span id='fig_3'></span></p>
+<div class="div" style="text-align: center">
+<i>成像声呐的几何结构。图中显示了单束波以及单个点的仰角 θ、方位角 ϕ 和距离 r。</i></div>
+<div class="div" style="text-align: center">
+<i>当物体被投影到方位-距离平面并相应地分箱后，所有的仰角数据 θ 都会丢失。</i></div>
+<style>
+.div {
+    height: 20px;
+    line-height: 1px;
+}
+</style>
+
+<h3 id="31">3.1 操作</h3>
+<p>&emsp;&emsp;多波束成像声呐传感器使用声波来捕捉周围环境的图像。它会发出声波，当遇到物体时，部分声波会反射回声呐，在那里记录强度，并使用波束形成技术来确定回波的方向。这个强度取决于它遇到的表面法向量以及声波的法向量。这是因为与波束对齐的表面比垂直的表面反射更多的能量。同时还会测量从发射到接收声波的时间，根据这个时间并利用水下声速可以计算出距离 <script type="math/tex">r</script>。</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:HolodeckPCCL">
+<p>Greaves, J. <em>et al.</em> Holodeck: A high fidelity simulator. (2018).&#160;<a class="footnote-backref" href="#fnref:HolodeckPCCL" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:unreal_engine">
+<p>Games, E. Unreal engine. (2019).&#160;<a class="footnote-backref" href="#fnref:unreal_engine" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:Cook2014">
+<p>Cook, D., Vardy, A. &amp; Lewis, R. A survey of AUV and robot simulators for multi-vehicle operations. <em>2014 Ieee/oes Autonomous Underwater Vehicles (auv)</em> (2014).&#160;<a class="footnote-backref" href="#fnref:Cook2014" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:Quigley2009">
+<p>Quigley, M. ROS: An open-source robot operating system. in (2009).&#160;<a class="footnote-backref" href="#fnref:Quigley2009" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+<li id="fn:Manhaes2016">
+<p>Manhaes, M. M. M., Scherer, S. A., Voss, M., Douat, L. R. &amp; Rauschenbach, T. UUV simulator: A gazebo-based package for underwater intervention and multi-robot simulation. <em>Oceans 2016 Mts/ieee Monterey</em> (2016).&#160;<a class="footnote-backref" href="#fnref:Manhaes2016" title="Jump back to footnote 5 in the text">&#8617;</a></p>
+</li>
+<li id="fn:N_2004">
+<p>N., K. &amp; A., H. Design and use paradigms for gazebo, an open-source multi-robot simulator. <em>IROS 2004) Proceedings 2004 IEEE/RSJ International Conference</em> <strong>3</strong>, 2149--2154vol.3 (2004).&#160;<a class="footnote-backref" href="#fnref:N_2004" title="Jump back to footnote 6 in the text">&#8617;</a></p>
+</li>
+<li id="fn:Cerqueira2017">
+<p>Cerqueira, R. <em>et al.</em> A novel GPU-based sonar simulator for real-time applications. <em>Computers &amp; Graphics-uk</em> <strong>68</strong>, 66--76 (2017).&#160;<a class="footnote-backref" href="#fnref:Cerqueira2017" title="Jump back to footnote 7 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
