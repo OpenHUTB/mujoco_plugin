@@ -49,9 +49,9 @@ dvl = state["DVLSensor"]
 
 * [自定义场景配置](./example/custom_scenarios.md)
 
-* [多智能体示例](./example/multi_agent.md)
+* [多代理示例](./example/multi_agent.md)
 
-* [多智能体通信](./example/multi_coms.md)
+* [多代理通信](./example/multi_coms.md)
 
 * [PD 控制器](./example/pd_controllers.md)
 

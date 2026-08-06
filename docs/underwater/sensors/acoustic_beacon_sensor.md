@@ -1,6 +1,6 @@
 # 声学信标
 
-用于水下智能体间通信的声学调制解调器。
+用于水下代理间通信的声学调制解调器。
 
 命令 [holoocean.environments.HoloOceanEnvironment.send_acoustic_message()](https://openhutb.github.io/doc/python_api/#send_acoustic_message) 用于在声学信标之间发送消息。可以发送多种消息类型，每种消息类型的功能各不相同。详情请参阅 [holoocean.sensors.AcousticBeaconSensor](https://openhutb.github.io/doc/python_api/#holoocean.sensors.AcousticBeaconSensor)。
 

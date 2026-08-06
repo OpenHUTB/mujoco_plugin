@@ -31,7 +31,7 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 
 * 高度且易于配置的传感器与任务
 
-* 多智能体任务，包括光学与声学通信
+* 多代理任务，包括光学与声学通信
 
 * 新型声纳仿真框架，用于模拟成像、剖面、侧扫和回声探测器声纳
 
@@ -48,4 +48,11 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 
 ## 参考
 
-
+* [holoocean-v1.0.0](https://byu-holoocean.github.io/holoocean-docs/v1.0.0)
+* [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html)
+* [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - [develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)（从 UnrealEngine fork）
+* [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)
+* [HoloOcean 的 bitbucket 仓库列表](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
+* [HoloOcean 论文](https://www.cs.cmu.edu/~kaess/pub/Potokar22icra.pdf)
+* [构建后缺少 UnrealBuildTool.exe](https://forums.unrealengine.com/t/missing-unrealbuildtool-exe-after-build/2674046/2)
+* [UE Asset Downgrader 高版本转低版本-哔哩哔哩](https://b23.tv/EukLZB6)
