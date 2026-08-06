@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>多智能体通信 - Mujoco 插件</title>
+    <title>多代理通信 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,7 +13,7 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u591a\u667a\u80fd\u4f53\u901a\u4fe1";
+        var mkdocs_page_name = "\u591a\u4ee3\u7406\u901a\u4fe1";
         var mkdocs_page_input_path = "underwater/example/multi_coms.md";
         var mkdocs_page_url = null;
       </script>
@@ -130,7 +130,7 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">多智能体通信</li>
+      <li class="breadcrumb-item active">多代理通信</li>
     <li class="wy-breadcrumbs-aside">
           <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/multi_coms.md"> 编辑页面</a>
     </li>
@@ -140,8 +140,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="_1">多智能体通信</h1>
-<p>智能体之间往往需要进行通信。这可以通过<strong>声学信标传感器</strong> AcousticBeaconSensor（通过声学信号进行通信的虚拟水声调制解调器；信标即信号标记点，也就是信号源）或<strong>光调制解调器传感器</strong> OpticalModemSensor（距离短、带宽大）来实现。以下是相关示例：</p>
+                <h1 id="_1">多代理通信</h1>
+<p>多代理之间往往需要进行通信。这可以通过<strong>声学信标传感器</strong> AcousticBeaconSensor（通过声学信号进行通信的虚拟声学调制解调器；信标即信号标记点，也就是信号源）或<strong>光调制解调器传感器</strong> OpticalModemSensor（距离短、带宽大）来实现。以下是相关示例：</p>
 <h2 id="_2">发送声学消息</h2>
 <p><a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.send_acoustic_message">holoocean.environments.HoloOceanEnvironment.send_acoustic_message()</a> 命令用于在声学信标之间发送消息。系统支持发送多种类型的消息，且各自具有不同的功能；具体详情请参阅 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.AcousticBeaconSensor">holoocean.sensors.AcousticBeaconSensor</a>。</p>
 <p>此外，如有需要，还可以使用以下辅助函数：</p>
