@@ -6,15 +6,15 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 * __[入门与示例](./getting_started.md)__  
 * __[使用 HoloOcean](./usage/usage.md)__
 * __[HoloOcean 软件包](./packages/packages.md)__
-* __[传感器](./sensors/sensors.md)__
 * __[代理](./agents/agents.md)__
+* __[传感器](./sensors/sensors.md)__
+* __[环境外观](./env_appearance/env_appearance.md)__
 * __[开发指南](./develop/develop.md)__
 * __[PythonAPI 参考](https://openhutb.github.io/doc/python_api/#water)__
 
 ---
 
 * __[ROS2 桥接器](./develop/ros2.md)__
-* __[环境外观](./env_appearance/env_appearance.md)__
 
 ---
 * __[环境搭建](./HoloOcean.md)__  
@@ -79,7 +79,7 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 ## 参考
 
 * [holoocean-v1.0.0](https://byu-holoocean.github.io/holoocean-docs/v1.0.0)
-* [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html)
+* [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html) - [develop 分支文档](https://byu-holoocean.github.io/holoocean-docs/develop/index.html)
 * [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - [develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)（从 UnrealEngine fork）
 * [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)
 * [HoloOcean 的 bitbucket 仓库列表](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)

@@ -38,7 +38,7 @@ HoloOcean 提供了多种代理，每种代理都具备不同的能力。HoloOce
 
 关于如何在 HoloOcean 中使用代理的文档：
 
-* [智能体配置](./agent_config.md)
+* [代理配置](./agent_config.md)
 
 * [洋流控制器](./currents.md)
 

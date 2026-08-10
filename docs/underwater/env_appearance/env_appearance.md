@@ -15,3 +15,5 @@ HoloOcean 提供多种命令来修改世界的外观。这包括控制潮汐、�
 * [天气控制器](./weather.md)
 
 * [雾气命令](./air_fog.md)
+
+* [FFT 水波控制器](./waves.md)
