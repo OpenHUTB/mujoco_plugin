@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>手电筒 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u624b\u7535\u7b52";
+        var mkdocs_page_input_path = "underwater/agents/flashlight.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">手电筒</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/agents/flashlight.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">手电筒</h1>
+<p>HoloOcean 的载具内置一个或多个手电筒，<strong>默认情况下处于关闭状态</strong>。</p>
+<h2 id="_2">位置</h2>
+<p>手电筒的位置和数量因载具而异：</p>
+<ul>
+<li>
+<p>BlueROV2 手电筒</p>
+</li>
+<li>
+<p>悬停式 AUV 手电筒</p>
+</li>
+<li>
+<p>CougUV 手电筒</p>
+</li>
+<li>
+<p>鱼雷式 AUV 手电筒</p>
+</li>
+<li>
+<p>水面舰艇手电筒</p>
+</li>
+</ul>
+<h2 id="_3">命令</h2>
+<p><img alt="" src="../../../img/underwater/flashlights_hov.gif" /></p>
+<p>有两种命令可用于控制手电筒：<code>TurnOnFlashlightCommand</code> 和 <code>TurnOffFlashlightCommand</code>。<code>TurnOnFlashlightCommand</code> 允许您选择性地自定义多个参数，例如：亮度、光束宽度、位置、旋转和颜色。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>手电筒颜色值使用 <strong>0.0 – 1.0</strong> 范围内的归一化 RGB 值，而非标准的 0 – 255 范围。</p>
+</div>
+<p>有关完整的使用详情，请参阅 Python API 文档：</p>
+<ul>
+<li>
+<p><a href="https://byu-holoocean.github.io/holoocean-docs/develop/holoocean/commands.html#holoocean.command.TurnOnFlashlightCommand">TurnOnFlashlightCommand</a></p>
+</li>
+<li>
+<p><a href="https://byu-holoocean.github.io/holoocean-docs/develop/holoocean/commands.html#holoocean.command.TurnOffFlashlightCommand">TurnOffFlashlightCommand</a></p>
+</li>
+</ul>
+<h2 id="hoveringauvbluerov2">使用示例（适用于 HoveringAUV/BlueROV2）</h2>
+<h3 id="_4">在以下场景中</h3>
+<div class="highlight"><pre><span></span><code><span class="err">co</span><span class="kc">nf</span><span class="err">ig</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;test_flashlight&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">&quot;main_agent&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="err">...</span>
+<span class="w">    </span><span class="nt">&quot;flashlight&quot;</span><span class="p">:[</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;flashlight_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;flashlight1&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;intensity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;beam_width&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">60</span><span class="p">,</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="nt">&quot;flashlight_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;flashlight4&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;intensity&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;color_G&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">            </span><span class="nt">&quot;angle_pitch&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">-30</span><span class="p">,</span>
+<span class="w">        </span><span class="p">},</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="_5">以编程方式</h3>
+<div class="highlight"><pre><span></span><code><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">holoocea</span><span class="kc">n</span><span class="err">.make(</span><span class="s2">&quot;...&quot;</span><span class="err">)</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">e</span><span class="kc">n</span><span class="err">v</span><span class="p">:</span>
+<span class="w">    </span><span class="err">while</span><span class="w"> </span><span class="err">True</span><span class="p">:</span>
+<span class="w">        </span><span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">&#39;o&#39;</span><span class="w"> </span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">pressed_keys</span><span class="p">:</span>
+<span class="w">            </span><span class="err">e</span><span class="kc">n</span><span class="err">v.</span><span class="kc">turn</span><span class="err">_o</span><span class="kc">n</span><span class="err">_</span><span class="kc">flas</span><span class="err">hligh</span><span class="kc">t</span><span class="err">(</span><span class="s2">&quot;flashlight1&quot;</span><span class="err">)</span>
+<span class="w">            </span><span class="err">e</span><span class="kc">n</span><span class="err">v.</span><span class="kc">turn</span><span class="err">_o</span><span class="kc">n</span><span class="err">_</span><span class="kc">flas</span><span class="err">hligh</span><span class="kc">t</span><span class="err">(</span><span class="s2">&quot;flashlight4&quot;</span><span class="p">,</span><span class="w"> </span><span class="err">beam_wid</span><span class="kc">t</span><span class="err">h=</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="err">color_B=</span><span class="mi">0</span><span class="err">)</span><span class="w"> </span><span class="err">#</span><span class="w"> </span><span class="err">打开手电筒</span><span class="w"> </span><span class="mi">4</span><span class="err">，光束宽度为</span><span class="w"> </span><span class="mi">80</span><span class="w"> </span><span class="err">度，并将蓝色分量调至零。</span>
+
+<span class="w">        </span><span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">&#39;p&#39;</span><span class="w"> </span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">pressed_keys</span><span class="p">:</span>
+<span class="w">            </span><span class="err">e</span><span class="kc">n</span><span class="err">v.</span><span class="kc">turn</span><span class="err">_o</span><span class="kc">ff</span><span class="err">_</span><span class="kc">flas</span><span class="err">hligh</span><span class="kc">t</span><span class="err">(</span><span class="s2">&quot;flashlight1&quot;</span><span class="err">)</span>
+<span class="w">            </span><span class="err">e</span><span class="kc">n</span><span class="err">v.</span><span class="kc">turn</span><span class="err">_o</span><span class="kc">ff</span><span class="err">_</span><span class="kc">flas</span><span class="err">hligh</span><span class="kc">t</span><span class="err">(</span><span class="s2">&quot;flashlight4&quot;</span><span class="err">)</span>
+
+<span class="w">        </span><span class="err">e</span><span class="kc">n</span><span class="err">v.</span><span class="kc">t</span><span class="err">ick()</span>
+</code></pre></div>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>调用 <code>turn_on_flashlight("flashlight_number")</code> 函数时，如果未指定其他参数，系统会首先查找场景配置中定义的值。如果手电筒已在场景配置中配置，则这些值将成为其默认值。只有当未找到任何配置值时，该命令才会回退到其内置的默认参数。</p>
+</div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

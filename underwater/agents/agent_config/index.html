@@ -141,9 +141,88 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="_1">代理配置</h1>
-<h2 id="_2">参考</h2>
+<p>HoloOcean 代理在场景字典中以列表形式声明。每个代理都使用列表中的一个新字典进行定义。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>代理数组中的第一个代理是“主代理”。</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="nt">&quot;agents&quot;</span><span class="p">:[</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;agent_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uav0&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;agent_type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{agent types}&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;sensors&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">         </span><span class="s2">&quot;array of sensor objects&quot;</span>
+<span class="w">      </span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;rotation&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mf">1.0</span><span class="p">,</span><span class="w"> </span><span class="mf">2.0</span><span class="p">,</span><span class="w"> </span><span class="mf">3.0</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;location_randomization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;rotation_randomization&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">],</span>
+<span class="w">      </span><span class="nt">&quot;control_scheme&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;{control scheme type}&quot;</span><span class="p">,</span>
+<span class="w">   </span><span class="p">},</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;agent_name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;uav1&quot;</span><span class="p">,</span>
+<span class="w">      </span><span class="err">...</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">]</span>
+</code></pre></div>
+<p>以下是代理字典中各键的说明：</p>
+<h2 id="_2">代理名称</h2>
+<p><code>agent_name</code> 是一个字符串，用于指定代理的名称。此名称用于在与环境交互时识别代理。</p>
+<h2 id="_3">代理类型</h2>
+<p><code>agent_type</code> 是一个字符串，用于指定代理的类型。下表列出了 <code>agent_type</code> 的当前有效参数：</p>
+<table>
+<thead>
+<tr>
+<th>代理类型</th>
+<th>agent_type 中的字符串</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="../hovering_auv_agent/">HoveringAUV</a></td>
+<td><code>HoveringAUV</code></td>
+</tr>
+<tr>
+<td><a href="../surface_vessel_agent/">SurfaceVessel</a></td>
+<td><code>SurfaceVessel</code></td>
+</tr>
+<tr>
+<td><a href="../torpedo_auv_agent/">TorpedoAUV</a></td>
+<td><code>TorpedoAUV</code></td>
+</tr>
+<tr>
+<td><a href="../coug_uv_agent/">CougUV</a></td>
+<td><code>CougUV</code></td>
+</tr>
+<tr>
+<td><a href="../blue_rov_agent/">BlueROV2</a></td>
+<td><code>BlueROV2</code></td>
+</tr>
+<tr>
+<td><a href="./sphere_agent.md">SphereAgent</a></td>
+<td><code>SphereAgent</code></td>
+</tr>
+<tr>
+<td><a href="../turtle_agent/">TurtleAgent</a></td>
+<td><code>TurtleAgent</code></td>
+</tr>
+<tr>
+<td><a href="../fixed_wing_agent/">FixedWing</a></td>
+<td><code>FixedWing</code></td>
+</tr>
+<tr>
+<td><a href="../uav_agent/">UAV</a></td>
+<td><code>UAV</code></td>
+</tr>
+<tr>
+<td><a href="../husky_agent/">哈士奇载具</a></td>
+<td><code>HuskyVehicle</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">参考</h2>
 <ul>
-<li><a href="https://byu-holoocean.github.io/holoocean-docs/v2.3.0/agents/docs/agent-config.html">Agent Configuration</a></li>
+<li><a href="https://byu-holoocean.github.io/holoocean-docs/develop/agents/docs/agent-config.html">Agent Configuration</a></li>
 </ul>
               
             </div>
