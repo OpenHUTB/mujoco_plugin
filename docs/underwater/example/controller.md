@@ -1,4 +1,4 @@
-# 手动控制 [controller.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/controller.py)
+# 手动控制代理 [controller.py](https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/controller.py)
 
 我们发现 pynput 是一个很好的库，用于向代理发送键盘命令以进行手动控制。
 
