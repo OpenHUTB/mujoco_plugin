@@ -46,20 +46,42 @@ HoloOcean 提供了多种代理，每种代理都具备不同的能力。HoloOce
 
 * [基于 Fossen 模型的动力学](./fossen_based_dynamics.md)
 
-* 手电筒
+* [手电筒](./flashlight.md)
 
 ## 代理
 
-* 悬停式自主水下航行器 ([HoveringAUV](hovering_auv_agent.md))
+HoloOcean 中特定代理的文档。请注意，测试代理不应用重力效果。
 
-* 水面航行器 ([SurfaceVessel](./surface_vessel_agent.md))
+### 水下代理
+
+* 悬停式自主水下航行器 ([HoveringAUV](hovering_auv_agent.md))
 
 * 鱼雷型自主水下航行器 ([TorpedoAUV](./torpedo_auv_agent.md))
 
 * [BlueRov2](./blue_rov_agent.md)
 
+* [CougUV](./coug_uv_agent.md)
+
+
+### 水面代理
+
+* 水面航行器 ([SurfaceVessel](./surface_vessel_agent.md))
+
+
+### 测试代理
+
 * 海龟代理 ([TurtleAgent](./turtle_agent.md))
 
 * 球形代理 ([SphereAgent](./sphere_agent.md))
 
+
+### 空域代理
+
 * 无人机代理 ([UAVAgent](./uav_agent.md))
+
+
+### 地面代理
+
+
+* [哈士奇载具](./husky_agent.md)
+
