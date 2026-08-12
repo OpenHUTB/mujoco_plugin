@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>手动控制代理  - Mujoco 插件</title>
+    <title>洋流 - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "\u624b\u52a8\u63a7\u5236\u4ee3\u7406 ";
-        var mkdocs_page_input_path = "underwater/example/controller.md";
+        var mkdocs_page_name = "\u6d0b\u6d41";
+        var mkdocs_page_input_path = "underwater/example/ocean_currents.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">手动控制代理 </li>
+      <li class="breadcrumb-item active">洋流</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/controller.md"> 编辑页面</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/ocean_currents.md"> 编辑页面</a>
     </li>
   </ul>
   <hr/>
@@ -140,47 +140,59 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="controllerpy">手动控制代理 <a href="https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/controller.py">controller.py</a></h1>
-<p>我们发现 pynput 是一个很好的库，用于向代理发送键盘命令以进行手动控制。</p>
-<p>这是一个使用以下键盘快捷键控制 <a href="https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/agents/hovering-auv-agent.html#hovering-auv-agent">HovingAUV</a> 的示例。</p>
-<p><img alt="" src="../../../img/underwater/controller.jpg" /></p>
-<table>
-<thead>
-<tr>
-<th>键</th>
-<th>前进键</th>
-<th>后退键</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>上/下</td>
-<td><code>i</code></td>
-<td><code>k</code></td>
-</tr>
-<tr>
-<td>左/右偏航</td>
-<td><code>j</code></td>
-<td><code>l</code></td>
-</tr>
-<tr>
-<td>前进/后退</td>
-<td><code>w</code></td>
-<td><code>s</code></td>
-</tr>
-<tr>
-<td>左/右扫</td>
-<td><code>w</code></td>
-<td><code>s</code></td>
-</tr>
-</tbody>
-</table>
+                <h1 id="_1">洋流</h1>
+<p>本示例演示了如何在 HoloOcean 模拟中实现洋流。洋流由一个函数定义，该函数接收水下航行器的位置并返回该位置的洋流速度。在本示例中，我们定义了一个涡流场来模拟旋转的水流。该洋流场应用于仿真中的两个水下航行器，用户可以通过键盘输入控制其中一个航行器。</p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pynput</span> <span class="kn">import</span> <span class="n">keyboard</span>
 
+<span class="n">scenario</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_currents&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="s2">&quot;SimpleUnderwater&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ocean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;main_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ticks_per_sec&quot;</span><span class="p">:</span> <span class="mi">30</span><span class="p">,</span>
+    <span class="s2">&quot;frames_per_sec&quot;</span><span class="p">:</span> <span class="mi">90</span><span class="p">,</span>
+    <span class="s2">&quot;current&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s2">&quot;vehicle_debugging&quot;</span><span class="p">:</span> <span class="kc">True</span>
+    <span class="p">},</span>
+    <span class="s2">&quot;ticks_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;Sigma&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">]</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;auv1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                <span class="p">{</span>
+                    <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+                        <span class="s2">&quot;Sigma&quot;</span><span class="p">:</span> <span class="mi">0</span>
+                    <span class="p">}</span>
+                <span class="p">}</span>
+            <span class="p">],</span>
+            <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">]</span>
+        <span class="p">}</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+
 <span class="n">pressed_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
-<span class="n">force</span> <span class="o">=</span> <span class="mi">25</span>
+<span class="n">force</span> <span class="o">=</span> <span class="mi">10</span>
 
 <span class="k">def</span> <span class="nf">on_press</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
     <span class="k">global</span> <span class="n">pressed_keys</span>
@@ -205,11 +217,11 @@
     <span class="k">if</span> <span class="s1">&#39;k&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">-=</span> <span class="n">val</span>
     <span class="k">if</span> <span class="s1">&#39;j&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">val</span>
-        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">-=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">+=</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">-=</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">val</span>
     <span class="k">if</span> <span class="s1">&#39;l&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
-        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">-=</span> <span class="n">val</span>
-        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">-=</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">+=</span> <span class="mf">.25</span> <span class="o">*</span> <span class="n">val</span>
 
     <span class="k">if</span> <span class="s1">&#39;w&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
         <span class="n">command</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+=</span> <span class="n">val</span>
@@ -224,15 +236,35 @@
 
     <span class="k">return</span> <span class="n">command</span>
 
-<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Dam-Hovering&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
-    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
-        <span class="k">if</span> <span class="s1">&#39;q&#39;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
-            <span class="k">break</span>
-        <span class="n">command</span> <span class="o">=</span> <span class="n">parse_keys</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
+<span class="k">def</span> <span class="nf">vortex_field</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="k">if</span> <span class="n">z</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="n">strength</span> <span class="o">=</span> <span class="mf">5.0</span>
+    <span class="n">r_squared</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="mf">1e-5</span>  <span class="c1"># 避免除以零</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="o">-</span><span class="n">y</span> <span class="o">/</span> <span class="n">r_squared</span> <span class="o">*</span> <span class="n">strength</span>
+    <span class="n">dy</span> <span class="o">=</span> <span class="n">x</span> <span class="o">/</span> <span class="n">r_squared</span> <span class="o">*</span> <span class="n">strength</span>
+    <span class="n">dz</span> <span class="o">=</span> <span class="mf">0.2</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">0.1</span> <span class="o">*</span> <span class="n">r_squared</span><span class="p">)</span>
+    <span class="k">return</span> <span class="p">[</span><span class="mi">3</span><span class="o">*</span><span class="n">dx</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">dy</span><span class="p">,</span> <span class="mi">3</span><span class="o">*</span><span class="n">dz</span><span class="p">]</span>
 
-        <span class="c1"># 发送到 holoocean</span>
+<span class="n">vehicles</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;auv0&#39;</span><span class="p">,</span> <span class="s1">&#39;auv1&#39;</span><span class="p">]</span>
+<span class="n">map_dimensions</span> <span class="o">=</span> <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">100</span><span class="p">,</span> <span class="mi">35</span><span class="p">]</span>
+
+<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">scenario_cfg</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">start_world</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+    <span class="n">clock</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">clock</span> <span class="o">+=</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="n">clock</span> <span class="o">==</span> <span class="mi">2000</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">draw_debug_vector_field</span><span class="p">(</span><span class="n">vortex_field</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">vector_field_dimensions</span><span class="o">=</span><span class="n">map_dimensions</span><span class="p">,</span> <span class="n">arrow_thickness</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">arrow_size</span><span class="o">=</span><span class="mf">.25</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">tick_info</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">parse_keys</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
         <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
-        <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+
+        <span class="c1"># Apply currents</span>
+        <span class="k">for</span> <span class="n">vehicle</span> <span class="ow">in</span> <span class="n">vehicles</span><span class="p">:</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">tick_info</span><span class="p">[</span><span class="n">vehicle</span><span class="p">][</span><span class="s1">&#39;LocationSensor&#39;</span><span class="p">]</span>
+            <span class="n">current_velocity</span> <span class="o">=</span> <span class="n">vortex_field</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">set_ocean_currents</span><span class="p">(</span><span class="n">vehicle</span><span class="p">,</span> <span class="n">current_velocity</span><span class="p">)</span>
 </code></pre></div>
               
             </div>

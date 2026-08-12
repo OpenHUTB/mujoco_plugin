@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>获取对象边界框 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u83b7\u53d6\u5bf9\u8c61\u8fb9\u754c\u6846";
+        var mkdocs_page_input_path = "underwater/example/retrieve_bounding_boxes.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">获取对象边界框</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/retrieve_bounding_boxes.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">获取对象边界框</h1>
+<p>本示例演示如何根据对象的语义标签获取其边界框。由于需要在虚幻编辑器中运行 Python 脚本，因此此方法仅适用于自定义关卡。</p>
+<p>首先，您需要配置虚幻编辑器以使用 Python。请参阅虚幻的 <a href="https://openhutb.github.io/engine_doc/zh-CN/ProductionPipelines/ScriptingAndAutomation/Python/index.html">Python 配置指南</a>。</p>
+<p>确保您的自定义关卡已设置语义标签。请参阅<a href="../../sensors/custom_semantics/">添加自定义语义标签</a>部分。然后，您可以使用语义标签更新 <code>map_label2id</code>。</p>
+<div class="highlight"><pre><span></span><code><span class="err">impor</span><span class="kc">t</span><span class="w"> </span><span class="err">os</span>
+<span class="err">impor</span><span class="kc">t</span><span class="w"> </span><span class="err">csv</span>
+<span class="err">impor</span><span class="kc">t</span><span class="w"> </span><span class="err">u</span><span class="kc">nreal</span>
+
+<span class="err">de</span><span class="kc">f</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span><span class="err">_id(label)</span><span class="p">:</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">请在</span><span class="w"> </span><span class="err">map_label</span><span class="mi">2</span><span class="err">id</span><span class="w"> </span><span class="err">中填写您世界地图的标签及其对应的数字</span>
+<span class="w">    </span><span class="err">map_label</span><span class="mi">2</span><span class="err">id</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">&quot;None&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w">             </span><span class="err">#</span><span class="w"> </span><span class="err">No</span><span class="kc">ne</span><span class="w">         </span><span class="err">=</span><span class="w"> </span><span class="mi">0</span><span class="err">u</span>
+<span class="w">        </span><span class="nt">&quot;Asphalt&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w">          </span><span class="err">#</span><span class="w"> </span><span class="err">Asphal</span><span class="kc">t</span><span class="w">      </span><span class="err">=</span><span class="w"> </span><span class="mi">1</span><span class="err">u</span>
+<span class="w">        </span><span class="nt">&quot;Bench&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w">            </span><span class="err">#</span><span class="w"> </span><span class="err">Be</span><span class="kc">n</span><span class="err">ch</span><span class="w">        </span><span class="err">=</span><span class="w"> </span><span class="mi">2</span><span class="err">u</span>
+<span class="w">        </span><span class="err">...</span><span class="w">                    </span><span class="err">#</span><span class="w"> </span><span class="err">在此处添加更多标签</span>
+<span class="w">        </span><span class="nt">&quot;Any&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">255</span><span class="w">             </span><span class="err">#</span><span class="w"> </span><span class="err">A</span><span class="kc">n</span><span class="err">y</span><span class="w">          </span><span class="err">=</span><span class="w"> </span><span class="mi">0</span><span class="err">xFF</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="err">re</span><span class="kc">turn</span><span class="w"> </span><span class="err">map_label</span><span class="mi">2</span><span class="err">id.ge</span><span class="kc">t</span><span class="err">(label</span><span class="p">,</span><span class="w"> </span><span class="mi">-1</span><span class="err">)</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">如果未找到标签，则返回</span><span class="w"> </span><span class="mi">-1</span>
+
+<span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">__</span><span class="kc">na</span><span class="err">me__</span><span class="w"> </span><span class="err">==</span><span class="w"> </span><span class="err">&#39;__mai</span><span class="kc">n</span><span class="err">__&#39;</span><span class="p">:</span>
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">获取编辑器参与者子系统</span>
+<span class="w">    </span><span class="err">ac</span><span class="kc">t</span><span class="err">or_subsys</span><span class="kc">te</span><span class="err">m</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">u</span><span class="kc">nreal</span><span class="err">.ge</span><span class="kc">t</span><span class="err">_edi</span><span class="kc">t</span><span class="err">or_subsys</span><span class="kc">te</span><span class="err">m(u</span><span class="kc">nreal</span><span class="err">.Edi</span><span class="kc">t</span><span class="err">orAc</span><span class="kc">t</span><span class="err">orSubsys</span><span class="kc">te</span><span class="err">m)</span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">获取当前关卡中的所有参与者</span>
+<span class="w">    </span><span class="err">ac</span><span class="kc">t</span><span class="err">ors</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">or_subsys</span><span class="kc">te</span><span class="err">m.ge</span><span class="kc">t</span><span class="err">_all_level_ac</span><span class="kc">t</span><span class="err">ors()</span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">调整保存</span><span class="w"> </span><span class="err">CSV</span><span class="w"> </span><span class="err">文件的路径</span>
+<span class="w">    </span><span class="err">csv_pa</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">os.pa</span><span class="kc">t</span><span class="err">h.expa</span><span class="kc">n</span><span class="err">duser(</span><span class="s2">&quot;/path/to/file.csv&quot;</span><span class="err">)</span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">如果您想要朝向边界框（能紧贴着物体旋转）而不是轴对齐边界框（必须平行于世界坐标系的坐标轴），请将值设置为</span><span class="w"> </span><span class="err">False</span>
+<span class="w">    </span><span class="err">ge</span><span class="kc">t</span><span class="err">AxisAlig</span><span class="kc">ne</span><span class="err">d</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">True</span>
+
+<span class="w">    </span><span class="err">#</span><span class="w"> </span><span class="err">打开</span><span class="w"> </span><span class="err">CSV</span><span class="w"> </span><span class="err">文件进行写入</span>
+<span class="w">    </span><span class="err">wi</span><span class="kc">t</span><span class="err">h</span><span class="w"> </span><span class="err">ope</span><span class="kc">n</span><span class="err">(csv_pa</span><span class="kc">t</span><span class="err">h</span><span class="p">,</span><span class="w"> </span><span class="err">mode=</span><span class="s2">&quot;w&quot;</span><span class="p">,</span><span class="w"> </span><span class="kc">ne</span><span class="err">wli</span><span class="kc">ne</span><span class="err">=</span><span class="s2">&quot;&quot;</span><span class="err">)</span><span class="w"> </span><span class="err">as</span><span class="w"> </span><span class="err">csv</span><span class="kc">f</span><span class="err">ile</span><span class="p">:</span>
+<span class="w">        </span><span class="err">wri</span><span class="kc">ter</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">csv.wri</span><span class="kc">ter</span><span class="err">(csv</span><span class="kc">f</span><span class="err">ile)</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="err">写入头</span>
+<span class="w">        </span><span class="err">#</span><span class="w"> </span><span class="err">wri</span><span class="kc">ter</span><span class="err">.wri</span><span class="kc">ter</span><span class="err">ow(</span><span class="p">[</span><span class="s2">&quot;UniqueID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ClassName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ClassID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OriginX&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OriginY&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OriginZ&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ExtentX&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ExtentY&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ExtentZ&quot;</span><span class="p">]</span><span class="err">)</span>
+<span class="w">        </span><span class="err">wri</span><span class="kc">ter</span><span class="err">.wri</span><span class="kc">ter</span><span class="err">ow(</span><span class="p">[</span>
+<span class="w">            </span><span class="s2">&quot;UniqueID&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ClassName&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ClassID&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;OriginX&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OriginY&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;OriginZ&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;ExtentX&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ExtentY&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;ExtentZ&quot;</span><span class="p">,</span>
+<span class="w">            </span><span class="s2">&quot;RotRoll_deg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;RotPitch_deg&quot;</span><span class="p">,</span><span class="w"> </span><span class="s2">&quot;RotYaw_deg&quot;</span>
+<span class="w">        </span><span class="p">]</span><span class="err">)</span>
+<span class="w">        </span><span class="err">u</span><span class="kc">n</span><span class="err">ique_id_cou</span><span class="kc">nter</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="mi">0</span>
+<span class="w">        </span><span class="kc">f</span><span class="err">or</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">or</span><span class="w"> </span><span class="err">i</span><span class="kc">n</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">ors</span><span class="p">:</span>
+<span class="w">            </span><span class="err">class_</span><span class="kc">na</span><span class="err">me</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">s</span><span class="kc">tr</span><span class="err">(ac</span><span class="kc">t</span><span class="err">or.ge</span><span class="kc">t</span><span class="err">_</span><span class="kc">f</span><span class="err">older_pa</span><span class="kc">t</span><span class="err">h())</span>
+<span class="w">            </span><span class="err">class_id</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span><span class="err">_id(class_</span><span class="kc">na</span><span class="err">me)</span>
+
+<span class="w">            </span><span class="err">i</span><span class="kc">f</span><span class="w"> </span><span class="err">ge</span><span class="kc">t</span><span class="err">AxisAlig</span><span class="kc">ne</span><span class="err">d</span><span class="p">:</span>
+<span class="w">                </span><span class="err">################################################</span>
+<span class="w">                </span><span class="err">##</span><span class="w"> </span><span class="err">选项</span><span class="w"> </span><span class="mi">1</span><span class="err">：返回轴对齐的边界框</span><span class="w">                   </span><span class="err">##</span>
+<span class="w">                </span><span class="err">################################################</span>
+<span class="w">                </span><span class="err">origi</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">or.ge</span><span class="kc">t</span><span class="err">_ac</span><span class="kc">t</span><span class="err">or_bou</span><span class="kc">n</span><span class="err">ds(False)</span>
+<span class="w">                </span><span class="err">wri</span><span class="kc">ter</span><span class="err">.wri</span><span class="kc">ter</span><span class="err">ow(</span><span class="p">[</span>
+<span class="w">                    </span><span class="err">u</span><span class="kc">n</span><span class="err">ique_id_cou</span><span class="kc">nter</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">class_</span><span class="kc">na</span><span class="err">me</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">class_id</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">origi</span><span class="kc">n</span><span class="err">.x</span><span class="p">,</span><span class="w"> </span><span class="err">origi</span><span class="kc">n</span><span class="err">.y</span><span class="p">,</span><span class="w"> </span><span class="err">origi</span><span class="kc">n</span><span class="err">.z</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.x</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.y</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.z</span>
+<span class="w">                </span><span class="p">]</span><span class="err">)</span>
+<span class="w">            </span><span class="err">else</span><span class="p">:</span>
+<span class="w">                </span><span class="err">############################################</span>
+<span class="w">                </span><span class="err">##</span><span class="w"> </span><span class="err">选项</span><span class="w"> </span><span class="mi">2</span><span class="err">：返回朝向边界框</span><span class="w">                   </span><span class="err">##</span>
+<span class="w">                </span><span class="err">############################################</span>
+<span class="w">                </span><span class="err">origi</span><span class="kc">n</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">or.ge</span><span class="kc">t</span><span class="err">_ac</span><span class="kc">t</span><span class="err">or_bou</span><span class="kc">n</span><span class="err">ds(False)</span>
+<span class="w">                </span><span class="err">ro</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="w"> </span><span class="err">=</span><span class="w"> </span><span class="err">ac</span><span class="kc">t</span><span class="err">or.ge</span><span class="kc">t</span><span class="err">_ac</span><span class="kc">t</span><span class="err">or_ro</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="err">()</span><span class="w">  </span><span class="err">#</span><span class="w"> </span><span class="err">返回虚幻引擎旋转器：俯仰角、偏航角、横滚角</span>
+<span class="w">                </span><span class="err">wri</span><span class="kc">ter</span><span class="err">.wri</span><span class="kc">ter</span><span class="err">ow(</span><span class="p">[</span>
+<span class="w">                    </span><span class="err">u</span><span class="kc">n</span><span class="err">ique_id_cou</span><span class="kc">nter</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">class_</span><span class="kc">na</span><span class="err">me</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">class_id</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">origi</span><span class="kc">n</span><span class="err">.x</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">-</span><span class="err">origi</span><span class="kc">n</span><span class="err">.y</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="err">origi</span><span class="kc">n</span><span class="err">.z</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.x</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.y</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="err">ex</span><span class="kc">tent</span><span class="err">.z</span><span class="w"> </span><span class="err">/</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">                    </span><span class="err">ro</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="err">.roll</span><span class="p">,</span><span class="w"> </span><span class="err">ro</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="err">.pi</span><span class="kc">t</span><span class="err">ch</span><span class="p">,</span><span class="w"> </span><span class="err">ro</span><span class="kc">tat</span><span class="err">io</span><span class="kc">n</span><span class="err">.yaw</span><span class="p">,</span>
+<span class="w">                </span><span class="p">]</span><span class="err">)</span>
+
+
+<span class="w">            </span><span class="err">u</span><span class="kc">n</span><span class="err">ique_id_cou</span><span class="kc">nter</span><span class="w"> </span><span class="err">+=</span><span class="w"> </span><span class="mi">1</span>
+
+
+<span class="w">    </span><span class="err">pri</span><span class="kc">nt</span><span class="err">(</span><span class="kc">f</span><span class="s2">&quot;Saved actor bounds to {csv_path}&quot;</span><span class="err">)</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
