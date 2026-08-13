@@ -22,10 +22,16 @@
 
 * [获取对象边界框](./retrieve_bounding_boxes.md)
 
+* [生物量、盐度、温度采样](./sampling_bst.md)
+
 * [可视化成像声纳](./sonar_imaging.md)
 
 * [可视化声纳数据剖面](./sonar_profiling.md)
 
 * [侧扫声纳可视化](./sonar_sidescan.md)
+
+* [单波束声纳的可视化](./sonar_singlebeam.md)
+
+* [交互式波浪](./waves_interactive.md)
 
 仓库的根目录下还有一个 [examples.py](https://github.com/OpenHUTB/Underwater/blob/master/client/example.py) 文件，其中包含更多示例代码。

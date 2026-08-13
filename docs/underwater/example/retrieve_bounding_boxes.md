@@ -84,3 +84,13 @@ if __name__ == '__main__':
 
     print(f"Saved actor bounds to {csv_path}")
 ```
+
+要运行 Python 脚本，您可以转到“工具”>“执行 Python 脚本”。
+
+![](../../img/underwater/how_to_run_python_script.png)
+
+以下是我们商务园区关卡边界框的示例。
+
+
+
+![](../../img/underwater/perspective_bbox_results.png)
