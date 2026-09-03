@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>机器人代理 AndroidAgent - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u673a\u5668\u4eba\u4ee3\u7406 AndroidAgent";
+        var mkdocs_page_input_path = "underwater/agents/android_agent.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">机器人代理 AndroidAgent</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/agents/android_agent.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="androidagent">机器人代理 AndroidAgent</h1>
+<h2 id="_1">外观</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: center;">前视图</th>
+<th style="text-align: center;">侧视图</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align: center;"><img alt="" src="../../../img/underwater/android-front.png" /></td>
+<td style="text-align: center;"><img alt="" src="../../../img/underwater/android-side.png" /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_2">描述</h2>
+<p>一种可通过施加在其关节上的扭矩来控制的机器人代理。更多详情请参阅机器人代理（<a href="https://holodeck.readthedocs.io/en/latest/holodeck/agents.html#holodeck.agents.AndroidAgent">AndroidAgent</a>）。</p>
+<h2 id="_3">控制方案</h2>
+<ul>
+<li><strong>机器人直接扭矩（Android Direct Torques）</strong> (<code>0</code>)</li>
+</ul>
+<p>一个 94 维的连续值向量，表示施加在每个关节上的扭矩。有关关节索引的说明，请参阅下文<a href="#android_joints">机器人关节</a>部分。</p>
+<ul>
+<li><strong>机器人最大扭矩（Android Max Scaled Torques）</strong> (<code>1</code>)</li>
+</ul>
+<p>一个 94 维向量，包含介于 -1 和 1 之间的连续值，表示施加在每个关节上的缩放扭矩。有关关节索引的说明，请参阅下文<a href="#android_joints">机器人关节</a>部分。</p>
+<p>1 代表最大正向扭矩，-1 代表最大反向扭矩。</p>
+<h2 id="_4">机器人关节 <span id='android_joints'></span></h2>
+<p>Android 和 <a href="https://holodeck.readthedocs.io/en/latest/holodeck/sensors.html#holodeck.sensors.JointRotationSensor">JointRotationSensor</a> 的控制方案使用一个长度为 94 的向量来表示 48 个关节。</p>
+<p>要了解这些关节，请参考下表，或使用 <a href="https://holodeck.readthedocs.io/en/latest/holodeck/agents.html#holodeck.agents.AndroidAgent.joint_ind">joint_ind()</a> 辅助方法将名称（例如 <code>spine_02</code>）转换为索引（6）。</p>
+<p><strong>注意：</strong> 请注意，此处给出的索引是关节的起始索引，有关每个关节在此索引之后有多少个值，请参阅章节标题。例如：<code>neck_01</code> 的起始索引为 3，其值包括 <code>[swing1, swing2, twist]</code>，因此，长度为 94 的向量中的索引 3 对应于 <code>swing1</code>，索引 4 对应于 <code>swing2</code>，索引 5 对应于 <code>neck_01</code> 的 <code>twist</code>。</p>
+<p>返回顺序如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>头部、脊柱和手臂关节</strong></th>
+<th>每个关节都有 <code>[swing1, swing2, twist]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>头 <code>head</code></td>
+</tr>
+<tr>
+<td><code>3</code></td>
+<td>脖子 <code>neck_01</code></td>
+</tr>
+<tr>
+<td><code>6</code></td>
+<td>脊柱<code>spine_02</code></td>
+</tr>
+<tr>
+<td><code>9</code></td>
+<td>脊柱<code>spine_01</code></td>
+</tr>
+<tr>
+<td><code>12</code></td>
+<td>左上臂膀<code>upperarm_l</code></td>
+</tr>
+<tr>
+<td><code>15</code></td>
+<td>左前臂 <code>lowerarm_l</code></td>
+</tr>
+<tr>
+<td><code>18</code></td>
+<td>左手 <code>hand_l</code></td>
+</tr>
+<tr>
+<td><code>21</code></td>
+<td>右上臂膀 <code>upperarm_r</code></td>
+</tr>
+<tr>
+<td><code>24</code></td>
+<td>右前臂<code>lowerarm_r</code></td>
+</tr>
+<tr>
+<td><code>27</code></td>
+<td>右手<code>hand_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>腿部关节</strong></th>
+<th>每个关节都有 <code>[swing1, swing2]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>30</code></td>
+<td>左大腿 <code>thigh_l</code></td>
+</tr>
+<tr>
+<td><code>33</code></td>
+<td>左小腿肚（腓肠） <code>calf_l</code></td>
+</tr>
+<tr>
+<td><code>36</code></td>
+<td>左脚<code>foot_l</code></td>
+</tr>
+<tr>
+<td><code>39</code></td>
+<td>左脚趾球 <code>ball_l</code></td>
+</tr>
+<tr>
+<td><code>42</code></td>
+<td>右大腿 <code>thigh_r</code></td>
+</tr>
+<tr>
+<td><code>45</code></td>
+<td>左小腿肚 <code>calf_r</code></td>
+</tr>
+<tr>
+<td><code>48</code></td>
+<td>右脚 <code>foot_r</code></td>
+</tr>
+<tr>
+<td><code>51</code></td>
+<td>右脚趾球<code>ball_r</code></td>
+</tr>
+</tbody>
+</table>
+<p>右手图：
+<img alt="" src="../../../img/underwater/hand_agent.png" /></p>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第一关节</strong></th>
+<th>只有 <code>[swing1, swing2]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>54</code></td>
+<td>左手拇指 <code>thumb_01_l</code></td>
+</tr>
+<tr>
+<td><code>56</code></td>
+<td>左手食指 <code>index_01_l</code></td>
+</tr>
+<tr>
+<td><code>58</code></td>
+<td>左手中指 <code>middle_01_l</code></td>
+</tr>
+<tr>
+<td><code>60</code></td>
+<td>左手无名指 <code>ring_01_l</code></td>
+</tr>
+<tr>
+<td><code>62</code></td>
+<td>左手小拇指 <code>pinky_01_l</code></td>
+</tr>
+<tr>
+<td><code>64</code></td>
+<td>右手拇指 <code>thumb_01_r</code></td>
+</tr>
+<tr>
+<td><code>66</code></td>
+<td>右手食指 <code>index_01_r</code></td>
+</tr>
+<tr>
+<td><code>68</code></td>
+<td>右手中指 <code>middle_01_r</code></td>
+</tr>
+<tr>
+<td><code>70</code></td>
+<td>右手无名指 <code>ring_01_r</code></td>
+</tr>
+<tr>
+<td><code>72</code></td>
+<td>右手小拇指 <code>pinky_01_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第二关节</strong></th>
+<th>只有 <code>[swing1]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>74</code></td>
+<td>左手拇指 <code>thumb_02_l</code></td>
+</tr>
+<tr>
+<td><code>75</code></td>
+<td>左手食指 <code>index_02_l</code></td>
+</tr>
+<tr>
+<td><code>76</code></td>
+<td>左手中指 <code>middle_02_l</code></td>
+</tr>
+<tr>
+<td><code>77</code></td>
+<td>左手无名指 <code>ring_02_l</code></td>
+</tr>
+<tr>
+<td><code>78</code></td>
+<td>左手小拇指 <code>pinky_02_l</code></td>
+</tr>
+<tr>
+<td><code>79</code></td>
+<td>右手拇指 <code>thumb_02_r</code></td>
+</tr>
+<tr>
+<td><code>80</code></td>
+<td>右手食指 <code>index_02_r</code></td>
+</tr>
+<tr>
+<td><code>81</code></td>
+<td>右手中指 <code>middle_02_r</code></td>
+</tr>
+<tr>
+<td><code>82</code></td>
+<td>右手无名指 <code>ring_02_r</code></td>
+</tr>
+<tr>
+<td><code>83</code></td>
+<td>右手小拇指 <code>pinky_02_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第三关节</strong></th>
+<th>只有 <code>[swing1]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>84</code></td>
+<td>左手拇指 <code>thumb_03_l</code></td>
+</tr>
+<tr>
+<td><code>85</code></td>
+<td>左手食指 <code>index_03_l</code></td>
+</tr>
+<tr>
+<td><code>86</code></td>
+<td>左手中指 <code>middle_03_l</code></td>
+</tr>
+<tr>
+<td><code>87</code></td>
+<td>左手无名指 <code>ring_03_l</code></td>
+</tr>
+<tr>
+<td><code>88</code></td>
+<td>左手小拇指 <code>pinky_03_l</code></td>
+</tr>
+<tr>
+<td><code>89</code></td>
+<td>右手拇指 <code>thumb_03_r</code></td>
+</tr>
+<tr>
+<td><code>90</code></td>
+<td>右手食指 <code>index_03_r</code></td>
+</tr>
+<tr>
+<td><code>91</code></td>
+<td>右手中指 <code>middle_03_r</code></td>
+</tr>
+<tr>
+<td><code>92</code></td>
+<td>右手无名指 <code>ring_03_r</code></td>
+</tr>
+<tr>
+<td><code>93</code></td>
+<td>右手小拇指 <code>pinky_03_r</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="androidagent_1">AndroidAgent 骨骼</h2>
+<p><a href="https://holodeck.readthedocs.io/en/latest/holodeck/sensors.html#holodeck.sensors.RelativeSkeletalPositionSensor">RelativeSkeletalPositionSensor</a> 返回一个数组，其中包含下面列出的每根骨骼的四个条目。</p>
+<table>
+<thead>
+<tr>
+<th><strong>索引</strong></th>
+<th>骨骼名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td>骨盆 <code>pelvis</code></td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td>脊柱 <code>spine_01</code></td>
+</tr>
+<tr>
+<td><code>8</code></td>
+<td>脊柱 <code>spine_02</code></td>
+</tr>
+<tr>
+<td><code>12</code></td>
+<td>脊柱 <code>spine_03</code></td>
+</tr>
+<tr>
+<td><code>16</code></td>
+<td>左锁骨 <code>clavicle_l</code></td>
+</tr>
+<tr>
+<td><code>20</code></td>
+<td>左上臂膀 <code>upperarm_l</code></td>
+</tr>
+<tr>
+<td><code>24</code></td>
+<td>左前臂 <code>lowerarm_l</code></td>
+</tr>
+<tr>
+<td><code>28</code></td>
+<td>左手 <code>hand_l</code></td>
+</tr>
+<tr>
+<td><code>32</code></td>
+<td>左手食指 <code>index_01_l</code></td>
+</tr>
+<tr>
+<td><code>36</code></td>
+<td>左手食指 <code>index_02_l</code></td>
+</tr>
+<tr>
+<td><code>40</code></td>
+<td>左手食指 <code>index_03_l</code></td>
+</tr>
+<tr>
+<td><code>44</code></td>
+<td>左手中指 <code>middle_01_l</code></td>
+</tr>
+<tr>
+<td><code>48</code></td>
+<td>左手中指 <code>middle_02_l</code></td>
+</tr>
+<tr>
+<td><code>52</code></td>
+<td>左手中指 <code>middle_03_l</code></td>
+</tr>
+<tr>
+<td><code>56</code></td>
+<td>左手小拇指 <code>pinky_01_l</code></td>
+</tr>
+<tr>
+<td><code>60</code></td>
+<td>左手小拇指 <code>pinky_02_l</code></td>
+</tr>
+<tr>
+<td><code>64</code></td>
+<td>左手小拇指 <code>pinky_03_l</code></td>
+</tr>
+<tr>
+<td><code>68</code></td>
+<td>左手小拇指 <code>ring_01_l</code></td>
+</tr>
+<tr>
+<td><code>72</code></td>
+<td>左手无名指 <code>ring_02_l</code></td>
+</tr>
+<tr>
+<td><code>76</code></td>
+<td>左手无名指 <code>ring_03_l</code></td>
+</tr>
+<tr>
+<td><code>80</code></td>
+<td>左手大拇指 <code>thumb_01_l</code></td>
+</tr>
+<tr>
+<td><code>84</code></td>
+<td>左手大拇指 <code>thumb_02_l</code></td>
+</tr>
+<tr>
+<td><code>88</code></td>
+<td>左手大拇指 <code>thumb_03_l</code></td>
+</tr>
+<tr>
+<td><code>92</code></td>
+<td>左前臂扭转 <code>lowerarm_twist_01_l</code></td>
+</tr>
+<tr>
+<td><code>96</code></td>
+<td>左上臂扭转 <code>upperarm_twist_01_l</code></td>
+</tr>
+<tr>
+<td><code>100</code></td>
+<td>右锁骨 <code>clavicle_r</code></td>
+</tr>
+<tr>
+<td><code>104</code></td>
+<td>右上臂膀 <code>upperarm_l</code></td>
+</tr>
+<tr>
+<td><code>108</code></td>
+<td>右前臂 <code>lowerarm_l</code></td>
+</tr>
+<tr>
+<td><code>112</code></td>
+<td>右手 <code>hand_l</code></td>
+</tr>
+<tr>
+<td><code>116</code></td>
+<td>右手食指 <code>index_01_l</code></td>
+</tr>
+<tr>
+<td><code>120</code></td>
+<td>右手食指 <code>index_02_l</code></td>
+</tr>
+<tr>
+<td><code>124</code></td>
+<td>右手食指 <code>index_03_l</code></td>
+</tr>
+<tr>
+<td><code>128</code></td>
+<td>右手中指 <code>middle_01_l</code></td>
+</tr>
+<tr>
+<td><code>132</code></td>
+<td>右手中指 <code>middle_02_l</code></td>
+</tr>
+<tr>
+<td><code>136</code></td>
+<td>右手中指 <code>middle_03_l</code></td>
+</tr>
+<tr>
+<td><code>140</code></td>
+<td>右手小拇指 <code>pinky_01_l</code></td>
+</tr>
+<tr>
+<td><code>144</code></td>
+<td>右手小拇指 <code>pinky_02_l</code></td>
+</tr>
+<tr>
+<td><code>148</code></td>
+<td>右手小拇指 <code>pinky_03_l</code></td>
+</tr>
+<tr>
+<td><code>152</code></td>
+<td>右手无名指 <code>ring_01_l</code></td>
+</tr>
+<tr>
+<td><code>156</code></td>
+<td>右手无名指 <code>ring_02_r</code></td>
+</tr>
+<tr>
+<td><code>160</code></td>
+<td>右手无名指 <code>ring_03_r</code></td>
+</tr>
+<tr>
+<td><code>164</code></td>
+<td>右手大拇指 <code>thumb_01_r</code></td>
+</tr>
+<tr>
+<td><code>168</code></td>
+<td>右手大拇指 <code>thumb_02_r</code></td>
+</tr>
+<tr>
+<td><code>172</code></td>
+<td>右手大拇指 <code>thumb_03_r</code></td>
+</tr>
+<tr>
+<td><code>176</code></td>
+<td>右前臂扭转 <code>lowerarm_twist_01_r</code></td>
+</tr>
+<tr>
+<td><code>184</code></td>
+<td>脖子 <code>neck_01</code></td>
+</tr>
+<tr>
+<td><code>188</code></td>
+<td>头 <code>head</code></td>
+</tr>
+<tr>
+<td><code>192</code></td>
+<td>右大腿 <code>thigh_l</code></td>
+</tr>
+<tr>
+<td><code>196</code></td>
+<td>左小腿肚（腓肠） <code>calf_l</code></td>
+</tr>
+<tr>
+<td><code>200</code></td>
+<td>左小腿扭转 <code>calf_twist_01_l</code></td>
+</tr>
+<tr>
+<td><code>204</code></td>
+<td>左足 <code>foot_l</code></td>
+</tr>
+<tr>
+<td><code>208</code></td>
+<td>左脚趾球 <code>ball_l</code></td>
+</tr>
+<tr>
+<td><code>212</code></td>
+<td>右大腿扭转 <code>thigh_twist_01_l</code></td>
+</tr>
+<tr>
+<td><code>216</code></td>
+<td>右大腿 <code>thigh_r</code></td>
+</tr>
+<tr>
+<td><code>220</code></td>
+<td>左小腿肚 <code>calf_r</code></td>
+</tr>
+<tr>
+<td><code>224</code></td>
+<td>右小腿扭转 <code>calf_twist_01_r</code></td>
+</tr>
+<tr>
+<td><code>228</code></td>
+<td>右足 <code>foot_r</code></td>
+</tr>
+<tr>
+<td><code>232</code></td>
+<td>右脚趾球 <code>ball_r</code></td>
+</tr>
+<tr>
+<td><code>236</code></td>
+<td>右大腿扭转 <code>thigh_twist_01_r</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_5">插槽</h2>
+<ul>
+<li>
+<p>摄像头插槽（<code>CameraSocket</code>）位于机器人设备面部中央</p>
+</li>
+<li>
+<p>视窗（<code>Viewport</code>）位于设备后方</p>
+</li>
+<li>
+<p>所有关节均可用作插槽。参见<a href="#android_joints">机器人关节</a>。</p>
+</li>
+</ul>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
