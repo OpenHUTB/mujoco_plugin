@@ -5,7 +5,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <link rel="shortcut icon" href="../../../img/favicon.ico" />
-    <title>HoloOcean 代理 - Mujoco 插件</title>
+    <title>HandAgent - Mujoco 插件</title>
     <link rel="stylesheet" href="../../../css/theme.css" />
     <link rel="stylesheet" href="../../../css/theme_extra.css" />
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
@@ -13,8 +13,8 @@
     
       <script>
         // Current page data
-        var mkdocs_page_name = "HoloOcean \u4ee3\u7406";
-        var mkdocs_page_input_path = "underwater/agents/agents.md";
+        var mkdocs_page_name = "HandAgent";
+        var mkdocs_page_input_path = "underwater/agents/hand_agent.md";
         var mkdocs_page_url = null;
       </script>
     
@@ -130,9 +130,9 @@
         <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
   <ul class="wy-breadcrumbs">
     <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
-      <li class="breadcrumb-item active">HoloOcean 代理</li>
+      <li class="breadcrumb-item active">HandAgent</li>
     <li class="wy-breadcrumbs-aside">
-          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/agents/agents.md"> 编辑页面</a>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/agents/hand_agent.md"> 编辑页面</a>
     </li>
   </ul>
   <hr/>
@@ -140,94 +140,221 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
             <div class="section" itemprop="articleBody">
               
-                <h1 id="holoocean">HoloOcean 代理</h1>
-<p>在 HoloOcean 中，代理（Agent）是与环境进行交互的实体，并在场景配置文件中进行定义。代理配备了用于从环境收集数据的传感器。通过调用 <code>env.act()</code> 或 <code>env.step()</code> 传入指令来控制代理，这些指令会由代理的控制方案进行解析。</p>
-<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
-
-<span class="n">scenario</span> <span class="o">=</span> <span class="p">{</span>
-   <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;{Scenario Name}&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="s2">&quot;{world it is associated with}&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="s2">&quot;{package it is associated with}&quot;</span><span class="p">,</span>
-   <span class="s2">&quot;agents&quot;</span><span class="p">:[</span>
-      <span class="p">{</span>
-         <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;uav0&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;{agent types}&quot;</span><span class="p">,</span>
-         <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
-         <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
-         <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
-            <span class="p">{</span> <span class="o">...</span> <span class="p">}</span>
-         <span class="p">]</span>
-   <span class="p">],</span>
-<span class="p">}</span>
-
-<span class="n">env</span> <span class="o">=</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">scenario_cfg</span><span class="o">=</span><span class="n">scenario</span><span class="p">)</span>
-
-<span class="n">command</span> <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">...</span><span class="p">]</span>
-
-<span class="k">for</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
-   <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
-</code></pre></div>
-<p>HoloOcean 提供了多种代理，每种代理都具备不同的能力。HoloOcean 中的三种主要智能体分别代表了三种最常见的<strong>水域载具</strong>：<a href="../hovering_auv_agent/">悬停式自主水下航行器（HoveringAUV）</a>、<a href="../surface_vessel_agent/">水面航行器（SurfaceVessel）</a>和<a href="../torpedo_auv_agent/">鱼雷型自主水下航行器（TorpedoAUV）</a>。这三种代理能够执行大部分感知和导航任务。此外，系统中还包含代表飞行器及特定现实世界载具的其他代理。</p>
-<p>有关在 HoloOcean 中开发自定义智能体的信息，请参阅<a href="../../develop/agents/">开发代理</a>相关内容。</p>
-<h2 id="_1">使用代理</h2>
-<p>关于如何在 HoloOcean 中使用代理的文档：</p>
+                <h1 id="handagent">HandAgent</h1>
+<h2 id="_1">图片</h2>
+<p><img alt="" src="../../../img/underwater/hand_agent.png" /></p>
+<h2 id="_2">描述</h2>
+<p>一个可以通过对关节施加扭矩来控制，并能在三维空间中移动的漂浮手部代理。</p>
+<h2 id="_3">控制方案</h2>
 <ul>
-<li>
-<p><a href="../agent_config/">代理配置</a></p>
-</li>
-<li>
-<p><a href="../currents/">洋流控制器</a></p>
-</li>
-<li>
-<p><a href="../control_schemes/">控制方案</a></p>
-</li>
-<li>
-<p><a href="../fossen_based_dynamics/">基于 Fossen 模型的动力学</a></p>
-</li>
-<li>
-<p><a href="../flashlight/">手电筒</a></p>
-</li>
+<li><strong>原始关节力矩（Raw Joint Torques）</strong> (<code>0</code>)</li>
 </ul>
-<h2 id="_2">代理</h2>
-<p>HoloOcean 中特定代理的文档。请注意，测试代理不应用重力效果。</p>
-<h3 id="_3">水下代理</h3>
+<p>23 维的原始转矩向量，用于传入关节，顺序按下面 <a href="#hand_joints">HandAgent</a> 关节列出的顺序</p>
 <ul>
-<li>
-<p>悬停式自主水下航行器 (<a href="../hovering_auv_agent/">HoveringAUV</a>)</p>
-</li>
-<li>
-<p>鱼雷型自主水下航行器 (<a href="../torpedo_auv_agent/">TorpedoAUV</a>)</p>
-</li>
-<li>
-<p><a href="../blue_rov_agent/">BlueRov2</a></p>
-</li>
-<li>
-<p><a href="../coug_uv_agent/">CougUV</a></p>
-</li>
+<li><strong>缩放关节扭矩（Scaled Joint Torques）</strong> (<code>1</code>)</li>
 </ul>
-<h3 id="_4">水面代理</h3>
+<p>23 长度的缩放扭矩向量，范围在 <code>-1</code> 到 <code>1</code> 之间。每个关节的手指力量根据骨骼的重量以及是否是手指来缩放。<code>1</code> 代表前向的最大力量</p>
 <ul>
-<li>水面航行器 (<a href="../surface_vessel_agent/">SurfaceVessel</a>)</li>
+<li><strong>缩放关节扭矩 + 浮动</strong> (<code>2</code>)</li>
 </ul>
-<h3 id="_5">测试代理</h3>
+<p>和上面一样，但向量长度为 26，最后三个值表示<code>[x, y, z]</code>方向的移动量（见坐标系），最大自由度为 <code>0.5</code> 米。</p>
+<p>最后几个坐标允许 HandAgent 四处漂浮。</p>
+<h2 id="handagent_1">HandAgent 关节 <span id='hand_joints'></span></h2>
+<p>HandAgent 和 <a href="https://holodeck.readthedocs.io/en/latest/holodeck/sensors.html#holodeck.sensors.JointRotationSensor">JointRotationSensor</a> 的控制方案使用一个长度为 94 的向量来表示 48 个关节。</p>
+<p>要深入了解这些关节，请参考下表。</p>
+<p><strong>注意：</strong> 请注意，此处给出的索引是关节的起始索引，有关每个关节在此索引之后有多少个值，请参阅章节标题。示例：<code>hand_r</code> 的起始索引为 0，其值包括 <code>[swing1, swing2, twist]</code>，因此向量中的索引 0 对应于 <code>swing1</code>，1 对应于 <code>swing2</code>，2 对应于 <code>twist</code>。</p>
+<p>返回顺序如下：</p>
+<table>
+<thead>
+<tr>
+<th><strong>手臂关节</strong></th>
+<th>每个动作都有 <code>[swing1, swing2, twist]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td><code>hand_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第一关节</strong></th>
+<th>只有 <code>[swing1, swing2]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>64</code></td>
+<td>右手拇指 <code>thumb_01_r</code></td>
+</tr>
+<tr>
+<td><code>66</code></td>
+<td>右手食指 <code>index_01_r</code></td>
+</tr>
+<tr>
+<td><code>68</code></td>
+<td>右手中指 <code>middle_01_r</code></td>
+</tr>
+<tr>
+<td><code>70</code></td>
+<td>右手无名指 <code>ring_01_r</code></td>
+</tr>
+<tr>
+<td><code>72</code></td>
+<td>右手小拇指 <code>pinky_01_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第二关节</strong></th>
+<th>只有 <code>[swing1]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>79</code></td>
+<td>右手拇指 <code>thumb_02_r</code></td>
+</tr>
+<tr>
+<td><code>80</code></td>
+<td>右手食指 <code>index_02_r</code></td>
+</tr>
+<tr>
+<td><code>81</code></td>
+<td>右手中指 <code>middle_02_r</code></td>
+</tr>
+<tr>
+<td><code>82</code></td>
+<td>右手无名指 <code>ring_02_r</code></td>
+</tr>
+<tr>
+<td><code>83</code></td>
+<td>右手小拇指 <code>pinky_02_r</code></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th><strong>每根手指的第三关节</strong></th>
+<th>只有 <code>[swing1]</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>89</code></td>
+<td>右手拇指 <code>thumb_03_r</code></td>
+</tr>
+<tr>
+<td><code>90</code></td>
+<td>右手食指 <code>index_03_r</code></td>
+</tr>
+<tr>
+<td><code>91</code></td>
+<td>右手中指 <code>middle_03_r</code></td>
+</tr>
+<tr>
+<td><code>92</code></td>
+<td>右手无名指 <code>ring_03_r</code></td>
+</tr>
+<tr>
+<td><code>93</code></td>
+<td>右手小拇指 <code>pinky_03_r</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="handagent_2">HandAgent 骨骼</h2>
+<p><a href="https://holodeck.readthedocs.io/en/latest/holodeck/sensors.html#holodeck.sensors.RelativeSkeletalPositionSensor">RelativeSkeletalPositionSensor</a> 返回一个数组，其中包含四个条目，分别对应下面列出的 17 块骨骼。</p>
+<table>
+<thead>
+<tr>
+<th><strong>索引</strong></th>
+<th>骨骼名称</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>0</code></td>
+<td><code>lowerarm_r</code></td>
+</tr>
+<tr>
+<td><code>4</code></td>
+<td><code>hand_r</code></td>
+</tr>
+<tr>
+<td><code>8</code></td>
+<td><code>index_01_r</code></td>
+</tr>
+<tr>
+<td><code>16</code></td>
+<td><code>index_03_r</code></td>
+</tr>
+<tr>
+<td><code>20</code></td>
+<td><code>middle_01_r</code></td>
+</tr>
+<tr>
+<td><code>24</code></td>
+<td><code>middle_02_r</code></td>
+</tr>
+<tr>
+<td><code>28</code></td>
+<td><code>middle_03_r</code></td>
+</tr>
+<tr>
+<td><code>32</code></td>
+<td><code>pinky_01_r</code></td>
+</tr>
+<tr>
+<td><code>36</code></td>
+<td><code>pinky_02_r</code></td>
+</tr>
+<tr>
+<td><code>40</code></td>
+<td><code>pinky_03_r</code></td>
+</tr>
+<tr>
+<td><code>44</code></td>
+<td><code>ring_01_r</code></td>
+</tr>
+<tr>
+<td><code>48</code></td>
+<td><code>ring_02_r</code></td>
+</tr>
+<tr>
+<td><code>52</code></td>
+<td><code>ring_03_r</code></td>
+</tr>
+<tr>
+<td><code>56</code></td>
+<td><code>thumb_01_r</code></td>
+</tr>
+<tr>
+<td><code>60</code></td>
+<td><code>thumb_02_r</code></td>
+</tr>
+<tr>
+<td><code>64</code></td>
+<td><code>thumb_03_r</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="_4">插槽</h2>
 <ul>
 <li>
-<p>海龟代理 (<a href="../turtle_agent/">TurtleAgent</a>)</p>
+<p>摄像头插槽（<code>CameraSocket</code>）位于手腕后上方</p>
 </li>
 <li>
-<p>球形代理 (<a href="./sphere_agent.md">SphereAgent</a>)</p>
+<p>视窗（<code>Viewport</code>）位于侧面，用于观察角色</p>
 </li>
 <li>
-<p>手部代理（<a href="../hand_agent/">HandAgent</a>）</p>
+<p>所有关节均可用作插槽。参见<a href="#hand_joints">HandAgent 关节</a>。</p>
 </li>
-</ul>
-<h3 id="_6">空域代理</h3>
-<ul>
-<li>无人机代理 (<a href="../uav_agent/">UAVAgent</a>)</li>
-</ul>
-<h3 id="_7">地面代理</h3>
-<ul>
-<li><a href="../husky_agent/">哈士奇载具</a></li>
 </ul>
               
             </div>
