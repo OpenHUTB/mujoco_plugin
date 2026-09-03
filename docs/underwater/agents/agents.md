@@ -76,6 +76,8 @@ HoloOcean 中特定代理的文档。请注意，测试代理不应用重力效�
 
 * 手部代理（[HandAgent](./hand_agent.md)）
 
+* 机器人代理（[AndroidAgent](./android_agent.md)）
+
 
 ### 空域代理
 
