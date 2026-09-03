@@ -2,7 +2,7 @@
 
 HoloOcean 的安装分为两部分：首先安装 Python 客户端库（`holoocean`），随后由该库下载“世界”包（world packages）。Python 部分非常小巧，而“世界”包（即“二进制文件”）的体积则可能达到数 GB。
 
-备用下载地址：水下机器人相关文件位于[网盘](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb)中的`software/underwater/`，其中`Linux_1.0.0.zip`为Linux平台下的UE4版本，`Linux_2.3.0.zip`为Linux平台下的UE5版本，`Windows.zip`为Windows下UE4的版本。
+备用下载地址：水下机器人相关文件位于[网盘](https://pan.baidu.com/s/1n2fJvWff4pbtMe97GOqtvQ?pwd=hutb)中的`software/underwater/`，其中`Linux_1.0.0.zip`为Linux平台下的UE4版本，[Linux_2.3.0.zip](https://robots.et.byu.edu/holo/Ocean/v2.3.0/Linux.zip)为Linux平台下的UE5版本，`Windows.zip`为Windows下UE4的版本。
 
 
 ## 要求

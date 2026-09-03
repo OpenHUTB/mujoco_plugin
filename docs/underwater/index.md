@@ -20,7 +20,7 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 ---
 * __[环境搭建](./HoloOcean.md)__  
 * __[迁移至 UE4.26](./develop/ue4.md)__  
-* __[使用 HoloOcean 的列表](./used_by.md)__  
+* __[使用 HoloOcean 的列表](./used_by.md)__ 
 * __[其他](./underwater.md)__
 
 
@@ -82,7 +82,7 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 * [holoocean-v1.0.0](https://byu-holoocean.github.io/holoocean-docs/v1.0.0)
 * [所有版本的文档](https://byu-holoocean.github.io/holoocean-docs/versionList.html) - [develop 分支文档](https://byu-holoocean.github.io/holoocean-docs/develop/index.html)
 * [HoloOcean 2 主仓库](https://github.com/byu-holoocean/HoloOcean) - [develop 分支](https://github.com/byu-holoocean/HoloOcean/commits/develop/)（从 UnrealEngine fork）
-* [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)
+* [holodeck-engine 源代码](https://github.com/BYU-PCCL/holodeck-engine) - [holodeck 客户端](https://github.com/BYU-PCCL/holodeck)、[holodeck文档](https://holodeck.readthedocs.io/en/latest/)
 * [HoloOcean 的 bitbucket 仓库列表](https://bitbucket.org/frostlab/workspace/projects/FROST_CORE)
 * [HoloOcean 论文](https://www.cs.cmu.edu/~kaess/pub/Potokar22icra.pdf)
 * [构建后缺少 UnrealBuildTool.exe](https://forums.unrealengine.com/t/missing-unrealbuildtool-exe-after-build/2674046/2)
