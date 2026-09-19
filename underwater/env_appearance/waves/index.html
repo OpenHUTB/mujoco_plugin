@@ -342,8 +342,8 @@
 <p>基于网格的浮力是一种估算值，可能无法反映真实世界的浮力相互作用。要更改此浮力对代理的影响，请在配置文件或使用命令更改“max_influence_depth”或“wave_force”参数的值。</p>
 </div>
 <h2 id="fft_3">为自定义关卡添加 FFT 水波</h2>
-<p>FFT 水波通过 CPU 和 GPU 的联合实现来实现。在虚幻引擎中，有一个位于内容目录 FFT_OceanWaterWave/Effects/FX_OceanWaves 下的 Niagara 系统。该系统以及 FFT_OceanWaterWaves 目录下的其他文件夹共同构成了 FFT 水波的可视化效果，所有计算均在 GPU 上完成。要为自定义关卡添加 FFT 水波，请按照此处的说明操作：[添加 FFT 水波](https://byu-holoocean.github.io/holoocean-docs/develop/develop/env-docs/create-env.html#create-waves）。</p>
-<p>更改 FFT 水波参数的最佳方法是通过配置文件和命令。但是，如果您决定更改默认参数，则必须在世界的 FX_OceanWaves 文件夹和 C++ 文件 OceanFFTData.h 中进行更改。如果您决定在此文件中添加/删除任何变量，请务必在 OceanFFTCalculator.ispc 文件中同步更改，否则 Unreal 可能会崩溃。</p>
+<p>FFT 水波通过 CPU 和 GPU 的联合实现来实现。在虚幻引擎中，有一个位于内容目录 FFT_OceanWaterWave/Effects/FX_OceanWaves 下的 Niagara 系统。该系统以及 FFT_OceanWaterWaves 目录下的其他文件夹共同构成了 FFT 水波的可视化效果，所有计算均在 GPU 上完成。要为自定义关卡添加 FFT 水波，请按照此处的说明操作：<a href="https://byu-holoocean.github.io/holoocean-docs/develop/develop/env-docs/create-env.html#create-waves">添加 FFT 水波</a> 。</p>
+<p>更改 FFT 水波参数的最佳方法是通过配置文件和命令。但是，如果您决定更改默认参数，则必须在世界的 FX_OceanWaves 文件夹和 C++ 文件 <a href="https://github.com/BjoernTroldahl/Unreal-iFFT-Ocean-Simulation/blob/main/Plugins/CustomWater/Source/CustomWater/Public/OceanFFTData.h">OceanFFTData.h</a> 中进行更改。如果您决定在此文件中添加/删除任何变量，请务必在 <a href="https://github.com/BjoernTroldahl/Unreal-iFFT-Ocean-Simulation/tree/main/Plugins/CustomWater/Source/CustomWater/Private/OceanFFTCalculator.ispc">OceanFFTCalculator.ispc</a> 文件中同步更改，否则引擎可能会崩溃。</p>
 <h2 id="_8">添加自定义代理</h2>
 <p>启用 FFT 水波后，将使用新的浮力系统。该系统采用基于网格的方法来计算代理所受的浮力。要添加新代理，请按照<a href="../../develop/agents/">开发代理：添加代理</a>中的说明进行操作。</p>
               
