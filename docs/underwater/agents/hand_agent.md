@@ -1,7 +1,6 @@
-# HandAgent
+# 手的代理 HandAgent
 
-## 图片
-
+## 外观
 
 ![](../../img/underwater/hand_agent.png)
 
@@ -34,7 +33,7 @@ HandAgent 和 [JointRotationSensor](https://holodeck.readthedocs.io/en/latest/ho
 
 要深入了解这些关节，请参考下表。
 
-**注意：** 请注意，此处给出的索引是关节的起始索引，有关每个关节在此索引之后有多少个值，请参阅章节标题。示例：`hand_r` 的起始索引为 0，其值包括 `[swing1, swing2, twist]`，因此向量中的索引 0 对应于 `swing1`，1 对应于 `swing2`，2 对应于 `twist`。
+**注意：** 此处给出的索引是关节的起始索引，有关每个关节在此索引之后有多少个值，请参阅章节标题。示例：`hand_r` 的起始索引为 0，其值包括 `[swing1, swing2, twist]`，因此向量中的索引 0 对应于 `swing1`，1 对应于 `swing2`，2 对应于 `twist`。
 
 返回顺序如下：
 

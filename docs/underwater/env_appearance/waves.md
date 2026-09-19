@@ -188,9 +188,10 @@ env.fftwaves.fft_wave_cascades(fft_wave_cascades_config)
 
 ## 为自定义关卡添加 FFT 水波
 
-FFT 水波通过 CPU 和 GPU 的联合实现来实现。在虚幻引擎中，有一个位于内容目录 FFT_OceanWaterWave/Effects/FX_OceanWaves 下的 Niagara 系统。该系统以及 FFT_OceanWaterWaves 目录下的其他文件夹共同构成了 FFT 水波的可视化效果，所有计算均在 GPU 上完成。要为自定义关卡添加 FFT 水波，请按照此处的说明操作：[添加 FFT 水波](https://byu-holoocean.github.io/holoocean-docs/develop/develop/env-docs/create-env.html#create-waves）。
+FFT 水波通过 CPU 和 GPU 的联合实现来实现。在虚幻引擎中，有一个位于内容目录 FFT_OceanWaterWave/Effects/FX_OceanWaves 下的 Niagara 系统。该系统以及 FFT_OceanWaterWaves 目录下的其他文件夹共同构成了 FFT 水波的可视化效果，所有计算均在 GPU 上完成。要为自定义关卡添加 FFT 水波，请按照此处的说明操作：[添加 FFT 水波](https://byu-holoocean.github.io/holoocean-docs/develop/develop/env-docs/create-env.html#create-waves) 。
 
-更改 FFT 水波参数的最佳方法是通过配置文件和命令。但是，如果您决定更改默认参数，则必须在世界的 FX_OceanWaves 文件夹和 C++ 文件 OceanFFTData.h 中进行更改。如果您决定在此文件中添加/删除任何变量，请务必在 OceanFFTCalculator.ispc 文件中同步更改，否则 Unreal 可能会崩溃。
+
+更改 FFT 水波参数的最佳方法是通过配置文件和命令。但是，如果您决定更改默认参数，则必须在世界的 FX_OceanWaves 文件夹和 C++ 文件 [OceanFFTData.h](https://github.com/BjoernTroldahl/Unreal-iFFT-Ocean-Simulation/blob/main/Plugins/CustomWater/Source/CustomWater/Public/OceanFFTData.h) 中进行更改。如果您决定在此文件中添加/删除任何变量，请务必在 [OceanFFTCalculator.ispc](https://github.com/BjoernTroldahl/Unreal-iFFT-Ocean-Simulation/tree/main/Plugins/CustomWater/Source/CustomWater/Private/OceanFFTCalculator.ispc) 文件中同步更改，否则引擎可能会崩溃。
 
 ## 添加自定义代理
 
