@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>交互式波浪 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u4ea4\u4e92\u5f0f\u6ce2\u6d6a";
+        var mkdocs_page_input_path = "underwater/example/waves_interactive.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">交互式波浪</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/waves_interactive.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">交互式波浪</h1>
+<p>本示例演示如何在 HoloOcean 仿真过程中生成并动态切换波浪。在仿真运行时改变波浪并同时控制载具是很有用的功能，本脚本展示了如何结合场景配置、用户按键和波浪命令来实现这一点。</p>
+<p>场景配置中的 <code>"fft_waves"</code> 字段是生成波浪的必要条件，还可以在此添加更多参数（详见 <a href="../../env_appearance/waves/">FFT 水波控制器</a>）。运行后按数字键 <code>0</code>-<code>6</code> 可实时切换海况等级，按 <code>i</code>/<code>k</code> 控制前进与后退，<code>j</code>/<code>l</code> 控制左转与右转，按 <code>-</code> 键退出。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pynput</span> <span class="kn">import</span> <span class="n">keyboard</span>
+
+<span class="n">config</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="s2">&quot;OpenWater&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ocean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;main_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;sv0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ticks_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;frames_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="c1"># This is required to initiate waves, however more parameters could be added.</span>
+    <span class="s2">&quot;fft_waves&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;sea_state&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">},</span>
+    <span class="s2">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;sv0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;SurfaceVessel&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[],</span>
+            <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+            <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">],</span>
+            <span class="s2">&quot;rotation&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
+        <span class="p">},</span>
+    <span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">pressed_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">on_press</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">pressed_keys</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;char&quot;</span><span class="p">):</span>
+        <span class="n">pressed_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+        <span class="n">pressed_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">on_release</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">pressed_keys</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s2">&quot;char&quot;</span><span class="p">):</span>
+        <span class="n">pressed_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+
+<span class="n">listener</span> <span class="o">=</span> <span class="n">keyboard</span><span class="o">.</span><span class="n">Listener</span><span class="p">(</span><span class="n">on_press</span><span class="o">=</span><span class="n">on_press</span><span class="p">,</span> <span class="n">on_release</span><span class="o">=</span><span class="n">on_release</span><span class="p">)</span>
+<span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="n">force</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="k">def</span> <span class="nf">parse_keys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s2">&quot;i&quot;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>  <span class="c1"># forward thrust</span>
+        <span class="n">command</span><span class="p">[:]</span> <span class="o">+=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s2">&quot;k&quot;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>  <span class="c1"># backward thrust</span>
+        <span class="n">command</span><span class="p">[:]</span> <span class="o">-=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s2">&quot;j&quot;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>  <span class="c1"># roll CCW</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s2">&quot;l&quot;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>  <span class="c1"># roll CW</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-=</span> <span class="n">val</span>
+
+    <span class="k">return</span> <span class="n">command</span>
+
+<span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">scenario_cfg</span><span class="o">=</span><span class="n">config</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;-&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="k">break</span>
+        <span class="k">if</span> <span class="s2">&quot;0&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;1&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;2&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;3&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;4&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;5&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+        <span class="k">if</span> <span class="s2">&quot;6&quot;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">fftwaves</span><span class="o">.</span><span class="n">fft_sea_state</span><span class="p">(</span><span class="mi">6</span><span class="p">)</span>
+
+        <span class="n">command</span> <span class="o">=</span> <span class="n">parse_keys</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;sv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+        <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

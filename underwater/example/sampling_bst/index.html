@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>生物量、盐度、温度采样 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u751f\u7269\u91cf\u3001\u76d0\u5ea6\u3001\u6e29\u5ea6\u91c7\u6837";
+        var mkdocs_page_input_path = "underwater/example/sampling_bst.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">生物量、盐度、温度采样</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/sampling_bst.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">生物量、盐度、温度采样</h1>
+<p>本示例演示如何对生物量、盐度和温度的复杂分布进行建模。通过"集群"（cluster），可以在地图上的任意位置放置生物量、盐度或温度的浓度中心，使其不再遵循常规趋势。本场景在基础的生物量和盐度函数模型之上，添加了若干可能代表浮游植物水华的生物量集群，并使用自定义温度函数模拟冰川附近温度随位置的变化。</p>
+<p>如需上传自定义函数而不只是调整现有参数，请在脚本中调用 <code>env.set_biomass_function("auv0", new_biomass_function)</code>、<code>env.set_salinity_function("auv0", new_salinity_function)</code> 或 <code>env.set_temperature_function("auv0", new_temperature_function)</code>，分别用于设置生物量、盐度或温度。其中 <code>"auv0"</code> 是您要修改的载具名称，<code>new_temp_function</code> 是您的自定义函数，它至少接受一个 3 元素的一维数组（位置）并返回对应数值。</p>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>实时更新热图会带来明显的性能开销。本示例使用 Python 多进程在独立进程中更新热图，在保持实时显示的同时显著提升模拟性能。如果您希望使用 BST 传感器的绘图功能，强烈建议采用多进程方式。</p>
+</div>
+<p>运行后使用键盘控制载具移动，按 <code>-</code> 键退出。</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pynput</span> <span class="kn">import</span> <span class="n">keyboard</span>
+<span class="kn">from</span> <span class="nn">multiprocessing</span> <span class="kn">import</span> <span class="n">Process</span><span class="p">,</span> <span class="n">Queue</span>
+<span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">from</span> <span class="nn">holoocean.environments</span> <span class="kn">import</span> <span class="n">HoloOceanEnvironment</span>
+<span class="kn">from</span> <span class="nn">queue</span> <span class="kn">import</span> <span class="n">Empty</span>
+
+<span class="k">def</span> <span class="nf">temp_fx</span><span class="p">(</span><span class="n">location</span><span class="p">):</span>
+    <span class="c1"># NOTE: It&#39;s required that we name this parameter &quot;location&quot;</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">location</span>
+    <span class="n">base_temp</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">alpha</span> <span class="o">=</span> <span class="o">-</span><span class="mf">.2</span>
+    <span class="n">beta</span> <span class="o">=</span> <span class="mf">.05</span>
+    <span class="k">return</span> <span class="n">base_temp</span> <span class="o">+</span> <span class="n">alpha</span> <span class="o">*</span> <span class="n">z</span> <span class="o">+</span> <span class="n">beta</span> <span class="o">*</span> <span class="n">y</span>
+
+<span class="n">scenario</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;name&quot;</span><span class="p">:</span> <span class="s2">&quot;test_currents&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;world&quot;</span><span class="p">:</span> <span class="s2">&quot;PierHarbor&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;package_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Ocean&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;main_agent&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;ticks_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;frames_per_sec&quot;</span><span class="p">:</span> <span class="mi">60</span><span class="p">,</span>
+    <span class="s2">&quot;agents&quot;</span><span class="p">:</span> <span class="p">[</span>
+            <span class="p">{</span>
+                <span class="s2">&quot;agent_name&quot;</span><span class="p">:</span> <span class="s2">&quot;auv0&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;agent_type&quot;</span><span class="p">:</span> <span class="s2">&quot;HoveringAUV&quot;</span><span class="p">,</span>
+                <span class="s2">&quot;sensors&quot;</span><span class="p">:</span> <span class="p">[</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;BSTSensor&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;configuration&quot;</span><span class="p">:</span> <span class="p">{</span>
+                            <span class="s2">&quot;biomass_clusters&quot;</span><span class="p">:</span> <span class="p">[{</span><span class="s2">&quot;position&quot;</span><span class="p">:[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">],</span> <span class="s2">&quot;strength&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;falloff&quot;</span><span class="p">:</span> <span class="mi">10</span><span class="p">}]</span>
+                        <span class="p">}</span>
+                    <span class="p">},</span>
+                    <span class="p">{</span>
+                        <span class="s2">&quot;sensor_type&quot;</span><span class="p">:</span> <span class="s2">&quot;LocationSensor&quot;</span><span class="p">,</span>
+                        <span class="s2">&quot;socket&quot;</span><span class="p">:</span> <span class="s2">&quot;COM&quot;</span>
+                    <span class="p">}</span>
+                <span class="p">],</span>
+                <span class="s2">&quot;control_scheme&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span>
+                <span class="s2">&quot;location&quot;</span><span class="p">:</span> <span class="p">[</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">]</span>
+            <span class="p">}</span>
+        <span class="p">],</span>
+    <span class="p">}</span>
+
+<span class="n">pressed_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">()</span>
+<span class="n">force</span> <span class="o">=</span> <span class="mi">200</span>
+
+<span class="k">def</span> <span class="nf">on_press</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">pressed_keys</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;char&#39;</span><span class="p">):</span>
+        <span class="n">pressed_keys</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+        <span class="n">pressed_keys</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">set</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">on_release</span><span class="p">(</span><span class="n">key</span><span class="p">):</span>
+    <span class="k">global</span> <span class="n">pressed_keys</span>
+    <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="s1">&#39;char&#39;</span><span class="p">):</span>
+        <span class="n">pressed_keys</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">key</span><span class="o">.</span><span class="n">char</span><span class="p">)</span>
+
+<span class="n">listener</span> <span class="o">=</span> <span class="n">keyboard</span><span class="o">.</span><span class="n">Listener</span><span class="p">(</span>
+    <span class="n">on_press</span><span class="o">=</span><span class="n">on_press</span><span class="p">,</span>
+    <span class="n">on_release</span><span class="o">=</span><span class="n">on_release</span><span class="p">)</span>
+<span class="n">listener</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+<span class="k">def</span> <span class="nf">parse_keys</span><span class="p">(</span><span class="n">keys</span><span class="p">,</span> <span class="n">val</span><span class="p">,</span> <span class="n">visualizer</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">location</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">8</span><span class="p">)</span>
+    <span class="k">if</span> <span class="s1">&#39;i&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">+=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;k&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span> <span class="o">-=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;j&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">+=</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">-=</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;l&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">-=</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">+=</span> <span class="mf">.1</span> <span class="o">*</span> <span class="n">val</span>
+
+    <span class="k">if</span> <span class="s1">&#39;w&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">+=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;s&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[</span><span class="mi">4</span><span class="p">:</span><span class="mi">8</span><span class="p">]</span> <span class="o">-=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;a&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">-=</span> <span class="n">val</span>
+    <span class="k">if</span> <span class="s1">&#39;d&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">4</span><span class="p">,</span><span class="mi">6</span><span class="p">]]</span> <span class="o">-=</span> <span class="n">val</span>
+        <span class="n">command</span><span class="p">[[</span><span class="mi">5</span><span class="p">,</span><span class="mi">7</span><span class="p">]]</span> <span class="o">+=</span> <span class="n">val</span>
+
+    <span class="k">if</span> <span class="s1">&#39;m&#39;</span> <span class="ow">in</span> <span class="n">keys</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">visualizer</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">visualizer</span><span class="o">.</span><span class="n">update_position</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+
+
+    <span class="k">return</span> <span class="n">command</span>
+
+<span class="k">def</span> <span class="nf">plot_process</span><span class="p">(</span><span class="n">location_queue</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">custom_temp</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Process started&quot;</span><span class="p">)</span>
+    <span class="n">visualizer</span> <span class="o">=</span> <span class="n">HoloOceanEnvironment</span><span class="o">.</span><span class="n">initialize_bst_graphs</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">temperature_func</span><span class="o">=</span><span class="n">custom_temp</span><span class="p">)</span>
+
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="n">latest_location</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">latest_location</span> <span class="o">=</span> <span class="n">location_queue</span><span class="o">.</span><span class="n">get_nowait</span><span class="p">()</span>
+            <span class="k">except</span> <span class="n">Empty</span><span class="p">:</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="n">latest_location</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">visualizer</span><span class="o">.</span><span class="n">update_position</span><span class="p">(</span><span class="n">latest_location</span><span class="p">)</span>
+
+        <span class="n">time</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="mf">.01</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
+    <span class="n">time</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">with</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="n">scenario_cfg</span><span class="o">=</span><span class="n">scenario</span><span class="p">,</span> <span class="n">start_world</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="k">as</span> <span class="n">env</span><span class="p">:</span>
+        <span class="c1"># Here we pass in the custom function into the live graph instance to get accurate figures</span>
+        <span class="n">queue</span> <span class="o">=</span> <span class="n">Queue</span><span class="p">()</span>
+        <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">scenario</span><span class="p">[</span><span class="s2">&quot;agents&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">][</span><span class="s2">&quot;location&quot;</span><span class="p">])</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="n">Process</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">plot_process</span><span class="p">,</span> <span class="n">args</span><span class="o">=</span><span class="p">(</span><span class="n">queue</span><span class="p">,</span> <span class="n">scenario</span><span class="p">,</span> <span class="n">temp_fx</span><span class="p">))</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+        <span class="n">env</span><span class="o">.</span><span class="n">set_temperature_function</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">temp_fx</span><span class="p">)</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="c1"># We need to pass the same custom function into the BST sensor to get accurate readings in the terminal</span>
+            <span class="n">sensor_data</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">tick</span><span class="p">()</span>
+            <span class="n">location</span> <span class="o">=</span> <span class="n">sensor_data</span><span class="p">[</span><span class="s2">&quot;LocationSensor&quot;</span><span class="p">]</span>
+            <span class="n">queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">location</span><span class="p">)</span>
+            <span class="n">bst_data</span> <span class="o">=</span> <span class="n">sensor_data</span><span class="p">[</span><span class="s2">&quot;BSTSensor&quot;</span><span class="p">]</span>
+            <span class="c1"># print(bst_data)</span>
+            <span class="n">time</span> <span class="o">+=</span> <span class="mi">1</span>
+
+            <span class="k">if</span> <span class="s1">&#39;-&#39;</span> <span class="ow">in</span> <span class="n">pressed_keys</span><span class="p">:</span>
+                <span class="k">break</span>
+
+            <span class="c1"># Your control logic</span>
+            <span class="n">command</span> <span class="o">=</span> <span class="n">parse_keys</span><span class="p">(</span><span class="n">pressed_keys</span><span class="p">,</span> <span class="n">force</span><span class="p">)</span>
+            <span class="n">env</span><span class="o">.</span><span class="n">act</span><span class="p">(</span><span class="s2">&quot;auv0&quot;</span><span class="p">,</span> <span class="n">command</span><span class="p">)</span>
+
+        <span class="c1"># Clean up</span>
+        <span class="n">p</span><span class="o">.</span><span class="n">join</span><span class="p">()</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
