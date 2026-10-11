@@ -2,6 +2,8 @@
 
 本示例演示了如何在 HoloOcean 模拟中实现洋流。洋流由一个函数定义，该函数接收水下航行器的位置并返回该位置的洋流速度。在本示例中，我们定义了一个涡流场来模拟旋转的水流。该洋流场应用于仿真中的两个水下航行器，用户可以通过键盘输入控制其中一个航行器。
 
+![](../../img/underwater/ocean_currents.gif)
+
 ```python
 import holoocean
 import numpy as np

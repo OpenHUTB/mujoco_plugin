@@ -4,6 +4,8 @@
 
 场景配置中的 `"fft_waves"` 字段是生成波浪的必要条件，还可以在此添加更多参数（详见 [FFT 水波控制器](../env_appearance/waves.md)）。运行后按数字键 `0`-`6` 可实时切换海况等级，按 `i`/`k` 控制前进与后退，`j`/`l` 控制左转与右转，按 `-` 键退出。
 
+![](../../img/underwater/waves_interactive.gif)
+
 ```python
 import holoocean
 import numpy as np

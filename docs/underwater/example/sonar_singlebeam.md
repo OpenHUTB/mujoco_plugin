@@ -4,6 +4,8 @@
 
 请注意，运行此脚本时会生成八叉树（octree），这可能会导致短暂的停顿。有关解决方案及更多信息，请参阅[八叉树生成](../usage/octree.md)相关内容。
 
+![](../../img/underwater/sonar_singlebeam.gif)
+
 ```python
 import holoocean
 import matplotlib.pyplot as plt
