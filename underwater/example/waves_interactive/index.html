@@ -143,6 +143,7 @@
                 <h1 id="_1">交互式波浪</h1>
 <p>本示例演示如何在 HoloOcean 仿真过程中生成并动态切换波浪。在仿真运行时改变波浪并同时控制载具是很有用的功能，本脚本展示了如何结合场景配置、用户按键和波浪命令来实现这一点。</p>
 <p>场景配置中的 <code>"fft_waves"</code> 字段是生成波浪的必要条件，还可以在此添加更多参数（详见 <a href="../../env_appearance/waves/">FFT 水波控制器</a>）。运行后按数字键 <code>0</code>-<code>6</code> 可实时切换海况等级，按 <code>i</code>/<code>k</code> 控制前进与后退，<code>j</code>/<code>l</code> 控制左转与右转，按 <code>-</code> 键退出。</p>
+<p><img alt="" src="../../../img/underwater/waves_interactive.gif" /></p>
 <div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">pynput</span> <span class="kn">import</span> <span class="n">keyboard</span>
