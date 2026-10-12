@@ -9,6 +9,8 @@
 
 运行后使用键盘控制载具移动，按 `-` 键退出。
 
+![](../../img/underwater/sampling_bst.gif)
+
 ```python
 import holoocean
 import numpy as np

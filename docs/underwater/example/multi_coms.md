@@ -78,6 +78,8 @@ for i in range(300):
 
 [holoocean.environments.HoloOceanEnvironment.send_optical_message()](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.send_optical_message) 命令用于在光调制解调器（optical modems）之间发送消息。有关配置详情，请参阅 [holoocean.sensors.OpticalModemSensor](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.OpticalModemSensor)。请注意，若要成功传输消息，两个传感器必须处于对齐状态。
 
+![](../../img/underwater/multi_coms.png)
+
 此外，如有需要，还可以使用以下辅助函数：
 
 * [holoocean.environments.HoloOceanEnvironment.modems](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.modems) 返回所有调制解调器。

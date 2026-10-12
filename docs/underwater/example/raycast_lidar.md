@@ -2,6 +2,8 @@
 
 在仿真过程中，将激光雷达传感器的输出可视化非常有用。此脚本可以实现这一点，在 HoloOcean 环境中绘制每次扫描的结果。该脚本还允许您控制代理。
 
+![](../../img/underwater/raycast_lidar.png)
+
 ```python
 import holoocean
 import numpy as np
