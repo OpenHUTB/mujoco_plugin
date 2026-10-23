@@ -21,7 +21,8 @@ HoloOcean[@Potokar22icra] 基于虚幻引擎和全息舱开发，能够轻松模
 * __[环境搭建](./HoloOcean.md)__  
 * __[迁移至 UE4.26](./develop/ue4.md)__  
 * __[使用 HoloOcean 的列表](./used_by.md)__ 
-* __[其他](./underwater.md)__
+* __[其他](./underwater.md)__  
+* __[空海数据集与文档（air_water）](https://github.com/OpenHUTB/air_water)__
 
 
 ## 功能
