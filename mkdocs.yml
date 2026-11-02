@@ -10,7 +10,7 @@ site_name: Mujoco 插件
 repo_url: https://github.com/OpenHUTB/mujoco_plugin
 
 # 页面右上角添加直接编辑页面的按钮
-edit_uri: edit/master/docs/
+edit_uri: edit/main/docs/
 
 theme:
   name: readthedocs

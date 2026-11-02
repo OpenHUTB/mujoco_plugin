@@ -5,7 +5,7 @@
 ![](../../img/underwater/sonar_imaging.jpg)
 
 !!! 注意
-    运行此脚本期间会生成八叉树（octree，快速判断三维空间中的某个点是否在声纳的视场内），这可能会导致短暂的停顿，会在场景中出现红色提示：Premarking 797 Octrees, will take some time... 。有关解决方案及更多信息，请参阅[八叉树生成](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/usage/octree.html#octree)相关内容。
+    运行此脚本期间会生成八叉树（octree，快速判断三维空间中的某个点是否在声纳的视场内），这可能会导致短暂的停顿，会在场景中出现红色提示：Premarking 797 Octrees, will take some time... 。有关解决方案及更多信息，请参阅[八叉树生成](../usage/octree.md)相关内容。
 
 
 ```python

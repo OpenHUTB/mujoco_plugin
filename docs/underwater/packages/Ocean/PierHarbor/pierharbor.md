@@ -12,6 +12,6 @@
 
 * 码头港口悬停的成像声呐（[PierHarbor-HoveringImagingSonar](./PierHarbor-HoveringImagingSonar.md)）
 
-* 码头港口鱼雷（[PierHarbor-Torpedo](./PierHarbor-Torpedo.md)）
+* 码头港口鱼雷型机器人（[PierHarbor-Torpedo](./PierHarbor-Torpedo.md)）
 
 ![](../../../../img/underwater/pier_close.png)

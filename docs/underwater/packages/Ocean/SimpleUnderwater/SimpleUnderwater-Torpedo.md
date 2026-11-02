@@ -1,4 +1,4 @@
-# 简易水下鱼雷 SimpleUnderwater-Torpedo
+# 简易水下鱼雷型机器人 SimpleUnderwater-Torpedo
 
 此场景开始时，一艘鱼雷型自主水下航行器（TorpedoAUV）位于水池中心。除非另有说明，所有传感器均与其类名相同，例如，IMUSensor 的名称为“IMUSensor”。
 

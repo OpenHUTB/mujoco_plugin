@@ -1,4 +1,4 @@
-# 鱼雷式自主水下航行器 (TorpedoAUV）
+# 鱼雷型自主水下航行器 (TorpedoAUV）
 
 ## 图像
 

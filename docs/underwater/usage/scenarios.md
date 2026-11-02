@@ -61,7 +61,7 @@
     agents 数组中的第一个代理是“主代理”。
 
 
-## 帧率
+## 帧率 <span id="configure_framerate"></span>
 
 您可以配置两个参数来控制帧率的变化：每秒节拍数`ticks_per_sec` 和 每秒帧数`frames_per_sec`。
 

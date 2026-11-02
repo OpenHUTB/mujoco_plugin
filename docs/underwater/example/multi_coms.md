@@ -1,6 +1,6 @@
-# 多智能体通信
+# 多代理通信
 
-智能体之间往往需要进行通信。这可以通过**声学信标传感器** AcousticBeaconSensor（通过声学信号进行通信的虚拟水声调制解调器；信标即信号标记点，也就是信号源）或**光调制解调器传感器** OpticalModemSensor（距离短、带宽大）来实现。以下是相关示例：
+多代理之间往往需要进行通信。这可以通过**声学信标传感器** AcousticBeaconSensor（通过声学信号进行通信的虚拟声学调制解调器；信标即信号标记点，也就是信号源）或**光调制解调器传感器** OpticalModemSensor（距离短、带宽大）来实现。以下是相关示例：
 
 ## 发送声学消息
 
@@ -77,6 +77,8 @@ for i in range(300):
 ## 发送光通信消息
 
 [holoocean.environments.HoloOceanEnvironment.send_optical_message()](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/environments.html#holoocean.environments.HoloOceanEnvironment.send_optical_message) 命令用于在光调制解调器（optical modems）之间发送消息。有关配置详情，请参阅 [holoocean.sensors.OpticalModemSensor](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.OpticalModemSensor)。请注意，若要成功传输消息，两个传感器必须处于对齐状态。
+
+![](../../img/underwater/multi_coms.png)
 
 此外，如有需要，还可以使用以下辅助函数：
 

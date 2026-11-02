@@ -42,6 +42,37 @@
 !!! 注意
     双击执行输出目录中的`WindowsNoEditor/Holodeck.exe`并不能看到默认的场景，执行`WindowsNoEditor\Holodeck\Binaries\Win64\Holodeck.exe`才能看到默认的场景。想要看到水下机器人需要通过运行 [Python 脚本](https://github.com/OpenHUTB/mujoco_plugin/tree/main/src/underwater/holo_ocean)。
 
+### 附：从 Windows 交叉编译到 Linux 
+
+**1.** 在 Epic Games 启动器中找到您的虚幻引擎版本。右键单击“启动”按钮旁边的箭头，然后选择“选项”。
+
+![](../../img/underwater/linux_steps_p1.png)
+
+**2.** 在“目标平台”下，选择 Linux 并进行安装。
+
+![](../../img/underwater/linux_steps_p2.png)
+
+**3.** UE 4.26 下载交叉编译工具链 -v17（请参阅[虚幻引擎的交叉编译文档](https://openhutb.github.io/engine_doc/zh-CN/SharingAndReleasing/Linux/AdvancedLinuxDeveloper/LinuxCrossCompileLegacy/index.html)，UE 4.27 下载 -v19）。
+![](../../img/underwater/linux_steps_p3_UE4.png)
+
+UE 5.3 下载交叉编译工具链 v22（请参阅[虚幻引擎的交叉编译文档](https://dev.epicgames.com/documentation/en-us/unreal-engine/linux-development-requirements-for-unreal-engine?application_version=5.3)）。
+![](../../img/underwater/linux_steps_p3.png)
+
+**3.1**. 
+
+运行`D:\UnrealToolchains\v18_clang-11.0.1-centos7\x86_64-unknown-linux-gnu\bin\clang++ -v`，验证是否安装成功（注意：需使用绝对路径，`%LINUX_MULTIARCH_ROOT%x86_64-unknown-linux-gnu\bin\clang++ -v`会提示命令找不到）
+
+
+
+
+
+**4.** 修改 Visual Studio 2022 的安装，使其包含“使用 C++ 进行 Linux 和嵌入式开发”组件。
+
+![](../../img/underwater/linux_steps_p4.png)
+
+经过这些更改，您应该能够从 Windows 编译 Linux 版本。
+
+该步骤参考[UnrealEngine交叉编译](https://zhuanlan.zhihu.com/p/616964048)。
 
 ## 将文件放置在安装目录中 <span id="place_in_install_directory"></span>
 
@@ -67,7 +98,7 @@
     `"path": "WindowsNoEditor/Holodeck/Binaries/Win64/Holodeck.exe"`
 
 
-## 关于创建环境对象和声呐的说明 <span id="note_on_creating_environment_objects_and_sonar"></span>
+## [关于创建环境对象和声呐的说明](../develop/custom_level.md#object_collision) <span id="note_on_creating_environment_objects_and_sonar"></span>
 
 
-声呐模拟在生成八叉树时依赖于对象的碰撞网格。如果对象的碰撞网格比视觉网格粗糙，则该对象在声呐图像中的表示将不准确。可以通过在虚幻引擎编辑器中，将静态网格编辑器详细信息部分的“碰撞复杂度”选项设置为“使用复杂碰撞作为简单碰撞”来解决此问题。
+

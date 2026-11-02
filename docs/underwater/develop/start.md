@@ -125,3 +125,10 @@ with holoocean.make(scenario_cfg=config, start_world=False) as env:
 有关开发自定义传感器/代理/环境以及如何入门的信息，请参阅[开发代理](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/agents.html#develop-agents)、[开发传感器](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/sensors.html#develop-sensor)和[开发环境](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/develop/env.html#develop-env)。
 
 要开发自定义声呐，请参阅 [HolodeckSonar.h](https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Public/HolodeckSonar.h) 和 [HolodeckSonar.cpp](https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/HolodeckCore/Private/HolodeckSonar.cpp) 文件以获取所需的超类，并参阅 [ImagingSonar.h](https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Public/ImagingSonar.h) 和 [ImagingSonar.cpp](https://github.com/OpenHUTB/Underwater/blob/master/Source/Holodeck/Sensors/Private/ImagingSonar.cpp) 以获取如何使用它们的示例。
+
+## 代码格式化  <span id="code_formatting"></span>
+
+如果您要提交修改 C++ 或 Python 代码的 pull request，请确保您的代码格式正确。Python 代码应使用 [ruff](https://docs.astral.sh/ruff/) 进行格式化，C++ 代码应使用提供的 clang-format 配置进行格式化，并遵循 UE 风格指南。要格式化 C++ 代码，您可以从 engine/ue5-clang-format-file 运行以下命令：
+```shell
+find ../Source -iname "*.h" -o -iname "*.cpp" | xargs clang-format -style=file -i
+```

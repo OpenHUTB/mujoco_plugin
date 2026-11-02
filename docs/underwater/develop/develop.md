@@ -13,6 +13,7 @@
     * [编译](./start.md#compiling)
     * [启动游戏（实时模式）](./start.md#launching_game_live)
     * [日志记录](./start.md#logging)
+    * [代码格式化](./start.md#code_formatting)
 * [开发环境](./env.md)
     * [添加 Underwater 世界](./env.md#adding_underwater_worlds)
     * [内容烘焙](./env.md#cooking_content)
@@ -34,6 +35,7 @@
     * [第 2 部分：.step()](./semaphores.md#part_2_step)
     * [备注](./semaphores.md#remarks)
 * [holodeck 开发维基页面](../wiki/Holodeck-Onboarding.md) - [参考页面](https://github.com/BYU-PCCL/holodeck/wiki)
+* [疑难解答](./troubleshooting.md)
 
 ## Holodeck
 
