@@ -286,64 +286,249 @@ Editor), this class’s functionality is restricted.  Specifically:</p>
 a lot of code duplication.  Therefore, we created classes according to the type of object (actuator / body / geom /
 joint / site) whose properties are measured, and the type (scalar / vector / quaternion) of the measured data.</p>
 <p>Here’s a table that maps types to sensors:</p>
-<p>+------------------------+---------------+---------------------+
-| <strong>Mujoco Object Type</strong> | <strong>Data Type</strong> | <strong>Sensor Name</strong>     |
-+------------------------+---------------+---------------------+
-| Actuator               | Scalar        | - <code>actuatorpos</code>   |
-|                        |               | - <code>actuatorvel</code>   |
-|                        |               | - <code>actuatorfrc</code>   |
-+------------------------+---------------+---------------------+
-| Body                   | Vector        | - <code>subtreecom</code>    |
-|                        |               | - <code>subtreelinvel</code> |
-|                        |               | - <code>subtreeangmom</code> |
-|                        |               | - <code>framepos</code>      |
-|                        |               | - <code>framexaxis</code>    |
-|                        |               | - <code>frameyaxis</code>    |
-|                        |               | - <code>framezaxis</code>    |
-|                        |               | - <code>framelinvel</code>   |
-|                        |               | - <code>frameangvel</code>   |
-|                        |               | - <code>framelinacc</code>   |
-|                        |               | - <code>frameangacc</code>   |
-+------------------------+---------------+---------------------+
-| Body                   | Quaternion    | - <code>framequat</code>     |
-+------------------------+---------------+---------------------+
-| Geom                   | Vector        | - <code>framepos</code>      |
-|                        |               | - <code>framexaxis</code>    |
-|                        |               | - <code>frameyaxis</code>    |
-|                        |               | - <code>framezaxis</code>    |
-|                        |               | - <code>framelinvel</code>   |
-|                        |               | - <code>frameangvel</code>   |
-|                        |               | - <code>framelinacc</code>   |
-|                        |               | - <code>frameangacc</code>   |
-+------------------------+---------------+---------------------+
-| Geom                   | Quaternion    | - <code>framequat</code>     |
-+------------------------+---------------+---------------------+
-| Joint                  | Scalar        | - <code>jointpos</code>      |
-|                        |               | - <code>jointvel</code>      |
-|                        |               | - <code>jointlimitpos</code> |
-|                        |               | - <code>jointlimitvel</code> |
-|                        |               | - <code>jointlimitfrc</code> |
-+------------------------+---------------+---------------------+
-| Site                   | Scalar        | - <code>touch</code>         |
-|                        |               | - <code>rangefinder</code>   |
-+------------------------+---------------+---------------------+
-| Site                   | Vector        | - <code>accelerometer</code> |
-|                        |               | - <code>velocimeter</code>   |
-|                        |               | - <code>force</code>         |
-|                        |               | - <code>torque</code>        |
-|                        |               | - <code>gyro</code>          |
-|                        |               | - <code>magnetometer</code>  |
-|                        |               | - <code>framepos</code>      |
-|                        |               | - <code>framexaxis</code>    |
-|                        |               | - <code>frameyaxis</code>    |
-|                        |               | - <code>framezaxis</code>    |
-|                        |               | - <code>framelinvel</code>   |
-|                        |               | - <code>frameangvel</code>   |
-|                        |               | - <code>framelinacc</code>   |
-|                        |               | - <code>frameangacc</code>   |
-+------------------------+---------------+---------------------+
-| Site                   | Quaternion    | - <code>framequat</code>     |
-+------------------------+---------------+---------------------+</p>
+<table>
+<tbody>
+<tr>
+<td colspan="1" rowspan="1">
+<p><strong>Mujoco Object Type</strong></p>
+</td>
+<td colspan="1" rowspan="1">
+<p><strong>Data Type</strong></p>
+</td>
+<td colspan="1" rowspan="1">
+<p><strong>Sensor Name</strong></p>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Actuator<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Scalar<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>actuatorpos</code>  </li>
+<li><code>actuatorvel</code>  </li>
+<li><code>actuatorfrc</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Body<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Vector<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>subtreecom</code>  </li>
+<li><code>subtreelinvel</code>  </li>
+<li><code>subtreeangmom</code>  </li>
+<li><code>framepos</code>  </li>
+<li><code>framexaxis</code>  </li>
+<li><code>frameyaxis</code>  </li>
+<li><code>framezaxis</code>  </li>
+<li><code>framelinvel</code>  </li>
+<li><code>frameangvel</code>  </li>
+<li><code>framelinacc</code>  </li>
+<li><code>frameangacc</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Body</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Quaternion</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>framequat</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Geom<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Vector<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>framepos</code>  </li>
+<li><code>framexaxis</code>  </li>
+<li><code>frameyaxis</code>  </li>
+<li><code>framezaxis</code>  </li>
+<li><code>framelinvel</code>  </li>
+<li><code>frameangvel</code>  </li>
+<li><code>framelinacc</code>  </li>
+<li><code>frameangacc</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Geom</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Quaternion</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>framequat</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Joint<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Scalar<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>jointpos</code>  </li>
+<li><code>jointvel</code>  </li>
+<li><code>jointlimitpos</code>  </li>
+<li><code>jointlimitvel</code>  </li>
+<li><code>jointlimitfrc</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Site<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Scalar<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>touch</code>  </li>
+<li><code>rangefinder</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Site<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Vector<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+<br />
+</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>accelerometer</code>  </li>
+<li><code>velocimeter</code>  </li>
+<li><code>force</code>  </li>
+<li><code>torque</code>  </li>
+<li><code>gyro</code>  </li>
+<li><code>magnetometer</code>  </li>
+<li><code>framepos</code>  </li>
+<li><code>framexaxis</code>  </li>
+<li><code>frameyaxis</code>  </li>
+<li><code>framezaxis</code>  </li>
+<li><code>framelinvel</code>  </li>
+<li><code>frameangvel</code>  </li>
+<li><code>framelinacc</code>  </li>
+<li><code>frameangacc</code></li>
+</ul>
+</td>
+</tr>
+<tr>
+<td colspan="1" rowspan="1">
+<p>Site</p>
+</td>
+<td colspan="1" rowspan="1">
+<p>Quaternion</p>
+</td>
+<td colspan="1" rowspan="1">
+<ul>
+<li><code>framequat</code></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
 <p>Here’s the same table in reverse, mapping sensors to classes:</p>
 <p>================= ===================================
 Sensor Name       Plugin Class
@@ -435,7 +620,7 @@ convex hull is not visible in Unity, but we intend to expose it in future versio
     <script src="../js/theme_extra.js"></script>
     <script src="../js/theme.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>

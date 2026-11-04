@@ -159,7 +159,7 @@
 <p>编辑工具的主要目标是自动将层次化的 XML 机器人描述转换为功能性的 <a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L34">AMjArticulation</a> 蓝图，该蓝图包含物理就绪的组件和优化的几何体。</p>
 <h2 id="mjcf">系统概述：从MJCF到蓝图</h2>
 <p>下图展示了从原始 MJCF 文件到虚幻编辑器中生成机器人的高层流程。</p>
-<pre class="mermaid"><code>flowchart TD
+<div  class="mermaid">flowchart TD
     subgraph subGraph2 ["Asset Space"]
         H["StaticMesh Assets"]
         I["AMjArticulation Blueprint"]
@@ -175,13 +175,14 @@
         A["MJCF XML File"]
         B["Mesh Assets (STL/OBJ)"]
     end
-    A --&gt; C
-    B --&gt; E
-    C --&gt; D
-    D --&gt; G
-    E --&gt; F
-    F --&gt; H
-    G --&gt; I</code></pre>
+    A --> C
+    B --> E
+    C --> D
+    D --> G
+    E --> F
+    F --> H
+    G --> I
+</div>
 <h3 id="mjcf_1">MJCF 导入管线</h3>
 <p>导入流程是一个多阶段的过程，当将 .xml 文件拖入虚幻内容浏览器时，该流程即开始。<a href="https://github.com/OpenHUTB/hutb/blob/f49dd4dd8c0effaa4a07b81a4a53248682fe7e5c/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp#L51">UMujocoImportFactory</a> 会拦截此操作，并协调多个专用类将 MuJoCo 场景图重建为虚幻引擎的参与者。</p>
 <ul>
@@ -239,7 +240,7 @@
 </tbody>
 </table>
 <p><strong>代码实体映射：网格清理流程</strong></p>
-<pre class="mermaid"><code>flowchart LR
+<div  class="mermaid">flowchart LR
     subgraph subGraph2 ["Unreal Editor"]
         PH["UMjPythonHelper"]
         MI["MujocoMeshImporter"]
@@ -253,11 +254,12 @@
         TM["trimesh"]
         NP["numpy"]
     end
-    TM --&gt; F_CM
-    NP --&gt; F_CM
-    F_CM --&gt; F_CV
-    F_CV --&gt; PH
-    PH --&gt; MI</code></pre>
+    TM --> F_CM
+    NP --> F_CM
+    F_CM --> F_CV
+    F_CV --> PH
+    PH --> MI
+</div>
 <h3 id="_2">报错解决方案</h3>
 <ul>
 <li>
@@ -322,7 +324,7 @@ Element name &#39;g1_29dof_rev_1_4_Geom_Mesh1&#39;, id 1
     <script src="../../js/theme_extra.js"></script>
     <script src="../../js/theme.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
-      <script src="https://cdn.rawgit.com/knsv/mermaid/6.0.0/dist/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
