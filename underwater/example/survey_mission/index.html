@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>水下机器人测绘任务仿真 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u6c34\u4e0b\u673a\u5668\u4eba\u6d4b\u7ed8\u4efb\u52a1\u4eff\u771f";
+        var mkdocs_page_input_path = "underwater/example/survey_mission.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">水下机器人测绘任务仿真</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/example/survey_mission.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">水下机器人测绘任务仿真</h1>
+<p>基于 MuJoCo 的水下测绘任务层，实现 <strong>弓字形测线规划 → LOS 制导 → PI 速度/艏向控制 + 深度 PID → 覆盖率评估</strong> 的完整闭环，可脱离 Unreal 引擎单独运行。</p>
+<p>与已有的 <code>underwater_sim.py</code>（基础流体/浮力/阻力/PID 悬浮）互补：那个脚本回答“ROV 在流体里怎么动”，本示例回答“ROV 怎么把一个作业区域扫完”。</p>
+<h2 id="_2">功能组成</h2>
+<table>
+<thead>
+<tr>
+<th>模块</th>
+<th>文件</th>
+<th>说明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>路径规划</td>
+<td><code>src/underwater/survey_mission.py</code></td>
+<td>弓字形（lawnmower）测线生成，支持任意朝向与起点</td>
+</tr>
+<tr>
+<td>制导</td>
+<td>同上，<code>LOSGuidance</code></td>
+<td>视线法（Line-Of-Sight）跟踪，输出期望艏向与横向偏差</td>
+</tr>
+<tr>
+<td>覆盖评估</td>
+<td>同上，<code>CoverageTracker</code></td>
+<td>栅格化统计声呐扫幅对作业区域的覆盖比例</td>
+</tr>
+<tr>
+<td>任务指标</td>
+<td>同上，<code>evaluate_mission</code></td>
+<td>横向偏差 RMS/峰值、航程、耗时、覆盖率</td>
+</tr>
+<tr>
+<td>仿真</td>
+<td><code>src/underwater/survey_mission_sim.py</code></td>
+<td>MuJoCo 闭环仿真、控制律、数据记录与绘图</td>
+</tr>
+<tr>
+<td>单元测试</td>
+<td><code>src/underwater/tests/test_survey_mission.py</code></td>
+<td>纯数学部分测试（不依赖 MuJoCo）</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_3">原理</h2>
+<h3 id="1">1. 覆盖路径规划</h3>
+<p>测线沿作业区域局部 X 方向往返，相邻测线沿 Y 方向等距排布：</p>
+<p>
+<script type="math/tex; mode=display">
+n = \left\lceil \frac{H}{s} \right\rceil , \qquad \Delta y = \frac{H}{n} \le s
+</script>
+</p>
+<p>其中 <script type="math/tex">H</script> 为区域宽度、<script type="math/tex">s</script> 为期望测线间距。取整后再均分，保证实际间距不超过设定值，且最后一条测线正好落在边界上。</p>
+<p>路径点会随规划整体旋转 <code>heading</code> 并平移到 <code>origin</code>，因此可以直接把作业区摆到世界坐标的任意位置。</p>
+<h3 id="2-los">2. LOS 制导</h3>
+<p>把当前位置 <script type="math/tex">P</script> 投影到当前测线段 <script type="math/tex">\overline{AB}</script> 上得到垂足 <script type="math/tex">F</script>，横向偏差定义为叉积：</p>
+<p>
+<script type="math/tex; mode=display">
+e_{ct} = \hat{u} \times (P - A) , \qquad \hat{u} = \frac{B - A}{\lVert B - A \rVert}
+</script>
+</p>
+<p>路径左侧为正、右侧为负。前视点取 <script type="math/tex">T = F + L \cdot \hat{u}</script>（且不越过 <script type="math/tex">B</script>），期望艏向为</p>
+<p>
+<script type="math/tex; mode=display">
+\psi_d = \operatorname{atan2}(T_y - P_y,\; T_x - P_x)
+</script>
+</p>
+<p>当存在横向偏差时，前视方向自然指向测线，形成回中趋势；前视距离 <script type="math/tex">L</script> 越大越平缓、越小越激进。</p>
+<h3 id="3">3. 控制律</h3>
+<ul>
+<li><strong>水平速度环（PI）</strong>：把期望速度 <script type="math/tex">v_d = u_{cruise}\,[\cos\psi_d, \sin\psi_d]</script> 与实际世界系速度做差，输出世界系推力，再投影到机体系限幅（模拟推进器能力上限）后转回世界系：</li>
+</ul>
+<p>
+<script type="math/tex; mode=display">
+F = K_p (v_d - v) + K_i \int (v_d - v)\,dt , \qquad \lVert F \rVert \le F_{max}
+</script>
+</p>
+<p>积分项用于抵消 MuJoCo 椭球流体模型带来的二次阻力（纯 P 控制会留下明显的稳态速度误差）。</p>
+<ul>
+<li>
+<p><strong>艏向环（PD）</strong>：<script type="math/tex">\tau_z = K_{p\psi}\, e_\psi - K_{d\psi}\, \dot{\psi}</script>，力矩限幅 <script type="math/tex">|\tau_z| \le \tau_{max}</script>。</p>
+</li>
+<li>
+<p><strong>深度环</strong>：复用 <code>depth_controller.PIDDepthController</code>，叠加静态浮力 <script type="math/tex">F_b = \rho g V</script> 前馈。</p>
+</li>
+</ul>
+<h3 id="4">4. 覆盖率</h3>
+<p>作业区域被离散成 <code>grid_resolution</code> 见方的栅格，ROV 每走过一段航迹，就把以航迹点为圆心、直径 <code>swath_width</code>（声呐扫幅）的圆内栅格标记为已覆盖，段内按半格插值避免漏格。</p>
+<p>工程上测线间距应略小于扫幅（即保留 10%–25% 的<strong>重叠率</strong>），否则跟踪误差会在测线交界处留下未覆盖的条带。</p>
+<h2 id="_4">运行</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src/underwater
+pip<span class="w"> </span>install<span class="w"> </span>mujoco<span class="w"> </span>numpy<span class="w"> </span>matplotlib
+
+<span class="c1"># 无界面运行（保存航迹 CSV 与结果图）</span>
+python<span class="w"> </span>survey_mission_sim.py
+
+<span class="c1"># 同时打开 MuJoCo Viewer 观察</span>
+python<span class="w"> </span>survey_mission_sim.py<span class="w"> </span>--viewer
+</code></pre></div>
+<p>输出：</p>
+<ul>
+<li><code>docs/img/underwater/survey_trajectory.png</code> —— 规划测线 vs 实际航迹</li>
+<li><code>docs/img/underwater/survey_cross_track.png</code> —— 横向偏差曲线</li>
+<li><code>docs/img/underwater/survey_coverage.png</code> —— 覆盖率栅格图</li>
+<li><code>docs/img/underwater/survey_track.csv</code> —— 时间、位置、速度、横向偏差</li>
+</ul>
+<h2 id="_5">实测结果</h2>
+<p>默认配置（40 m × 16 m 作业区、测线间距 8 m、航速 1.0 m/s、目标深度 −5 m）：</p>
+<table>
+<thead>
+<tr>
+<th>指标</th>
+<th>数值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>覆盖率</td>
+<td><strong>100.0 %</strong></td>
+</tr>
+<tr>
+<td>横向偏差 RMS</td>
+<td><strong>0.276 m</strong></td>
+</tr>
+<tr>
+<td>横向偏差峰值</td>
+<td>1.496 m（出现在测线末端的 180° 掉头处）</td>
+</tr>
+<tr>
+<td>实际航程 / 规划航程</td>
+<td>131.9 m / 136.0 m</td>
+</tr>
+<tr>
+<td>任务耗时</td>
+<td>211.7 s</td>
+</tr>
+<tr>
+<td>是否完成</td>
+<td>是</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="测绘航迹" src="../../../img/underwater/survey_trajectory.png" /></p>
+<p>掉头时因为要同时完成减速转向，横向偏差会短时冲到 1.5 m 左右；直线段上偏差稳定在 ±0.2 m 内。</p>
+<p><img alt="横向偏差" src="../../../img/underwater/survey_cross_track.png" /></p>
+<p><img alt="覆盖率" src="../../../img/underwater/survey_coverage.png" /></p>
+<h2 id="_6">配置项</h2>
+<p><code>src/underwater/data/config.json</code> 中的 <code>survey_mission</code> 段：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>area_width</code> / <code>area_height</code></td>
+<td>作业区域尺寸 (m)</td>
+</tr>
+<tr>
+<td><code>lane_spacing</code></td>
+<td>期望测线间距 (m)</td>
+</tr>
+<tr>
+<td><code>origin</code> / <code>heading</code></td>
+<td>作业区域位置与朝向</td>
+</tr>
+<tr>
+<td><code>target_depth</code></td>
+<td>测绘深度 (m，负值)</td>
+</tr>
+<tr>
+<td><code>cruise_speed</code></td>
+<td>巡航速度 (m/s)</td>
+</tr>
+<tr>
+<td><code>lookahead</code></td>
+<td>LOS 前视距离 (m)</td>
+</tr>
+<tr>
+<td><code>accept_radius</code></td>
+<td>路径点切换半径 (m)</td>
+</tr>
+<tr>
+<td><code>timeout_seconds</code></td>
+<td>仿真超时 (s)</td>
+</tr>
+<tr>
+<td><code>swath_width</code></td>
+<td>声呐扫幅 (m)，建议取 <code>lane_spacing × 1.1 ~ 1.25</code></td>
+</tr>
+<tr>
+<td><code>grid_resolution</code></td>
+<td>覆盖率栅格边长 (m)</td>
+</tr>
+<tr>
+<td><code>controller.*</code></td>
+<td>速度环 / 艏向环增益与限幅</td>
+</tr>
+</tbody>
+</table>
+<h2 id="_7">单元测试</h2>
+<div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src/underwater
+python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v
+</code></pre></div>
+<p>覆盖测线生成（边界、间距、蛇形交替、旋转平移、非法输入）、LOS 制导（偏差符号、回中趋势、航点切换）、覆盖率统计与指标汇总，共 14 个用例。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
