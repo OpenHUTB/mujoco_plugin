@@ -34,4 +34,6 @@
 
 * [交互式波浪](./waves_interactive.md)
 
+* [测绘任务仿真：弓字形测线 + LOS 制导](./survey_mission.md)
+
 仓库的根目录下还有一个 [examples.py](https://github.com/OpenHUTB/Underwater/blob/master/client/example.py) 文件，其中包含更多示例代码。
