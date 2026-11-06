@@ -150,6 +150,8 @@ PythonPath=C:/Users/you/miniconda3/envs/myenv/python.exe
 
 启用 [UMjPhysicsEngine](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L60) 的 [bSaveDebugXml](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L139) 功能，即可在编译后将 [scene_compiled.xml](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255) 和 [scene_compiled.mjb](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L241)（MuJoCo Binary） 保存到 [Saved/URLab/](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L273) 目录。对比原始 MJCF 和编译后的 XML 文件，找出导入/导出不匹配之处（例如缺少元素、属性值错误、默认继承关系损坏）。编译后的 XML 文件也可以加载到原生 MuJoCo 中进行验证。更多信息请参阅 [URLab 编辑器](../dev/URLabEditor.md)、[开发者工具](developer_tools.md) 。
 
+## 导入时所遇到的及解决方案
+[MuJoCo XML 导入崩溃：GC 回收导入对象（UE4.26）](mujoco_import_gc_crash.md)
 
 ## 导入后
 
