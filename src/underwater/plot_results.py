@@ -106,7 +106,7 @@ def plot_ocean_current(time_data, speed_data, save_dir):
 def plot_depth_comparison(no_oc_t, no_oc_z, with_oc_t, with_oc_z, target_z, save_dir):
     """
     5. 绘制洋流对 PID 悬浮的影响对比图
-    
+
     对比无洋流和有洋流两种情况下的深度跟踪曲线。
     """
     plt.figure("PID 悬浮：无洋流 vs 有洋流", figsize=(12, 6))
@@ -132,4 +132,83 @@ def plot_depth_comparison(no_oc_t, no_oc_z, with_oc_t, with_oc_z, target_z, save
     graph_path = os.path.join(save_dir, "depth_comparison_oc.png")
     plt.savefig(graph_path, dpi=300)
     print(f"\n[可视化] 深度对比图已保存至: {os.path.abspath(graph_path)}")
+    plt.close()
+
+
+# ══════════════════════════════════════════════════════════════
+# 测绘任务 (Survey Mission) 可视化
+# ══════════════════════════════════════════════════════════════
+
+def plot_survey_trajectory(waypoints, actual_traj, save_dir):
+    """6. 测绘任务航迹图：规划测线 vs 实际航迹"""
+    fig, ax = plt.subplots(figsize=(9, 6))
+
+    ax.plot(waypoints[:, 0], waypoints[:, 1], color='crimson', linestyle='--',
+            linewidth=1.8, label="规划测线 (Planned)")
+    if len(actual_traj) > 1:
+        ax.plot(actual_traj[:, 0], actual_traj[:, 1], color='tab:blue',
+                linewidth=1.5, label="实际航迹 (Actual)")
+
+    ax.scatter(waypoints[0, 0], waypoints[0, 1], c='green', s=70, marker='o',
+               zorder=5, label="起点")
+    ax.scatter(waypoints[-1, 0], waypoints[-1, 1], c='black', s=70, marker='s',
+               zorder=5, label="终点")
+
+    ax.set_aspect('equal', adjustable='datalim')
+    ax.set_title("水下机器人测绘任务航迹 (弓字形测线 + LOS 制导)", fontsize=14)
+    ax.set_xlabel("X / m", fontsize=12)
+    ax.set_ylabel("Y / m", fontsize=12)
+    ax.grid(True, linestyle="--", alpha=0.6)
+    ax.legend(fontsize=10, loc='best')
+    plt.tight_layout()
+
+    os.makedirs(save_dir, exist_ok=True)
+    graph_path = os.path.join(save_dir, "survey_trajectory.png")
+    plt.savefig(graph_path, dpi=300)
+    print(f"\n[可视化] 测绘航迹图已保存至: {os.path.abspath(graph_path)}")
+    plt.close()
+
+
+def plot_cross_track(time_data, cross_track, save_dir):
+    """7. 横向偏差曲线 (路径跟踪精度)"""
+    plt.figure("横向偏差", figsize=(10, 4.5))
+
+    plt.plot(time_data, cross_track, color='darkorange', linewidth=2,
+             label="横向偏差 (Cross-track)")
+    plt.axhline(y=0.0, color='gray', linestyle='-', linewidth=1)
+    plt.axhline(y=1.0, color='red', linestyle=':', linewidth=1.2, label="±1 m 容差")
+    plt.axhline(y=-1.0, color='red', linestyle=':', linewidth=1.2)
+
+    plt.title("LOS 制导横向偏差随时间变化", fontsize=14)
+    plt.xlabel("时间 (Time / s)", fontsize=12)
+    plt.ylabel("横向偏差 (m)", fontsize=12)
+    plt.grid(True, linestyle="--", alpha=0.6)
+    plt.legend(fontsize=10)
+    plt.tight_layout()
+
+    os.makedirs(save_dir, exist_ok=True)
+    graph_path = os.path.join(save_dir, "survey_cross_track.png")
+    plt.savefig(graph_path, dpi=300)
+    print(f"\n[可视化] 横向偏差曲线已保存至: {os.path.abspath(graph_path)}")
+    plt.close()
+
+
+def plot_coverage_map(tracker, save_dir):
+    """8. 覆盖率栅格图 (绿色=已覆盖)"""
+    plt.figure("覆盖率", figsize=(9, 5))
+
+    plt.imshow(tracker.visited.T, origin='lower', cmap='Greens', vmin=0, vmax=1,
+               extent=[0, tracker.width, 0, tracker.height], aspect='equal',
+               interpolation='nearest')
+
+    plt.title(f"作业区域覆盖率: {tracker.coverage * 100:.1f}%", fontsize=14)
+    plt.xlabel("X / m", fontsize=12)
+    plt.ylabel("Y / m", fontsize=12)
+    plt.colorbar(label="已覆盖")
+    plt.tight_layout()
+
+    os.makedirs(save_dir, exist_ok=True)
+    graph_path = os.path.join(save_dir, "survey_coverage.png")
+    plt.savefig(graph_path, dpi=300)
+    print(f"\n[可视化] 覆盖率栅格图已保存至: {os.path.abspath(graph_path)}")
     plt.close()

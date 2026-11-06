@@ -19,6 +19,8 @@
 
 - [用于设置HoloOcean 水下机器人模拟器和 HoloOcean ROS2 桥接器的开发环境的脚本](https://github.com/migeran/holoocean_tools)
 
+- [用于将 holoocean 数据转换为原始传感器消息的 ROS2 包](https://github.com/BYU-FROST-Lab/holoocean-sensor-bridge/tree/master)
+
 
 
 ## 强化学习 <span id="rl"></span>

@@ -31,6 +31,29 @@
     }
   },
 
+  "survey_mission": {
+    "area_width": 40.0,
+    "area_height": 16.0,
+    "lane_spacing": 8.0,
+    "origin": [0.0, 0.0],
+    "heading": 0.0,
+    "target_depth": -5.0,
+    "cruise_speed": 1.0,
+    "lookahead": 4.0,
+    "accept_radius": 1.5,
+    "timeout_seconds": 300.0,
+    "swath_width": 10.0,
+    "grid_resolution": 0.5,
+    "controller": {
+      "kp_vel": 320.0,
+      "ki_vel": 150.0,
+      "max_force": 1500.0,
+      "kp_yaw": 320.0,
+      "kd_yaw": 140.0,
+      "max_torque": 260.0
+    }
+  },
+
   "ocean_current": {
     "enabled": true,
     "model_type": "cascade",
