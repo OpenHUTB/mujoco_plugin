@@ -4,6 +4,8 @@
 
 ---
 
+[其中xml的下载位置](https://github.com/google-deepmind/mujoco_menagerie/blob/main/unitree_z1/z1.xml)
+
 ## 1. 现象
 
 - 拖入 `.xml` 后，前几个网格顺利导入，日志出现 `Imported <mesh> in [0 min X s]`，紧接着编辑器崩溃退出。
