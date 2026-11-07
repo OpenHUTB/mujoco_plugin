@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>MuJoCo XML 导入崩溃： GC 回收导入对象（UE4.26） - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "MuJoCo XML \u5bfc\u5165\u5d29\u6e83\uff1a GC \u56de\u6536\u5bfc\u5165\u5bf9\u8c61\uff08UE4.26\uff09";
+        var mkdocs_page_input_path = "guides/mujoco_import_gc_crash.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">MuJoCo XML 导入崩溃： GC 回收导入对象（UE4.26）</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/guides/mujoco_import_gc_crash.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="mujoco-xml-gc-ue426">MuJoCo XML 导入崩溃： GC 回收导入对象（UE4.26）</h1>
+<p>本文记录在 <strong>UE4.26 + CarlaUE4（hutb 工程）</strong> 中，把 MuJoCo <code>.xml</code> 从文件管理器拖入内容浏览器后，编辑器在网格导入完成后发生 <strong>SIGSEGV</strong> 崩溃的问题：现象、完整日志、根因分析与修复方案。</p>
+<hr />
+<p><a href="https://github.com/google-deepmind/mujoco_menagerie/blob/main/unitree_z1/z1.xml">其中xml的下载位置</a></p>
+<h2 id="1">1. 现象</h2>
+<ul>
+<li>拖入 <code>.xml</code> 后，前几个网格顺利导入，日志出现 <code>Imported &lt;mesh&gt; in [0 min X s]</code>，紧接着编辑器崩溃退出。</li>
+<li>崩溃对话框显示 <code>Caught signal 11 Segmentation fault</code>，日志里是：</li>
+<li><code>Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490</code></li>
+<li>崩溃点不在 Datasmith 里，而是在<strong>导入成功之后</strong>的 AssetTools 收尾代码中。</li>
+</ul>
+<hr />
+<h2 id="2">2. 崩溃日志</h2>
+<div class="highlight"><pre><span></span><code>[2026.11.05-04.15.47:735][299]LogLayoutUV: FindBestPacking (Total Time: 0 ms, Avg Efficiency: -nan)
+[2026.11.05-04.15.47:823][299]LogUObjectHash: Compacting FUObjectHashTables data took   2.88ms
+[2026.11.05-04.15.47:826][299]LogDatasmithImport: Imported z1_Link00 in [0 min 2.070 s]
+[2026.11.05-04.15.47:826][299]LoadErrors: Warning: Mesh has primitives with no materials assigned: 0_z1_Link00.stl
+[2026.11.05-04.15.47:875][299]LogCore: === Critical error: ===
+Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490
+
+[2026.11.05-04.15.47:875][299]LogCore: 0x00001539f794e517 libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetsInternal(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*, FAssetImportParams const&amp;) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:2126]
+0x00001539f79511f9 libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetTasks(TArray&lt;UAssetImportTask*, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:1170]
+0x0000153554c0d8fd libUE4Editor-URLabEditor.so!UMujocoGenerationAction::AttemptMeshImport(FString const&amp;, FString const&amp;, EFBXNormalGenerationMethod::Type) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp:213]
+0x0000153554c0cd32 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportSingleMesh(FString const&amp;, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp:91]
+0x0000153554c04aa5 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportNodeRecursive(FXmlNode const*, USCS_Node*, UBlueprint*, FString const&amp;, FString const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FVector, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FVector, false&gt; &gt; const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FMuJoCoMaterialData, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FMuJoCoMaterialData, false&gt; &gt; const&amp;, TMap&lt;FString, UTexture2D*, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, UTexture2D*, false&gt; &gt; const&amp;, FMjCompilerSettings const&amp;, bool, USCS_Node*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp:471]
+0x0000153554c0600f libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportNodeRecursive(FXmlNode const*, USCS_Node*, UBlueprint*, FString const&amp;, FString const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FVector, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FVector, false&gt; &gt; const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FMuJoCoMaterialData, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FMuJoCoMaterialData, false&gt; &gt; const&amp;, TMap&lt;FString, UTexture2D*, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, UTexture2D*, false&gt; &gt; const&amp;, FMjCompilerSettings const&amp;, bool, USCS_Node*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp:979]
+0x0000153554bf47c0 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprintXml(UBlueprint*, FString const&amp;, FXmlFile const*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:231]
+0x0000153554bf3a80 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprintXml(UBlueprint*, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:125]
+0x0000153554bf3897 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprint(UBlueprint*, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:107]
+0x0000153554c0bd06 libUE4Editor-URLabEditor.so!UMujocoImportFactory::FactoryCreateFile(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, FFeedbackContext*, bool&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp:200]
+0x0000153a09daf9fe libUE4Editor-UnrealEd.so!UFactory::ImportObject(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, bool&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Factories/Factory.cpp:201]
+0x00001539f794e30c libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetsInternal(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*, FAssetImportParams const&amp;) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:2091]
+0x00001539f7956cfd libUE4Editor-AssetTools.so!non-virtual thunk to UAssetToolsImpl::ImportAssets(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, UFactory*, bool, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:0]
+0x0000153a0a70ee2d libUE4Editor-UnrealEd.so!FImportFilesByPath::Run() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Subsystems/ImportSubsystem.cpp:95]
+0x0000153a0a6bfc0e libUE4Editor-UnrealEd.so!UImportSubsystem::HandleNextTick() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Subsystems/ImportSubsystem.cpp:143]
+0x0000153a0f8987c0 libUE4Editor-Engine.so!FTimerUnifiedDelegate::Execute() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Engine/Public/TimerManager.h:51]
+0x0000153a0f7e230c libUE4Editor-Engine.so!FTimerManager::Tick(float) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Engine/Private/TimerManager.cpp:878]
+0x0000153a09c17664 libUE4Editor-UnrealEd.so!UEditorEngine::Tick(float, bool) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/EditorEngine.cpp:1362]
+0x0000153a0a74ed12 libUE4Editor-UnrealEd.so!UUnrealEdEngine::Tick(float, bool) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/UnrealEdEngine.cpp:423]
+0x000000000026c4c1 UE4Editor!FEngineLoop::Tick() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Launch/Private/LaunchEngineLoop.cpp:4830]
+0x000000000027ad83 UE4Editor!GuardedMain(char16_t const*) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Launch/Private/Launch.cpp:171]
+0x0000153a08800286 libUE4Editor-UnixCommonStartup.so!CommonUnixMain(int, char**, int (*)(char16_t const*), void (*)()) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Unix/UnixCommonStartup/Private/UnixCommonStartup.cpp:264]
+0x0000153a08624083 libc.so.6!__libc_start_main(+0xf2)
+0x0000000000263d89 UE4Editor!_start()
+</code></pre></div>
+<h2 id="3">3. 根因分析</h2>
+<h3 id="31">3.1 调用链</h3>
+<div class="highlight"><pre><span></span><code>UMujocoGenerationAction::AttemptMeshImport                     // 插件
+  └─ AssetTools.ImportAssetTasks(ImportTasks)                  // AssetTools.cpp:1144
+       └─ ImportAssetsInternal                                 // AssetTools.cpp:1666
+            ├─ Factory = Params.SpecifiedFactory               // :1851-1853 自动化导入直接使用指定工厂
+            ├─ Factory-&gt;SetAutomatedAssetImportData(...)       // :2087
+            ├─ Factory-&gt;SetAssetImportTask(ImportTask)         // :2088 临时以 UPROPERTY 持有任务
+            └─ Factory-&gt;ImportObject(...)                      // :2091 → Factory.cpp:162
+                 └─ FactoryCreateFile (虚函数分发)              // DatasmithImportFactory.cpp:457
+                      ├─ TranslatableSource.Translate(Scene)   // 解析 GLB
+                      ├─ Import(ImportContext)                 // 生成 StaticMesh 等资产
+                      └─ ReportImportStats(...)                // DatasmithImportFactory.cpp:340
+                           └─ CollectGarbage(...)              // ★ 显式 GC（:349）
+            ← 返回后：SetAssetImportTask(nullptr)
+            ← 然后：ImportAssetType = Factory-&gt;ResolveSupportedClass()   // ★ 崩溃点
+</code></pre></div>
+<p>要点：GC <strong>不是</strong> AssetTools 触发的，而是 Datasmith 在每次导入收尾时（<code>ReportImportStats</code>）显式调用 <code>CollectGarbage()</code> 回收翻译过程的临时数据。日志里 <code>Imported &lt;mesh&gt; in [0 min X s]</code> 正是该函数在 GC <strong>之后</strong>打印的，所以这行日志紧挨着崩溃。</p>
+<p><strong>延伸阅读</strong>：<a href="why_sigsegv_means_gc/">为什么日志中出现的这个 <code>Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490</code>，就能知道是 <code>CollectGarbage</code> 把创建的对象给回收了？</a></p>
+<h2 id="4">4. 解决方案</h2>
+<h3 id="41-importtask-factory">4.1 核心修复：导入期间保护 <code>ImportTask</code> 与 <code>Factory</code></h3>
+<p>文件：<code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code>（<code>UMujocoGenerationAction::AttemptMeshImport</code>）</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 运行导入。</span>
+<span class="c1">// 注意：Datasmith 工厂在 FactoryCreateFile() 结束时调用 CollectGarbage()</span>
+<span class="c1">// （DatasmithImportFactory.cpp 的 ReportImportStats）；UE4.26 中</span>
+<span class="c1">// GARBAGE_COLLECTION_KEEPFLAGS 在编辑器里等于 RF_Standalone。</span>
+<span class="c1">// 这里 NewObject 出来的 ImportTask / Factory 都不是 RF_Standalone 且未被 Root，</span>
+<span class="c1">// GC 会把工厂回收，AssetTools 之后在 ImportAssetsInternal() 末尾执行</span>
+<span class="c1">// Factory-&gt;ResolveSupportedClass() 时就会访问已释放对象并段错误。</span>
+<span class="c1">// 所以导入期间必须把它们保持在根集里，TStrongObjectPtr 析构时会自动移出根集。</span>
+<span class="n">TStrongObjectPtr</span><span class="o">&lt;</span><span class="n">UAssetImportTask</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ImportTaskGuard</span><span class="p">(</span><span class="n">ImportTask</span><span class="p">);</span>
+<span class="n">TStrongObjectPtr</span><span class="o">&lt;</span><span class="n">UFactory</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ImportFactoryGuard</span><span class="p">(</span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">Factory</span><span class="p">);</span>
+
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UAssetImportTask</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ImportTasks</span><span class="p">;</span>
+<span class="n">ImportTasks</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ImportTask</span><span class="p">);</span>
+<span class="n">AssetTools</span><span class="p">.</span><span class="n">ImportAssetTasks</span><span class="p">(</span><span class="n">ImportTasks</span><span class="p">);</span>
+
+<span class="c1">// 之后的 ImportTask-&gt;Result / ImportTask-&gt;ImportedObjectPaths 读取同样受保护</span>
+</code></pre></div>
+<h2 id="_1">总结</h2>
+<p>就是在<code>ImportTask</code>和<code>Factory</code>执行到<code>CollectGarbage</code>的时候被当垃圾回收了。然后回来的时候还是要用<code>Factory</code>或<code>ImportTask</code>，从而导致的报错。</p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

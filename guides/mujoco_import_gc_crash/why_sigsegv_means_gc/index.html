@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>如何从崩溃日志判定：是 CollectGarbage 回收了对象？ - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5982\u4f55\u4ece\u5d29\u6e83\u65e5\u5fd7\u5224\u5b9a\uff1a\u662f CollectGarbage \u56de\u6536\u4e86\u5bf9\u8c61\uff1f";
+        var mkdocs_page_input_path = "guides/mujoco_import_gc_crash/why_sigsegv_means_gc.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">如何从崩溃日志判定：是 CollectGarbage 回收了对象？</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/guides/mujoco_import_gc_crash/why_sigsegv_means_gc.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="collectgarbage">如何从崩溃日志判定：是 <code>CollectGarbage</code> 回收了对象？</h1>
+<blockquote>
+<p>本文是 <a href="../">MuJoCo XML 导入崩溃：Datasmith GC 回收导入对象（UE4.26）</a> 的补充说明，回答：</p>
+<p>为什么日志里只有一行 <code>Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490</code>，就能判断是 <code>CollectGarbage()</code> 把导入时创建的对象回收了？</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 地址本身能说明什么</h2>
+<div class="highlight"><pre><span></span><code>Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490
+</code></pre></div>
+<ul>
+<li>这是 <strong>read</strong>（不是 write）——代码在读取某个对象的内存；</li>
+<li>地址<strong>不是 0 附近</strong>：纯空指针解引用通常读 <code>0x0</code>、<code>0x8</code>、<code>0x10</code> 这类小地址；</li>
+<li><code>0x00000000e30a0490</code> 是「看起来像指针、实际不可映射」的垃圾值，典型于<strong>对象已释放、内存被分配器改写后，代码又通过它读 vtable 或成员</strong>；</li>
+<li>同一地址在多次崩溃中<strong>完全一致</strong>（11-05 的三次崩溃都是 <code>0xe30a0490</code>），说明是<strong>确定性</strong>的释放后内存内容，而不是随机野指针。</li>
+</ul>
+<p><strong>但这只能证明「use-after-free 类野指针」，不能证明是谁释放的。</strong> 是谁释放的，要看下面的证据。</p>
+<hr />
+<h2 id="2">2. 证据详解</h2>
+<h3 id="21-importobject">2.1 崩溃栈：对象死在 <code>ImportObject</code> 期间</h3>
+<p>崩溃时的调用栈（节选）：</p>
+<div class="highlight"><pre><span></span><code>UAssetToolsImpl::ImportAssetsInternal        ← 崩溃点（ResolveSupportedClass）
+UAssetToolsImpl::ImportAssetTasks
+UMujocoGenerationAction::AttemptMeshImport
+UMujocoGenerationAction::ImportSingleMesh
+UMujocoGenerationAction::ImportNodeRecursive
+...
+UMujocoImportFactory::FactoryCreateFile
+UFactory::ImportObject                        ← 工厂调用在这里面
+UAssetToolsImpl::ImportAssetsInternal         ← 外层（拖入的 .xml）
+FImportFilesByPath::Run
+UImportSubsystem::HandleNextTick
+</code></pre></div>
+<p>关键推理：</p>
+<ul>
+<li>在同一个 <code>ImportAssetsInternal</code> 里，<code>Factory</code> 在调用 <code>ImportObject</code> <strong>之前</strong>刚被正常使用过（<code>Factory-&gt;ImportObject(...)</code> 本身能调进去）；</li>
+<li>调用返回后，<strong>下一次</strong>使用同一个 <code>Factory</code>（<code>Factory-&gt;ResolveSupportedClass()</code>）就崩溃了；</li>
+<li>指针值没有变化（不是传错指针），唯一解释是：<strong>对象在 <code>ImportObject</code> 执行期间被销毁了</strong>。</li>
+</ul>
+<h3 id="22-datasmith-gc">2.2 日志时序：窗口内只发生了 Datasmith 的 GC</h3>
+<p>崩溃前最后几行日志：</p>
+<div class="highlight"><pre><span></span><code>LogUObjectHash: Compacting FUObjectHashTables data took   2.88ms
+LogDatasmithImport: Imported z1_Link00 in [0 min 2.070 s]
+LoadErrors: Warning: Mesh has primitives with no materials assigned: 0_z1_Link00.stl
+=== Critical error ===
+Unhandled Exception: SIGSEGV: invalid attempt to read memory at address 0x00000000e30a0490
+</code></pre></div>
+<p>查看源码可知， 这一行是在 <code>CollectGarbage()</code> <strong>之后</strong>才打印的：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// DatasmithImportFactory.cpp:340  ReportImportStats</span>
+<span class="n">CollectGarbage</span><span class="p">(</span><span class="n">GARBAGE_COLLECTION_KEEPFLAGS</span><span class="p">);</span><span class="w">                    </span><span class="c1">// :349  ← 显式 GC</span>
+<span class="p">...</span>
+<span class="n">UE_LOG</span><span class="p">(</span><span class="n">LogDatasmithImport</span><span class="p">,</span><span class="w"> </span><span class="n">Log</span><span class="p">,</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;%s %s in [%d min %.3f s]%s&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">ImportContext</span><span class="p">.</span><span class="n">bIsAReimport</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;Reimported&quot;</span><span class="p">)</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">TEXT</span><span class="p">(</span><span class="s">&quot;Imported&quot;</span><span class="p">),</span><span class="w"> </span><span class="n">ImportContext</span><span class="p">.</span><span class="n">Scene</span><span class="o">-&gt;</span><span class="n">GetName</span><span class="p">(),</span><span class="w"> </span><span class="n">ElapsedMin</span><span class="p">,</span><span class="w"> </span><span class="n">ElapsedSeconds</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">MemoryStats</span><span class="p">);</span>
+</code></pre></div>
+<p>因此「日志紧挨着崩溃」=「GC 刚跑完，控制权回到 AssetTools，随即崩溃」。</p>
+<p>也可以在<strong>源码里全局搜这个格式串</strong></p>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-rn<span class="w"> </span><span class="s1">&#39;in \[%d min&#39;</span><span class="w"> </span>
+<span class="w">  </span>/home/ubuntu/UnrealEngine_4.26/Engine/Plugins/Enterprise/DatasmithImporter/Source<span class="w"> </span>--include<span class="o">=</span>*.cpp
+</code></pre></div>
+<p>输出</p>
+<div class="highlight"><pre><span></span><code>/home/ubuntu/UnrealEngine_4.26/Engine/Plugins/Enterprise/DatasmithImporter/Source/DatasmithImporter/Private/DatasmithImportFactory.cpp:366:<span class="w">     </span>UE_LOG<span class="o">(</span>LogDatasmithImport,<span class="w"> </span>Log,<span class="w"> </span>TEXT<span class="o">(</span><span class="s2">&quot;%s %s in [%d min %.3f s]%s&quot;</span><span class="o">)</span>,<span class="w"> </span>ImportContext.bIsAReimport<span class="w"> </span>?<span class="w"> </span>TEXT<span class="o">(</span><span class="s2">&quot;Reimported&quot;</span><span class="o">)</span><span class="w"> </span>:<span class="w"> </span>TEXT<span class="o">(</span><span class="s2">&quot;Imported&quot;</span><span class="o">)</span>,<span class="w"> </span>ImportContext.Scene-&gt;GetName<span class="o">()</span>,<span class="w"> </span>ElapsedMin,<span class="w"> </span>ElapsedSeconds,<span class="w"> </span>*MemoryStats<span class="o">)</span><span class="p">;</span>
+</code></pre></div>
+<p><a href="../">← 返回主文档</a></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

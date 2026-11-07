@@ -75,7 +75,9 @@
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_7">调试导入问题</a>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#_8">导入后</a>
+    <li class="toctree-l2"><a class="reference internal" href="#_8">导入时所遇到的及解决方案</a>
+    </li>
+    <li class="toctree-l2"><a class="reference internal" href="#_9">导入后</a>
     </li>
     </ul>
                 </li>
@@ -337,7 +339,9 @@ python<span class="w"> </span>clean_meshes.py<span class="w"> </span>hutb<span c
 <hr />
 <h2 id="_7">调试导入问题</h2>
 <p>启用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L60">UMjPhysicsEngine</a> 的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjPhysicsEngine.h#L139">bSaveDebugXml</a> 功能，即可在编译后将 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L255">scene_compiled.xml</a> 和 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L241">scene_compiled.mjb</a>（MuJoCo Binary） 保存到 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp#L273">Saved/URLab/</a> 目录。对比原始 MJCF 和编译后的 XML 文件，找出导入/导出不匹配之处（例如缺少元素、属性值错误、默认继承关系损坏）。编译后的 XML 文件也可以加载到原生 MuJoCo 中进行验证。更多信息请参阅 <a href="../../dev/URLabEditor/">URLab 编辑器</a>、<a href="developer_tools.md">开发者工具</a> 。</p>
-<h2 id="_8">导入后</h2>
+<h2 id="_8">导入时所遇到的及解决方案</h2>
+<p><a href="../mujoco_import_gc_crash/">MuJoCo XML 导入崩溃：GC 回收导入对象（UE4.26）</a></p>
+<h2 id="_9">导入后</h2>
 <p>导入的关节是一个普通的虚幻引擎参与者。您可以重新排列组件、添加传感器或摄像机、覆盖属性，或将其保存为可重用的蓝图。XML 仅在导入期间读取——之后，虚幻引擎组件才是最终的数据源。</p>
 <p>有关导入流程内部结构的完整详细信息，请参阅 <a href="../../architecture/#import-pipeline">架构</a> 部分。</p>
               
