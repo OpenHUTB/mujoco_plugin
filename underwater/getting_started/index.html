@@ -141,6 +141,32 @@
             <div class="section" itemprop="articleBody">
               
                 <h1 id="_1">入门与示例</h1>
+<h2 id="_2">运行前准备</h2>
+<p>建议先安装以下 Python 依赖，其中 <code>posix_ipc</code> 用于与仿真世界进程共享内存，
+缺失时会在 <code>holoocean.make()</code> 处报 <code>ModuleNotFoundError: No module named 'posix_ipc'</code>：</p>
+<div class="highlight"><pre><span></span><code>pip<span class="w"> </span>install<span class="w"> </span>posix_ipc<span class="w"> </span>psutil<span class="w"> </span>lcm<span class="w"> </span>numpy
+</code></pre></div>
+<h3 id="holoocean">世界包版本需与 holoocean 包版本一致</h3>
+<p>HoloOcean 会到 <code>~/.local/share/holoocean/&lt;版本号&gt;/worlds/</code> 下查找场景文件，
+其中 <code>&lt;版本号&gt;</code> 取自 <code>holoocean.__version__</code>。若已下载的世界包版本与它不一致
+（例如包为 <code>1.0.0</code>、世界包解压在 <code>2.3.0</code> 目录），运行时会报：</p>
+<div class="highlight"><pre><span></span><code>FileNotFoundError: The file `XXX.json` could not be found in
+~/.local/share/holoocean/1.0.0
+</code></pre></div>
+<p>确认版本：</p>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import holoocean; print(holoocean.__version__)&quot;</span>
+ls<span class="w"> </span>~/.local/share/holoocean/
+</code></pre></div>
+<p>若不一致，可建立软链接快速验证：</p>
+<div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-s<span class="w"> </span>~/.local/share/holoocean/2.3.0<span class="w"> </span>~/.local/share/holoocean/1.0.0
+</code></pre></div>
+<h3 id="_3">示例脚本不要在与其同名的目录下运行</h3>
+<p><code>PythonAPI/examples/holoocean.py</code> 与 Python 包同名，若在该目录下执行
+<code>import holoocean</code>，会导入脚本自身并触发循环导入错误。请在其它目录运行，
+或使用绝对路径加载脚本。</p>
+<h3 id="_4">关于画面提示</h3>
+<p>Development 版世界包未烘焙光照，启动时可能出现
+<code>LIGHTING NEEDS TO BE REBUILT</code> 提示，不影响功能。</p>
 <p>首先，请参阅安装以安装 holocean 包和 Ocean。</p>
 <p>HoloOcean的最小使用示例（<a href="https://github.com/OpenHUTB/mujoco_plugin/blob/main/src/underwater/holo_ocean/getting_started.py">getting_started.py</a>）如下：</p>
 <p><div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
@@ -151,7 +177,7 @@
 <span class="c1"># 悬停的AUV对每个推进器发出指令</span>
 <span class="n">command</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">])</span>
 
-<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">180</span><span class="p">):</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1800</span><span class="p">):</span>
    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">command</span><span class="p">)</span>
 </code></pre></div>
 <img alt="" src="../../img/underwater/getting_started.gif" /></p>
