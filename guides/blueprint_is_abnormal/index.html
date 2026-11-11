@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>生成的蓝图不正常 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u751f\u6210\u7684\u84dd\u56fe\u4e0d\u6b63\u5e38";
+        var mkdocs_page_input_path = "guides/blueprint_is_abnormal.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">生成的蓝图不正常</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/guides/blueprint_is_abnormal.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="_1">生成的蓝图不正常</h1>
+<blockquote>
+<p>适用场景：CarlaUE4 / hutb 工程，把 MuJoCo <code>.xml</code> 拖入内容浏览器后，由插件自动导入 <code>clean_meshes.py</code> 生成的 <code>.glb</code> 网格。</p>
+<p>本文解释一个很容易误判的现象：<strong>不弹窗、不报错、蓝图正常生成，但蓝图里没有任何网格</strong>。</p>
+<p>路径约定：项目路径相对 <code>hutb</code> 仓库根目录；引擎路径相对 <code>UnrealEngine_4.26</code> 引擎根目录。</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 现象</h2>
+<ul>
+<li>拖入 XML 后，Content Browser 里<strong>确实生成了蓝图</strong>；</li>
+<li>双击打开蓝图，组件树里只有 <code>MjBody</code> / <code>MjGeom</code> 这类逻辑组件，<strong>没有 <code>Viz_*</code> 静态网格组件</strong>；</li>
+<li>视口里什么都不显示；</li>
+<li>编辑器中<strong>没有弹出任何窗口，也没有红色错误通知</strong>；</li>
+<li>日志里反复出现同一组三行：</li>
+</ul>
+<div class="highlight"><pre><span></span><code>LogSlate: Warning: A modal window tried to take control while running in unattended script mode. 
+LogOutputDevice: Error: === FDebug::DumpStackTrace(): ===
+LogOutputDevice: Error: 
+LogOutputDevice: Error: [Callstack] 0x000014e0d6eedeee libUE4Editor-GLTFImporter.so!GLTFImporterImpl::ShowOptionsWindow(FString const&amp;, FString const&amp;, UGLTFImportOptions&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Plugins/Editor/GLTFImporter/Source/GLTFImporter/Private/GLTFImportFactory.cpp:52]
+LogOutputDevice: Error: [Callstack] 0x000014e0d6eef034 libUE4Editor-GLTFImporter.so!UGLTFImportFactory::FactoryCreateFile(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, FFeedbackContext*, bool&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Plugins/Editor/GLTFImporter/Source/GLTFImporter/Private/GLTFImportFactory.cpp:104]
+LogOutputDevice: Error: [Callstack] 0x000014e3c70f18ce libUE4Editor-UnrealEd.so!UFactory::ImportObject(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, bool&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Factories/Factory.cpp:202]
+LogOutputDevice: Error: [Callstack] 0x000014e3b54b330c libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetsInternal(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*, FAssetImportParams const&amp;) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:2091]
+LogOutputDevice: Error: [Callstack] 0x000014e3b54b61f9 libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetTasks(TArray&lt;UAssetImportTask*, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:1170]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb3d1bf libUE4Editor-URLabEditor.so!UMujocoGenerationAction::AttemptMeshImport(FString const&amp;, FString const&amp;, EFBXNormalGenerationMethod::Type) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp:216]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb3c6a1 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportSingleMesh(FString const&amp;, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp:108]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb342f5 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportNodeRecursive(FXmlNode const*, USCS_Node*, UBlueprint*, FString const&amp;, FString const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FVector, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FVector, false&gt; &gt; const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FMuJoCoMaterialData, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FMuJoCoMaterialData, false&gt; &gt; const&amp;, TMap&lt;FString, UTexture2D*, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, UTexture2D*, false&gt; &gt; const&amp;, FMjCompilerSettings const&amp;, bool, USCS_Node*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp:471]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb3585f libUE4Editor-URLabEditor.so!UMujocoGenerationAction::ImportNodeRecursive(FXmlNode const*, USCS_Node*, UBlueprint*, FString const&amp;, FString const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FVector, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FVector, false&gt; &gt; const&amp;, TMap&lt;FString, FString, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FString, false&gt; &gt; const&amp;, TMap&lt;FString, FMuJoCoMaterialData, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, FMuJoCoMaterialData, false&gt; &gt; const&amp;, TMap&lt;FString, UTexture2D*, FDefaultSetAllocator, TDefaultMapHashableKeyFuncs&lt;FString, UTexture2D*, false&gt; &gt; const&amp;, FMjCompilerSettings const&amp;, bool, USCS_Node*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoXmlParser.cpp:979]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb24010 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprintXml(UBlueprint*, FString const&amp;, FXmlFile const*) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:231]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb232d0 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprintXml(UBlueprint*, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:125]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb230e7 libUE4Editor-URLabEditor.so!UMujocoGenerationAction::GenerateForBlueprint(UBlueprint*, FString const&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoGenerationAction.cpp:107]
+LogOutputDevice: Error: [Callstack] 0x000014df1cb3b556 libUE4Editor-URLabEditor.so!UMujocoImportFactory::FactoryCreateFile(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, FFeedbackContext*, bool&amp;) [/home/ubuntu/hdd4/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp:200]
+LogOutputDevice: Error: [Callstack] 0x000014e3c70f18ce libUE4Editor-UnrealEd.so!UFactory::ImportObject(UClass*, UObject*, FName, EObjectFlags, FString const&amp;, char16_t const*, bool&amp;) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Factories/Factory.cpp:202]
+LogOutputDevice: Error: [Callstack] 0x000014e3b54b330c libUE4Editor-AssetTools.so!UAssetToolsImpl::ImportAssetsInternal(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*, FAssetImportParams const&amp;) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:2091]
+LogOutputDevice: Error: [Callstack] 0x000014e3b54bbcfd libUE4Editor-AssetTools.so!non-virtual thunk to UAssetToolsImpl::ImportAssets(TArray&lt;FString, TSizedDefaultAllocator&lt;32&gt; &gt; const&amp;, FString const&amp;, UFactory*, bool, TArray&lt;TTuple&lt;FString, FString&gt;, TSizedDefaultAllocator&lt;32&gt; &gt;*) const [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:0]
+LogOutputDevice: Error: [Callstack] 0x000014e3c80bacad libUE4Editor-UnrealEd.so!FImportFilesByPath::Run() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Subsystems/ImportSubsystem.cpp:95]
+LogOutputDevice: Error: [Callstack] 0x000014e3c806ba8e libUE4Editor-UnrealEd.so!UImportSubsystem::HandleNextTick() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/Subsystems/ImportSubsystem.cpp:143]
+LogOutputDevice: Error: [Callstack] 0x000014e3cd1ec7c0 libUE4Editor-Engine.so!FTimerUnifiedDelegate::Execute() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Engine/Public/TimerManager.h:51]
+LogOutputDevice: Error: [Callstack] 0x000014e3cd13630c libUE4Editor-Engine.so!FTimerManager::Tick(float) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Engine/Private/TimerManager.cpp:878]
+LogOutputDevice: Error: [Callstack] 0x000014e3c75c8564 libUE4Editor-UnrealEd.so!UEditorEngine::Tick(float, bool) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/EditorEngine.cpp:1362]
+LogOutputDevice: Error: [Callstack] 0x000014e3c80fab92 libUE4Editor-UnrealEd.so!UUnrealEdEngine::Tick(float, bool) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Editor/UnrealEd/Private/UnrealEdEngine.cpp:423]
+LogOutputDevice: Error: [Callstack] 0x000000000023b9c1 UE4Editor!FEngineLoop::Tick() [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Launch/Private/LaunchEngineLoop.cpp:4830]
+LogOutputDevice: Error: [Callstack] 0x000000000024a283 UE4Editor!GuardedMain(char16_t const*) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Launch/Private/Launch.cpp:171]
+LogOutputDevice: Error: [Callstack] 0x000014e3c61ac286 libUE4Editor-UnixCommonStartup.so!CommonUnixMain(int, char**, int (*)(char16_t const*), void (*)()) [/home/ubuntu/UnrealEngine_4.26/Engine/Source/Runtime/Unix/UnixCommonStartup/Private/UnixCommonStartup.cpp:264]
+LogOutputDevice: Error: [Callstack] 0x000014e3c5fd0083 libc.so.6!__libc_start_main(+0xf2)
+LogOutputDevice: Error: [Callstack] 0x0000000000233289 UE4Editor!_start()
+LogOutputDevice: Error: 
+The window was canceled.
+LogAssetTools: The import task was canceled.
+LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+</code></pre></div>
+<hr />
+<h2 id="2">2. 根因：把“弹窗”当成了“导入许可”</h2>
+<p>UE4.26 的 <code>UGLTFImportFactory::FactoryCreateFile</code> 里，<code>ShowOptionsWindow</code> 的返回值被当成了“用户是否同意导入”：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// GLTFImportFactory.cpp</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">GLTFImporterImpl</span><span class="o">::</span><span class="n">ShowOptionsWindow</span><span class="p">(</span><span class="n">Filepath</span><span class="p">,</span><span class="w"> </span><span class="n">PackagePath</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">ImporterOptions</span><span class="p">))</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">bOutOperationCanceled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span><span class="w">      </span><span class="c1">// ← 窗口没显示出来，也走这里</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>而 <code>ShowOptionsWindow</code> 返回 <code>false</code> 有两种完全不同的原因：</p>
+<ol>
+<li>用户点了 Cancel；</li>
+<li><strong>窗口根本没有显示出来</strong>（无人值守模式下被 Slate 取消）。</li>
+</ol>
+<p>工厂不区分这两种情况，统一按“用户取消导入”处理。</p>
+<p>同时，选项窗口的默认状态是“不同意导入”：</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// GLTFOptionsWindow.cpp:21</span>
+<span class="n">bShouldImport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+
+<span class="c1">// GLTFOptionsWindow.cpp:123（用户点击 Import 按钮时才会执行）</span>
+<span class="n">bShouldImport</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+</code></pre></div>
+<p>所以只要窗口没显示、没人点按钮，<code>ShouldImport()</code> 就一定是 <code>false</code>。</p>
+<hr />
+<h2 id="3">3. 完整调用链</h2>
+<div class="highlight"><pre><span></span><code>① 插件把导入任务标记为自动化
+   MujocoMeshImporter.cpp:133      ImportTask-&gt;bAutomated = true;
+
+② AssetTools 进入无人值守模式
+   AssetTools.cpp:1667             Params.bAutomated = ImportTask-&gt;bAutomated;
+   AssetTools.cpp:1668             GIsRunningUnattendedScript = true;
+
+③ 选工厂：没有指定工厂时走自动发现
+   自动发现 → UGLTFImportFactory
+
+   AssetTools.cpp:2090   Factory-&gt;ImportObject(...)
+                       │
+                       │  ① 虚函数调用（vtable 槽位 = ImportObject）
+                       │     UGLTFImportFactory 没有重写 ImportObject
+                       ▼      → 落到基类 UFactory::ImportObject
+                  Factory.cpp:162  UFactory::ImportObject(...)
+                       │
+                       ├─ :199  UE_LOG(&quot;FactoryCreateFile: %s with %s&quot;, ..., *GetClass()-&gt;GetName())
+                       │         ← 日志里打印的 &quot;GLTFImportFactory&quot; 就是这里
+                       │
+                       │  ② 虚函数调用（vtable 槽位 = FactoryCreateFile）
+                       ▼     UGLTFImportFactory 重写了 FactoryCreateFile
+                  GLTFImportFactory.cpp:91  UGLTFImportFactory::FactoryCreateFile(...)
+                       │
+                       ▼
+                  GLTFImporterImpl::ShowOptionsWindow(...)
+
+④ 工厂无条件调用选项窗口
+   GLTFImportFactory.cpp:99        GLTFImporterImpl::ShowOptionsWindow(...)
+        │
+        ▼
+⑤ Slate 拒绝创建模态窗口
+   SlateApplication.cpp:1872       if (GIsRunningUnattendedScript &amp;&amp; !bSlowTaskWindow)
+                                   {
+                                       UE_LOG(LogSlate, Warning, &quot;...window was canceled.&quot;);
+                                       FDebug::DumpStackTraceToLog(...);
+                                       return;          ← 窗口从未创建
+                                   }
+
+⑥ 窗口没显示，用户没点 Import
+   GLTFOptionsWindow.cpp:21        bShouldImport = false;
+   → ShouldImport() == false
+
+⑦ 工厂把“窗口没显示”当成“用户取消”
+   GLTFImportFactory.cpp:103      if (!ShowOptionsWindow(...))
+                                  {
+                                      bOutOperationCanceled = true;
+                                      return nullptr;
+                                  }
+
+⑧ AssetTools 记录取消
+   AssetTools.cpp:2137             UE_LOG(LogAssetTools, Log, TEXT(&quot;The import task was canceled.&quot;));
+
+⑨ 插件拿不到网格
+   MujocoMeshImporter.cpp:217-235  ImportTask-&gt;Result / ImportedObjectPaths 都为空
+   [ImportSingleMesh] Import returned 0 objects:
+
+⑩ 不创建网格组件
+   MujocoXmlParser.cpp:471-476     UStaticMesh* NewMesh = ImportSingleMesh(...);
+                                   if (NewMesh) { ... 创建 Viz_* ... }   ← 不成立
+</code></pre></div>
+<h2 id="4">4. 为什么“有蓝图但里面空白”</h2>
+<p>蓝图是在组件生成之前就创建好的：</p>
+<p><code>Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoImportFactory.cpp:87</code></p>
+<div class="highlight"><pre><span></span><code><span class="n">UBlueprint</span><span class="o">*</span><span class="w"> </span><span class="n">NewBP</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FKismetEditorUtilities</span><span class="o">::</span><span class="n">CreateBlueprint</span><span class="p">(</span>
+<span class="w">    </span><span class="n">ParentClass</span><span class="p">,</span><span class="w"> </span><span class="n">InParent</span><span class="p">,</span><span class="w"> </span><span class="n">InName</span><span class="p">,</span><span class="w"> </span><span class="n">BPTYPE_Normal</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+</code></pre></div>
+<p>无论后面网格导入成不成功，<code>NewBP</code> 都会被返回并注册到 Content Browser，所以蓝图一定存在。</p>
+<p>但 <code>Viz_*</code> 网格组件只有在 <code>ImportSingleMesh</code> 返回非空时才会创建。所有网格都被取消后：</p>
+<ul>
+<li>蓝图：存在；</li>
+<li><code>MjBody</code> / <code>MjGeom</code> 等逻辑组件：存在；</li>
+<li><code>Viz_*</code> 静态网格组件：<strong>不存在</strong>；</li>
+<li>视口：空白。</li>
+</ul>
+<hr />
+<h2 id="5">5. 总结</h2>
+<p>由于不管是不是自动导入都会进入让用户选择的是否导入的界面，但是一开始就把自动导入设置成true，从而不会弹窗让用户选择。导致以为用户选择的是取消，后面想要制作网格被直接跳过。再回到网格的判断中，直接没有网格。由于一开始有创建一个蓝图，所以最终只有蓝图没有网格。</p>
+<h2 id="6">6. 解决方案</h2>
+<p>在GLTFImportFactory.cpp:99加入 if (!IsAutomatedImport()) 如果是自动导入，直接跳过选择弹窗，直接执行制作静态网格步骤。
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">IsAutomatedImport</span><span class="p">())</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">FString</span><span class="w"> </span><span class="n">Filepath</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">FPaths</span><span class="o">::</span><span class="n">ConvertRelativePathToFull</span><span class="p">(</span><span class="n">Filename</span><span class="p">);</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="n">FString</span><span class="w"> </span><span class="n">PackagePath</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">InParent</span><span class="o">-&gt;</span><span class="n">GetPathName</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">GLTFImporterImpl</span><span class="o">::</span><span class="n">ShowOptionsWindow</span><span class="p">(</span><span class="n">Filepath</span><span class="p">,</span><span class="w"> </span><span class="n">PackagePath</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">ImporterOptions</span><span class="p">))</span>
+<span class="w">        </span><span class="p">{</span>
+<span class="w">            </span><span class="n">bOutOperationCanceled</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="k">nullptr</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+</code></pre></div></p>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>

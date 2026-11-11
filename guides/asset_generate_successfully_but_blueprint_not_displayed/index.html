@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>资产生成成功但蓝图没显示（UE4.26） - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u8d44\u4ea7\u751f\u6210\u6210\u529f\u4f46\u84dd\u56fe\u6ca1\u663e\u793a\uff08UE4.26\uff09";
+        var mkdocs_page_input_path = "guides/asset_generate_successfully_but_blueprint_not_displayed.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">资产生成成功但蓝图没显示（UE4.26）</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/guides/asset_generate_successfully_but_blueprint_not_displayed.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ue426">资产生成成功但蓝图没显示（UE4.26）</h1>
+<blockquote>
+<p>本文记录 MuJoCo 插件在 <strong>UE4.26 + CarlaUE4（hutb 工程）</strong> 中遇到的一个“假失败”：
+网格实际上已经导入成功并保存成了 <code>.uasset</code>，但插件报告 <strong>0 个对象</strong>，最后判定 <code>Failed to import mesh ... - all import methods failed</code>，蓝图里没有任何网格。</p>
+<p>路径约定：项目路径相对 <code>hutb</code> 仓库根目录；引擎路径相对 <code>UnrealEngine_4.26</code> 引擎根目录。</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 现象</h2>
+<p>拖入 XML、<code>clean_meshes.py</code> 生成 <code>.glb</code> 之后，日志里明明能看到 GLTF 工厂在构建网格、保存资产：</p>
+<div class="highlight"><pre><span></span><code>LogFactory: FactoryCreateFile: StaticMesh with GLTFImportFactory (.../pelvis.glb)
+LogStaticMesh: 正在构建静态网格体0_pelvis_STL……
+LogStaticMesh: Built static mesh [0.07s] /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/0_pelvis_STL.0_pelvis_STL
+LogSavePackage: Moving &#39;.../0_pelvis_STL....tmp&#39; to &#39;.../0_pelvis_STL.uasset&#39;
+</code></pre></div>
+<p>但紧接着插件打印的是：</p>
+<div class="highlight"><pre><span></span><code>[ImportSingleMesh] Import returned 0 objects:
+</code></pre></div>
+<p>然后路径猜测全部失败，最终：</p>
+<div class="highlight"><pre><span></span><code>Failed to import mesh &#39;pelvis&#39; - all import methods failed
+</code></pre></div>
+<hr />
+<h2 id="2">2. 错误日志（失败运行）</h2>
+<p>关键片段（从第 47874 行开始）：</p>
+<div class="highlight"><pre><span></span><code>LogURLabEditor: Importing mesh from: .../unitree_g1/assets/pelvis.STL to /Game/MuJoCoImports/g1_ue_Assets/Meshes
+LogURLabEditor: Found higher priority mesh file: .../unitree_g1/assets/pelvis.glb
+LogFactory: FactoryCreateFile: StaticMesh with GLTFImportFactory (.../pelvis.glb)
+LogStaticMesh: 正在构建静态网格体0_pelvis_STL……
+LogStaticMesh: Built static mesh [0.07s] /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/0_pelvis_STL.0_pelvis_STL
+LoadErrors: Warning: Mesh has primitives with no materials assigned: 0_pelvis.STL
+LogSavePackage: Moving &#39;.../0_pelvis_STL....tmp&#39; to &#39;.../Content/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/0_pelvis_STL.uasset&#39;
+LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/StaticMeshes/pelvis.pelvis
+LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/StaticMeshes/pelvis
+LogURLabEditor: [ImportSingleMesh] Not found at: /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis.pelvis
+LogURLabEditor: [ImportSingleMesh] Searching asset registry under: /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis
+LogURLabEditor: Warning: Failed to import mesh &#39;pelvis&#39; with MikkTSpace, attempting fallback
+</code></pre></div>
+<p>这次运行（同一日志文件）的统计：</p>
+<div class="highlight"><pre><span></span><code>[ImportSingleMesh] Import returned 0 objects:   118 次
+Successfully imported mesh                       0 次
+</code></pre></div>
+<hr />
+<h2 id="3-ue426-importedobjectpaths-result">3. 根因：UE4.26 只填 <code>ImportedObjectPaths</code>，不填 <code>Result</code></h2>
+<h3 id="31-uassetimporttask">3.1 <code>UAssetImportTask</code> 有两个结果字段</h3>
+<p><code>Engine/Source/Editor/UnrealEd/Public/AssetImportTask.h:62-68</code></p>
+<div class="highlight"><pre><span></span><code><span class="cm">/** Paths to objects created or updated after import */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Asset Import Task&quot;</span><span class="p">)</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">FString</span><span class="o">&gt;</span><span class="w"> </span><span class="n">ImportedObjectPaths</span><span class="p">;</span>
+
+<span class="cm">/** Imported objects */</span>
+<span class="n">UPROPERTY</span><span class="p">(</span><span class="n">BlueprintReadWrite</span><span class="p">,</span><span class="w"> </span><span class="n">Category</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;Asset Import Task&quot;</span><span class="p">)</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">Result</span><span class="p">;</span>
+</code></pre></div>
+<h3 id="32-ue426-importassettasks-importedobjectpaths">3.2 UE4.26 的 <code>ImportAssetTasks</code> 只写 <code>ImportedObjectPaths</code></h3>
+<p><code>Engine/Source/Developer/AssetTools/Private/AssetTools.cpp:1173-1180</code></p>
+<div class="highlight"><pre><span></span><code><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ImportedObjects</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">ImportedObjectPaths</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Object</span><span class="o">-&gt;</span><span class="n">GetPathName</span><span class="p">());</span><span class="w">   </span><span class="c1">// ← 只写路径</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">bSave</span><span class="p">)</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">PackagesToSave</span><span class="p">.</span><span class="n">AddUnique</span><span class="p">(</span><span class="n">Object</span><span class="o">-&gt;</span><span class="n">GetOutermost</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>整个 UE4.26 的 <code>ImportAssetTasks</code> 里没有任何 <code>ImportTask-&gt;Result.Add(...)</code>。<code>Result</code> 的填充是 UE5（Interchange 导入流程）才有的行为。</p>
+<h3 id="33-result">3.3 插件当时只读了 <code>Result</code></h3>
+<p>修复前，插件在导入返回后只做了：</p>
+<div class="highlight"><pre><span></span><code><span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ImportedAssets</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span><span class="w"> </span><span class="n">Obj</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">Result</span><span class="p">)</span><span class="w">   </span><span class="c1">// UE4.26 里这个数组恒为空</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Obj</span><span class="p">)</span><span class="w"> </span><span class="n">ImportedAssets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Obj</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>所以无论工厂导入得多成功，<code>ImportedAssets</code> 永远是空的：</p>
+<div class="highlight"><pre><span></span><code>[ImportSingleMesh] Import returned 0 objects:
+</code></pre></div>
+<h3 id="34">3.4 为什么后面的兜底也找不到</h3>
+<p><code>ImportSingleMesh</code> 在直接结果为空后，会按固定路径猜测：</p>
+<div class="highlight"><pre><span></span><code>&lt;目标&gt;/&lt;网格名&gt;/StaticMeshes/&lt;网格名&gt;.&lt;网格名&gt;
+&lt;目标&gt;/&lt;网格名&gt;/StaticMeshes/&lt;网格名&gt;
+&lt;目标&gt;/&lt;网格名&gt;.&lt;网格名&gt;
+</code></pre></div>
+<p>而 GLTF 工厂实际生成的资产是：</p>
+<div class="highlight"><pre><span></span><code>/Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/0_pelvis_STL.0_pelvis_STL
+</code></pre></div>
+<p>两者对不上，所以三条猜测全部 <code>Not found</code>。</p>
+<h3 id="35">3.5 网格其实已经导入成功了</h3>
+<p>日志里的这两行就是证据：</p>
+<ul>
+<li><code>LogStaticMesh: Built static mesh ...</code> —— StaticMesh 已经构建；</li>
+<li><code>LogSavePackage: Moving ... 0_pelvis_STL.uasset</code> —— 资产已经落盘。</li>
+</ul>
+<p>所以问题不在“导入失败”，而在“<strong>导入成功了，但插件没读到结果</strong>”。</p>
+<hr />
+<h2 id="4">4. 修复</h2>
+<p>位置：<code>Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Source/URLabEditor/Private/MujocoMeshImporter.cpp:217-233</code></p>
+<div class="highlight"><pre><span></span><code><span class="c1">// 获取结果。</span>
+<span class="c1">// 注意：UE4.26 的 UAssetToolsImpl::ImportAssetTasks() 只填充 ImportedObjectPaths，</span>
+<span class="c1">// 不填充 Result（UE5 才会填充 Result），因此两个都要读取。</span>
+<span class="n">TArray</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">*&gt;</span><span class="w"> </span><span class="n">ImportedAssets</span><span class="p">;</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span><span class="w"> </span><span class="n">Obj</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">Result</span><span class="p">)</span><span class="w">      </span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Obj</span><span class="p">)</span><span class="w"> </span><span class="n">ImportedAssets</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="n">Obj</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="n">FString</span><span class="o">&amp;</span><span class="w"> </span><span class="n">ObjectPath</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">ImportTask</span><span class="o">-&gt;</span><span class="n">ImportedObjectPaths</span><span class="p">)</span><span class="w">   </span><span class="c1">// UE4.26</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">UObject</span><span class="o">*</span><span class="w"> </span><span class="n">ImportedObject</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">LoadObject</span><span class="o">&lt;</span><span class="n">UObject</span><span class="o">&gt;</span><span class="p">(</span><span class="k">nullptr</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">ObjectPath</span><span class="p">))</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ImportedAssets</span><span class="p">.</span><span class="n">AddUnique</span><span class="p">(</span><span class="n">ImportedObject</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>说明：</p>
+<ul>
+<li><code>ImportedObjectPaths</code> 里存的是 <code>Object-&gt;GetPathName()</code>，用 <code>LoadObject</code> 就能取回对象；对象通常已经在内存里，基本没有磁盘开销；</li>
+</ul>
+<hr />
+<h2 id="5">5. 修复后的日志</h2>
+<p>成功样例：</p>
+<div class="highlight"><pre><span></span><code>LogURLabEditor: [ImportSingleMesh] Import returned 1 objects:
+LogURLabEditor:   [0] 0_pelvis_STL (StaticMesh) at /Game/MuJoCoImports/g1_ue_Assets/Meshes/pelvis/0_pelvis_STL.0_pelvis_STL
+LogSavePackage: Moving &#39;.../0_pelvis_STL....tmp&#39; to &#39;.../0_pelvis_STL.uasset&#39;
+LogURLabEditor: Imported mesh &#39;pelvis&#39; - Bounds: X=9.750 Y=12.890 Z=14.995
+LogURLabEditor: Successfully imported mesh &#39;pelvis&#39; with MikkTSpace
+</code></pre></div>
+<p>统计：</p>
+<div class="highlight"><pre><span></span><code>[ImportSingleMesh] Import returned 1 objects:   87 次
+[ImportSingleMesh] Import returned 0 objects:    0 次
+Successfully imported mesh                      87 次
+Failed to import mesh                            0 次
+</code></pre></div>
+<hr />
+<h2 id="6">6. 和“导入被取消”的区别</h2>
+<p>同样是 <code>Import returned 0 objects</code>，但原因完全不同，修复方式也不同：</p>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>日志特征</th>
+<th>根因</th>
+<th>修复</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>工厂内部把导入取消</td>
+<td><code>A modal window tried to take control...</code> + <code>The import task was canceled.</code></td>
+<td>GLTF 工厂在自动化模式下调用了模态窗口，窗口被 Slate 取消</td>
+<td>引擎补丁 <code>if (!IsAutomatedImport())</code></td>
+</tr>
+<tr>
+<td>工厂导入成功但插件读不到结果</td>
+<td><code>LogStaticMesh: Built static mesh ...</code> + <code>LogSavePackage: Moving ...</code>，但 <code>Import returned 0 objects</code></td>
+<td>插件只读 <code>Result</code>，UE4.26 只填 <code>ImportedObjectPaths</code></td>
+<td>读取 <code>ImportedObjectPaths</code> 并 <code>LoadObject</code></td>
+</tr>
+</tbody>
+</table>
+<p>判断方法：</p>
+<div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;The import task was canceled&quot;</span><span class="w"> </span>Saved/Logs/CarlaUE4.log
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Built static mesh&quot;</span><span class="w">            </span>Saved/Logs/CarlaUE4.log
+grep<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;Import returned 0 objects&quot;</span><span class="w">    </span>Saved/Logs/CarlaUE4.log
+</code></pre></div>
+<ul>
+<li>第一项 &gt; 0：是“弹窗取消”问题；</li>
+<li>第一项为 0、第二项 &gt; 0、第三项 &gt; 0：是“结果没读取”问题。</li>
+</ul>
+<hr />
+<h2 id="7">7. 如何自行定位这类问题</h2>
+<ol>
+<li>确认工厂是否真的执行了：</li>
+</ol>
+<p><div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;FactoryCreateFile: StaticMesh with&quot;</span><span class="w"> </span>Saved/Logs/CarlaUE4.log
+</code></pre></div>
+2. 确认网格是否真的构建、保存了：</p>
+<p><div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;Built static mesh&quot;</span><span class="w"> </span>Saved/Logs/CarlaUE4.log
+grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;Moving .*\.uasset&quot;</span><span class="w"> </span>Saved/Logs/CarlaUE4.log
+</code></pre></div>
+3. 确认插件读到几个对象：</p>
+<p><div class="highlight"><pre><span></span><code>grep<span class="w"> </span>-n<span class="w"> </span><span class="s2">&quot;Import returned&quot;</span><span class="w"> </span>Saved/Logs/CarlaUE4.log
+</code></pre></div>
+4. 如果“构建了但读到 0 个”，去检查 <code>ImportTask-&gt;Result</code> 和 <code>ImportTask-&gt;ImportedObjectPaths</code> 的读取代码。</p>
+<hr />
+<h2 id="8">8. 总结</h2>
+<p><strong>UE4.26 的 <code>UAssetToolsImpl::ImportAssetTasks</code> 只把导入结果写进 <code>ImportTask-&gt;ImportedObjectPaths</code>，不写 <code>Result</code>。</strong> 插件如果只读 <code>Result</code>，就会在“网格已经导入成功”的情况下拿到 0 个对象，随后路径猜测和资产注册表兜底都找不到，最终误判为导入失败。读取 <code>ImportedObjectPaths</code> 并 <code>LoadObject</code> 即可解决。</p>
+<hr />
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
