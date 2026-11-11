@@ -30,8 +30,6 @@ LogSavePackage: Moving '.../0_pelvis_STL....tmp' to '.../0_pelvis_STL.uasset'
 Failed to import mesh 'pelvis' - all import methods failed
 ```
 
-蓝图因此没有 `Viz_*` 组件，视口空白。
-
 ---
 
 ## 2. 错误日志（失败运行）
@@ -132,8 +130,6 @@ for (UObject* Obj : ImportTask->Result)   // UE4.26 里这个数组恒为空
 
 两者对不上，所以三条猜测全部 `Not found`。
 
-最后的资产注册表兜底也没命中（`Found mesh via registry` 为 0），因为资产是刚刚创建的，注册表缓存尚未更新。
-
 ### 3.5 网格其实已经导入成功了
 
 日志里的这两行就是证据：
@@ -154,7 +150,7 @@ for (UObject* Obj : ImportTask->Result)   // UE4.26 里这个数组恒为空
 // 注意：UE4.26 的 UAssetToolsImpl::ImportAssetTasks() 只填充 ImportedObjectPaths，
 // 不填充 Result（UE5 才会填充 Result），因此两个都要读取。
 TArray<UObject*> ImportedAssets;
-for (UObject* Obj : ImportTask->Result)        
+for (UObject* Obj : ImportTask->Result)      
 {
     if (Obj) ImportedAssets.Add(Obj);
 }
