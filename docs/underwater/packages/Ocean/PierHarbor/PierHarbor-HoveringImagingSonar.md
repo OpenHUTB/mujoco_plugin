@@ -18,4 +18,7 @@
 
     * [VelocitySensor](https://byu-holoocean.github.io/holoocean-docs/UE4.27_archival_develop/holoocean/sensors.html#holoocean.sensors.VelocitySensor) 用于获取真实值。
 
+!!! 注意                                   
+    本场景带有 `ImagingSonar`，首次加载需要生成八叉树，启动明显慢于普通场景：实测约 **147 秒**。期间窗口可能短暂显示「未响应」，属正常现象，请耐心等待，不要中断进程。
+
 ![](../../../../img/underwater/starting2.png)
