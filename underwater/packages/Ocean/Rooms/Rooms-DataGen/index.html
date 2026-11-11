@@ -156,6 +156,17 @@
 <p>测距仪 RangeFinder 配置有 64 个光束，最大距离为 20 米。</p>
 </li>
 </ul>
+<div class="admonition 注意">
+<p class="admonition-title">注意</p>
+<p>本场景的代理是 TurtleAgent，控制命令为 <strong>2 维</strong>浮点向量（前向推力、旋转力），与水下 AUV 常见的 8 维不同。若传入 8 维命令，会报 <code>ValueError: could not broadcast input array from shape (8,) into shape (2,)</code>。各代理的命令维度见<a href="../../../../agents/control_schemes/">控制方案</a>。</p>
+</div>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span> <span class="nn">holoocean</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">env</span> <span class="o">=</span> <span class="n">holoocean</span><span class="o">.</span><span class="n">make</span><span class="p">(</span><span class="s2">&quot;Rooms-DataGen&quot;</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">100</span><span class="p">):</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">env</span><span class="o">.</span><span class="n">step</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">2</span><span class="p">))</span>   <span class="c1"># 2 维，不是 8 维</span>
+</code></pre></div>
               
             </div>
           </div><footer>
