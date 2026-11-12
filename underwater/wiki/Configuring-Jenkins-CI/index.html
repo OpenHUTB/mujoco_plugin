@@ -161,8 +161,10 @@
 2. <a href="https://adamrehn.com/docs/ue4-docker/use-cases/continuous-integration">Build the <code>ue4-complete</code> image</a>. Make sure to specify the current Holodeck engine version.</p>
 <p>Note that you will need ~300gb of disk space for this to succeed! The requirements aren't overestimating</p>
 <h3 id="step-2-install-jenkins">Step 2: Install Jenkins</h3>
-<p>We run Jenkins in a docker container, and use a Docker volume to persist data (instead of a bind mount. Avoids permissions issues).
-1. Install <code>jenkinsci/blueocean</code></p>
+<p>We run Jenkins in a docker container, and use a Docker volume to persist data (instead of a bind mount. Avoids permissions issues).</p>
+<ol>
+<li>Install <code>jenkinsci/blueocean</code></li>
+</ol>
 <p><code>docker pull jenkinsci/blueocean</code></p>
 <ol>
 <li>Create our custom docker image, with Git LFS</li>

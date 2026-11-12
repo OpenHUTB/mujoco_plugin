@@ -206,9 +206,11 @@ Dependant modules &#39;SlateFileDialogs&#39;, &#39;DesktopPlatform&#39;, &#39;UR
 
 <span class="c1">// BrowseAndSaveRecording 同样处理</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/URLab.Build.cs</code>
-- <code>Source/URLab/Private/Replay/MjReplayManager.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/URLab.Build.cs</code></li>
+<li><code>Source/URLab/Private/Replay/MjReplayManager.cpp</code></li>
+</ul>
 <hr />
 <h2 id="windows-dll">问题二：硬编码 Windows DLL 名称</h2>
 <p><strong>错误信息：</strong>
@@ -291,9 +293,11 @@ LogURLab: Error: libzmq-v143-mt-4_3_6.dll not found (searched plugin dir + binar
 </code></pre></div></p>
 </li>
 </ol>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/Private/URLab.cpp</code>
-- <code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/Private/URLab.cpp</code></li>
+<li><code>Source/URLab/Private/MuJoCo/Core/MjPhysicsEngine.cpp</code></li>
+</ul>
 <hr />
 <h2 id="staging">问题三：软链接导致 Staging 复制失败</h2>
 <p><strong>错误信息：</strong>
@@ -329,10 +333,12 @@ cp<span class="w"> </span><span class="s2">&quot;</span><span class="nv">$ZMQ_LI
 
 <span class="l l-Scalar l-Scalar-Plain"># ZMQ — 同理</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>third_party/install/MuJoCo/lib/libmujoco.so</code>（本地）
-- <code>third_party/install/libzmq/lib/libzmq.so</code>（本地）
-- <code>.github/workflows/build_linux.yml</code>（CI 同步）</p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>third_party/install/MuJoCo/lib/libmujoco.so</code>（本地）</li>
+<li><code>third_party/install/libzmq/lib/libzmq.so</code>（本地）</li>
+<li><code>.github/workflows/build_linux.yml</code>（CI 同步）</li>
+</ul>
 <hr />
 <hr />
 <h2 id="cook-setupattachment-ensure">问题四：Cook 阶段 SetupAttachment ensure 崩溃</h2>
@@ -393,11 +399,13 @@ UE4.26 中 <code>SetupAttachment</code> 和 <code>AttachTo</code> 不能混用�
 </code></pre></div>
 <p>每个文件分别在 <code>EnsureVisualizerMesh()</code> 和 <code>OnRegister()</code> 两处添加此保护。</p>
 <p><code>MjCapsule.cpp</code> 中通过 lambda <code>MakeSubMesh</code> 和 <code>RegisterIfNeeded</code> 调用，同样添加保护。</p>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjCylinder.cpp</code>
-- <code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjBox.cpp</code>
-- <code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjSphere.cpp</code>
-- <code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjCapsule.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjCylinder.cpp</code></li>
+<li><code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjBox.cpp</code></li>
+<li><code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjSphere.cpp</code></li>
+<li><code>Source/URLab/Private/MuJoCo/Components/Geometry/Primitives/MjCapsule.cpp</code></li>
+</ul>
 <hr />
 <h2 id="_1">修改文件清单</h2>
 <table>

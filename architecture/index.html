@@ -676,26 +676,34 @@
 <hr />
 <h2 id="_18">坐标系统</h2>
 <p>MuJoCo使用<strong>右手</strong>坐标系，Z 轴朝上，单位为米。而虚幻引擎使用左手坐标系，Z 轴朝上，单位为厘米。</p>
-<p><strong>位置转换</strong> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L27">MjUtils::MjToUEPosition</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L42">UEToMjPosition</a>):
-- X -&gt; X, Y -&gt; -Y, Z -&gt; Z
-- 比例：MuJoCo 米 * 100 = 虚幻引擎的厘米</p>
-<p><strong>旋转转换</strong> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L50">MjUtils::MjToUERotation</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L58">UEToMjRotation</a>):
-- MuJoCo四元数 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L52">[w, x, y, z]</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L55">FQuat</a>，其中 X 和 Z 分量取反（以处理手性翻转）。</p>
+<p><strong>位置转换</strong> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L27">MjUtils::MjToUEPosition</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L42">UEToMjPosition</a>):</p>
+<ul>
+<li>X -&gt; X, Y -&gt; -Y, Z -&gt; Z</li>
+<li>比例：MuJoCo 米 * 100 = 虚幻引擎的厘米</li>
+</ul>
+<p><strong>旋转转换</strong> (<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L50">MjUtils::MjToUERotation</a> / <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L58">UEToMjRotation</a>):</p>
+<ul>
+<li>MuJoCo四元数 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L52">[w, x, y, z]</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Utils/MjUtils.cpp#L55">FQuat</a>，其中 X 和 Z 分量取反（以处理手性翻转）。</li>
+</ul>
 <p>所有转换工具都在 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Public/MuJoCo/Utils/MjUtils.h">Source/URLab/Public/MuJoCo/Utils/MjUtils.h</a> 文件中。</p>
 <hr />
 <h2 id="_19">导入与用于自制的铰链</h2>
 <p>创建 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L61">AMjArticulation</a> 有两种方法：</p>
-<p><strong>1. 从 MJCF XML 导入（拖放式）：</strong>
-- 使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLabEditor/Private/MujocoImportFactory.cpp">UMujocoImportFactory</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLabEditor/Private/MujocoGenerationAction.cpp">UMujocoGenerationAction</a>
-- 所有组件均通过 XML 解析自动生成
-- 默认类层次结构保留为 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Defaults/MjDefault.cpp#L34">UMjDefault</a> 组件
-- <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjArticulation.h#L411">MuJoCoXMLFile</a> 属性用于存储源 XML 路径
-- 导入到虚幻内容浏览器(Content Browser)的网格资源</p>
-<p><strong>2. 用户从零开始构建（右键点击 -&gt; 新建 MuJoCo 关节）：</strong>
-- 使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MjArticulationFactory.cpp#L31">UMjArticulationFactory</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L366">UMujocoGenerationAction::SetupEmptyArticulation()</a>
-- 创建组织层次结构（定义、默认值、执行器、传感器等）
-- 用户在蓝图编辑器中手动添加组件
-- 无XML文件 — 组件直接编写</p>
+<p><strong>1. 从 MJCF XML 导入（拖放式）：</strong></p>
+<ul>
+<li>使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLabEditor/Private/MujocoImportFactory.cpp">UMujocoImportFactory</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLabEditor/Private/MujocoGenerationAction.cpp">UMujocoGenerationAction</a></li>
+<li>所有组件均通过 XML 解析自动生成</li>
+<li>默认类层次结构保留为 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/Defaults/MjDefault.cpp#L34">UMjDefault</a> 组件</li>
+<li><a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Public/MuJoCo/Core/MjArticulation.h#L411">MuJoCoXMLFile</a> 属性用于存储源 XML 路径</li>
+<li>导入到虚幻内容浏览器(Content Browser)的网格资源</li>
+</ul>
+<p><strong>2. 用户从零开始构建（右键点击 -&gt; 新建 MuJoCo 关节）：</strong></p>
+<ul>
+<li>使用 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MjArticulationFactory.cpp#L31">UMjArticulationFactory</a> -&gt; <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLabEditor/Private/MujocoGenerationAction.cpp#L366">UMujocoGenerationAction::SetupEmptyArticulation()</a></li>
+<li>创建组织层次结构（定义、默认值、执行器、传感器等）</li>
+<li>用户在蓝图编辑器中手动添加组件</li>
+<li>无XML文件 — 组件直接编写</li>
+</ul>
 <p><strong>这两种路径都会产生相同的结果：</strong> 一个包含 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Components/MjComponent.cpp#L35">UMjComponent</a> 子类的 <a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L61">AMjArticulation</a> 蓝图。在运行时，两者都会经历相同的设置(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L241">Setup</a>)-&gt;编译(Compile)-&gt;绑定(<a href="https://github.com/OpenHUTB/UnrealRoboticsLab/blob/352a9ea7bdce0eaa9e1bd365454f3b7ea421d44c/Source/URLab/Private/MuJoCo/Core/MjArticulation.cpp#L553">Bind</a>)流程。规范系统并不知晓或关心组件是如何创建的。</p>
 <h3 id="_20">特殊情况标志</h3>
 <table>

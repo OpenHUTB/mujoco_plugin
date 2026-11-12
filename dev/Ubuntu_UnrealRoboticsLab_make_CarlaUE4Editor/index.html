@@ -143,18 +143,22 @@
                 <h1 id="carlaue4-linux">CarlaUE4 Linux 编译问题与解决方案</h1>
 <h2 id="mujoco">一、MuJoCo 版本不匹配</h2>
 <h3 id="11-mujoco-api">问题 1.1：大量 MuJoCo API 未声明</h3>
-<p><strong>错误信息：</strong>
-- <code>use of undeclared identifier 'mjGAIN_DCMOTOR'</code>
-- <code>use of undeclared identifier 'mjBIAS_DCMOTOR'</code>
-- <code>use of undeclared identifier 'mjDYN_DCMOTOR'</code>
-- <code>use of undeclared identifier 'mjNPOLY'</code>
-- <code>no member named 'sleep_tolerance' in 'mjOption_'</code>
-- <code>no member named 'body_awake' in 'mjData_'</code>
-- <code>no member named 'tree_sleep_policy' in 'mjModel_'</code></p>
+<p><strong>错误信息：</strong></p>
+<ul>
+<li><code>use of undeclared identifier 'mjGAIN_DCMOTOR'</code></li>
+<li><code>use of undeclared identifier 'mjBIAS_DCMOTOR'</code></li>
+<li><code>use of undeclared identifier 'mjDYN_DCMOTOR'</code></li>
+<li><code>use of undeclared identifier 'mjNPOLY'</code></li>
+<li><code>no member named 'sleep_tolerance' in 'mjOption_'</code></li>
+<li><code>no member named 'body_awake' in 'mjData_'</code></li>
+<li><code>no member named 'tree_sleep_policy' in 'mjModel_'</code></li>
+</ul>
 <p><strong>根因：</strong>
-CI 流水线安装的 MuJoCo 3.3.5 太旧。上述 API 在 MuJoCo 3.4.0 ~ 3.7.0 之间才逐步引入：
-- <code>mjNPOLY</code>、<code>mjGAIN_DCMOTOR</code>、<code>mjBIAS_DCMOTOR</code>、<code>mjDYN_DCMOTOR</code> → 3.7.0
-- <code>sleep_tolerance</code>、<code>body_awake</code>、<code>tree_sleep_policy</code> → 3.4.0</p>
+CI 流水线安装的 MuJoCo 3.3.5 太旧。上述 API 在 MuJoCo 3.4.0 ~ 3.7.0 之间才逐步引入：</p>
+<ul>
+<li><code>mjNPOLY</code>、<code>mjGAIN_DCMOTOR</code>、<code>mjBIAS_DCMOTOR</code>、<code>mjDYN_DCMOTOR</code> → 3.7.0</li>
+<li><code>sleep_tolerance</code>、<code>body_awake</code>、<code>tree_sleep_policy</code> → 3.4.0</li>
+</ul>
 <p><strong>解决方案：</strong>
 从 MuJoCo GitHub Releases 下载 <strong>3.7.0</strong> Linux 预编译包，替换 <code>third_party/install/MuJoCo/</code>。</p>
 <div class="highlight"><pre><span></span><code><span class="c1"># 下载</span>
@@ -169,9 +173,11 @@ tar<span class="w"> </span>-xzf<span class="w"> </span>mujoco-3.7.0-linux-x86_64
 <span class="c1"># 同时保存到 CI 依赖目录</span>
 cp<span class="w"> </span>mujoco-3.7.0-linux-x86_64.tar.gz<span class="w"> </span>Build/dependencies/Plugins/
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Build/dependencies/Plugins/mujoco-3.7.0-linux-x86_64.tar.gz</code>（新增）
-- <code>.github/workflows/build_linux.yml</code>（更新版本号）</p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Build/dependencies/Plugins/mujoco-3.7.0-linux-x86_64.tar.gz</code>（新增）</li>
+<li><code>.github/workflows/build_linux.yml</code>（更新版本号）</li>
+</ul>
 <hr />
 <h2 id="c">二、C++ 标准版本</h2>
 <h3 id="21stdbyte">问题 2.1：<code>std::byte</code> 不存在</h3>
@@ -195,9 +201,11 @@ error: unknown type name &#39;mjByteVec&#39;; did you mean &#39;mjIntVec&#39;?
 <span class="cp">#endif</span>
 </code></pre></div>
 <p>同时在 <code>URLab.Build.cs</code> 中保留 <code>CppStandard = CppStandardVersion.Cpp17</code> 作为兜底。</p>
-<p><strong>涉及文件：</strong>
-- <code>third_party/install/MuJoCo/include/mujoco/mjspec.h</code>（polyfill）
-- <code>Source/URLab/URLab.Build.cs</code>（CppStandard 设置）</p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>third_party/install/MuJoCo/include/mujoco/mjspec.h</code>（polyfill）</li>
+<li><code>Source/URLab/URLab.Build.cs</code>（CppStandard 设置）</li>
+</ul>
 <hr />
 <h2 id="_1">三、平台宏污染</h2>
 <h3 id="31linux-__declspec">问题 3.1：Linux 编译时 <code>__declspec</code> 报错</h3>
@@ -233,8 +241,10 @@ use &#39;-fdeclspec&#39; or &#39;-fms-extensions&#39; to enable support for __de
 <span class="w">    </span><span class="n">PublicDefinitions</span><span class="p">.</span><span class="n">Add</span><span class="p">(</span><span class="s">&quot;__unix__=1&quot;</span><span class="p">);</span>
 <span class="p">}</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/URLab.Build.cs</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/URLab.Build.cs</code></li>
+</ul>
 <hr />
 <h3 id="32urlabh-_win32">问题 3.2：<code>URLab.h</code> 无条件定义 <code>_WIN32</code></h3>
 <p><strong>根因：</strong>
@@ -261,8 +271,10 @@ use &#39;-fdeclspec&#39; or &#39;-fms-extensions&#39; to enable support for __de
 <span class="w">    </span><span class="cp">#endif</span>
 <span class="cp">#endif</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/Public/URLab.h</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/Public/URLab.h</code></li>
+</ul>
 <hr />
 <h3 id="33coacd-if-_win32-wundef">问题 3.3：CoACD 第三方库 <code>#if _WIN32</code> 触发 <code>-Wundef</code></h3>
 <p><strong>错误信息：</strong>
@@ -274,8 +286,10 @@ use &#39;-fdeclspec&#39; or &#39;-fms-extensions&#39; to enable support for __de
 在 <code>URLab.Build.cs</code> 中禁用未定义标识符警告：</p>
 <div class="highlight"><pre><span></span><code><span class="n">bEnableUndefinedIdentifierWarnings</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">false</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/URLab.Build.cs</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/URLab.Build.cs</code></li>
+</ul>
 <hr />
 <h2 id="fbxmeshimportdata">四、FbxMeshImportData 枚举冲突</h2>
 <h3 id="41-ue426">问题 4.1：前向声明与 UE4.26 定义冲突</h3>
@@ -336,8 +350,10 @@ namespace EFBXNormalGenerationMethod { enum Type : int; }
 <span class="c1">// Forward declarations</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Factories/FbxMeshImportData.h&quot;</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLabEditor/Public/MujocoGenerationAction.h</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLabEditor/Public/MujocoGenerationAction.h</code></li>
+</ul>
 <hr />
 <h2 id="_2">五、其他编译错误</h2>
 <h3 id="51">问题 5.1：<code>/*</code> 嵌套在块注释中</h3>
@@ -353,8 +369,10 @@ namespace EFBXNormalGenerationMethod { enum Type : int; }
 将 <code>/** */</code> 块注释改为 <code>///</code> 行注释：</p>
 <div class="highlight"><pre><span></span><code><span class="c1">/// @brief The ZMQ Endpoint for this specific camera (e.g., tcp://*:5558).</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLab/Public/MuJoCo/Components/Sensors/MjCamera.h</code></li>
+</ul>
 <hr />
 <h3 id="52efbxnormalgenerationmethodmikktspace">问题 5.2：<code>EFBXNormalGenerationMethod::MikkTSpace</code> 找不到</h3>
 <p><strong>错误信息：</strong>
@@ -379,8 +397,10 @@ error: no member named &#39;BuiltIn&#39; in namespace &#39;EFBXNormalGenerationM
 <span class="n">ImportedMesh</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">AttemptMeshImport</span><span class="p">(</span><span class="n">ActualSourcePath</span><span class="p">,</span><span class="w"> </span><span class="n">DestinationPath</span><span class="p">,</span>
 <span class="w">    </span><span class="k">static_cast</span><span class="o">&lt;</span><span class="n">EFBXNormalGenerationMethod</span><span class="o">::</span><span class="n">Type</span><span class="o">&gt;</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span><span class="w"> </span><span class="c1">// BuiltIn</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></li>
+</ul>
 <hr />
 <h3 id="53ffilehelper">问题 5.3：<code>FFileHelper</code> 未声明</h3>
 <p><strong>错误信息：</strong>
@@ -394,8 +414,10 @@ error: no member named &#39;BuiltIn&#39; in namespace &#39;EFBXNormalGenerationM
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;Misc/FileHelper.h&quot;</span><span class="c1">       // ← 新增</span>
 <span class="cp">#include</span><span class="w"> </span><span class="cpf">&quot;URLabEditorLogging.h&quot;</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></li>
+</ul>
 <hr />
 <h3 id="54">问题 5.4：变量未初始化</h3>
 <p><strong>错误信息：</strong>
@@ -409,8 +431,10 @@ error: no member named &#39;BuiltIn&#39; in namespace &#39;EFBXNormalGenerationM
 <span class="n">int32</span><span class="w"> </span><span class="n">NumTriangles</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 <span class="n">int32</span><span class="w"> </span><span class="n">NumUVChannels</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>Source/URLabEditor/Private/MujocoMeshImporter.cpp</code></li>
+</ul>
 <hr />
 <h2 id="_3">六、第三方库</h2>
 <h3 id="61coacd">问题 6.1：CoACD 头文件找不到</h3>
@@ -445,9 +469,11 @@ CoACD.zip 解压后的目录结构为 <code>CoACD/CoACD/include/CoACD/coacd.h</c
 </code></pre></div></p>
 </li>
 </ol>
-<p><strong>涉及文件：</strong>
-- <code>third_party/install/CoACD/include/</code>（目录结构调整）
-- <code>.github/workflows/build_linux.yml</code>（CI 同步）</p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>third_party/install/CoACD/include/</code>（目录结构调整）</li>
+<li><code>.github/workflows/build_linux.yml</code>（CI 同步）</li>
+</ul>
 <hr />
 <h3 id="62zmq">问题 6.2：ZMQ 头文件找不到</h3>
 <p><strong>错误信息：</strong>
@@ -460,8 +486,10 @@ CI 提供的 <code>libzmq-linux.tar.gz</code> 预编译包只包含 <code>.so</c
 <div class="highlight"><pre><span></span><code>ln<span class="w"> </span>-sf<span class="w"> </span>/usr/include/zmq.h<span class="w"> </span><span class="se">\</span>
 <span class="w">  </span>third_party/install/libzmq/include/zmq.h
 </code></pre></div>
-<p><strong>涉及文件：</strong>
-- <code>third_party/install/libzmq/include/zmq.h</code>（软链接）</p>
+<p><strong>涉及文件：</strong></p>
+<ul>
+<li><code>third_party/install/libzmq/include/zmq.h</code>（软链接）</li>
+</ul>
 <hr />
 <h2 id="_4">修改文件清单</h2>
 <table>

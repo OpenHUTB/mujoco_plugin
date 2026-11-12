@@ -142,10 +142,12 @@
               
                 <p>If you have built a custom Unreal world using the <a href="https://github.com/BYU-PCCL/Holodeck">Holodeck backend</a> you can now follow this tutorial to use it for training agents from the python bindings.</p>
 <h2 id="packaging">Packaging</h2>
-<p>Before packaging the project, ensure that you have completed the following:
-* You have followed the <a href="https://github.com/BYU-PCCL/Holodeck/wiki/Pre-Build-Checks">pre-build checks</a>
-* You know the names of the levels and agents in the world that you plan to use
-* If you are packaging for linux you have followed <a href="https://github.com/BYU-PCCL/Holodeck/wiki/Cross-Compiling-for-Linux">this tutorial</a></p>
+<p>Before packaging the project, ensure that you have completed the following:</p>
+<ul>
+<li>You have followed the <a href="https://github.com/BYU-PCCL/Holodeck/wiki/Pre-Build-Checks">pre-build checks</a></li>
+<li>You know the names of the levels and agents in the world that you plan to use</li>
+<li>If you are packaging for linux you have followed <a href="https://github.com/BYU-PCCL/Holodeck/wiki/Cross-Compiling-for-Linux">this tutorial</a></li>
+</ul>
 <p>Go to File&gt;Package Project&gt;<em>operating system</em> to package. After packaging, you should have a directory called WindowsNoEditor or LinuxNoEditor depending on what OS you packaged it for.</p>
 <h2 id="using-the-packaged-world">Using the Packaged World</h2>
 <p>Now a config file must be written to inform the python bindings about each level in your world. Follow the <a href="https://github.com/BYU-PCCL/HolodeckPythonBinding/wiki/The-Config-File-Format">json format</a> to write the config file. When finished, put both the config file and the NoEditor folder in a directory called WindowsDefaultWorlds or LinuxDefaultWorlds.</p>
