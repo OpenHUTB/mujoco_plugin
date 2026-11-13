@@ -131,7 +131,7 @@
 
 ## 实现参考
 
-- 热键调度 — [MjInputHandler.cpp](../../Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp)
-- 快照捕获（物理线程） — [MjDebugVisualizer.cpp:`CaptureDebugData`](../../Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp)
-- 霍尔顿岛颜色辅助函数 — [MjColor.cpp](../../Source/URLab/Private/MuJoCo/Utils/MjColor.cpp) (与 MuJoCo 上游完全匹配，并由 `URLab.Color.*` 自动化测试覆盖)
+- 热键调度 — [MjInputHandler.cpp](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Input/MjInputHandler.cpp)
+- 快照捕获（物理线程） — [MjDebugVisualizer.cpp:`CaptureDebugData`](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Core/MjDebugVisualizer.cpp)
+- 霍尔顿岛颜色辅助函数 — [MjColor.cpp](https://github.com/OpenHUTB/UnrealRoboticsLab/blob/main/Source/URLab/Private/MuJoCo/Utils/MjColor.cpp) (与 MuJoCo 上游完全匹配，并由 `URLab.Color.*` 自动化测试覆盖)
 - 上游参考 — MuJoCo 的 [`engine_vis_visualize.c`](https://github.com/google-deepmind/mujoco/blob/main/src/engine/engine_vis_visualize.c)
