@@ -166,7 +166,7 @@
 <p>如大坝环境所示，水面是一个位于 z=0 的独立平面。环绕环境的红色轮廓框即为后期处理体积。</p>
 <p><img alt="" src="../../../img/underwater/water_w_postprocess.png" /></p>
 <p>请务必将 PostProcessVolume 标记设置为 <code>WaterPPV</code>，以便“水雾命令”和“潮汐命令”能够正常工作。</p>
-<p><img alt="" src="../../img/underwater/post_process_volume_tag.png" /></p>
+<p><img alt="" src="../../../img/underwater/post_process_volume_tag.jpg" /></p>
 <h3 id="postprocessvolume-2">水雾（后期处理体积 PostProcessVolume 2）</h3>
 <p>要模拟水下雾气并降低能见度，请添加第二个与第一个 PostProcessVolume 大小相同的 PostProcessVolume（您可以直接复制现有体积），并为其指定 <code>MM_Fog_Water_Simple</code> 材质。在“细节”面板中，导航至“渲染功能”➡“后期处理材质”，向数组中添加一个元素，将其设置为“资源引用”，然后选择 <code>MM_Fog_Water_Simple</code>。或者，您可以直接从“Content/WeatherContent/Fog/MM_Fog_Water_Simple”拖动该材质。</p>
 <p><img alt="" src="../../../img/underwater/water_fog_material.png" /></p>
