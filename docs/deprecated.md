@@ -17,13 +17,13 @@
 
 **具身人**：
 
-![](./docs/img/hero.png)
+![](./img/hero.png)
 
-![Simulation Demo](./docs/img/humanoid100.gif)
+![Simulation Demo](./img/humanoid100.gif)
 
 **摆锤**：
 
-![](./docs/img/pendulum.gif)
+![](./img/pendulum.gif)
 
 
 ## 安装
