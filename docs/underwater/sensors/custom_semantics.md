@@ -72,7 +72,7 @@
 
 ## 可用语义标签 <span id='semantic_labels'></span>
 
-以下是 HoloOcean 当前已实现的所有标签列表。Ocean 和 BusinessCampus 包中的每个世界都使用这些标签的子集，具体取决于该世界中的资源（请参阅 [BusinessCampus](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/BusinessCampus/BusinessCampus.html#business-campus) 和 [Ocean 包](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/Ocean.html#ocean)中的世界子页面）。
+以下是 HoloOcean 当前已实现的所有标签列表。Ocean 和 BusinessCampus 包中的每个世界都使用这些标签的子集，具体取决于该世界中的资源（请参阅 [BusinessCampus](../packages/business_campus.md#semantic_labels) 和 [Ocean 包](https://byu-holoocean.github.io/holoocean-docs/v2.3.0/packages/Ocean/Ocean.html#ocean)中的世界子页面）。
 
 | 文件夹名字  | 模板值 | RGB 值 |
 |-------|--------|-------|
