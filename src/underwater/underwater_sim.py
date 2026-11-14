@@ -109,6 +109,9 @@ class UnderwaterSimulation:
         drag_coeff = self.config.get("ocean_drag_coeff", 10.0)
 
         for i in range(steps):
+            # 0. 清空上一步的外力（拖曳力是叠加注入的，不清空会逐步累积）
+            data.xfrc_applied[body_id] = 0.0
+
             # 1. 浮力
             if apply_buoyancy and density > 0:
                 data.xfrc_applied[body_id, 2] = buoyancy_force
@@ -213,6 +216,9 @@ class UnderwaterSimulation:
         for i in range(steps):
             current_z = data.qpos[qpos_addr + 2]
             
+            # 0. 清空上一步的外力（拖曳力是叠加注入的，不清空会逐步累积）
+            data.xfrc_applied[body_id] = 0.0
+
             # 1. 叠加环境浮力
             data.xfrc_applied[body_id, 2] = buoyancy_force
             
@@ -222,7 +228,7 @@ class UnderwaterSimulation:
                 robot_x, robot_y, robot_z = data.sensor("pos").data[:3]
                 v_current = self.ocean_current.get_velocity(robot_x, robot_y, robot_z, dt)
                 apply_current_drag(data, body_id, v_current, drag_coeff)
-                v_current_z = v_current[2]  # Z 分量用于前馈
+                v_current_z = -v_current[2]  # 前馈约定向下为正，MuJoCo 的 Z 轴向上
                 
             # 3. PID 闭环控制力（带洋流前馈补偿）
             thrust_z = self.depth_controller.compute(
@@ -300,7 +306,7 @@ class UnderwaterSimulation:
                 vx, vy, vz = d.sensor("pos").data[:3]
                 v_cur = self.ocean_current.get_velocity(vx, vy, vz, m.opt.timestep)
                 apply_current_drag(d, body_id_active, v_cur, drag_coeff)
-                v_current_z = v_cur[2]
+                v_current_z = -v_cur[2]  # 前馈约定向下为正，MuJoCo 的 Z 轴向上
             
             thrust_z = self.depth_controller.compute(
                 target_depth, current_z, m.opt.timestep, current_velocity=v_current_z)
@@ -392,6 +398,7 @@ if __name__ == "__main__":
                 log_oc_t.append(data.time)
                 log_oc_v.append(np.linalg.norm(v_cur))
                 
+                data.xfrc_applied[body_id] = 0.0  # 清空上一步的外力，避免拖曳力累积
                 data.xfrc_applied[body_id, 2] = buoyancy_force
                 apply_current_drag(data, body_id, v_cur, 10.0)
                 _mujoco.mj_step(model, data)
