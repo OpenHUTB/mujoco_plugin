@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../../img/favicon.ico" />
+    <title>商业园区（BusinessCampus） - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../../css/theme.css" />
+    <link rel="stylesheet" href="../../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "\u5546\u4e1a\u56ed\u533a\uff08BusinessCampus\uff09";
+        var mkdocs_page_input_path = "underwater/packages/business_campus.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../guides/policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">商业园区（BusinessCampus）</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/underwater/packages/business_campus.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="businesscampus">商业园区（BusinessCampus）</h1>
+<p><img alt="" src="../../../img/underwater/bc_view1.png" /></p>
+<p>商业园区环境的面积约为 200 米 x 200 米，其中有 3 栋建筑，所有建筑的内部都可以进入查看。关卡中的物体都带有语义标签，可以配合<a href="../../sensors/semantic_segmentation_camera_sensor/">语义分割相机</a>和<a href="../../sensors/raycast_semantic_lidar_sensor/">Raycast 语义激光雷达传感器</a>使用。</p>
+<p><img alt="" src="../../../img/underwater/bc_view2.png" /></p>
+<p><img alt="" src="../../../img/underwater/bc_interior.png" /></p>
+<p>HoloOcean 中的坐标与虚幻引擎编辑器中显示的坐标不同。下面两张图标注了商业园区关卡在 HoloOcean 中的坐标。</p>
+<p><img alt="" src="../../../img/underwater/bc_top.png" /></p>
+<p><img alt="" src="../../../img/underwater/bc_side.png" /></p>
+<h2 id="_1">语义标签 <span id='semantic_labels'></span></h2>
+<p>该关卡使用以下语义标签（完整的标签列表见<a href="../../sensors/custom_semantics/#semantic_labels">添加自定义语义标签</a>）：</p>
+<table>
+<thead>
+<tr>
+<th>文件夹名字</th>
+<th>模板值</th>
+<th>RGB 值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>None（无）</td>
+<td>0</td>
+<td>{0, 0, 0}</td>
+</tr>
+<tr>
+<td>Landscape（景色）</td>
+<td>4</td>
+<td>{153, 153, 153}</td>
+</tr>
+<tr>
+<td>Trash（垃圾）</td>
+<td>24</td>
+<td>{107, 156, 137}</td>
+</tr>
+<tr>
+<td>Grass（草）</td>
+<td>25</td>
+<td>{91, 235, 52}</td>
+</tr>
+<tr>
+<td>Asphalt（沥青）</td>
+<td>26</td>
+<td>{79, 82, 77}</td>
+</tr>
+<tr>
+<td>Bench（长凳）</td>
+<td>27</td>
+<td>{212, 191, 125}</td>
+</tr>
+<tr>
+<td>BikeRack（自行车架）</td>
+<td>28</td>
+<td>{209, 208, 203}</td>
+</tr>
+<tr>
+<td>Building（建筑物）</td>
+<td>29</td>
+<td>{31, 240, 205}</td>
+</tr>
+<tr>
+<td>Bus（公共汽车）</td>
+<td>30</td>
+<td>{240, 220, 43}</td>
+</tr>
+<tr>
+<td>Bush（灌木）</td>
+<td>31</td>
+<td>{177, 247, 124}</td>
+</tr>
+<tr>
+<td>Car（汽车）</td>
+<td>32</td>
+<td>{224, 109, 237}</td>
+</tr>
+<tr>
+<td>Ceiling（天花板）</td>
+<td>33</td>
+<td>{161, 247, 233}</td>
+</tr>
+<tr>
+<td>Chair（椅子）</td>
+<td>34</td>
+<td>{65, 13, 255}</td>
+</tr>
+<tr>
+<td>Cone（圆锥体）</td>
+<td>35</td>
+<td>{255, 169, 10}</td>
+</tr>
+<tr>
+<td>Crate（板条箱）</td>
+<td>36</td>
+<td>{140, 86, 0}</td>
+</tr>
+<tr>
+<td>Desk（书桌）</td>
+<td>37</td>
+<td>{242, 65, 224}</td>
+</tr>
+<tr>
+<td>Dumpster（大垃圾桶）</td>
+<td>38</td>
+<td>{0, 138, 14}</td>
+</tr>
+<tr>
+<td>FireHydrant（消防栓）</td>
+<td>39</td>
+<td>{255, 0, 0}</td>
+</tr>
+<tr>
+<td>Floor（地板）</td>
+<td>40</td>
+<td>{2, 125, 104}</td>
+</tr>
+<tr>
+<td>GarbageCan（垃圾桶）</td>
+<td>41</td>
+<td>{0, 184, 92}</td>
+</tr>
+<tr>
+<td>Pallet（托盘）</td>
+<td>42</td>
+<td>{143, 129, 6}</td>
+</tr>
+<tr>
+<td>ParkingGate（停车门）</td>
+<td>43</td>
+<td>{222, 164, 177}</td>
+</tr>
+<tr>
+<td>PatioUmbrella（庭院遮阳伞）</td>
+<td>44</td>
+<td>{195, 0, 255}</td>
+</tr>
+<tr>
+<td>Railing（栏杆）</td>
+<td>45</td>
+<td>{242, 97, 130}</td>
+</tr>
+<tr>
+<td>SemiTruck（半挂式卡车）</td>
+<td>46</td>
+<td>{124, 6, 138}</td>
+</tr>
+<tr>
+<td>Sidewalk（人行道）</td>
+<td>47</td>
+<td>{232, 232, 232}</td>
+</tr>
+<tr>
+<td>SpeedLimitSign（限速标志）</td>
+<td>48</td>
+<td>{222, 218, 245}</td>
+</tr>
+<tr>
+<td>StopSign（停车标志）</td>
+<td>49</td>
+<td>{250, 37, 62}</td>
+</tr>
+<tr>
+<td>StreetLamps（路灯）</td>
+<td>50</td>
+<td>{255, 149, 10}</td>
+</tr>
+<tr>
+<td>Table（桌子）</td>
+<td>51</td>
+<td>{186, 17, 169}</td>
+</tr>
+<tr>
+<td>Tree（树）</td>
+<td>52</td>
+<td>{69, 99, 46}</td>
+</tr>
+<tr>
+<td>Wall（墙）</td>
+<td>53</td>
+<td>{126, 60, 250}</td>
+</tr>
+<tr>
+<td>Unlabeled（未贴标签）</td>
+<td>54</td>
+<td>{0, 0, 0}</td>
+</tr>
+<tr>
+<td>Any（任何一个）</td>
+<td>255</td>
+<td>{255, 255, 255}</td>
+</tr>
+</tbody>
+</table>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../../..";</script>
+    <script src="../../../js/theme_extra.js"></script>
+    <script src="../../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../../js/umlconvert.js"></script>
+      <script src="../../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
