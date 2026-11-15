@@ -78,6 +78,8 @@ python survey_mission_sim.py
 python survey_mission_sim.py --viewer
 ```
 
+`--viewer` 使用 `mujoco.viewer.launch_passive` 打开窗口，在 macOS 上需要改用 MuJoCo 自带的 `mjpython` 运行：`mjpython survey_mission_sim.py --viewer`。仿真结束或关闭窗口后，仍会照常输出指标并保存结果。
+
 输出：
 
 * `docs/img/underwater/survey_trajectory.png` —— 规划测线 vs 实际航迹
