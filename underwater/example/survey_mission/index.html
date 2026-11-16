@@ -209,6 +209,7 @@ e_{ct} = \hat{u} \times (P - A) , \qquad \hat{u} = \frac{B - A}{\lVert B - A \rV
 </script>
 </p>
 <p>当存在横向偏差时，前视方向自然指向测线，形成回中趋势；前视距离 <script type="math/tex">L</script> 越大越平缓、越小越激进。</p>
+<p>进入当前段终点 <code>accept_radius</code> 范围内即切换到下一段。只有切换到最后一段后再进入终点的 <code>accept_radius</code> 范围，<code>LOSGuidance</code> 才会把 <code>finished</code> 置为真，仿真随即结束；仅靠近终点而没有走完前面的测线（例如终点与起点或中途某段很近）不算完成。</p>
 <h3 id="3">3. 控制律</h3>
 <ul>
 <li><strong>水平速度环（PI）</strong>：把期望速度 <script type="math/tex">v_d = u_{cruise}\,[\cos\psi_d, \sin\psi_d]</script> 与实际世界系速度做差，输出世界系推力，再投影到机体系限幅（模拟推进器能力上限）后转回世界系：</li>
@@ -323,7 +324,7 @@ python<span class="w"> </span>survey_mission_sim.py<span class="w"> </span>--vie
 </tr>
 <tr>
 <td><code>accept_radius</code></td>
-<td>路径点切换半径 (m)</td>
+<td>路径点切换半径与终点到达判定半径 (m)</td>
 </tr>
 <tr>
 <td><code>timeout_seconds</code></td>
@@ -347,7 +348,7 @@ python<span class="w"> </span>survey_mission_sim.py<span class="w"> </span>--vie
 <div class="highlight"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>src/underwater
 python<span class="w"> </span>-m<span class="w"> </span>pytest<span class="w"> </span>tests/<span class="w"> </span>-v
 </code></pre></div>
-<p>覆盖测线生成（边界、间距、蛇形交替、旋转平移、非法输入）、LOS 制导（偏差符号、回中趋势、航点切换）、覆盖率统计与指标汇总，共 14 个用例。</p>
+<p>覆盖测线生成（边界、间距、蛇形交替、旋转平移、非法输入）、LOS 制导（偏差符号、回中趋势、航点切换、完成判定）、覆盖率统计与指标汇总，共 16 个用例。</p>
               
             </div>
           </div><footer>
