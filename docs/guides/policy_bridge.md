@@ -11,7 +11,7 @@ URLab Bridge 是同一 GitHub 组织下的独立配套仓库（`urlab_bridge`）
 - 自动处理关节发现、关节映射和执行器 ID 解析
 - 提供用于身体位置计算的正向运动学
 - 面向多关节机构场景的前缀式消息过滤机制
-- 同时支持位置目标（适用于位置执行器）与力矩目标（适用于运动 + PD 控制）。
+- 同时支持位置目标（适用于位置执行器）与力矩目标（适用于电机 + PD 控制）。
 
 ## 架构
 
@@ -66,7 +66,7 @@ cd RoboJuDo && git submodule update --init --recursive
 
 ## ZMQ 协议
 
-有关 ZMQ 协议的详细信息、主题格式和消息结构，请参阅 ZMQ 网络文档。(zmq_networking.md).
+有关 ZMQ 协议的详细信息、话题格式和消息结构，请参阅 [ZMQ 网络](zmq_networking.md)。
 
 ## 直接使用 Bridge
 
@@ -115,14 +115,14 @@ python src/run.py --policy unitree --prefix g1
 
 12 自由度的四足策略，支持步态调节。提供预设步态：Trot（小跑）、Pronk（跳跃）、Bound（弹跳）和 Pace（侧对步）。需要下载检查点文件(详见文件  `RoboJuDo/checkpoints/` README).
 
-## 运动执行器 vs 位置执行器
+## 电机（motor）执行器 vs 位置执行器
 
 |    方式      |       MJCF 执行器 |                控制信号                  |            PD 位置              |
 |----------   |------------------------------------|------------------------|---------------------------------|
 |  Position   |   `<position kp="100" kv="5">`     |      位置目标（弧度）    |           MuJoCo 内部           |
 |  Motor + PD |   `<motor forcerange="-88 88">`    |      位置目标（弧度 ）   |        C++ UMjPDController      |
 
-位置执行器更简单、更稳定。运动+PD 方式与训练动力学完全匹配，但需要配置增益。使用 GUI 中的复选框进行切换。
+位置执行器更简单、更稳定。电机 + PD 方式与训练动力学完全匹配，但需要配置增益。使用 GUI 中的复选框进行切换。
 
 ## 配置
 
