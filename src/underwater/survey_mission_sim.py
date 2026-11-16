@@ -25,6 +25,7 @@ from pathlib import Path
 
 import numpy as np
 import mujoco
+import mujoco.viewer
 
 from depth_controller import PIDDepthController
 from survey_mission import (CoverageTracker, LOSGuidance, evaluate_mission,
