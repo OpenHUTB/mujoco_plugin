@@ -45,6 +45,8 @@ $$
 
 当存在横向偏差时，前视方向自然指向测线，形成回中趋势；前视距离 $L$ 越大越平缓、越小越激进。
 
+进入当前段终点 `accept_radius` 范围内即切换到下一段。只有切换到最后一段后再进入终点的 `accept_radius` 范围，`LOSGuidance` 才会把 `finished` 置为真，仿真随即结束；仅靠近终点而没有走完前面的测线（例如终点与起点或中途某段很近）不算完成。
+
 ### 3. 控制律
 
 * **水平速度环（PI）**：把期望速度 $v_d = u_{cruise}\,[\cos\psi_d, \sin\psi_d]$ 与实际世界系速度做差，输出世界系推力，再投影到机体系限幅（模拟推进器能力上限）后转回世界系：
@@ -118,7 +120,7 @@ python survey_mission_sim.py --viewer
 | `target_depth` | 测绘深度 (m，负值) |
 | `cruise_speed` | 巡航速度 (m/s) |
 | `lookahead` | LOS 前视距离 (m) |
-| `accept_radius` | 路径点切换半径 (m) |
+| `accept_radius` | 路径点切换半径与终点到达判定半径 (m) |
 | `timeout_seconds` | 仿真超时 (s) |
 | `swath_width` | 声呐扫幅 (m)，建议取 `lane_spacing × 1.1 ~ 1.25` |
 | `grid_resolution` | 覆盖率栅格边长 (m) |
@@ -131,4 +133,4 @@ cd src/underwater
 python -m pytest tests/ -v
 ```
 
-覆盖测线生成（边界、间距、蛇形交替、旋转平移、非法输入）、LOS 制导（偏差符号、回中趋势、航点切换）、覆盖率统计与指标汇总，共 14 个用例。
+覆盖测线生成（边界、间距、蛇形交替、旋转平移、非法输入）、LOS 制导（偏差符号、回中趋势、航点切换、完成判定）、覆盖率统计与指标汇总，共 16 个用例。

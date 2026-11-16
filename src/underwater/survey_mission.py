@@ -96,6 +96,9 @@ class LOSGuidance:
     对当前位置投影到当前测线段，得到横向偏差；
     在投影点前方 lookahead 处取前视点，以“当前位置 → 前视点”的方向
     作为期望艏向，从而在存在横向偏差时自然产生回中趋势。
+
+    依次切换到最后一段后，进入终点的 accept_radius 范围即视为完成全部路径；
+    仅靠近终点而没有走完前面的测线（例如起点与终点重合的闭合路径）不算完成。
     """
 
     def __init__(self, waypoints: np.ndarray,
@@ -107,9 +110,11 @@ class LOSGuidance:
         self.lookahead = float(lookahead)
         self.accept_radius = float(accept_radius)
         self.segment_index = 0
+        self.finished = False
 
     def reset(self) -> None:
         self.segment_index = 0
+        self.finished = False
 
     def update(self, position_xy: Sequence[float], heading: float = 0.0) -> GuidanceState:
         """
@@ -151,13 +156,17 @@ class LOSGuidance:
         desired = math.atan2(target[1] - p[1], target[0] - p[0])
         distance_to_goal = float(np.linalg.norm(p - self.waypoints[-1]))
 
+        # 只有在跟踪最后一段时到达终点才算完成，完成后保持该状态直到 reset()
+        if i == last and distance_to_goal <= self.accept_radius:
+            self.finished = True
+
         return GuidanceState(
             desired_heading=wrap_to_pi(desired),
             cross_track_error=float(cross),
             segment_index=i,
             lookahead_point=target,
             distance_to_goal=distance_to_goal,
-            finished=False,
+            finished=self.finished,
         )
 
 

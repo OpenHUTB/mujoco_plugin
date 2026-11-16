@@ -113,8 +113,51 @@ def test_waypoint_switch_and_finish():
                     lookahead=2.0, accept_radius=0.5)
     st = g.update((9.9, 0.0))
     assert st.segment_index == 1          # 到达第一段终点后自动切换
+    assert not st.finished
     st = g.update((10.0, 10.0))
     assert st.distance_to_goal == pytest.approx(0.0, abs=1e-9)
+    assert st.finished
+
+
+def test_closed_path_not_finished_at_start():
+    """起点与终点重合的闭合路径：在起点处不能判定为完成，需按顺序走完各段"""
+    square = np.array([[0.0, 0.0], [10.0, 0.0], [10.0, 10.0], [0.0, 10.0], [0.0, 0.0]])
+    g = LOSGuidance(square, lookahead=2.0, accept_radius=1.0)
+    st = g.update((0.0, 0.0))
+    assert st.distance_to_goal == pytest.approx(0.0, abs=1e-9)
+    assert st.segment_index == 0
+    assert not st.finished
+
+    for corner in square[1:4]:
+        assert not g.update(corner).finished
+    st = g.update((0.0, 0.5))
+    assert st.segment_index == 3
+    assert st.finished
+
+    # 完成后保持完成状态，reset() 后重新开始
+    assert g.update((5.0, 5.0)).finished
+    g.reset()
+    assert not g.update((0.0, 0.0)).finished
+
+
+def test_los_finishes_lawnmower_after_all_lanes():
+    """终点靠近起点的窄条带：沿期望艏向直行，走完全部测线后才判定完成"""
+    wp = lawnmower_waypoints(width=20.0, height=1.5, lane_spacing=0.5)
+    assert np.linalg.norm(wp[-1] - wp[0]) <= 1.5   # 终点就在起点的接受半径内
+    g = LOSGuidance(wp, lookahead=2.0, accept_radius=1.5)
+    pos = wp[0].copy()
+    traveled = 0.0
+    for _ in range(5000):
+        st = g.update(pos)
+        if st.finished:
+            break
+        pos = pos + 0.1 * np.array([math.cos(st.desired_heading),
+                                    math.sin(st.desired_heading)])
+        traveled += 0.1
+    assert st.finished
+    assert st.segment_index == len(wp) - 2
+    # 4 条 20 m 测线：除去掉头处的切角和终点接受半径，航程应超过 3 条测线
+    assert traveled > 3 * 20.0
 
 
 def test_wrap_to_pi():
