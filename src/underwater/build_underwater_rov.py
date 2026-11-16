@@ -3,7 +3,18 @@ import mujoco
 import mujoco.viewer
 from pathlib import Path
 
-def build_underwater_assembly():
+from ur5e_industrial_grasp import build_gripper_model
+
+def build_underwater_assembly(launch_viewer=True):
+    """
+    把 UR5e + 夹爪挂到 ROV 底座上，生成 data/underwater_rov_with_arm.xml
+
+    Args:
+        launch_viewer: 生成后是否打开 MuJoCo Viewer 进行验证（会阻塞到窗口关闭）
+
+    Returns:
+        生成的装配体模型路径
+    """
     print("=" * 60)
     print("正在执行水下机器人全系统组装...")
     print("架构：长方体基座 + 绝对路径网格暴力重构")
@@ -20,6 +31,9 @@ def build_underwater_assembly():
     
     rov_xml_path = data_dir / "rov_base.xml"
     ur5e_gripper_xml_path = ur5e_dir / "ur5e_with_gripper.xml"
+
+    # UR5e + 夹爪模型由 ur5e_industrial_grasp.py 生成，不纳入版本控制，每次重新生成以免使用过期文件
+    build_gripper_model()
 
     # 2. XML 树解析与动态挂载
     rov_tree = ET.parse(str(rov_xml_path))
@@ -116,10 +130,13 @@ def build_underwater_assembly():
     rov_tree.write(str(merged_model_path), encoding="utf-8")
     print(f"物理融合完成！相对路径已全部被绝对化重构。")
 
-    print("正在拉起 MuJoCo 仿真器进行验证...")
-    model = mujoco.MjModel.from_xml_path(str(merged_model_path))
-    data = mujoco.MjData(model)
-    mujoco.viewer.launch(model, data)
+    if launch_viewer:
+        print("正在拉起 MuJoCo 仿真器进行验证...")
+        model = mujoco.MjModel.from_xml_path(str(merged_model_path))
+        data = mujoco.MjData(model)
+        mujoco.viewer.launch(model, data)
+
+    return merged_model_path
 
 if __name__ == "__main__":
     build_underwater_assembly()

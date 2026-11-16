@@ -15,6 +15,7 @@ from pathlib import Path
 from depth_controller import PIDDepthController
 from plot_results import plot_basic_scenarios, plot_anisotropic_drag, plot_depth_tracking
 from ocean_current import OceanCurrentCascade, apply_current_drag
+from build_underwater_rov import build_underwater_assembly
 
 _HERE = Path(__file__).resolve().parent
 _DEFAULT_CONFIG = _HERE / "data" / "config.json"
@@ -27,6 +28,10 @@ class UnderwaterSimulation:
         with open(config_path, 'r', encoding='utf-8') as f:
             self.config = json.load(f)
         self.model_path = str(model_path)
+
+        # 默认装配体由 build_underwater_rov.py 生成、不纳入版本控制，首次运行时自动生成
+        if Path(model_path) == _DEFAULT_MODEL and not _DEFAULT_MODEL.exists():
+            build_underwater_assembly(launch_viewer=False)
 
         # 预先计算几何特征
         rov_cfg = self.config["rov_body"]
