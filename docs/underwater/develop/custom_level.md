@@ -48,7 +48,7 @@ HoloOcean 关卡主要包含两个方面：地形和水体。
 
 请务必将 PostProcessVolume 标记设置为 `WaterPPV`，以便“水雾命令”和“潮汐命令”能够正常工作。
 
-![](../../img/underwater/post_process_volume_tag.png)
+![](../../img/underwater/post_process_volume_tag.jpg)
 
 
 ### 水雾（后期处理体积 PostProcessVolume 2）

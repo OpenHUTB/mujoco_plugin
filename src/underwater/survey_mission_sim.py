@@ -25,6 +25,7 @@ from pathlib import Path
 
 import numpy as np
 import mujoco
+import mujoco.viewer
 
 from depth_controller import PIDDepthController
 from survey_mission import (CoverageTracker, LOSGuidance, evaluate_mission,
@@ -167,6 +168,11 @@ class SurveySimulation:
                 pos = data.sensor("pos").data[:3]
                 gs = guidance.update(pos[:2])
 
+                # 按顺序走完全部测线并到达终点即收工
+                if gs.finished:
+                    finished = True
+                    break
+
                 force, tau_z = self._control(data, gs, m["target_depth"], dt, buoyancy)
                 data.xfrc_applied[body_id, 0:3] = force
                 data.xfrc_applied[body_id, 5] = tau_z
@@ -185,11 +191,6 @@ class SurveySimulation:
                     if not viewer_ctx.is_running():
                         break
                     viewer_ctx.sync()
-
-                # 到达终点即收工
-                if np.linalg.norm(pos[:2] - waypoints[-1]) <= m["accept_radius"]:
-                    finished = True
-                    break
         finally:
             if viewer_ctx is not None:
                 viewer_ctx.close()
