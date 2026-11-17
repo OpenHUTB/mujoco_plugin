@@ -107,7 +107,7 @@
     </li>
         </ul>
     </li>
-    <li class="toctree-l2"><a class="reference internal" href="#vs">运动执行器 vs 位置执行器</a>
+    <li class="toctree-l2"><a class="reference internal" href="#motor-vs">电机（motor）执行器 vs 位置执行器</a>
     </li>
     <li class="toctree-l2"><a class="reference internal" href="#_4">配置</a>
     </li>
@@ -181,7 +181,7 @@
 <li>自动处理关节发现、关节映射和执行器 ID 解析</li>
 <li>提供用于身体位置计算的正向运动学</li>
 <li>面向多关节机构场景的前缀式消息过滤机制</li>
-<li>同时支持位置目标（适用于位置执行器）与力矩目标（适用于运动 + PD 控制）。</li>
+<li>同时支持位置目标（适用于位置执行器）与力矩目标（适用于电机 + PD 控制）。</li>
 </ul>
 <h2 id="_2">架构</h2>
 <div class="highlight"><pre><span></span><code>┌─────────────────────────────────┐     ZMQ      ┌──────────────────┐
@@ -215,7 +215,7 @@
 <div class="highlight"><pre><span></span><code><span class="nb">cd </span><span class="n">RoboJuDo</span> <span class="p">&amp;&amp;</span> <span class="n">git</span> <span class="n">submodule</span> <span class="n">update</span> <span class="p">-</span><span class="n">-init</span> <span class="p">-</span><span class="n">-recursive</span>
 </code></pre></div>
 <h2 id="zmq">ZMQ 协议</h2>
-<p>有关 ZMQ 协议的详细信息、主题格式和消息结构，请参阅 ZMQ 网络文档。(zmq_networking.md).</p>
+<p>有关 ZMQ 协议的详细信息、话题格式和消息结构，请参阅 <a href="../zmq_networking/">ZMQ 网络</a>。</p>
 <h2 id="bridge">直接使用 Bridge</h2>
 <p>无需 RoboJuDo 的自定义控制器示例：</p>
 <div class="highlight"><pre><span></span><code><span class="kn">from</span> <span class="nn">urlab_policy.unreal_env</span> <span class="kn">import</span> <span class="n">ZmqLink</span>
@@ -250,7 +250,7 @@
 <p>可用策略在<code>policy_registry.py</code>中注册。每个条目定义了策略配置类、环境配置、自由度数量和控制器类型。</p>
 <h3 id="go2-walk-these-ways">Go2 Walk-These-Ways 策略</h3>
 <p>12 自由度的四足策略，支持步态调节。提供预设步态：Trot（小跑）、Pronk（跳跃）、Bound（弹跳）和 Pace（侧对步）。需要下载检查点文件(详见文件  <code>RoboJuDo/checkpoints/</code> README).</p>
-<h2 id="vs">运动执行器 vs 位置执行器</h2>
+<h2 id="motor-vs">电机（motor）执行器 vs 位置执行器</h2>
 <table>
 <thead>
 <tr>
@@ -275,7 +275,7 @@
 </tr>
 </tbody>
 </table>
-<p>位置执行器更简单、更稳定。运动+PD 方式与训练动力学完全匹配，但需要配置增益。使用 GUI 中的复选框进行切换。</p>
+<p>位置执行器更简单、更稳定。电机 + PD 方式与训练动力学完全匹配，但需要配置增益。使用 GUI 中的复选框进行切换。</p>
 <h2 id="_4">配置</h2>
 <p><code>env_config.py</code>中的关键设置：</p>
 <table>
