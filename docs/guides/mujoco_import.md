@@ -157,6 +157,8 @@ PythonPath=C:/Users/you/miniconda3/envs/myenv/python.exe
 
 [资产生成成功但蓝图没显示](./asset_generate_successfully_but_blueprint_not_displayed.md)
 
+[导入 MJCF 时 XML 报“未知扩展名 stl”问题分析与解决方案](./mjcf_import_troubleshooting.md)
+
 ## 导入后
 
 导入的关节是一个普通的虚幻引擎参与者。您可以重新排列组件、添加传感器或摄像机、覆盖属性，或将其保存为可重用的蓝图。XML 仅在导入期间读取——之后，虚幻引擎组件才是最终的数据源。
