@@ -23,7 +23,7 @@ assets/mujoco_menagerie/universal_robots_ur5e/
 assets/mujoco_menagerie/robotiq_2f85/
 ```
 
-只要这两个目录存在，并且里面有对应的 mesh 文件，就可以继续往下跑。
+只要这两个目录存在，并且里面有对应的 mesh 文件（`universal_robots_ur5e/assets/` 下的 `.obj` 与 `robotiq_2f85/assets/` 下的 `.stl`），就可以继续往下跑。
 
 ### 3）运行唯一推荐入口
 
@@ -33,7 +33,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 python src/underwater/underwater_sim.py
 ```
 
-这个脚本是**唯一推荐入口**。它会按顺序执行：
+这个脚本是**唯一推荐入口**。首次运行时，如果 `data/underwater_rov_with_arm.xml` 还不存在，会先自动完成模型拼装（UR5e + 夹爪 → 挂到 ROV 底座，不弹出 Viewer），然后按顺序执行：
 
 1. 四组基础流体场景对比（含洋流）
 2. 6-DOF 各向异性阻力测试
@@ -120,6 +120,7 @@ config.json
 
 #### 处理
 - 读取配置
+- `data/underwater_rov_with_arm.xml` 不存在时，调用 `build_underwater_rov.py` 自动生成
 - 动态注入流体参数和物理参数
 - 执行四组基础场景测试（含洋流）
 - 执行 6-DOF 各向异性阻力测试
@@ -163,7 +164,7 @@ config.json
 
 #### 输入
 - `data/rov_base.xml`
-- `assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml`
+- `assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml`（每次运行时先调用 `ur5e_industrial_grasp.py` 重新生成）
 
 #### 处理
 - 解析 XML 树
@@ -277,6 +278,8 @@ assets/mujoco_menagerie/robotiq_2f85/
 ```bash
 python src/underwater/underwater_sim.py
 ```
+
+`underwater_sim.py` 只在装配体缺失时自动生成。修改了 `data/rov_base.xml` 或 Menagerie 模型后，删除 `data/underwater_rov_with_arm.xml` 再运行主脚本，或直接运行 `python src/underwater/build_underwater_rov.py`（生成后会打开 Viewer）即可重新生成。
 
 ### 3）Viewer 打不开
 

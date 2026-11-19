@@ -6,6 +6,8 @@
 *.lo
 *.o
 *.obj
+# MuJoCo Menagerie 模型自带的 .obj 是网格文件而非编译产物，需要纳入版本控制
+!assets/mujoco_menagerie/**/*.obj
 
 # Precompiled Headers
 *.gch

@@ -4,7 +4,16 @@ import xml.etree.ElementTree as ET
 import mujoco
 import mujoco.viewer
 
-def build_and_launch():
+def build_gripper_model():
+    """
+    把 Robotiq 2F-85 夹爪挂到 UR5e 末端，生成 ur5e_with_gripper.xml 与 industrial_scene.xml
+
+    Returns:
+        industrial_scene.xml 的路径
+
+    Raises:
+        FileNotFoundError: assets/mujoco_menagerie 下缺少 UR5e 或夹爪的模型文件
+    """
     print("=" * 60)
     print("正在执行底层 XML 级模型组装...")
     print("架构：XML 树合并 + 命名空间隔离 + 接触对过滤")
@@ -19,8 +28,7 @@ def build_and_launch():
     gripper_xml_path = os.path.join(gripper_dir, "2f85.xml")
     
     if not os.path.exists(ur5e_xml_path) or not os.path.exists(gripper_xml_path):
-        print("错误：找不到官方模型文件，请确保已正确下载并放置在 assets/mujoco_menagerie 目录下")
-        return
+        raise FileNotFoundError("找不到官方模型文件，请确保已正确下载并放置在 assets/mujoco_menagerie 目录下")
 
     ur5e_tree = ET.parse(ur5e_xml_path)
     ur5e_root = ur5e_tree.getroot()
@@ -104,7 +112,16 @@ def build_and_launch():
     scene_template_path = os.path.join(data_dir, "ur5e_scene.xml")
     master_scene_path = os.path.join(ur5e_dir, "industrial_scene.xml")
     shutil.copy(scene_template_path, master_scene_path)
-    
+    return master_scene_path
+
+
+def build_and_launch():
+    try:
+        master_scene_path = build_gripper_model()
+    except FileNotFoundError as e:
+        print(f"错误：{e}")
+        return
+
     #启动
     print("正在拉起查看器")
     model = mujoco.MjModel.from_xml_path(master_scene_path)
