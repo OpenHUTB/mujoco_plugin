@@ -153,12 +153,12 @@
 <div class="highlight"><pre><span></span><code>assets/mujoco_menagerie/universal_robots_ur5e/
 assets/mujoco_menagerie/robotiq_2f85/
 </code></pre></div>
-<p>只要这两个目录存在，并且里面有对应的 mesh 文件，就可以继续往下跑。</p>
+<p>只要这两个目录存在，并且里面有对应的 mesh 文件（<code>universal_robots_ur5e/assets/</code> 下的 <code>.obj</code> 与 <code>robotiq_2f85/assets/</code> 下的 <code>.stl</code>），就可以继续往下跑。</p>
 <h3 id="3">3）运行唯一推荐入口</h3>
 <p>进入仓库后，直接运行：</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/underwater/underwater_sim.py
 </code></pre></div>
-<p>这个脚本是<strong>唯一推荐入口</strong>。它会按顺序执行：</p>
+<p>这个脚本是<strong>唯一推荐入口</strong>。首次运行时，如果 <code>data/underwater_rov_with_arm.xml</code> 还不存在，会先自动完成模型拼装（UR5e + 夹爪 → 挂到 ROV 底座，不弹出 Viewer），然后按顺序执行：</p>
 <ol>
 <li>四组基础流体场景对比（含洋流）</li>
 <li>6-DOF 各向异性阻力测试</li>
@@ -233,6 +233,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h4 id="_6">处理</h4>
 <ul>
 <li>读取配置</li>
+<li><code>data/underwater_rov_with_arm.xml</code> 不存在时，调用 <code>build_underwater_rov.py</code> 自动生成</li>
 <li>动态注入流体参数和物理参数</li>
 <li>执行四组基础场景测试（含洋流）</li>
 <li>执行 6-DOF 各向异性阻力测试</li>
@@ -281,7 +282,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h4 id="_14">输入</h4>
 <ul>
 <li><code>data/rov_base.xml</code></li>
-<li><code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml</code></li>
+<li><code>assets/mujoco_menagerie/universal_robots_ur5e/ur5e_with_gripper.xml</code>（每次运行时先调用 <code>ur5e_industrial_grasp.py</code> 重新生成）</li>
 </ul>
 <h4 id="_15">处理</h4>
 <ul>
@@ -376,6 +377,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 先确认 Menagerie 目录存在，再重新运行：</p>
 <div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/underwater/underwater_sim.py
 </code></pre></div>
+<p><code>underwater_sim.py</code> 只在装配体缺失时自动生成。修改了 <code>data/rov_base.xml</code> 或 Menagerie 模型后，删除 <code>data/underwater_rov_with_arm.xml</code> 再运行主脚本，或直接运行 <code>python src/underwater/build_underwater_rov.py</code>（生成后会打开 Viewer）即可重新生成。</p>
 <h3 id="3viewer">3）Viewer 打不开</h3>
 <p>Viewer 是可选步骤，不影响前面的物理测试和图片生成。<br />
 先确认前面三张图是否已经保存到 <code>docs/img/</code>，再决定是否重试 Viewer。</p>
