@@ -159,6 +159,8 @@ PythonPath=C:/Users/you/miniconda3/envs/myenv/python.exe
 
 [导入 MJCF 时 XML 报“未知扩展名 stl”问题分析与解决方案](./mjcf_import_troubleshooting.md)
 
+[MS-Human-700.xml 导入失败：日志与解决方案](./ms_human_700_import_failure.md)
+
 ## 导入后
 
 导入的关节是一个普通的虚幻引擎参与者。您可以重新排列组件、添加传感器或摄像机、覆盖属性，或将其保存为可重用的蓝图。XML 仅在导入期间读取——之后，虚幻引擎组件才是最终的数据源。
