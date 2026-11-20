@@ -157,7 +157,8 @@ class StratifiedCurrent:
     参考：UUV Simulator stratified current database
     
     参数：
-        layers: CurrentLayer 列表，必须按深度升序排列（最深到最浅）
+        layers: CurrentLayer 列表，内部会按 depth_m 升序排列（最深到最浅）。
+                depth_m 与 MuJoCo 的 z 坐标一致：水面为 0，水下为负值
     """
 
     def __init__(self, layers: List[CurrentLayer]):
@@ -184,13 +185,13 @@ class StratifiedCurrent:
         获取指定深度的洋流速度（线性插值）
         
         Args:
-            depth_m: 深度 (m)，负值表示水下
+            depth_m: 深度 (m)，即 MuJoCo 的 z 坐标，负值表示水下
             dt: 时间步长
         
         Returns:
             洋流速度向量 [vx, vy, vz] (m/s, MuJoCo Z向上)
         """
-        # 边界处理：浅于最浅层 → 使用最浅层
+        # 边界处理：深于最深层 → 使用最深层
         if depth_m <= self.layers[0].depth_m:
             return self._gm_models[0].update(dt)
 
@@ -206,7 +207,7 @@ class StratifiedCurrent:
 
                 return v1 * (1.0 - t) + v2 * t
 
-        # 深于最深层 → 使用最深层
+        # 浅于最浅层 → 使用最浅层
         return self._gm_models[-1].update(dt)
 
     def reset(self):
@@ -356,8 +357,8 @@ class OceanCurrentCascade:
         v_gm = self._gm.update(dt)
 
         # Layer 2: 分层（深度变化）
-        depth = -z  # z 向上，深度为正数取反
-        v_strat = self._stratified.get_velocity_at(depth, dt) if self._stratified \
+        # 分层数据的 depth_m 与 z 采用同一约定（水面为 0，水下为负），直接使用 z
+        v_strat = self._stratified.get_velocity_at(z, dt) if self._stratified \
             else np.zeros(3)
 
         # Layer 3: 湍流（空间变化）
@@ -400,8 +401,11 @@ def apply_current_drag(data: "mujoco.MjData", body_id: int,
     """
     将洋流速度作为拖曳力注入 xfrc_applied
     
-    简单线性模型：F_drag = -drag_coeff * V_current
-    更精确的模型应使用 V_rel = V_robot - V_current
+    阻力取决于相对流速 V_rel = V_robot - V_current（线性模型 F = -drag_coeff * V_rel）。
+    与机器人自身速度 V_robot 相关的阻力已由 MuJoCo 椭球流体模型计算，
+    这里只补充洋流带来的部分：F_current = drag_coeff * V_current，
+    即洋流把机器人推向洋流流动的方向。力会叠加到 xfrc_applied 上，
+    调用方需在每个仿真步开始时清空或重新设置该 body 的外力。
     
     Args:
         data: MuJoCo MjData 实例
@@ -409,9 +413,9 @@ def apply_current_drag(data: "mujoco.MjData", body_id: int,
         current_velocity: 洋流速度 [vx, vy, vz] (m/s)
         drag_coeff: 拖曳系数 (kg/s)
     """
-    data.xfrc_applied[body_id, 0] -= drag_coeff * current_velocity[0]
-    data.xfrc_applied[body_id, 1] -= drag_coeff * current_velocity[1]
-    data.xfrc_applied[body_id, 2] -= drag_coeff * current_velocity[2]
+    data.xfrc_applied[body_id, 0] += drag_coeff * current_velocity[0]
+    data.xfrc_applied[body_id, 1] += drag_coeff * current_velocity[1]
+    data.xfrc_applied[body_id, 2] += drag_coeff * current_velocity[2]
 
 
 def compute_relative_velocity(robot_vel: np.ndarray,
