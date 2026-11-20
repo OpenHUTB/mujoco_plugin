@@ -325,14 +325,25 @@ assets/mujoco_menagerie/robotiq_2f85/
 <h4 id="_21">处理</h4>
 <ul>
 <li>从内嵌 MJCF 字符串编译模型</li>
-<li>用平滑轨迹驱动机械臂完成抓取演示</li>
+<li>通过 MuJoCo 控制回调，用余弦平滑轨迹驱动机械臂完成抓取演示：<ol>
+<li>0–2 s：从竖直初始姿态移动到小球正上方</li>
+<li>2–3 s：夹爪竖直朝下下探，两指包住小球</li>
+<li>3–4 s：收拢夹爪夹紧小球</li>
+<li>4–6 s：把小球举到约 0.27 m 高，之后保持该姿态</li>
+</ol>
+</li>
+<li>摩擦锥采用 <code>cone="elliptic"</code>、<code>impratio="10"</code>：默认的金字塔锥下软接触蠕滑明显，小球举起后十几秒就会滑落</li>
 </ul>
+<p>在 Viewer 中按 <code>Backspace</code> 重置仿真后，动作会从头重新播放。</p>
 <h4 id="_22">输出</h4>
 <ul>
 <li>MuJoCo Viewer 窗口</li>
 </ul>
+<h4 id="_23">运行</h4>
+<div class="highlight"><pre><span></span><code>python<span class="w"> </span>src/underwater/arm_grasp_sandbox.py
+</code></pre></div>
 <hr />
-<h2 id="_23">物理验证内容</h2>
+<h2 id="_24">物理验证内容</h2>
 <p>这个模块保留了四类核心物理验证。</p>
 <h3 id="1_1">1）基础流体场景对比</h3>
 <p>对比三种场景：</p>
@@ -361,11 +372,11 @@ assets/mujoco_menagerie/robotiq_2f85/
 </ul>
 <p>这部分会生成额外的 <code>ocean_current_speed.png</code>（洋流速度曲线图）。</p>
 <hr />
-<h2 id="_24">为什么浮力要手动加</h2>
+<h2 id="_25">为什么浮力要手动加</h2>
 <p>MuJoCo 的流体参数主要负责阻力和相关流体效应，浮力这里采用手动注入方式实现。<br />
 所以仿真里会在每一步通过 <code>xfrc_applied</code> 施加向上的浮力，这也是这个模块里最关键的一点。</p>
 <hr />
-<h2 id="_25">常见问题</h2>
+<h2 id="_26">常见问题</h2>
 <h3 id="1-menagerie">1）找不到 Menagerie 模型</h3>
 <p>先确认下面两个目录是否存在：</p>
 <div class="highlight"><pre><span></span><code>assets/mujoco_menagerie/universal_robots_ur5e/
@@ -390,7 +401,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 </ul>
 <p>如果后台测试中途报错，图表也不会生成。</p>
 <hr />
-<h2 id="_26">输出产物</h2>
+<h2 id="_27">输出产物</h2>
 <p>运行完成后，<code>docs/img/</code> 下会生成：</p>
 <ul>
 <li><code>underwater_test_results.png</code> — 基础流体场景对比</li>
@@ -399,7 +410,7 @@ assets/mujoco_menagerie/robotiq_2f85/
 <li><code>ocean_current_speed.png</code> — 洋流速度曲线（洋流模块启用时）</li>
 </ul>
 <hr />
-<h2 id="_27">参考</h2>
+<h2 id="_28">参考</h2>
 <ul>
 <li><a href="https://mujoco.readthedocs.io/en/stable/computation/fluid.html">MuJoCo 流体受力官方文档</a></li>
 <li><a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie 官方模型资源</a></li>
