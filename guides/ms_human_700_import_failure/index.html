@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <link rel="shortcut icon" href="../../img/favicon.ico" />
+    <title>MS-Human-700.xml 导入失败：日志与解决方案 - Mujoco 插件</title>
+    <link rel="stylesheet" href="../../css/theme.css" />
+    <link rel="stylesheet" href="../../css/theme_extra.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/styles/github.min.css" />
+        <link href="../../extra.css" rel="stylesheet" />
+    
+      <script>
+        // Current page data
+        var mkdocs_page_name = "MS-Human-700.xml \u5bfc\u5165\u5931\u8d25\uff1a\u65e5\u5fd7\u4e0e\u89e3\u51b3\u65b9\u6848";
+        var mkdocs_page_input_path = "guides/ms_human_700_import_failure.md";
+        var mkdocs_page_url = null;
+      </script>
+    
+    <!--[if lt IE 9]>
+      <script src="../../js/html5shiv.min.js"></script>
+    <![endif]-->
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.8.0/highlight.min.js"></script>
+      <script>hljs.highlightAll();</script> 
+</head>
+
+<body class="wy-body-for-nav" role="document">
+
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side stickynav">
+    <div class="wy-side-scroll">
+      <div class="wy-side-nav-search">
+          <a href="../.." class="icon icon-home"> Mujoco 插件
+        </a><div role="search">
+  <form id ="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+      <input type="text" name="q" placeholder="搜索文档" aria-label="Search docs" title="Type search term here" />
+  </form>
+</div>
+      </div>
+
+      <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../paper/">介绍</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../getting_started/">入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../features/">特性</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../mujoco_import/">MJCF 导入</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../dev/URLabEditor/">URLab 编辑器</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../geometry_authoring/">几何体与碰撞</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../controller_framework/">控制器框架</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../debug_visualization/">调试可视化</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../perturbation/">交互式扰动</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../possession_twist/">持有和扭转控制</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../blueprint_reference/">使用蓝图编写脚本</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../zmq_networking/">ZMQ 网络与 ROS 2</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../policy_bridge/">URLab 桥接</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../mjcf_schema_coverage/">MJCF 模式覆盖率</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../architecture/">架构</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../introduction/">引擎插件开发入门</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../ms/human_700/">肌肉骨骼人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../humanoid/g1/">人形机器人</a>
+                </li>
+              </ul>
+              <ul>
+                <li class="toctree-l1"><a class="reference internal" href="../../underwater/">水下机器人</a>
+                </li>
+              </ul>
+      </div>
+    </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+      <nav class="wy-nav-top" role="navigation" aria-label="Mobile navigation menu">
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../..">Mujoco 插件</a>
+        
+      </nav>
+      <div class="wy-nav-content">
+        <div class="rst-content"><div role="navigation" aria-label="breadcrumbs navigation">
+  <ul class="wy-breadcrumbs">
+    <li><a href="../.." class="icon icon-home" aria-label="Docs"></a></li>
+      <li class="breadcrumb-item active">MS-Human-700.xml 导入失败：日志与解决方案</li>
+    <li class="wy-breadcrumbs-aside">
+          <a href="https://github.com/OpenHUTB/mujoco_plugin/edit/main/docs/guides/ms_human_700_import_failure.md"> 编辑页面</a>
+    </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+            <div class="section" itemprop="articleBody">
+              
+                <h1 id="ms-human-700xml">MS-Human-700.xml 导入失败：日志与解决方案</h1>
+<blockquote>
+<p>引擎：Unreal Engine 4.26（Linux）　|　插件：UnrealRoboticsLab</p>
+<p>导入模型：MuJoCo Menagerie <code>ms_human_700/MS-Human-700.xml</code>   模型<a href="https://github.com/google-deepmind/mujoco_menagerie/tree/main/ms_human_700">下载地址</a></p>
+</blockquote>
+<h2 id="_1">总结</h2>
+<p><code>MS-Human-700.xml</code> 顶层没有任何 <code>&lt;mesh&gt;</code>，网格全部在<code>&lt;include&gt;</code> 文件里。导入时使用的 <code>clean_meshes.py</code> 不会展开 <code>&lt;include&gt;</code>，在主 XML 里没有找到<strong>网格</strong>、一个 GLB 都没生成，脚本正常退出并写出了 <code>_ue.xml</code>。</p>
+<h2 id="1">1. 失败现象</h2>
+<ul>
+<li>
+<p>把 <code>MS-Human-700.xml</code> 拖进内容浏览器，进度条走完后：</p>
+</li>
+<li>
+<p>蓝图能创建，但模型没有网格（缺少 <code>Viz_*</code> StaticMesh 组件）；</p>
+</li>
+</ul>
+<p><img alt="1795085314454" src="../../img/MS-Human-700_import_no_BP.png" /></p>
+<ul>
+<li><code>Saved/Logs/CarlaUE4.log</code> 中网格出现：</li>
+</ul>
+<div class="highlight"><pre><span></span><code>LogURLabEditor: Importing mesh from: .../assets/asset/../geometry/r_pelvis.stl
+LogURLabEditor: Using automated factory detection for mesh: .../r_pelvis.stl
+LogAssetTools: Warning: 导入&quot;.../assets/geometry/r_pelvis.stl&quot;失败。未知扩展名&quot;stl&quot;。
+LogURLabEditor: [ImportSingleMesh] Import returned 0 objects:
+LogURLabEditor: Warning: Failed to import mesh &#39;r_pelvis&#39; with MikkTSpace, attempting fallback
+LogURLabEditor: Error: Failed to import mesh &#39;r_pelvis&#39; - all import methods failed
+</code></pre></div>
+<p>如图所示：</p>
+<p><img alt="1795085424318" src="../img/MS_Human_700_import_show_stl.png" /></p>
+<h2 id="2">2. 根因链</h2>
+<h3 id="21-ms-human-700-include">2.1 MS-Human-700 的网格全部在 include 文件里</h3>
+<div class="highlight"><pre><span></span><code>MS-Human-700.xml
+  &lt;include file=&quot;assets/asset/Asset_Lowerbody.xml&quot;/&gt;
+  &lt;include file=&quot;assets/asset/Asset_Torso.xml&quot;/&gt;
+  &lt;include file=&quot;assets/asset/Asset_Upperbody.xml&quot;/&gt;
+  &lt;include file=&quot;assets/asset/Asset_Others.xml&quot;/&gt;
+
+  &lt;include file=&quot;assets/contact/Contact_Lowerbody.xml&quot;/&gt;
+
+  &lt;include file=&quot;assets/equality/Equality_Lowerbody.xml&quot;/&gt;
+  &lt;include file=&quot;assets/equality/Equality_Upperbody.xml&quot;/&gt;
+
+  &lt;include file=&quot;assets/tendon/Tendon_Leg_r.xml&quot;/&gt;
+  &lt;include file=&quot;assets/tendon/Tendon_Leg_l.xml&quot;/&gt;
+  &lt;include file=&quot;assets/tendon/Tendon_Arm_r.xml&quot;/&gt;
+  &lt;include file=&quot;assets/tendon/Tendon_Arm_l.xml&quot;/&gt;
+  &lt;include file=&quot;assets/tendon/Tendon_Torso.xml&quot;/&gt;
+
+  &lt;include file=&quot;assets/muscle/Muscle_Leg_r.xml&quot;/&gt;
+  &lt;include file=&quot;assets/muscle/Muscle_Leg_l.xml&quot;/&gt;
+  &lt;include file=&quot;assets/muscle/Muscle_Arm_r.xml&quot;/&gt;
+  &lt;include file=&quot;assets/muscle/Muscle_Arm_l.xml&quot;/&gt;
+  &lt;include file=&quot;assets/muscle/Muscle_Torso.xml&quot;/&gt;
+</code></pre></div>
+<h3 id="22-clean_meshespy-include">2.2 旧版 <code>clean_meshes.py</code> 不展开 <code>&lt;include&gt;</code></h3>
+<p>旧实现只扫主树的内容：</p>
+<div class="highlight"><pre><span></span><code><span class="n">mesh_elements</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;mesh&quot;</span><span class="p">))</span>
+</code></pre></div>
+<p><strong>关键点：脚本即使一个网格都没转换，也会正常退出并写出 <code>_ue.xml</code>。</strong></p>
+<h2 id="3">3. 解决方案</h2>
+<h3 id="include-clean_meshespy">使用支持 include 递归展开的 <code>clean_meshes.py</code></h3>
+<p><a href="https://github.com/OpenHUTB/hutb/blob/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Scripts/clean_meshes.py">脚本位置</a>：<code>/hutb/Unreal/CarlaUE4/Plugins/UnrealRoboticsLab/Scripts/clean_meshes.py</code></p>
+<p>核心逻辑是新增递归收集函数 <code>collect_from_include</code>：</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># 递归函数：从给定节点收集网格和 &lt;include&gt;，并解析包含的文件</span>
+<span class="k">def</span> <span class="nf">collect_from_include</span><span class="p">(</span><span class="n">node_root</span><span class="p">:</span> <span class="n">ET</span><span class="o">.</span><span class="n">Element</span><span class="p">,</span> <span class="n">owner_dir</span><span class="p">:</span> <span class="n">Path</span><span class="p">):</span>
+    <span class="n">base_dir</span> <span class="o">=</span> <span class="n">mesh_base</span> <span class="k">if</span> <span class="n">meshdir</span> <span class="k">else</span> <span class="n">owner_dir</span>
+
+    <span class="k">for</span> <span class="n">mesh_el</span> <span class="ow">in</span> <span class="n">node_root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;mesh&quot;</span><span class="p">):</span>
+        <span class="n">file_attr</span> <span class="o">=</span> <span class="n">mesh_el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_attr</span><span class="p">:</span>
+            <span class="k">continue</span>
+
+        <span class="c1"># 确保显式名称属性存在——如果省略，MuJoCo 默认使用文件名前缀。</span>
+        <span class="c1"># 在更改文件属性之前，我们必须保留它。</span>
+        <span class="k">if</span> <span class="n">mesh_el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">implicit_name</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">file_attr</span><span class="p">)</span><span class="o">.</span><span class="n">stem</span>
+            <span class="n">mesh_el</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="s2">&quot;name&quot;</span><span class="p">,</span> <span class="n">implicit_name</span><span class="p">)</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Set explicit name=&#39;</span><span class="si">{</span><span class="n">implicit_name</span><span class="si">}</span><span class="s2">&#39; on mesh with file=&#39;</span><span class="si">{</span><span class="n">file_attr</span><span class="si">}</span><span class="s2">&#39;&quot;</span><span class="p">)</span>
+
+        <span class="c1"># 添加网格条目：包括 mesh 元素和源文件路径</span>
+        <span class="n">mesh_elements</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="n">mesh_el</span><span class="p">,</span> <span class="n">base_dir</span> <span class="o">/</span> <span class="n">file_attr</span><span class="p">))</span>
+
+    <span class="k">for</span> <span class="n">include_el</span> <span class="ow">in</span> <span class="n">node_root</span><span class="o">.</span><span class="n">iter</span><span class="p">(</span><span class="s2">&quot;include&quot;</span><span class="p">):</span>
+        <span class="n">file_attr</span> <span class="o">=</span> <span class="n">include_el</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;file&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">file_attr</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="c1"># resolve() 是 pathlib.Path 的方法：把路径规范化成唯一的绝对路径。</span>
+        <span class="c1"># 它做三件事：</span>
+        <span class="c1"># 1.变成绝对路径（相对路径拼上当前工作目录）</span>
+        <span class="c1"># 2.消掉 . 和 ..（纯字符串/路径层面的规整）</span>
+        <span class="c1"># 3.解析符号链接（symlink 指向哪，就得到真实路径）</span>
+        <span class="n">include_path</span> <span class="o">=</span> <span class="p">(</span><span class="n">owner_dir</span> <span class="o">/</span> <span class="n">file_attr</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">include_path</span> <span class="ow">in</span> <span class="n">seen_includes</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">seen_includes</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">include_path</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">include_path</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  x Included file not found: </span><span class="si">{</span><span class="n">include_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  Expanding include: </span><span class="si">{</span><span class="n">include_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="c1"># 得到include的文件中的根节点</span>
+            <span class="n">include_root</span> <span class="o">=</span> <span class="n">ET</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">include_path</span><span class="p">))</span><span class="o">.</span><span class="n">getroot</span><span class="p">()</span>
+        <span class="k">except</span> <span class="n">ET</span><span class="o">.</span><span class="n">ParseError</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+            <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;  x Failed to parse </span><span class="si">{</span><span class="n">include_path</span><span class="si">}</span><span class="s2">: </span><span class="si">{</span><span class="n">e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="k">continue</span>
+        <span class="c1"># 再看include文件中的 &lt;include&gt;，递归展开</span>
+        <span class="n">collect_from_include</span><span class="p">(</span><span class="n">include_root</span><span class="p">,</span> <span class="n">include_path</span><span class="o">.</span><span class="n">parent</span><span class="p">)</span>
+
+<span class="n">collect_from_include</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">xml_dir</span><span class="p">)</span>
+</code></pre></div>
+              
+            </div>
+          </div><footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <!-- Copyright etc -->
+      <p>OpenHUTB 版权所有 &copy; 2026</p>
+  </div>
+
+</footer>
+          
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+
+  <div class="rst-versions" role="note" aria-label="Versions">
+  <span class="rst-current-version" data-toggle="rst-current-version">
+    
+        <span>
+          <a href="https://github.com/OpenHUTB/mujoco_plugin" style="color: #fcfcfc">OpenHUTB</a>
+        </span>
+    
+    
+    
+  </span>
+</div>
+    <script src="../../js/jquery-3.6.0.min.js"></script>
+    <script>var base_url = "../..";</script>
+    <script src="../../js/theme_extra.js"></script>
+    <script src="../../js/theme.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.4/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.9.1/mermaid.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.2.7/raphael.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/js-sequence-diagrams/1.0.6/sequence-diagram-min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/flowchart/1.6.5/flowchart.min.js"></script>
+      <script src="../../js/umlconvert.js"></script>
+      <script src="../../search/main.js"></script>
+    <script>
+        jQuery(function () {
+            SphinxRtdTheme.Navigation.enable(true);
+        });
+    </script>
+
+</body>
+</html>
