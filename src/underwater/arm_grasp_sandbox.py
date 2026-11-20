@@ -10,11 +10,13 @@ import numpy as np
 # 2. 核心求解器微调：设置 solref="0.01 1" 和 solimp="0.95 0.99 0.001"。
 #    这会把刚性碰撞软化为高度阻尼的弹簧接触，彻底吸收物体碰撞瞬间的动能，防止弹飞。
 # 3. 增大摩擦系数 friction="1.5 0.005 0.0001"，为末端夹爪提供极强的切向和扭转摩擦，防止小球异常旋转。
+# 4. 摩擦锥采用 cone="elliptic" 并设置 impratio="10"：默认的金字塔锥下软接触蠕滑明显，
+#    夹住的小球举起后十几秒就会滑落；椭圆锥 + 较大的 impratio 是 MuJoCo 推荐的抓取配置，可稳定夹持。
 # ──────────────────────────────────────────────────────────────────
 MJCF_ARM_SANDBOX = """
 <mujoco model="underwater_arm_sandbox">
     <compiler angle="degree" coordinate="local"/>
-    <option timestep="0.002" gravity="0 0 -9.81"/>
+    <option timestep="0.002" gravity="0 0 -9.81" cone="elliptic" impratio="10"/>
     
     <default>
         <joint armature="0.05" damping="5" stiffness="0"/>
@@ -92,53 +94,74 @@ MJCF_ARM_SANDBOX = """
 </mujoco>
 """
 
+# ──────────────────────────────────────────────────────────────────
+# 抓取动作的关键姿态 (Target Positions)，顺序与 <actuator> 一致：
+#   [j1, j2, j3, j4, j5, j6, 左指, 右指]，关节单位为弧度，手指单位为米
+# 手臂在 XZ 平面内工作 (j1 = j5 = 0)，j2、j3、j4、j6 由逆运动学求得：
+#   两指中点对准目标高度、夹爪竖直朝下；j4 已到执行器上限 1 rad，余量由 j6 补偿。
+# 位置执行器在重力作用下存在稳态误差，实际位置比下面注释中的目标高度低约 1.5 cm。
+# ──────────────────────────────────────────────────────────────────
+CTRL_HOME = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
+# 预抓取：两指中点位于小球正上方 z = 0.17 m，避免下探途中扫到小球
+CTRL_PREGRASP = [0.0, 0.585, 1.287, 1.0, 0.0, 0.269, 0.0, 0.0]
+# 下探：两指中点目标 z = 0.06 m，下沉后指尖刚好不触地，手指覆盖小球球心高度 (z = 0.03 m)
+CTRL_REACH = [0.0, 0.772, 1.311, 1.0, 0.0, 0.059, 0.0, 0.0]
+# 夹紧：手指滑移约 0.022 m 时接触半径 0.03 m 的小球，指令取 0.03 m，
+# 由位置执行器 (kp=800) 的剩余误差产生约 6 N 的夹持力
+GRIP_CLOSED = 0.03
+CTRL_CLAMP = CTRL_REACH[:6] + [GRIP_CLOSED, GRIP_CLOSED]
+# 举起：保持夹爪竖直，两指中点升至 z = 0.30 m
+CTRL_LIFT = [0.0, 0.430, 1.164, 1.0, 0.0, 0.548, GRIP_CLOSED, GRIP_CLOSED]
+
+# 动作时间表：(起始姿态, 目标姿态, 持续时间 s)，结束后保持 CTRL_LIFT
+GRASP_SEGMENTS = [
+    (CTRL_HOME, CTRL_PREGRASP, 2.0),   # 0~2 s：从竖直初始姿态移动到小球正上方
+    (CTRL_PREGRASP, CTRL_REACH, 1.0),  # 2~3 s：竖直下探，让手指包住小球
+    (CTRL_REACH, CTRL_CLAMP, 1.0),     # 3~4 s：保持手臂不动，收拢夹爪
+    (CTRL_CLAMP, CTRL_LIFT, 2.0),      # 4~6 s：夹持小球竖直举起
+]
+
+
+def smooth_interp(start, end, progress):
+    """余弦缓动 (Cosine Easing)，让电机的启动和停止像真实机械臂一样丝滑"""
+    progress = np.clip(progress, 0.0, 1.0)
+    ease = (1.0 - np.cos(progress * np.pi)) / 2.0
+    return start + (end - start) * ease
+
+
+def scripted_grasp_ctrl(t):
+    """返回时刻 t (s) 的执行器目标：把离散的关键姿态转化为基于时间的连续平滑轨迹"""
+    for start, end, duration in GRASP_SEGMENTS:
+        if t < duration:
+            return smooth_interp(np.array(start), np.array(end), t / duration)
+        t -= duration
+    return np.array(CTRL_LIFT)
+
+
 class ArmGraspSandbox:
     def __init__(self):
         # 从内嵌字符串直接编译模型，消除外部依赖文件
         self.model = mujoco.MjModel.from_xml_string(MJCF_ARM_SANDBOX)
         self.data = mujoco.MjData(self.model)
 
+    @staticmethod
+    def controller_callback(model, data):
+        """MuJoCo 控制回调：每个仿真步按当前仿真时间写入执行器目标"""
+        data.ctrl[:] = scripted_grasp_ctrl(data.time)
+
     def execute_scripted_grasp(self):
-        """控制机械臂顺序执行：平滑下落接近 -> 稳定夹紧 -> 垂直举起目标物体"""
+        """控制机械臂顺序执行：移到上方 -> 竖直下探 -> 稳定夹紧 -> 垂直举起目标物体"""
         print("=" * 60)
         print("  正在拉起多自由度机械臂物理接触控制沙盒...")
         print("  已启用 Cosine 平滑轨迹插补算法")
         print("=" * 60)
 
-        # 预设动作序列的各控制点位置 (Target Positions)
-        ctrl_home  = [0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0]
-        ctrl_reach = [0.0, np.deg2rad(75), np.deg2rad(50), np.deg2rad(-20), 0.0, 0.0, 0.0, 0.0]
-        # 💡 修正 4：闭合距离加大到 0.018，确保两侧紧紧夹住小球而不发生碾压穿模
-        ctrl_clamp = [0.0, np.deg2rad(75), np.deg2rad(50), np.deg2rad(-20), 0.0, 0.0, 0.018, 0.018]
-        ctrl_lift  = [0.0, np.deg2rad(45), np.deg2rad(30), np.deg2rad(-10), 0.0, 0.0, 0.018, 0.018]
-
-        # 💡 修正 2：工业级平滑插值函数
-        def smooth_interp(start, end, progress):
-            """余弦缓动 (Cosine Easing)，让电机的启动和停止像真实机械臂一样丝滑"""
-            progress = np.clip(progress, 0.0, 1.0)
-            ease = (1.0 - np.cos(progress * np.pi)) / 2.0
-            return start + (end - start) * ease
-
-        def controller_callback(model, data):
-            t = data.time
-            # 将离散的瞬间阶跃指令，转化为基于时间的连续平滑轨迹
-            if t < 2.0:
-                # 阶段 1 (0~2秒)：从初始竖直状态，缓慢丝滑地探向小球
-                p = t / 2.0
-                data.ctrl[:] = smooth_interp(np.array(ctrl_home), np.array(ctrl_reach), p)
-            elif t < 3.0:
-                # 阶段 2 (2~3秒)：保持手臂姿态不动，平滑收缩夹爪
-                p = (t - 2.0) / 1.0
-                data.ctrl[:] = smooth_interp(np.array(ctrl_reach), np.array(ctrl_clamp), p)
-            elif t < 5.0:
-                # 阶段 3 (3~5秒)：发力抬起，平滑过渡到举高姿态
-                p = (t - 3.0) / 2.0
-                data.ctrl[:] = smooth_interp(np.array(ctrl_clamp), np.array(ctrl_lift), p)
-            else:
-                data.ctrl[:] = ctrl_lift
-
-        #mujoco.set_mjcb_control(controller_callback)
-        mujoco.viewer.launch(self.model, self.data)
+        # 控制回调是全局设置，关闭 Viewer 后需要清除，避免影响同一进程中的其他模型
+        mujoco.set_mjcb_control(self.controller_callback)
+        try:
+            mujoco.viewer.launch(self.model, self.data)
+        finally:
+            mujoco.set_mjcb_control(None)
 
 
 if __name__ == "__main__":
