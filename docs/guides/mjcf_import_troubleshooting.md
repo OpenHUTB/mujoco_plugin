@@ -17,7 +17,7 @@
 总的来说，没有下载`clean_meshes.py`所要用的包，以至于`clean_meshes.py`没有起作用。最终导致的报错。
 
 - 1.`EnsurePythonReady`(MujocoImportFactory.cpp:122)是python编译器以及对应包的准备环节，最主要的就是`if (!InstallPythonPackages(PythonPath, InstallLog))`，（MjPythonHelper.cpp:308）的判断，从而取决于`if (!bPackagesPresent)`对于这个的判断。但是应该是没有包的，应该会下载包，但是通过这张图可以看到安装失败。所以没有安装`clean_meshes.py`所要用的包。
-  ![软件包安装失败：pip is not available in this Python environment](image/mjcf_import_troubleshooting/stl_import_error.png)
+  ![软件包安装失败：pip is not available in this Python environment](../img/stl_import_error.png)
 - 但是在`clean_meshes.py`为什么这里不报错？
   `clean_meshes.py`没报错是因为错误被吞掉了。由于包trimesh和np只clean_mesh和convert_mesh这个函数里面用并且clean_mesh这个函数只在convert_mesh函数里面用，但是convert_mesh这个函数的报错没有传出去，然后往下走所以网格并没有被清洗所以导致没有将stl转换成obj。最终就会报未知扩展名“stl”。
   `convert_mesh()` 把每个网格的异常都 catch 了（clean_meshes.py:101-103）：
